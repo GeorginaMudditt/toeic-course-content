@@ -1,6 +1,6 @@
 import { NextAuthOptions } from 'next-auth'
 import CredentialsProvider from 'next-auth/providers/credentials'
-import { supabase } from './supabase'
+import { supabaseServer } from './supabase'
 import bcrypt from 'bcryptjs'
 
 export const authOptions: NextAuthOptions = {
@@ -21,8 +21,8 @@ export const authOptions: NextAuthOptions = {
           console.log('Authorize: Attempting to find user:', credentials.email)
           
           // Use Supabase REST API instead of Prisma for serverless compatibility
-          // Prisma creates table name matching model name exactly (case-sensitive)
-          const { data: users, error } = await supabase
+          // Use server client which bypasses RLS (if using service_role key) or has proper RLS policies
+          const { data: users, error } = await supabaseServer
             .from('User')
             .select('id, email, password, name, role')
             .eq('email', credentials.email)
