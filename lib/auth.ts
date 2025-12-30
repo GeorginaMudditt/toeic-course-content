@@ -67,18 +67,28 @@ export const authOptions: NextAuthOptions = {
   ],
   callbacks: {
     async jwt({ token, user }) {
-      if (user) {
-        token.role = user.role
-        token.id = user.id
+      try {
+        if (user) {
+          token.role = user.role || null
+          token.id = user.id || null
+        }
+        return token
+      } catch (error) {
+        console.error('JWT callback error:', error)
+        return token
       }
-      return token
     },
     async session({ session, token }) {
-      if (session.user) {
-        session.user.role = token.role as string
-        session.user.id = token.id as string
+      try {
+        if (session?.user && token) {
+          session.user.role = (token.role as string) || null
+          session.user.id = (token.id as string) || null
+        }
+        return session
+      } catch (error) {
+        console.error('Session callback error:', error)
+        return session
       }
-      return session
     }
   },
   pages: {

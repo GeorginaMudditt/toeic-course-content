@@ -35,8 +35,26 @@ export default function LoginPage() {
 
       if (result?.ok) {
         console.log('Login successful, redirecting...')
-        // Redirect to a client-side redirect page to avoid server component errors
-        window.location.href = '/dashboard-redirect'
+        // Wait a moment for session to be established, then redirect directly
+        setTimeout(() => {
+          // Check session and redirect based on role
+          fetch('/api/auth/session')
+            .then(res => res.json())
+            .then(data => {
+              console.log('Session data:', data)
+              if (data?.user?.role === 'TEACHER') {
+                window.location.href = '/teacher/dashboard'
+              } else if (data?.user?.role === 'STUDENT') {
+                window.location.href = '/student/dashboard'
+              } else {
+                window.location.href = '/dashboard-redirect'
+              }
+            })
+            .catch(err => {
+              console.error('Error checking session:', err)
+              window.location.href = '/dashboard-redirect'
+            })
+        }, 500)
       } else {
         console.error('Login failed - no error but not ok:', result)
         setError('Login failed. Please check your credentials and try again.')
