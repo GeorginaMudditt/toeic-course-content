@@ -35,23 +35,8 @@ export default async function VocabularyPage() {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {LEVEL_INFO.map((level) => {
                 const isA1 = level.id === 'A1'
-                const LevelCard = isA1 ? Link : 'div'
-                const cardProps = isA1 
-                  ? { href: `/student/vocabulary/${level.id.toLowerCase()}` }
-                  : {}
-                
-                return (
-                  <LevelCard
-                    key={level.id}
-                    {...cardProps}
-                    className={`border-2 rounded-lg p-6 transition-all ${
-                      isA1 
-                        ? 'hover:shadow-lg cursor-pointer' 
-                        : 'cursor-not-allowed opacity-60 relative group'
-                    }`}
-                    style={{ borderColor: level.color }}
-                    title={!isA1 ? 'This level is coming soon' : undefined}
-                  >
+                const cardContent = (
+                  <>
                     {!isA1 && (
                       <div className="absolute inset-0 flex items-center justify-center bg-white bg-opacity-90 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity z-10">
                         <span className="text-sm font-medium text-gray-700">This level is coming soon</span>
@@ -72,7 +57,33 @@ export default async function VocabularyPage() {
                         </div>
                       )}
                     </div>
-                  </LevelCard>
+                  </>
+                )
+                
+                const cardClassName = `border-2 rounded-lg p-6 transition-all ${
+                  isA1 
+                    ? 'hover:shadow-lg cursor-pointer' 
+                    : 'cursor-not-allowed opacity-60 relative group'
+                }`
+                
+                return isA1 ? (
+                  <Link
+                    key={level.id}
+                    href={`/student/vocabulary/${level.id.toLowerCase()}`}
+                    className={cardClassName}
+                    style={{ borderColor: level.color }}
+                  >
+                    {cardContent}
+                  </Link>
+                ) : (
+                  <div
+                    key={level.id}
+                    className={cardClassName}
+                    style={{ borderColor: level.color }}
+                    title="This level is coming soon"
+                  >
+                    {cardContent}
+                  </div>
                 )
               })}
             </div>
