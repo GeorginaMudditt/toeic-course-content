@@ -2,10 +2,12 @@ import { createClient } from '@supabase/supabase-js'
 
 // Using the same Supabase project as the database (ulrwcortyhassmytkcij)
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://ulrwcortyhassmytkcij.supabase.co'
-const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || ''
 
-if (!supabaseAnonKey) {
-  throw new Error('Missing NEXT_PUBLIC_SUPABASE_ANON_KEY environment variable. Please check your .env.local file.')
+// Don't throw error during module load - this prevents the entire app from crashing
+// Instead, create clients with empty string if key is missing (they'll fail gracefully at runtime)
+if (!process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
+  console.error('WARNING: NEXT_PUBLIC_SUPABASE_ANON_KEY is missing. Please add it to your environment variables.')
 }
 
 // Client-side Supabase client (uses anon key)
