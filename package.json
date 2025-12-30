@@ -18,6 +18,7 @@
     "db:migrate:deploy": "prisma migrate deploy",
     "db:studio": "prisma studio",
     "setup": "tsx scripts/setup.ts",
+    "setup:production": "tsx scripts/setup-production.ts",
     "demo:student": "tsx scripts/create-demo-student.ts",
     "update:modal-verbs": "tsx scripts/update-modal-verbs-resource.ts",
     "update:resource": "tsx scripts/update-resource.ts"
