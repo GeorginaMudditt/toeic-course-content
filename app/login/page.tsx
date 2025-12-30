@@ -17,21 +17,32 @@ export default function LoginPage() {
     setError('')
     setLoading(true)
 
-    const result = await signIn('credentials', {
-      email,
-      password,
-      redirect: false,
-    })
+    try {
+      const result = await signIn('credentials', {
+        email,
+        password,
+        redirect: false,
+      })
 
-    setLoading(false)
+      if (result?.error) {
+        console.error('Login error:', result.error)
+        setError('Invalid email or password. Please check your credentials and try again.')
+        setLoading(false)
+        return
+      }
 
-    if (result?.error) {
-      setError('Invalid email or password')
-      return
+      if (result?.ok) {
+        router.push('/')
+        router.refresh()
+      } else {
+        setError('Login failed. Please try again.')
+        setLoading(false)
+      }
+    } catch (err) {
+      console.error('Login exception:', err)
+      setError('An error occurred. Please try again.')
+      setLoading(false)
     }
-
-    router.push('/')
-    router.refresh()
   }
 
   return (
@@ -106,12 +117,13 @@ export default function LoginPage() {
               />
               <button
                 type="button"
-                onClick={(e) => {
-                  e.preventDefault()
-                  e.stopPropagation()
-                  setShowPassword(!showPassword)
+                onClick={() => {
+                  setShowPassword(prev => !prev)
                 }}
-                className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-500 hover:text-gray-700 focus:outline-none"
+                onMouseDown={(e) => {
+                  e.preventDefault()
+                }}
+                className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-500 hover:text-gray-700 focus:outline-none z-10"
                 tabIndex={-1}
                 aria-label={showPassword ? 'Hide password' : 'Show password'}
               >
