@@ -24,23 +24,27 @@ export default function LoginPage() {
         redirect: false,
       })
 
+      console.log('Login result:', result)
+
       if (result?.error) {
         console.error('Login error:', result.error)
-        setError('Invalid email or password. Please check your credentials and try again.')
+        setError(`Login failed: ${result.error}. Please check your credentials and try again.`)
         setLoading(false)
         return
       }
 
       if (result?.ok) {
+        console.log('Login successful, redirecting...')
         router.push('/')
         router.refresh()
       } else {
-        setError('Login failed. Please try again.')
+        console.error('Login failed - no error but not ok:', result)
+        setError('Login failed. Please check your credentials and try again.')
         setLoading(false)
       }
-    } catch (err) {
+    } catch (err: any) {
       console.error('Login exception:', err)
-      setError('An error occurred. Please try again.')
+      setError(`An error occurred: ${err.message || 'Unknown error'}. Please try again.`)
       setLoading(false)
     }
   }
