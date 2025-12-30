@@ -12,12 +12,28 @@ export default async function TeacherDashboard() {
     redirect('/login')
   }
 
-  const [resourceCount, studentCount, courseCount, totalProgress] = await Promise.all([
-    prisma.resource.count({ where: { creatorId: session.user.id } }),
-    prisma.user.count({ where: { role: 'STUDENT' } }),
-    prisma.course.count({ where: { creatorId: session.user.id } }),
-    prisma.progress.count({ where: { status: 'COMPLETED' } })
-  ])
+  // Wrap Prisma calls in try-catch to handle connection errors gracefully
+  let resourceCount = 0
+  let studentCount = 0
+  let courseCount = 0
+  let totalProgress = 0
+
+  try {
+    const [resourceCountResult, studentCountResult, courseCountResult, totalProgressResult] = await Promise.all([
+      prisma.resource.count({ where: { creatorId: session.user.id } }).catch(() => 0),
+      prisma.user.count({ where: { role: 'STUDENT' } }).catch(() => 0),
+      prisma.course.count({ where: { creatorId: session.user.id } }).catch(() => 0),
+      prisma.progress.count({ where: { status: 'COMPLETED' } }).catch(() => 0)
+    ])
+    
+    resourceCount = resourceCountResult
+    studentCount = studentCountResult
+    courseCount = courseCountResult
+    totalProgress = totalProgressResult
+  } catch (error) {
+    console.error('Error loading dashboard data:', error)
+    // Continue with default values (0) so the page still renders
+  }
 
   return (
     <div className="min-h-screen bg-gray-50">
