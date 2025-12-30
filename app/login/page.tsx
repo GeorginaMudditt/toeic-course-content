@@ -35,8 +35,8 @@ export default function LoginPage() {
 
       if (result?.ok) {
         console.log('Login successful, redirecting...')
-        router.push('/')
-        router.refresh()
+        // Redirect to a client-side redirect page to avoid server component errors
+        window.location.href = '/dashboard-redirect'
       } else {
         console.error('Login failed - no error but not ok:', result)
         setError('Login failed. Please check your credentials and try again.')
