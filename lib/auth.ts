@@ -21,6 +21,7 @@ export const authOptions: NextAuthOptions = {
           console.log('Authorize: Attempting to find user:', credentials.email)
           
           // Use Supabase REST API instead of Prisma for serverless compatibility
+          // Prisma creates table name matching model name exactly (case-sensitive)
           const { data: users, error } = await supabase
             .from('User')
             .select('id, email, password, name, role')
