@@ -2,9 +2,22 @@ import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
 import { redirect } from 'next/navigation'
 import { prisma } from '@/lib/prisma'
+import { Prisma } from '@prisma/client'
 import Navbar from '@/components/Navbar'
 import Link from 'next/link'
 import { formatUKDate, formatCourseName } from '@/lib/date-utils'
+
+type EnrollmentWithRelations = Prisma.EnrollmentGetPayload<{
+  include: {
+    course: true
+    assignments: {
+      include: {
+        resource: true
+        progress: true
+      }
+    }
+  }
+}>
 
 export default async function MyCoursePage() {
   const session = await getServerSession(authOptions)
@@ -13,7 +26,7 @@ export default async function MyCoursePage() {
     redirect('/login')
   }
 
-  const enrollments = await prisma.enrollment.findMany({
+  const enrollments: EnrollmentWithRelations[] = await prisma.enrollment.findMany({
     where: { studentId: session.user.id },
     include: {
       course: true,
