@@ -1,6 +1,6 @@
 import { NextAuthOptions } from 'next-auth'
 import CredentialsProvider from 'next-auth/providers/credentials'
-import { prisma } from './prisma'
+import { supabase } from './supabase'
 import bcrypt from 'bcryptjs'
 
 export const authOptions: NextAuthOptions = {
@@ -19,16 +19,27 @@ export const authOptions: NextAuthOptions = {
           }
 
           console.log('Authorize: Attempting to find user:', credentials.email)
-          const user = await prisma.user.findUnique({
-            where: { email: credentials.email }
-          })
+          
+          // Use Supabase REST API instead of Prisma for serverless compatibility
+          const { data: users, error } = await supabase
+            .from('User')
+            .select('id, email, password, name, role')
+            .eq('email', credentials.email)
+            .limit(1)
 
-          if (!user) {
+          if (error) {
+            console.error('Authorize: Supabase error:', error)
+            return null
+          }
+
+          if (!users || users.length === 0) {
             console.log('Authorize: User not found')
             return null
           }
 
+          const user = users[0]
           console.log('Authorize: User found, checking password')
+          
           const isPasswordValid = await bcrypt.compare(
             credentials.password,
             user.password
