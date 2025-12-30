@@ -1,0 +1,276 @@
+'use client'
+
+import { useEffect, useState } from 'react'
+import { useParams, useRouter } from 'next/navigation'
+import { supabase } from '@/lib/supabase'
+import { LEVEL_COLORS } from '@/lib/level-colors'
+import Navbar from '@/components/Navbar'
+import Link from 'next/link'
+
+interface Topic {
+  name: string
+  count: number
+}
+
+export default function VocabularyLevelPage() {
+  const params = useParams()
+  const router = useRouter()
+  const level = (params.level as string)?.toLowerCase() || 'a1'
+
+  const [topics, setTopics] = useState<Topic[]>([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState('')
+  const [topicToIcon, setTopicToIcon] = useState<Record<string, string>>({})
+
+  // Get progress for a topic from localStorage
+  const getTopicProgress = (topicName: string) => {
+    if (typeof window === 'undefined') return { bronze: false, silver: false, gold: false }
+    const savedProgress = localStorage.getItem(`challenge_${level}_${topicName}`)
+    if (savedProgress) {
+      return JSON.parse(savedProgress)
+    }
+    return { bronze: false, silver: false, gold: false }
+  }
+
+  // Handle topic click - navigate to challenge selection
+  const handleTopicClick = (topicName: string) => {
+    const progress = getTopicProgress(topicName)
+    const nextChallenge = !progress.bronze
+      ? 'bronze'
+      : !progress.silver
+      ? 'silver'
+      : 'gold'
+    router.push(`/student/vocabulary/${level}/${encodeURIComponent(topicName)}/challenge/${nextChallenge}`)
+  }
+
+  // Get completion status for display
+  const getCompletionStatus = (topicName: string) => {
+    const progress = getTopicProgress(topicName)
+    const completedCount = Object.values(progress).filter(Boolean).length
+    return { progress, completedCount, allCompleted: completedCount === 3 }
+  }
+
+  // Get level color for styling
+  const getLevelColor = () => {
+    const levelMap: Record<string, string> = {
+      'a1': LEVEL_COLORS.A1,
+      'a2': LEVEL_COLORS.A2,
+      'b1': LEVEL_COLORS.B1,
+      'b2': LEVEL_COLORS.B2,
+      'c1': LEVEL_COLORS.C1,
+      'c2': LEVEL_COLORS.C2
+    }
+    return levelMap[level] || '#4A4A7D'
+  }
+
+  const levelColor = getLevelColor()
+  const levelDisplay = level.toUpperCase()
+
+  useEffect(() => {
+    const fetchTopics = async () => {
+      setLoading(true)
+      setError('')
+      try {
+        // Only A1 is currently available
+        if (level !== 'a1') {
+          setTopics([])
+          setLoading(false)
+          return
+        }
+
+        // Fetch distinct topic_page values from the A1 table
+        const { data, error } = await supabase
+          .from('Brizzle_A1_vocab')
+          .select('topic_page')
+          .order('topic_page', { ascending: true })
+
+        if (error) throw error
+
+        const rows = (data || []).filter((row) => !!row.topic_page)
+        const topicToCount = new Map<string, number>()
+        const topicToOriginalName = new Map<string, string>()
+        
+        for (const row of rows) {
+          // Normalize the topic name for grouping: trim whitespace, remove extra spaces, lowercase
+          const normalizedKey = row.topic_page.trim().replace(/\s+/g, ' ').toLowerCase()
+          const originalName = row.topic_page.trim().replace(/\s+/g, ' ')
+          
+          // Store the count
+          topicToCount.set(normalizedKey, (topicToCount.get(normalizedKey) || 0) + 1)
+          // Store the original name (use the first occurrence as the display name)
+          if (!topicToOriginalName.has(normalizedKey)) {
+            topicToOriginalName.set(normalizedKey, originalName)
+          }
+        }
+        
+        const topicsWithCounts = Array.from(topicToCount.entries())
+          .map(([normalizedName, count]) => ({ 
+            name: topicToOriginalName.get(normalizedName) || normalizedName, 
+            count 
+          }))
+          .sort((a, b) => a.name.localeCompare(b.name))
+
+        setTopics(topicsWithCounts)
+      } catch (err: any) {
+        setError(err.message || 'Error loading themes')
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    fetchTopics()
+  }, [level])
+
+  // Fetch completion icons for topics from Brizzle_A1_icons
+  useEffect(() => {
+    const fetchIcons = async () => {
+      try {
+        if (level !== 'a1') return
+
+        const { data, error } = await supabase
+          .from('Brizzle_A1_icons')
+          .select('topic_page, icon')
+
+        if (error) throw error
+        const iconMap: Record<string, string> = {}
+        ;(data || []).forEach(row => {
+          if (row.topic_page && row.icon) {
+            iconMap[row.topic_page] = row.icon
+          }
+        })
+        setTopicToIcon(iconMap)
+      } catch (err) {
+        // non-fatal; icons are optional
+      }
+    }
+
+    if (level === 'a1') fetchIcons()
+  }, [level])
+
+  return (
+    <div className="min-h-screen bg-gray-50">
+      <Navbar />
+      <div className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
+        <div className="px-4 py-6 sm:px-0">
+          <Link
+            href="/student/vocabulary"
+            className="inline-flex items-center text-sm text-gray-600 hover:text-gray-900 mb-4 transition-colors"
+          >
+            <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+            </svg>
+            Back to Vocabulary Levels
+          </Link>
+          
+          <div className="bg-white shadow rounded-lg p-6">
+            <div className="mb-6">
+              <h1 className="text-3xl font-bold mb-4" style={{ color: levelColor }}>
+                Vocabulary - Level {levelDisplay}
+              </h1>
+              <div className="space-y-2 text-gray-700">
+                <p>🎯 Complete three challenges (1, 2, 3) for each theme.</p>
+                <p>🧭 You can complete the themes in any order.</p>
+                <p>🏆 The goal is to learn all the words by completing all the challenges.</p>
+                <p>🎉 Have fun watching your board fill up with rewards!</p>
+              </div>
+            </div>
+
+            <div className="overflow-x-auto">
+              <table className="min-w-full divide-y divide-gray-200">
+                <thead>
+                  <tr style={{ backgroundColor: levelColor, color: 'white' }}>
+                    <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">
+                      Theme
+                    </th>
+                    <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">
+                      Number of words
+                    </th>
+                    <th className="px-6 py-3 text-center text-xs font-medium uppercase tracking-wider">
+                      Challenge 1
+                    </th>
+                    <th className="px-6 py-3 text-center text-xs font-medium uppercase tracking-wider">
+                      Challenge 2
+                    </th>
+                    <th className="px-6 py-3 text-center text-xs font-medium uppercase tracking-wider">
+                      Challenge 3
+                    </th>
+                    <th className="px-6 py-3 text-center text-xs font-medium uppercase tracking-wider">
+                      Completed
+                    </th>
+                  </tr>
+                </thead>
+                <tbody className="bg-white divide-y divide-gray-200">
+                  {loading && (
+                    <tr>
+                      <td colSpan={6} className="px-6 py-4 text-center text-gray-500">
+                        Loading...
+                      </td>
+                    </tr>
+                  )}
+                  {error && !loading && (
+                    <tr>
+                      <td colSpan={6} className="px-6 py-4 text-center text-red-600">
+                        {error}
+                      </td>
+                    </tr>
+                  )}
+                  {!loading && !error && topics.length === 0 && (
+                    <tr>
+                      <td colSpan={6} className="px-6 py-4 text-center text-gray-500">
+                        {level === 'a1' 
+                          ? 'No themes found for this level at the moment.'
+                          : 'This level is coming soon. Only A1 is currently available.'}
+                      </td>
+                    </tr>
+                  )}
+                  {!loading && !error && topics.map((topic) => {
+                    const { progress, completedCount, allCompleted } = getCompletionStatus(topic.name)
+                    return (
+                      <tr 
+                        key={topic.name}
+                        className="hover:bg-gray-50 cursor-pointer transition-colors"
+                        onClick={() => handleTopicClick(topic.name)}
+                      >
+                        <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                          {topic.name}
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                          {topic.count}
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap text-center text-2xl">
+                          {progress.bronze ? '🏅' : '○'}
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap text-center text-2xl">
+                          {progress.silver ? '🏅' : '○'}
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap text-center text-2xl">
+                          {progress.gold ? '🏅' : '○'}
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap text-center text-sm">
+                          {allCompleted ? (
+                            topicToIcon[topic.name] ? (
+                              <img 
+                                src={topicToIcon[topic.name]} 
+                                alt={`Completed icon for ${topic.name}`} 
+                                className="h-8 w-8 mx-auto"
+                              />
+                            ) : (
+                              <span className="text-2xl">🏆</span>
+                            )
+                          ) : (
+                            <span className="text-gray-600">{completedCount}/3</span>
+                          )}
+                        </td>
+                      </tr>
+                    )
+                  })}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
+

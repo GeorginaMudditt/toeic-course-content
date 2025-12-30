@@ -1,0 +1,128 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum UserRole {
+  TEACHER
+  STUDENT
+}
+
+enum ResourceType {
+  WORKSHEET
+  LESSON
+  EXERCISE
+  QUIZ
+}
+
+enum ProgressStatus {
+  NOT_STARTED
+  IN_PROGRESS
+  COMPLETED
+}
+
+model User {
+  id            String    @id @default(cuid())
+  email         String    @unique
+  name          String
+  password      String
+  role          UserRole
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  
+  // Teacher relationships
+  createdResources Resource[] @relation("ResourceCreator")
+  createdCourses   Course[]    @relation("CourseCreator")
+  
+  // Student relationships
+  enrollments     Enrollment[]
+  progress        Progress[]
+}
+
+model Resource {
+  id            String       @id @default(cuid())
+  title         String
+  description   String?
+  type          ResourceType
+  content       String       // JSON or HTML content for the worksheet
+  estimatedHours Float       // Estimated time to complete in hours
+  level          String       // CEFR level: A1, A2, B1, B2, C1, C2 (required)
+  tags          String?      // Comma-separated tags for filtering
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @updatedAt
+  
+  creatorId     String
+  creator       User         @relation("ResourceCreator", fields: [creatorId], references: [id])
+  
+  assignments   Assignment[]
+}
+
+model Course {
+  id            String    @id @default(cuid())
+  name          String
+  duration      Int       // 15, 30, 45, or 60 hours
+  description   String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  
+  creatorId     String
+  creator       User      @relation("CourseCreator", fields: [creatorId], references: [id])
+  
+  enrollments   Enrollment[]
+}
+
+model Enrollment {
+  id            String    @id @default(cuid())
+  studentId     String
+  courseId      String
+  enrolledAt    DateTime  @default(now())
+  
+  student       User      @relation(fields: [studentId], references: [id])
+  course        Course    @relation(fields: [courseId], references: [id])
+  
+  assignments   Assignment[]
+  
+  @@unique([studentId, courseId])
+}
+
+model Assignment {
+  id            String    @id @default(cuid())
+  enrollmentId  String
+  resourceId    String
+  assignedAt    DateTime  @default(now())
+  dueDate       DateTime?
+  order         Int       // Order in which resources should be completed
+  
+  enrollment    Enrollment @relation(fields: [enrollmentId], references: [id])
+  resource      Resource   @relation(fields: [resourceId], references: [id])
+  
+  progress      Progress[]
+  
+  @@unique([enrollmentId, resourceId])
+}
+
+model Progress {
+  id            String         @id @default(cuid())
+  assignmentId  String
+  studentId     String
+  status        ProgressStatus @default(NOT_STARTED)
+  completedAt   DateTime?
+  score         Float?
+  notes         String?        // Student's work/answers
+  timeSpent     Float?         // Time spent in hours
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+  
+  assignment    Assignment     @relation(fields: [assignmentId], references: [id])
+  student       User           @relation(fields: [studentId], references: [id])
+  
+  @@unique([assignmentId, studentId])
+}
+
