@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from 'react'
 import { useParams, useRouter } from 'next/navigation'
-import { supabase } from '@/lib/supabase'
 import { LEVEL_COLORS } from '@/lib/level-colors'
 import Navbar from '@/components/Navbar'
 import Link from 'next/link'
@@ -78,39 +77,15 @@ export default function VocabularyLevelPage() {
           return
         }
 
-        // Fetch distinct topic_page values from the A1 table
-        const { data, error } = await supabase
-          .from('Brizzle_A1_vocab')
-          .select('topic_page')
-          .order('topic_page', { ascending: true })
+        // Fetch topics from API route (uses service role key server-side)
+        const response = await fetch(`/api/vocabulary/${level}`)
+        const result = await response.json()
 
-        if (error) throw error
-
-        const rows = (data || []).filter((row) => !!row.topic_page)
-        const topicToCount = new Map<string, number>()
-        const topicToOriginalName = new Map<string, string>()
-        
-        for (const row of rows) {
-          // Normalize the topic name for grouping: trim whitespace, remove extra spaces, lowercase
-          const normalizedKey = row.topic_page.trim().replace(/\s+/g, ' ').toLowerCase()
-          const originalName = row.topic_page.trim().replace(/\s+/g, ' ')
-          
-          // Store the count
-          topicToCount.set(normalizedKey, (topicToCount.get(normalizedKey) || 0) + 1)
-          // Store the original name (use the first occurrence as the display name)
-          if (!topicToOriginalName.has(normalizedKey)) {
-            topicToOriginalName.set(normalizedKey, originalName)
-          }
+        if (!response.ok || result.error) {
+          throw new Error(result.error || 'Error loading themes')
         }
-        
-        const topicsWithCounts = Array.from(topicToCount.entries())
-          .map(([normalizedName, count]) => ({ 
-            name: topicToOriginalName.get(normalizedName) || normalizedName, 
-            count 
-          }))
-          .sort((a, b) => a.name.localeCompare(b.name))
 
-        setTopics(topicsWithCounts)
+        setTopics(result.data || [])
       } catch (err: any) {
         setError(err.message || 'Error loading themes')
       } finally {
@@ -121,24 +96,20 @@ export default function VocabularyLevelPage() {
     fetchTopics()
   }, [level])
 
-  // Fetch completion icons for topics from Brizzle_A1_icons
+  // Fetch completion icons for topics from API route
   useEffect(() => {
     const fetchIcons = async () => {
       try {
         if (level !== 'a1') return
 
-        const { data, error } = await supabase
-          .from('Brizzle_A1_icons')
-          .select('topic_page, icon')
+        const response = await fetch(`/api/vocabulary/${level}/icons`)
+        const result = await response.json()
 
-        if (error) throw error
-        const iconMap: Record<string, string> = {}
-        ;(data || []).forEach(row => {
-          if (row.topic_page && row.icon) {
-            iconMap[row.topic_page] = row.icon
-          }
-        })
-        setTopicToIcon(iconMap)
+        if (!response.ok || result.error) {
+          throw new Error(result.error || 'Error loading icons')
+        }
+
+        setTopicToIcon(result.data || {})
       } catch (err) {
         // non-fatal; icons are optional
       }

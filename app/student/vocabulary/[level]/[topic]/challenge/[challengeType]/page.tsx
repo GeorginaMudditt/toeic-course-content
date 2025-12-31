@@ -2,7 +2,6 @@
 
 import { useEffect, useState, useMemo } from 'react'
 import { useParams, useRouter } from 'next/navigation'
-import { supabase } from '@/lib/supabase'
 import { LEVEL_COLORS } from '@/lib/level-colors'
 import Navbar from '@/components/Navbar'
 import ChallengeModal from '@/components/ChallengeModal'
@@ -63,28 +62,19 @@ export default function ChallengePage() {
         setLoading(true)
         setError('')
         try {
-          const { data, error } = await supabase
-            .from('Brizzle_A1_vocab')
-            .select('word_english, pron_english, translation_french, created_at, id')
-            .eq('topic_page', topic)
+          // Fetch words from API route (uses service role key server-side)
+          const response = await fetch(`/api/vocabulary/${level}/${encodeURIComponent(topic)}`)
+          const result = await response.json()
 
-          if (error) throw error
+          if (!response.ok || result.error) {
+            throw new Error(result.error || 'Error loading words')
+          }
           
-          const sorted = (data || []).slice().sort((a, b) => {
-            if (a.created_at && b.created_at) {
-              return new Date(a.created_at).getTime() - new Date(b.created_at).getTime()
-            }
-            if (a.id !== undefined && b.id !== undefined) {
-              return String(a.id).localeCompare(String(b.id))
-            }
-            return 0
-          })
-          
-          setWords(sorted)
+          setWords(result.data || [])
           
           // For silver challenge, create shuffled English words
-          if (challengeType === 'silver' && sorted.length > 0) {
-            const englishWords = sorted.map(item => item.word_english)
+          if (challengeType === 'silver' && result.data && result.data.length > 0) {
+            const englishWords = result.data.map((item: Word) => item.word_english)
             const shuffled = [...englishWords].sort(() => Math.random() - 0.5)
             setShuffledWords(shuffled)
             setWordPositions({})
