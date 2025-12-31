@@ -13,16 +13,33 @@ export default async function ResourcePreviewPage({ params }: { params: { id: st
     redirect('/login')
   }
 
-  const resource = await prisma.resource.findUnique({
-    where: { id: params.id }
-  })
+  // Use Supabase REST API instead of Prisma for serverless compatibility
+  let resource: any = null
 
-  if (!resource) {
-    redirect('/teacher/resources')
-  }
+  try {
+    const { data, error } = await supabaseServer
+      .from('Resource')
+      .select('*')
+      .eq('id', params.id)
+      .single()
 
-  // Verify the resource belongs to the logged-in teacher
-  if (resource.creatorId !== session.user.id) {
+    if (error) {
+      console.error('Error loading resource:', error)
+      redirect('/teacher/resources')
+    }
+
+    resource = data
+
+    if (!resource) {
+      redirect('/teacher/resources')
+    }
+
+    // Verify the resource belongs to the logged-in teacher
+    if (resource.creatorId !== session.user.id) {
+      redirect('/teacher/resources')
+    }
+  } catch (error) {
+    console.error('Error loading resource:', error)
     redirect('/teacher/resources')
   }
 
@@ -60,4 +77,3 @@ export default async function ResourcePreviewPage({ params }: { params: { id: st
     </div>
   )
 }
-
