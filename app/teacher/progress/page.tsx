@@ -127,14 +127,14 @@ export default async function ProgressPage() {
           <h1 className="text-3xl font-bold text-gray-900 mb-6">Student Progress</h1>
 
           <div className="space-y-6">
-            {students.map((student) => {
-              const allAssignments = student.enrollments.flatMap(e => e.assignments)
+            {students.map((student: any) => {
+              const allAssignments = student.enrollments.flatMap((e: any) => e.assignments)
               const total = allAssignments.length
-              const completed = allAssignments.filter(a => 
-                a.progress.some(p => p.status === 'COMPLETED')
+              const completed = allAssignments.filter((a: any) => 
+                a.progress.some((p: any) => p.status === 'COMPLETED')
               ).length
-              const inProgress = allAssignments.filter(a => 
-                a.progress.some(p => p.status === 'IN_PROGRESS')
+              const inProgress = allAssignments.filter((a: any) => 
+                a.progress.some((p: any) => p.status === 'IN_PROGRESS')
               ).length
               const notStarted = total - completed - inProgress
 
@@ -176,11 +176,11 @@ export default async function ProgressPage() {
                   </div>
 
                   <div className="space-y-2">
-                    {student.enrollments.map((enrollment) => (
+                    {student.enrollments.map((enrollment: any) => (
                       <div key={enrollment.id} className="border-t pt-4">
                         <h3 className="font-medium mb-2">{formatCourseName(enrollment.course.name, enrollment.course.duration)}</h3>
                         <div className="space-y-1">
-                          {enrollment.assignments.map((assignment) => {
+                          {enrollment.assignments.map((assignment: any) => {
                             const progress = assignment.progress[0]
                             return (
                               <div
