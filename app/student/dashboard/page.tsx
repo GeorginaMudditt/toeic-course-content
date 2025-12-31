@@ -13,12 +13,34 @@ export default async function StudentDashboard() {
     redirect('/login')
   }
 
-  const enrollments = await prisma.enrollment.findMany({
-    where: { studentId: session.user.id },
-    include: {
-      course: true
+  // Wrap Prisma calls in try-catch to handle connection errors gracefully
+  let enrollments: Array<{
+    id: string
+    studentId: string
+    courseId: string
+    enrolledAt: Date
+    course: {
+      id: string
+      name: string
+      duration: number
+      description: string | null
+      createdAt: Date
+      updatedAt: Date
+      creatorId: string
     }
-  })
+  }> = []
+
+  try {
+    enrollments = await prisma.enrollment.findMany({
+      where: { studentId: session.user.id },
+      include: {
+        course: true
+      }
+    })
+  } catch (error) {
+    console.error('Error loading enrollments:', error)
+    // Continue with empty array so the page still renders
+  }
 
   // Get the first enrollment for the "My Course" card
   const firstEnrollment = enrollments[0]
