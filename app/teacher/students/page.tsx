@@ -137,11 +137,11 @@ export default async function StudentsPage() {
                   </tr>
                 ) : (
                   students.map((student) => {
-                    const totalAssignments = student.enrollments.reduce<number>(
+                    const totalAssignments = student.enrollments.reduce(
                       (sum: number, e: any) => sum + e.assignments.length,
                       0
                     )
-                    const completedAssignments = student.enrollments.reduce<number>(
+                    const completedAssignments = student.enrollments.reduce(
                       (sum: number, e: any) => sum + e.assignments.filter((a: any) => 
                         a.progress.some((p: any) => p.status === 'COMPLETED')
                       ).length,
