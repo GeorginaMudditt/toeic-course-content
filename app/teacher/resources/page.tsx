@@ -12,10 +12,18 @@ export default async function ResourcesPage() {
     redirect('/login')
   }
 
-  const resources = await prisma.resource.findMany({
-    where: { creatorId: session.user.id },
-    orderBy: { createdAt: 'desc' }
-  })
+  // Wrap Prisma calls in try-catch to handle connection errors gracefully
+  let resources: any[] = []
+
+  try {
+    resources = await prisma.resource.findMany({
+      where: { creatorId: session.user.id },
+      orderBy: { createdAt: 'desc' }
+    })
+  } catch (error) {
+    console.error('Error loading resources:', error)
+    // Continue with empty array so the page still renders
+  }
 
   return (
     <div className="min-h-screen bg-gray-50">
