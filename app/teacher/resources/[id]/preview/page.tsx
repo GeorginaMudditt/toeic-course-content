@@ -1,7 +1,7 @@
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
 import { redirect } from 'next/navigation'
-import { prisma } from '@/lib/prisma'
+import { supabaseServer } from '@/lib/supabase'
 import Navbar from '@/components/Navbar'
 import ResourcePreview from '@/components/ResourcePreview'
 import Link from 'next/link'
