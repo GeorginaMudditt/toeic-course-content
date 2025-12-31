@@ -36,9 +36,10 @@ export default async function StudentDashboard() {
       if (courseError) {
         console.error('Error loading courses:', courseError)
       } else {
-        // Combine enrollments with courses
+        // Combine enrollments with courses and convert date strings to Date objects
         enrollments = enrollmentData.map(enrollment => ({
           ...enrollment,
+          enrolledAt: new Date(enrollment.enrolledAt),
           course: courseData?.find(c => c.id === enrollment.courseId) || null
         }))
       }
