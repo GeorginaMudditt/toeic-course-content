@@ -1,7 +1,7 @@
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
 import { redirect } from 'next/navigation'
-import { prisma } from '@/lib/prisma'
+import { supabaseServer } from '@/lib/supabase'
 import Navbar from '@/components/Navbar'
 import Link from 'next/link'
 
@@ -12,24 +12,36 @@ export default async function TeacherDashboard() {
     redirect('/login')
   }
 
-  // Wrap Prisma calls in try-catch to handle connection errors gracefully
+  // Use Supabase REST API instead of Prisma for serverless compatibility
   let resourceCount = 0
   let studentCount = 0
   let courseCount = 0
   let totalProgress = 0
 
   try {
-    const [resourceCountResult, studentCountResult, courseCountResult, totalProgressResult] = await Promise.all([
-      prisma.resource.count({ where: { creatorId: session.user.id } }).catch(() => 0),
-      prisma.user.count({ where: { role: 'STUDENT' } }).catch(() => 0),
-      prisma.course.count({ where: { creatorId: session.user.id } }).catch(() => 0),
-      prisma.progress.count({ where: { status: 'COMPLETED' } }).catch(() => 0)
+    const [resourceResult, studentResult, courseResult, progressResult] = await Promise.all([
+      supabaseServer
+        .from('Resource')
+        .select('*', { count: 'exact', head: true })
+        .eq('creatorId', session.user.id),
+      supabaseServer
+        .from('User')
+        .select('*', { count: 'exact', head: true })
+        .eq('role', 'STUDENT'),
+      supabaseServer
+        .from('Course')
+        .select('*', { count: 'exact', head: true })
+        .eq('creatorId', session.user.id),
+      supabaseServer
+        .from('Progress')
+        .select('*', { count: 'exact', head: true })
+        .eq('status', 'COMPLETED')
     ])
     
-    resourceCount = resourceCountResult
-    studentCount = studentCountResult
-    courseCount = courseCountResult
-    totalProgress = totalProgressResult
+    resourceCount = resourceResult.count || 0
+    studentCount = studentResult.count || 0
+    courseCount = courseResult.count || 0
+    totalProgress = progressResult.count || 0
   } catch (error) {
     console.error('Error loading dashboard data:', error)
     // Continue with default values (0) so the page still renders

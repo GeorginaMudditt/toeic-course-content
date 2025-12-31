@@ -1,7 +1,7 @@
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
 import { redirect } from 'next/navigation'
-import { prisma } from '@/lib/prisma'
+import { supabaseServer } from '@/lib/supabase'
 import Navbar from '@/components/Navbar'
 import Link from 'next/link'
 
@@ -12,14 +12,21 @@ export default async function ResourcesPage() {
     redirect('/login')
   }
 
-  // Wrap Prisma calls in try-catch to handle connection errors gracefully
+  // Use Supabase REST API instead of Prisma for serverless compatibility
   let resources: any[] = []
 
   try {
-    resources = await prisma.resource.findMany({
-      where: { creatorId: session.user.id },
-      orderBy: { createdAt: 'desc' }
-    })
+    const { data, error } = await supabaseServer
+      .from('Resource')
+      .select('*')
+      .eq('creatorId', session.user.id)
+      .order('createdAt', { ascending: false })
+
+    if (error) {
+      console.error('Error loading resources:', error)
+    } else {
+      resources = data || []
+    }
   } catch (error) {
     console.error('Error loading resources:', error)
     // Continue with empty array so the page still renders

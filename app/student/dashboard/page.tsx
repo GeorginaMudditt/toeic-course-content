@@ -1,7 +1,7 @@
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
 import { redirect } from 'next/navigation'
-import { prisma } from '@/lib/prisma'
+import { supabaseServer } from '@/lib/supabase'
 import Navbar from '@/components/Navbar'
 import Link from 'next/link'
 import { formatUKDate, formatCourseName } from '@/lib/date-utils'
@@ -13,16 +13,36 @@ export default async function StudentDashboard() {
     redirect('/login')
   }
 
-  // Wrap Prisma calls in try-catch to handle connection errors gracefully
+  // Use Supabase REST API instead of Prisma for serverless compatibility
   let enrollments: any[] = []
 
   try {
-    enrollments = await prisma.enrollment.findMany({
-      where: { studentId: session.user.id },
-      include: {
-        course: true
+    // First get enrollments
+    const { data: enrollmentData, error: enrollmentError } = await supabaseServer
+      .from('Enrollment')
+      .select('*')
+      .eq('studentId', session.user.id)
+
+    if (enrollmentError) {
+      console.error('Error loading enrollments:', enrollmentError)
+    } else if (enrollmentData && enrollmentData.length > 0) {
+      // Then get courses for each enrollment
+      const courseIds = enrollmentData.map(e => e.courseId)
+      const { data: courseData, error: courseError } = await supabaseServer
+        .from('Course')
+        .select('*')
+        .in('id', courseIds)
+
+      if (courseError) {
+        console.error('Error loading courses:', courseError)
+      } else {
+        // Combine enrollments with courses
+        enrollments = enrollmentData.map(enrollment => ({
+          ...enrollment,
+          course: courseData?.find(c => c.id === enrollment.courseId) || null
+        }))
       }
-    })
+    }
   } catch (error) {
     console.error('Error loading enrollments:', error)
     // Continue with empty array so the page still renders
