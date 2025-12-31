@@ -1,7 +1,7 @@
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
 import { redirect } from 'next/navigation'
-import { prisma } from '@/lib/prisma'
+import { supabaseServer } from '@/lib/supabase'
 import Navbar from '@/components/Navbar'
 import { formatCourseName } from '@/lib/date-utils'
 
@@ -12,23 +12,112 @@ export default async function ProgressPage() {
     redirect('/login')
   }
 
-  const students = await prisma.user.findMany({
-    where: { role: 'STUDENT' },
-    include: {
-      enrollments: {
-        include: {
-          course: true,
-          assignments: {
-            include: {
-              resource: true,
-              progress: true
-            }
-          }
+  let students: any[] = []
+
+  try {
+    // Fetch all students
+    const { data: studentData, error: studentError } = await supabaseServer
+      .from('User')
+      .select('*')
+      .eq('role', 'STUDENT')
+      .order('name', { ascending: true })
+
+    if (studentError) {
+      console.error('Error loading students:', studentError)
+    } else if (studentData && studentData.length > 0) {
+      const studentIds = studentData.map(s => s.id)
+
+      // Fetch all enrollments for these students
+      const { data: enrollmentData, error: enrollmentError } = await supabaseServer
+        .from('Enrollment')
+        .select('*')
+        .in('studentId', studentIds)
+
+      if (enrollmentError) console.error('Error fetching enrollments:', enrollmentError)
+
+      // Fetch all courses for these enrollments
+      const courseIds = enrollmentData?.map(e => e.courseId) || []
+      let courseData: any[] = []
+      if (courseIds.length > 0) {
+        const { data: coursesData, error: coursesError } = await supabaseServer
+          .from('Course')
+          .select('*')
+          .in('id', courseIds)
+        if (coursesError) {
+          console.error('Error fetching courses:', coursesError)
+        } else {
+          courseData = coursesData || []
         }
       }
-    },
-    orderBy: { name: 'asc' }
-  })
+
+      // Fetch all assignments for these enrollments
+      const enrollmentIds = enrollmentData?.map(e => e.id) || []
+      let assignmentData: any[] = []
+      if (enrollmentIds.length > 0) {
+        const { data: assignmentsData, error: assignmentsError } = await supabaseServer
+          .from('Assignment')
+          .select('*')
+          .in('enrollmentId', enrollmentIds)
+        if (assignmentsError) {
+          console.error('Error fetching assignments:', assignmentsError)
+        } else {
+          assignmentData = assignmentsData || []
+        }
+      }
+
+      // Fetch all resources for these assignments
+      const resourceIds = assignmentData.map(a => a.resourceId)
+      let resourceData: any[] = []
+      if (resourceIds.length > 0) {
+        const { data: resourcesData, error: resourcesError } = await supabaseServer
+          .from('Resource')
+          .select('*')
+          .in('id', resourceIds)
+        if (resourcesError) {
+          console.error('Error fetching resources:', resourcesError)
+        } else {
+          resourceData = resourcesData || []
+        }
+      }
+
+      // Fetch all progress for these assignments
+      const assignmentIds = assignmentData.map(a => a.id)
+      let progressData: any[] = []
+      if (assignmentIds.length > 0) {
+        const { data: progressDataResult, error: progressError } = await supabaseServer
+          .from('Progress')
+          .select('*')
+          .in('assignmentId', assignmentIds)
+        if (progressError) {
+          console.error('Error fetching progress:', progressError)
+        } else {
+          progressData = progressDataResult || []
+        }
+      }
+
+      // Manually join data
+      students = studentData.map(student => {
+        const studentEnrollments = (enrollmentData || []).filter(e => e.studentId === student.id)
+        const enrollments = studentEnrollments.map(enrollment => ({
+          ...enrollment,
+          course: courseData.find(c => c.id === enrollment.courseId) || null,
+          assignments: assignmentData
+            .filter(a => a.enrollmentId === enrollment.id)
+            .map(assignment => ({
+              ...assignment,
+              resource: resourceData.find(r => r.id === assignment.resourceId) || null,
+              progress: progressData.filter(p => p.assignmentId === assignment.id)
+            }))
+        }))
+        return {
+          ...student,
+          enrollments
+        }
+      })
+    }
+  } catch (error) {
+    console.error('Error loading progress page:', error)
+  }
 
   return (
     <div className="min-h-screen bg-gray-50">
