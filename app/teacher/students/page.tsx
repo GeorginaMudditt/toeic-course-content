@@ -1,7 +1,7 @@
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
 import { redirect } from 'next/navigation'
-import { prisma } from '@/lib/prisma'
+import { supabaseServer } from '@/lib/supabase'
 import Navbar from '@/components/Navbar'
 import Link from 'next/link'
 
@@ -12,22 +12,84 @@ export default async function StudentsPage() {
     redirect('/login')
   }
 
-  const students = await prisma.user.findMany({
-    where: { role: 'STUDENT' },
-    include: {
-      enrollments: {
-        include: {
-          course: true,
-          assignments: {
-            include: {
-              progress: true
+  // Use Supabase REST API instead of Prisma for serverless compatibility
+  let students: any[] = []
+
+  try {
+    // Get all students
+    const { data: studentData, error: studentError } = await supabaseServer
+      .from('User')
+      .select('*')
+      .eq('role', 'STUDENT')
+      .order('name', { ascending: true })
+
+    if (studentError) {
+      console.error('Error loading students:', studentError)
+    } else if (studentData) {
+      // For each student, get their enrollments, courses, and assignments
+      students = await Promise.all(
+        studentData.map(async (student) => {
+          // Get enrollments for this student
+          const { data: enrollmentData } = await supabaseServer
+            .from('Enrollment')
+            .select('*')
+            .eq('studentId', student.id)
+
+          if (enrollmentData && enrollmentData.length > 0) {
+            // Get courses for these enrollments
+            const courseIds = enrollmentData.map(e => e.courseId)
+            const { data: courseData } = await supabaseServer
+              .from('Course')
+              .select('*')
+              .in('id', courseIds)
+
+            // Get assignments for these enrollments
+            const enrollmentIds = enrollmentData.map(e => e.id)
+            const { data: assignmentData } = await supabaseServer
+              .from('Assignment')
+              .select('*')
+              .in('enrollmentId', enrollmentIds)
+
+            // Get progress for these assignments
+            let progressData: any[] = []
+            if (assignmentData && assignmentData.length > 0) {
+              const assignmentIds = assignmentData.map(a => a.id)
+              const { data: progress } = await supabaseServer
+                .from('Progress')
+                .select('*')
+                .in('assignmentId', assignmentIds)
+              progressData = progress || []
+            }
+
+            // Combine the data
+            const enrollments = enrollmentData.map(enrollment => ({
+              ...enrollment,
+              course: courseData?.find(c => c.id === enrollment.courseId) || null,
+              assignments: (assignmentData || [])
+                .filter(a => a.enrollmentId === enrollment.id)
+                .map(assignment => ({
+                  ...assignment,
+                  progress: progressData.filter(p => p.assignmentId === assignment.id)
+                }))
+            }))
+
+            return {
+              ...student,
+              enrollments
             }
           }
-        }
-      }
-    },
-    orderBy: { name: 'asc' }
-  })
+
+          return {
+            ...student,
+            enrollments: []
+          }
+        })
+      )
+    }
+  } catch (error) {
+    console.error('Error loading students:', error)
+    // Continue with empty array so the page still renders
+  }
 
   return (
     <div className="min-h-screen bg-gray-50">
