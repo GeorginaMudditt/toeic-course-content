@@ -20,15 +20,40 @@ export default function VocabularyLevelPage() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
   const [topicToIcon, setTopicToIcon] = useState<Record<string, string>>({})
+  const [topicProgress, setTopicProgress] = useState<Record<string, { bronze: boolean; silver: boolean; gold: boolean }>>({})
 
-  // Get progress for a topic from localStorage
-  const getTopicProgress = (topicName: string) => {
-    if (typeof window === 'undefined') return { bronze: false, silver: false, gold: false }
-    const savedProgress = localStorage.getItem(`challenge_${level}_${topicName}`)
-    if (savedProgress) {
-      return JSON.parse(savedProgress)
+  // Fetch progress for all topics in this level
+  useEffect(() => {
+    const fetchProgress = async () => {
+      try {
+        const response = await fetch(`/api/vocabulary-progress?level=${level}`)
+        const result = await response.json()
+        
+        if (response.ok && result.data) {
+          const progressMap: Record<string, { bronze: boolean; silver: boolean; gold: boolean }> = {}
+          result.data.forEach((item: any) => {
+            progressMap[item.topic] = {
+              bronze: item.bronze || false,
+              silver: item.silver || false,
+              gold: item.gold || false
+            }
+          })
+          setTopicProgress(progressMap)
+        }
+      } catch (err) {
+        // Non-fatal error
+        console.error('Error loading progress:', err)
+      }
     }
-    return { bronze: false, silver: false, gold: false }
+    
+    if (level === 'a1') {
+      fetchProgress()
+    }
+  }, [level])
+
+  // Get progress for a topic from state
+  const getTopicProgress = (topicName: string) => {
+    return topicProgress[topicName] || { bronze: false, silver: false, gold: false }
   }
 
   // Handle topic click - navigate to challenge selection

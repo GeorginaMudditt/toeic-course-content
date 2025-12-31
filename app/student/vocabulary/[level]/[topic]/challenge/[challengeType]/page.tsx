@@ -46,13 +46,28 @@ export default function ChallengePage() {
     message: ''
   })
 
-  // Load progress from localStorage
+  // Load progress from API
   useEffect(() => {
-    if (typeof window === 'undefined') return
-    const savedProgress = localStorage.getItem(`challenge_${level}_${topic}`)
-    if (savedProgress) {
-      setProgress(JSON.parse(savedProgress))
+    const fetchProgress = async () => {
+      try {
+        const response = await fetch(`/api/vocabulary-progress?level=${level}&topic=${encodeURIComponent(topic)}`)
+        const result = await response.json()
+        
+        if (response.ok && result.data && result.data.length > 0) {
+          const progressData = result.data[0]
+          setProgress({
+            bronze: progressData.bronze || false,
+            silver: progressData.silver || false,
+            gold: progressData.gold || false
+          })
+        }
+      } catch (err) {
+        // Non-fatal error, progress will default to all false
+        console.error('Error loading progress:', err)
+      }
     }
+    
+    fetchProgress()
   }, [level, topic])
 
   // Fetch words for challenges
@@ -92,11 +107,33 @@ export default function ChallengePage() {
     fetchWords()
   }, [level, topic, challengeType])
 
-  // Save progress to localStorage
-  const saveProgress = (newProgress: { bronze: boolean; silver: boolean; gold: boolean }) => {
-    if (typeof window === 'undefined') return
-    localStorage.setItem(`challenge_${level}_${topic}`, JSON.stringify(newProgress))
-    setProgress(newProgress)
+  // Save progress to API
+  const saveProgress = async (newProgress: { bronze: boolean; silver: boolean; gold: boolean }) => {
+    try {
+      const response = await fetch('/api/vocabulary-progress', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          level,
+          topic,
+          ...newProgress
+        })
+      })
+
+      const result = await response.json()
+      
+      if (response.ok && !result.error) {
+        setProgress(newProgress)
+      } else {
+        console.error('Error saving progress:', result.error)
+        // Still update local state even if save fails
+        setProgress(newProgress)
+      }
+    } catch (err) {
+      console.error('Error saving progress:', err)
+      // Still update local state even if save fails
+      setProgress(newProgress)
+    }
   }
 
   const getLevelColor = () => {
@@ -208,7 +245,7 @@ export default function ChallengePage() {
     })
   }
 
-  const completeChallenge = () => {
+  const completeChallenge = async () => {
     // For bronze challenge, ensure all audio have been listened to at least once
     if (challengeType === 'bronze') {
       if (words.length === 0 || listenedWords.size < words.length) {
@@ -264,7 +301,7 @@ export default function ChallengePage() {
     }
     
     const newProgress = { ...progress, [challengeType]: true }
-    saveProgress(newProgress)
+    await saveProgress(newProgress)
 
     // Show success modal
     setModalState({

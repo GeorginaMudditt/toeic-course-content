@@ -154,6 +154,15 @@ export default async function TeacherDashboard() {
                   <div className="font-medium text-gray-900">View Progress</div>
                 </div>
               </Link>
+              <Link
+                href="/teacher/vocabulary-progress"
+                className="block p-4 border-2 border-dashed border-gray-300 rounded-lg transition-colors hover:border-[#38438f] hover:bg-[#e8eaf6]"
+              >
+                <div className="text-center">
+                  <div className="text-2xl mb-2">📚</div>
+                  <div className="font-medium text-gray-900">Vocabulary Progress</div>
+                </div>
+              </Link>
             </div>
           </div>
         </div>
