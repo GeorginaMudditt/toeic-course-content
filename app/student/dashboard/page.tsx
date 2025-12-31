@@ -14,21 +14,7 @@ export default async function StudentDashboard() {
   }
 
   // Wrap Prisma calls in try-catch to handle connection errors gracefully
-  let enrollments: Array<{
-    id: string
-    studentId: string
-    courseId: string
-    enrolledAt: Date
-    course: {
-      id: string
-      name: string
-      duration: number
-      description: string | null
-      createdAt: Date
-      updatedAt: Date
-      creatorId: string
-    }
-  }> = []
+  let enrollments: any[] = []
 
   try {
     enrollments = await prisma.enrollment.findMany({
