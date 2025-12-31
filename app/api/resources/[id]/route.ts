@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
-import { prisma } from '@/lib/prisma'
+import { supabaseServer } from '@/lib/supabase'
 
 export async function GET(
   request: NextRequest,
@@ -14,9 +14,17 @@ export async function GET(
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
-    const resource = await prisma.resource.findUnique({
-      where: { id: params.id }
-    })
+    // Use Supabase REST API instead of Prisma for serverless compatibility
+    const { data: resource, error } = await supabaseServer
+      .from('Resource')
+      .select('*')
+      .eq('id', params.id)
+      .single()
+
+    if (error) {
+      console.error('Error fetching resource:', error)
+      return NextResponse.json({ error: 'Failed to fetch resource' }, { status: 500 })
+    }
 
     if (!resource || resource.creatorId !== session.user.id) {
       return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
@@ -45,27 +53,43 @@ export async function PUT(
 
     const data = await request.json()
 
-    // Verify resource belongs to teacher
-    const existingResource = await prisma.resource.findUnique({
-      where: { id: params.id }
-    })
+    // Verify resource belongs to teacher using Supabase REST API
+    const { data: existingResource, error: checkError } = await supabaseServer
+      .from('Resource')
+      .select('*')
+      .eq('id', params.id)
+      .single()
+
+    if (checkError) {
+      console.error('Error checking resource:', checkError)
+      return NextResponse.json({ error: 'Failed to verify resource' }, { status: 500 })
+    }
 
     if (!existingResource || existingResource.creatorId !== session.user.id) {
       return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
     }
 
-    const resource = await prisma.resource.update({
-      where: { id: params.id },
-      data: {
+    // Update resource using Supabase REST API
+    const { data: resource, error: updateError } = await supabaseServer
+      .from('Resource')
+      .update({
         title: data.title,
         description: data.description || null,
         type: data.type,
         content: data.content,
         estimatedHours: data.estimatedHours,
         level: data.level,
-        tags: data.tags || null
-      }
-    })
+        tags: data.tags || null,
+        updatedAt: new Date().toISOString()
+      })
+      .eq('id', params.id)
+      .select()
+      .single()
+
+    if (updateError) {
+      console.error('Error updating resource:', updateError)
+      return NextResponse.json({ error: 'Failed to update resource' }, { status: 500 })
+    }
 
     return NextResponse.json(resource)
   } catch (error) {
@@ -76,4 +100,3 @@ export async function PUT(
     )
   }
 }
-
