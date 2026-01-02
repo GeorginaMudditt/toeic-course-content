@@ -14,6 +14,11 @@ interface Resource {
   type?: string
 }
 
+interface FullResource extends Resource {
+  content: string
+  type: string
+}
+
 interface Props {
   resources: Resource[]
 }
@@ -23,7 +28,7 @@ export default function ResourcesList({ resources }: Props) {
   const [selectedLevel, setSelectedLevel] = useState<string>('All')
   const [deleteModalOpen, setDeleteModalOpen] = useState(false)
   const [resourceToDelete, setResourceToDelete] = useState<Resource | null>(null)
-  const [fullResourceData, setFullResourceData] = useState<Resource | null>(null)
+  const [fullResourceData, setFullResourceData] = useState<FullResource | null>(null)
   const [deleting, setDeleting] = useState(false)
 
   const filteredResources = selectedLevel === 'All' 
@@ -36,9 +41,14 @@ export default function ResourcesList({ resources }: Props) {
       const response = await fetch(`/api/resources/${resource.id}`)
       if (response.ok) {
         const fullResource = await response.json()
-        setFullResourceData(fullResource)
-        setResourceToDelete(resource)
-        setDeleteModalOpen(true)
+        // Ensure content and type are present
+        if (fullResource.content && fullResource.type) {
+          setFullResourceData(fullResource as FullResource)
+          setResourceToDelete(resource)
+          setDeleteModalOpen(true)
+        } else {
+          alert('Resource data is incomplete. Cannot show preview.')
+        }
       } else {
         alert('Failed to load resource details')
       }
@@ -206,7 +216,9 @@ export default function ResourcesList({ resources }: Props) {
                 
                 <div className="border rounded-lg p-4 bg-white max-h-96 overflow-y-auto">
                   <h4 className="text-sm font-medium text-gray-700 mb-3">Resource Preview:</h4>
-                  <ResourcePreview resource={fullResourceData} showActions={false} />
+                  {fullResourceData && (
+                    <ResourcePreview resource={fullResourceData} showActions={false} />
+                  )}
                 </div>
               </div>
 
