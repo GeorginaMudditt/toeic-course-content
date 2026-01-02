@@ -112,9 +112,9 @@ export default function NewResourcePage() {
     setLoading(true)
 
     try {
-      // If using file upload, content should be the file path
-      const content = contentType === 'file' && uploadedFile 
-        ? uploadedFile.path 
+      // If using file upload, content should be the file path or JSON
+      const content = contentType === 'file' && uploadedFiles.length > 0
+        ? (formData.content.startsWith('{') ? formData.content : uploadedFiles[0].path)
         : formData.content
 
       if (!content) {
