@@ -96,17 +96,20 @@ export default function NewResourcePage() {
       } else {
         let errorMessage = 'Failed to upload files'
         try {
-          const error = await response.json()
-          errorMessage = error.error || errorMessage
+          const errorData = await response.json()
+          errorMessage = errorData.error || errorMessage
+          console.error('Upload API error:', errorData)
         } catch (e) {
           errorMessage = `Upload failed with status ${response.status}: ${response.statusText}`
+          console.error('Failed to parse error response:', e)
         }
-        alert(errorMessage)
+        alert(`Upload Error: ${errorMessage}`)
         e.target.value = ''
       }
     } catch (error) {
       console.error('Error uploading files:', error)
-      alert('Failed to upload files')
+      const errorMsg = error instanceof Error ? error.message : 'Unknown error occurred'
+      alert(`Upload Error: ${errorMsg}`)
       e.target.value = ''
     } finally {
       setUploading(false)

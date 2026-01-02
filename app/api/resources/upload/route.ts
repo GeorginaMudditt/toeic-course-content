@@ -77,7 +77,8 @@ export async function POST(request: NextRequest) {
       const random = Math.random().toString(36).substring(2, 9)
       const sanitizedName = file.name.replace(/[^a-zA-Z0-9.-]/g, '_')
       const filename = `${timestamp}-${random}-${sanitizedName}`
-      const filePath = `resources/${filename}`
+      // File path is just the filename (bucket is already specified in .from('resources'))
+      const filePath = filename
 
       // Convert file to buffer
       const bytes = await file.arrayBuffer()
