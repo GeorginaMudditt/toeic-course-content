@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
 import { supabaseServer } from '@/lib/supabase'
+import { randomUUID } from 'crypto'
 
 export async function POST(request: NextRequest) {
   try {
@@ -13,10 +14,15 @@ export async function POST(request: NextRequest) {
 
     const data = await request.json()
 
+    // Generate ID (Supabase doesn't auto-generate like Prisma does)
+    const id = randomUUID()
+    const now = new Date().toISOString()
+
     // Use Supabase REST API instead of Prisma for serverless compatibility
     const { data: resource, error } = await supabaseServer
       .from('Resource')
       .insert({
+        id: id,
         title: data.title,
         description: data.description || null,
         type: data.type,
@@ -24,7 +30,9 @@ export async function POST(request: NextRequest) {
         estimatedHours: data.estimatedHours,
         level: data.level,
         tags: data.tags || null,
-        creatorId: session.user.id
+        creatorId: session.user.id,
+        createdAt: now,
+        updatedAt: now
       })
       .select()
       .single()
