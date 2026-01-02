@@ -157,11 +157,21 @@ export default function NewResourcePage() {
       if (response.ok) {
         router.push('/teacher/resources')
       } else {
-        alert('Failed to create resource')
+        let errorMessage = 'Failed to create resource'
+        try {
+          const errorData = await response.json()
+          errorMessage = errorData.error || errorMessage
+          console.error('Create resource API error:', errorData)
+        } catch (e) {
+          errorMessage = `Failed to create resource: ${response.status} ${response.statusText}`
+          console.error('Failed to parse error response:', e)
+        }
+        alert(`Error: ${errorMessage}`)
       }
     } catch (error) {
       console.error('Error creating resource:', error)
-      alert('Failed to create resource')
+      const errorMsg = error instanceof Error ? error.message : 'Unknown error occurred'
+      alert(`Error: ${errorMsg}`)
     } finally {
       setLoading(false)
     }
