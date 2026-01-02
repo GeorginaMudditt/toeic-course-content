@@ -100,3 +100,51 @@ export async function PUT(
     )
   }
 }
+
+export async function DELETE(
+  request: NextRequest,
+  { params }: { params: { id: string } }
+) {
+  try {
+    const session = await getServerSession(authOptions)
+    
+    if (!session || session.user.role !== 'TEACHER') {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+    }
+
+    // Verify resource belongs to teacher using Supabase REST API
+    const { data: existingResource, error: checkError } = await supabaseServer
+      .from('Resource')
+      .select('*')
+      .eq('id', params.id)
+      .single()
+
+    if (checkError) {
+      console.error('Error checking resource:', checkError)
+      return NextResponse.json({ error: 'Failed to verify resource' }, { status: 500 })
+    }
+
+    if (!existingResource || existingResource.creatorId !== session.user.id) {
+      return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
+    }
+
+    // Delete resource using Supabase REST API
+    const { error: deleteError } = await supabaseServer
+      .from('Resource')
+      .delete()
+      .eq('id', params.id)
+
+    if (deleteError) {
+      console.error('Error deleting resource:', deleteError)
+      return NextResponse.json({ error: 'Failed to delete resource' }, { status: 500 })
+    }
+
+    return NextResponse.json({ success: true })
+  } catch (error) {
+    console.error('Error deleting resource:', error)
+    return NextResponse.json(
+      { error: 'Failed to delete resource' },
+      { status: 500 }
+    )
+  }
+}

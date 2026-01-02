@@ -1,13 +1,17 @@
 'use client'
 
 import { useState } from 'react'
+import { useRouter } from 'next/navigation'
 import Link from 'next/link'
+import ResourcePreview from '@/components/ResourcePreview'
 
 interface Resource {
   id: string
   title: string
   description?: string
   level: string
+  content?: string
+  type?: string
 }
 
 interface Props {
@@ -15,11 +19,66 @@ interface Props {
 }
 
 export default function ResourcesList({ resources }: Props) {
+  const router = useRouter()
   const [selectedLevel, setSelectedLevel] = useState<string>('All')
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false)
+  const [resourceToDelete, setResourceToDelete] = useState<Resource | null>(null)
+  const [fullResourceData, setFullResourceData] = useState<Resource | null>(null)
+  const [deleting, setDeleting] = useState(false)
 
   const filteredResources = selectedLevel === 'All' 
     ? resources 
     : resources.filter(resource => resource.level === selectedLevel)
+
+  const handleDeleteClick = async (resource: Resource) => {
+    // Fetch full resource data for preview
+    try {
+      const response = await fetch(`/api/resources/${resource.id}`)
+      if (response.ok) {
+        const fullResource = await response.json()
+        setFullResourceData(fullResource)
+        setResourceToDelete(resource)
+        setDeleteModalOpen(true)
+      } else {
+        alert('Failed to load resource details')
+      }
+    } catch (error) {
+      console.error('Error fetching resource:', error)
+      alert('Failed to load resource details')
+    }
+  }
+
+  const handleConfirmDelete = async () => {
+    if (!resourceToDelete) return
+
+    setDeleting(true)
+    try {
+      const response = await fetch(`/api/resources/${resourceToDelete.id}`, {
+        method: 'DELETE'
+      })
+
+      if (response.ok) {
+        setDeleteModalOpen(false)
+        setResourceToDelete(null)
+        setFullResourceData(null)
+        router.refresh()
+      } else {
+        const error = await response.json()
+        alert(error.error || 'Failed to delete resource')
+      }
+    } catch (error) {
+      console.error('Error deleting resource:', error)
+      alert('Failed to delete resource')
+    } finally {
+      setDeleting(false)
+    }
+  }
+
+  const handleCancelDelete = () => {
+    setDeleteModalOpen(false)
+    setResourceToDelete(null)
+    setFullResourceData(null)
+  }
 
   return (
     <>
@@ -103,11 +162,17 @@ export default function ResourcesList({ resources }: Props) {
                     </Link>
                     <Link
                       href={`/teacher/resources/${resource.id}`}
-                      className="transition-colors hover:text-[#2d3569]"
+                      className="mr-4 transition-colors hover:text-[#2d3569]"
                       style={{ color: '#38438f' }}
                     >
                       Edit
                     </Link>
+                    <button
+                      onClick={() => handleDeleteClick(resource)}
+                      className="text-red-600 hover:text-red-800 transition-colors"
+                    >
+                      Delete
+                    </button>
                   </td>
                 </tr>
               ))
@@ -115,6 +180,56 @@ export default function ResourcesList({ resources }: Props) {
           </tbody>
         </table>
       </div>
+
+      {/* Delete Confirmation Modal */}
+      {deleteModalOpen && resourceToDelete && fullResourceData && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg shadow-xl max-w-4xl w-full mx-4 max-h-[90vh] overflow-y-auto">
+            <div className="p-6">
+              <h2 className="text-2xl font-bold text-gray-900 mb-4">
+                Are you sure you want to delete this resource?
+              </h2>
+              
+              <div className="mb-6">
+                <div className="bg-gray-50 p-4 rounded-lg mb-4">
+                  <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                    {fullResourceData.title}
+                  </h3>
+                  {fullResourceData.description && (
+                    <p className="text-sm text-gray-600 mb-2">{fullResourceData.description}</p>
+                  )}
+                  <div className="text-xs text-gray-500">
+                    <span className="mr-4">Level: {fullResourceData.level || 'N/A'}</span>
+                    <span>Type: {fullResourceData.type || 'N/A'}</span>
+                  </div>
+                </div>
+                
+                <div className="border rounded-lg p-4 bg-white max-h-96 overflow-y-auto">
+                  <h4 className="text-sm font-medium text-gray-700 mb-3">Resource Preview:</h4>
+                  <ResourcePreview resource={fullResourceData} showActions={false} />
+                </div>
+              </div>
+
+              <div className="flex justify-end space-x-4">
+                <button
+                  onClick={handleCancelDelete}
+                  disabled={deleting}
+                  className="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50 disabled:opacity-50"
+                >
+                  No, Cancel
+                </button>
+                <button
+                  onClick={handleConfirmDelete}
+                  disabled={deleting}
+                  className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 disabled:opacity-50"
+                >
+                  {deleting ? 'Deleting...' : 'Yes, Delete'}
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </>
   )
 }

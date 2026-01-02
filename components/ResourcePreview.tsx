@@ -15,9 +15,10 @@ interface Resource {
 
 interface ResourcePreviewProps {
   resource: Resource
+  showActions?: boolean
 }
 
-export default function ResourcePreview({ resource }: ResourcePreviewProps) {
+export default function ResourcePreview({ resource, showActions = true }: ResourcePreviewProps) {
   const [downloading, setDownloading] = useState(false)
   const [linkCopied, setLinkCopied] = useState(false)
 
@@ -144,39 +145,41 @@ export default function ResourcePreview({ resource }: ResourcePreviewProps) {
 
   return (
     <div className="bg-white shadow rounded-lg p-6">
-      <div className="flex justify-between items-center mb-4 flex-wrap gap-4">
-        <div className="flex items-center space-x-3 flex-wrap">
-          <button
-            onClick={downloadPDF}
-            disabled={downloading}
-            className="px-4 py-2 text-white rounded-md disabled:opacity-50 transition-colors hover:bg-[#2d3569]"
-            style={{ backgroundColor: '#38438f' }}
-          >
-            {downloading ? 'Generating PDF...' : (resource.content.startsWith('/uploads/') && resource.content.toLowerCase().endsWith('.pdf') ? '📥 Download PDF' : '📥 Download PDF')}
-          </button>
-          <button
-            onClick={handlePrint}
-            className="px-4 py-2 bg-gray-600 text-white rounded-md hover:bg-gray-700 transition-colors"
-          >
-            🖨️ Print
-          </button>
-          <button
-            onClick={copyShareLink}
-            className="px-4 py-2 bg-gray-500 text-white rounded-md hover:bg-gray-600 transition-colors"
-          >
-            {linkCopied ? '✓ Link Copied!' : '🔗 Share Link'}
-          </button>
+      {showActions && (
+        <div className="flex justify-between items-center mb-4 flex-wrap gap-4">
+          <div className="flex items-center space-x-3 flex-wrap">
+            <button
+              onClick={downloadPDF}
+              disabled={downloading}
+              className="px-4 py-2 text-white rounded-md disabled:opacity-50 transition-colors hover:bg-[#2d3569]"
+              style={{ backgroundColor: '#38438f' }}
+            >
+              {downloading ? 'Generating PDF...' : (resource.content.startsWith('/uploads/') && resource.content.toLowerCase().endsWith('.pdf') ? '📥 Download PDF' : '📥 Download PDF')}
+            </button>
+            <button
+              onClick={handlePrint}
+              className="px-4 py-2 bg-gray-600 text-white rounded-md hover:bg-gray-700 transition-colors"
+            >
+              🖨️ Print
+            </button>
+            <button
+              onClick={copyShareLink}
+              className="px-4 py-2 bg-gray-500 text-white rounded-md hover:bg-gray-600 transition-colors"
+            >
+              {linkCopied ? '✓ Link Copied!' : '🔗 Share Link'}
+            </button>
+          </div>
+          <div className="text-sm text-gray-500">
+            <span className="font-medium">Type:</span> {resource.type}
+            {resource.level && (
+              <>
+                {' | '}
+                <span className="font-medium">Level:</span> {resource.level}
+              </>
+            )}
+          </div>
         </div>
-        <div className="text-sm text-gray-500">
-          <span className="font-medium">Type:</span> {resource.type}
-          {resource.level && (
-            <>
-              {' | '}
-              <span className="font-medium">Level:</span> {resource.level}
-            </>
-          )}
-        </div>
-      </div>
+      )}
 
       <div id="resource-content" className="border rounded-lg p-6 bg-white mb-4">
         {(() => {
@@ -268,10 +271,12 @@ export default function ResourcePreview({ resource }: ResourcePreviewProps) {
         })()}
       </div>
 
-      <div className="mt-4 text-sm text-gray-500 bg-gray-50 p-4 rounded-lg">
-        <p className="font-medium mb-2">💡 Teacher Preview</p>
-        <p>This is how students will see this resource. You can download it as PDF, print it, or share the preview link.</p>
-      </div>
+      {showActions && (
+        <div className="mt-4 text-sm text-gray-500 bg-gray-50 p-4 rounded-lg">
+          <p className="font-medium mb-2">💡 Teacher Preview</p>
+          <p>This is how students will see this resource. You can download it as PDF, print it, or share the preview link.</p>
+        </div>
+      )}
     </div>
   )
 }
