@@ -244,7 +244,7 @@ export default function NewResourcePage() {
                     checked={contentType === 'html'}
                     onChange={(e) => {
                       setContentType('html')
-                      setUploadedFile(null)
+                      setUploadedFiles([])
                       setFormData({ ...formData, content: '' })
                     }}
                     className="mr-2"
