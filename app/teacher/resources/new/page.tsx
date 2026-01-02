@@ -65,34 +65,44 @@ export default function NewResourcePage() {
             audioCode: file.isAudio ? extractAudioCode(file.filename) : undefined
         }))
 
-        setUploadedFiles(processedFiles)
+        // Merge with existing uploaded files (append new files, don't replace)
+        setUploadedFiles(prevFiles => {
+          const allFiles = [...prevFiles]
+          
+          // Add new files if they don't already exist
+          processedFiles.forEach(newFile => {
+            const exists = allFiles.some(existing => existing.filename === newFile.filename && existing.path === newFile.path)
+            if (!exists) {
+              allFiles.push(newFile)
+            }
+          })
 
-        // Organize files: PDF + audio files
-        const pdfFile = processedFiles.find(f => f.isPDF)
-        const audioFiles = processedFiles.filter(f => f.isAudio)
+          // Organize files: PDF + audio files
+          const pdfFile = allFiles.find(f => f.isPDF)
+          const audioFiles = allFiles.filter(f => f.isAudio)
 
-        if (pdfFile && audioFiles.length > 0) {
-          // Store as JSON for PDF with audio
-          const contentData = {
-            type: 'pdf-with-audio',
-            pdf: pdfFile.path,
-            audio: audioFiles.map(f => ({
-              path: f.path,
-              code: f.audioCode || f.filename.replace(/\.(mp3|mp4)$/i, '').toUpperCase(),
-              filename: f.filename
-            }))
+          if (pdfFile && audioFiles.length > 0) {
+            // Store as JSON for PDF with audio
+            const contentData = {
+              type: 'pdf-with-audio',
+              pdf: pdfFile.path,
+              audio: audioFiles.map(f => ({
+                path: f.path,
+                code: f.audioCode || f.filename.replace(/\.(mp3|mp4)$/i, '').toUpperCase(),
+                filename: f.filename
+              }))
+            }
+            setFormData(prev => ({ ...prev, content: JSON.stringify(contentData) }))
+          } else if (pdfFile) {
+            // Just PDF
+            setFormData(prev => ({ ...prev, content: pdfFile.path }))
+          } else if (allFiles.length === 1 && allFiles[0].isImage) {
+            // Just image
+            setFormData(prev => ({ ...prev, content: allFiles[0].path }))
           }
-          setFormData({ ...formData, content: JSON.stringify(contentData) })
-        } else if (pdfFile) {
-          // Just PDF
-          setFormData({ ...formData, content: pdfFile.path })
-        } else if (processedFiles.length === 1 && processedFiles[0].isImage) {
-          // Just image
-          setFormData({ ...formData, content: processedFiles[0].path })
-        } else {
-          // HTML or other
-          setFormData({ ...formData, content: '' })
-        }
+          
+          return allFiles
+        })
       } else {
         let errorMessage = 'Failed to upload files'
         try {
