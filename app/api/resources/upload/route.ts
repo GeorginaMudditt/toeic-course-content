@@ -11,6 +11,14 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
+    // Verify Supabase is configured
+    if (!process.env.SUPABASE_SERVICE_ROLE_KEY && !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
+      return NextResponse.json(
+        { error: 'Supabase is not configured. Please set SUPABASE_SERVICE_ROLE_KEY or NEXT_PUBLIC_SUPABASE_ANON_KEY in your environment variables.' },
+        { status: 500 }
+      )
+    }
+
     const formData = await request.formData()
     const files = formData.getAll('files') as File[]
     const singleFile = formData.get('file') as File
@@ -84,10 +92,27 @@ export async function POST(request: NextRequest) {
         })
 
       if (uploadError) {
-        // If bucket doesn't exist, try to create it (this might fail if user doesn't have permissions)
-        console.error('Upload error:', uploadError)
+        console.error('Upload error details:', {
+          message: uploadError.message,
+          statusCode: uploadError.statusCode,
+          error: uploadError.error,
+          fileName: file.name,
+          filePath: filePath
+        })
+        
+        // Provide more helpful error messages
+        let errorMsg = `Failed to upload ${file.name}: ${uploadError.message}`
+        
+        if (uploadError.message?.includes('Bucket not found') || uploadError.message?.includes('not found')) {
+          errorMsg += '. Please ensure the "resources" bucket exists in Supabase Storage and is set to public.'
+        } else if (uploadError.message?.includes('permission') || uploadError.message?.includes('denied')) {
+          errorMsg += '. Please check that SUPABASE_SERVICE_ROLE_KEY is set correctly and the bucket has proper permissions.'
+        } else if (uploadError.message?.includes('JWT')) {
+          errorMsg += '. Please check that SUPABASE_SERVICE_ROLE_KEY is set correctly in your environment variables.'
+        }
+        
         return NextResponse.json(
-          { error: `Failed to upload ${file.name}: ${uploadError.message}. Please ensure the 'resources' storage bucket exists in Supabase.` },
+          { error: errorMsg },
           { status: 500 }
         )
       }
@@ -119,9 +144,11 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ files: uploadedFiles })
   } catch (error) {
     console.error('Error uploading file:', error)
-    const errorMessage = error instanceof Error ? error.message : 'Failed to upload file'
+    const errorMessage = error instanceof Error 
+      ? `${error.message}${error.stack ? `\nStack: ${error.stack}` : ''}` 
+      : 'Failed to upload file'
     return NextResponse.json(
-      { error: errorMessage },
+      { error: `Upload failed: ${errorMessage}` },
       { status: 500 }
     )
   }
