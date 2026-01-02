@@ -92,16 +92,18 @@ export async function POST(request: NextRequest) {
         })
 
       if (uploadError) {
+        // Cast to any to access properties that may exist at runtime
+        const errorDetails = uploadError as any
         console.error('Upload error details:', {
           message: uploadError.message,
-          statusCode: uploadError.statusCode,
-          error: uploadError.error,
+          statusCode: errorDetails.statusCode,
+          error: errorDetails.error,
           fileName: file.name,
           filePath: filePath
         })
         
         // Provide more helpful error messages
-        let errorMsg = `Failed to upload ${file.name}: ${uploadError.message}`
+        let errorMsg = `Failed to upload ${file.name}: ${uploadError.message || 'Unknown error'}`
         
         if (uploadError.message?.includes('Bucket not found') || uploadError.message?.includes('not found')) {
           errorMsg += '. Please ensure the "resources" bucket exists in Supabase Storage and is set to public.'
