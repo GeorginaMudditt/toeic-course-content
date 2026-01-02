@@ -94,8 +94,14 @@ export default function NewResourcePage() {
           setFormData({ ...formData, content: '' })
         }
       } else {
-        const error = await response.json()
-        alert(error.error || 'Failed to upload files')
+        let errorMessage = 'Failed to upload files'
+        try {
+          const error = await response.json()
+          errorMessage = error.error || errorMessage
+        } catch (e) {
+          errorMessage = `Upload failed with status ${response.status}: ${response.statusText}`
+        }
+        alert(errorMessage)
         e.target.value = ''
       }
     } catch (error) {
