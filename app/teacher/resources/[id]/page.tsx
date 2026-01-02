@@ -7,10 +7,20 @@ import Navbar from '@/components/Navbar'
 export default function EditResourcePage({ params }: { params: { id: string } }) {
   const router = useRouter()
   const [loading, setLoading] = useState(false)
+  interface UploadedFile {
+    path: string
+    filename: string
+    type: string
+    isAudio?: boolean
+    isPDF?: boolean
+    isImage?: boolean
+    audioCode?: string
+  }
+
   const [uploading, setUploading] = useState(false)
   const [fetching, setFetching] = useState(true)
   const [contentType, setContentType] = useState<'html' | 'file'>('html')
-  const [uploadedFile, setUploadedFile] = useState<{ path: string; filename: string } | null>(null)
+  const [uploadedFiles, setUploadedFiles] = useState<UploadedFile[]>([])
   const [formData, setFormData] = useState({
     title: '',
     description: '',
@@ -19,16 +29,51 @@ export default function EditResourcePage({ params }: { params: { id: string } })
     tags: ''
   })
 
+  // Extract audio code from filename (e.g., "A1.mp3" or "A1.mp4" -> "A1")
+  const extractAudioCode = (filename: string): string | null => {
+    const match = filename.match(/^([A-Z0-9]+)\.(mp3|mp4)$/i)
+    return match ? match[1].toUpperCase() : null
+  }
+
   useEffect(() => {
     fetch(`/api/resources/${params.id}`)
       .then(res => res.json())
       .then(data => {
-        const isFile = data.content?.startsWith('/uploads/') || data.content?.startsWith('uploads/')
+        const isFile = data.content?.startsWith('/uploads/') || data.content?.startsWith('uploads/') || (data.content?.startsWith('{') && data.content.includes('pdf-with-audio'))
         setContentType(isFile ? 'file' : 'html')
-        if (isFile) {
+        
+        // Handle JSON content (PDF with audio)
+        if (data.content?.startsWith('{')) {
+          try {
+            const contentData = JSON.parse(data.content)
+            if (contentData.type === 'pdf-with-audio') {
+              const files: UploadedFile[] = []
+              if (contentData.pdf) {
+                const pdfFilename = contentData.pdf.split('/').pop() || 'PDF'
+                files.push({ path: contentData.pdf, filename: pdfFilename, type: 'application/pdf', isPDF: true })
+              }
+              if (contentData.audio) {
+                contentData.audio.forEach((audio: any) => {
+                  const isMP4 = audio.filename.toLowerCase().endsWith('.mp4')
+                  files.push({
+                    path: audio.path,
+                    filename: audio.filename,
+                    type: isMP4 ? 'video/mp4' : 'audio/mpeg',
+                    isAudio: true,
+                    audioCode: audio.code
+                  })
+                })
+              }
+              setUploadedFiles(files)
+            }
+          } catch (e) {
+            // Not valid JSON, treat as regular file
+          }
+        } else if (isFile) {
           const filename = data.content.split('/').pop() || 'uploaded file'
-          setUploadedFile({ path: data.content, filename })
+          setUploadedFiles([{ path: data.content, filename, type: data.content.toLowerCase().endsWith('.pdf') ? 'application/pdf' : 'image' }])
         }
+        
         setFormData({
           title: data.title || '',
           description: data.description || '',
@@ -44,29 +89,15 @@ export default function EditResourcePage({ params }: { params: { id: string } })
   }, [params.id])
 
   const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0]
-    if (!file) return
-
-    // Validate file type
-    const allowedTypes = ['application/pdf', 'image/png', 'image/jpeg', 'image/jpg']
-    if (!allowedTypes.includes(file.type)) {
-      alert('Invalid file type. Only PDF, PNG, and JPEG files are allowed.')
-      e.target.value = ''
-      return
-    }
-
-    // Validate file size (max 10MB)
-    const maxSize = 10 * 1024 * 1024 // 10MB
-    if (file.size > maxSize) {
-      alert('File size exceeds 10MB limit')
-      e.target.value = ''
-      return
-    }
+    const files = Array.from(e.target.files || [])
+    if (files.length === 0) return
 
     setUploading(true)
     try {
       const uploadFormData = new FormData()
-      uploadFormData.append('file', file)
+      files.forEach(file => {
+        uploadFormData.append('files', file)
+      })
 
       const response = await fetch('/api/resources/upload', {
         method: 'POST',
@@ -75,16 +106,55 @@ export default function EditResourcePage({ params }: { params: { id: string } })
 
       if (response.ok) {
         const data = await response.json()
-        setUploadedFile({ path: data.path, filename: data.filename })
-        setFormData({ ...formData, content: data.path })
+        // Handle both single file (backward compatibility) and multiple files
+        const filesData = data.files || [data]
+        
+        const processedFiles: UploadedFile[] = filesData.map((file: any) => ({
+          path: file.path,
+          filename: file.filename,
+          type: file.type,
+          isAudio: file.isAudio,
+          isPDF: file.isPDF,
+          isImage: file.isImage,
+          audioCode: file.isAudio ? extractAudioCode(file.filename) : undefined
+        }))
+
+        setUploadedFiles(processedFiles)
+
+        // Organize files: PDF + audio files
+        const pdfFile = processedFiles.find(f => f.isPDF)
+        const audioFiles = processedFiles.filter(f => f.isAudio)
+
+        if (pdfFile && audioFiles.length > 0) {
+          // Store as JSON for PDF with audio
+          const contentData = {
+            type: 'pdf-with-audio',
+            pdf: pdfFile.path,
+            audio: audioFiles.map(f => ({
+              path: f.path,
+              code: f.audioCode || f.filename.replace(/\.(mp3|mp4)$/i, '').toUpperCase(),
+              filename: f.filename
+            }))
+          }
+          setFormData({ ...formData, content: JSON.stringify(contentData) })
+        } else if (pdfFile) {
+          // Just PDF
+          setFormData({ ...formData, content: pdfFile.path })
+        } else if (processedFiles.length === 1 && processedFiles[0].isImage) {
+          // Just image
+          setFormData({ ...formData, content: processedFiles[0].path })
+        } else {
+          // Keep existing content or clear
+          setFormData({ ...formData })
+        }
       } else {
         const error = await response.json()
-        alert(error.error || 'Failed to upload file')
+        alert(error.error || 'Failed to upload files')
         e.target.value = ''
       }
     } catch (error) {
-      console.error('Error uploading file:', error)
-      alert('Failed to upload file')
+      console.error('Error uploading files:', error)
+      alert('Failed to upload files')
       e.target.value = ''
     } finally {
       setUploading(false)
@@ -96,9 +166,9 @@ export default function EditResourcePage({ params }: { params: { id: string } })
     setLoading(true)
 
     try {
-      // If using file upload, content should be the file path
-      const content = contentType === 'file' && uploadedFile 
-        ? uploadedFile.path 
+      // If using file upload, content should be the file path or JSON
+      const content = contentType === 'file' && uploadedFiles.length > 0
+        ? (formData.content.startsWith('{') ? formData.content : uploadedFiles[0].path)
         : formData.content
 
       if (!content) {
@@ -241,8 +311,8 @@ export default function EditResourcePage({ params }: { params: { id: string } })
                     checked={contentType === 'html'}
                     onChange={(e) => {
                       setContentType('html')
-                      if (uploadedFile) {
-                        setUploadedFile(null)
+                      if (uploadedFiles.length > 0) {
+                        setUploadedFiles([])
                         setFormData({ ...formData, content: '' })
                       }
                     }}
@@ -258,7 +328,7 @@ export default function EditResourcePage({ params }: { params: { id: string } })
                     checked={contentType === 'file'}
                     onChange={(e) => {
                       setContentType('file')
-                      if (!uploadedFile && !formData.content.startsWith('/uploads/')) {
+                      if (uploadedFiles.length === 0 && !formData.content.startsWith('/uploads/') && !formData.content.startsWith('{')) {
                         setFormData({ ...formData, content: '' })
                       }
                     }}
@@ -288,19 +358,45 @@ export default function EditResourcePage({ params }: { params: { id: string } })
               ) : (
                 <>
                   <p className="text-sm text-gray-500 mb-2">
-                    Upload a PDF or image file (PNG, JPEG). Max size: 10MB
+                    Upload files: PDF (required) and MP4 audio files (optional). 
+                    <br />
+                    <span className="font-medium">For audio files:</span> Name them with audio codes (e.g., A1.mp4, A2.mp4) to match icons on your PDF.
+                    <br />
+                    Max sizes: PDF/Images 10MB, Audio 20MB
                   </p>
-                  {uploadedFile && (
-                    <div className="mb-2 p-3 bg-blue-50 border border-blue-200 rounded-md">
-                      <p className="text-sm text-blue-800">
-                        Current file: <strong>{uploadedFile.filename}</strong>
-                      </p>
+                  {uploadedFiles.length > 0 && (
+                    <div className="mb-2 space-y-2">
+                      {uploadedFiles.map((file, index) => (
+                        <div 
+                          key={index}
+                          className={`p-3 rounded-md border ${
+                            file.isPDF 
+                              ? 'bg-blue-50 border-blue-200' 
+                              : file.isAudio 
+                              ? 'bg-purple-50 border-purple-200' 
+                              : 'bg-green-50 border-green-200'
+                          }`}
+                        >
+                          <p className="text-sm">
+                            {file.isPDF && '📄 Current PDF: '}
+                            {file.isAudio && '🎵 Current Audio: '}
+                            {file.isImage && '🖼️ Current Image: '}
+                            <strong>{file.filename}</strong>
+                            {file.audioCode && (
+                              <span className="ml-2 text-xs bg-purple-200 px-2 py-1 rounded">
+                                Code: {file.audioCode}
+                              </span>
+                            )}
+                          </p>
+                        </div>
+                      ))}
                     </div>
                   )}
                   <input
                     type="file"
                     id="file"
-                    accept=".pdf,.png,.jpg,.jpeg"
+                    multiple
+                    accept=".pdf,.png,.jpg,.jpeg,.mp4,.mp3"
                     onChange={handleFileUpload}
                     disabled={uploading}
                     className="mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-[#38438f] file:text-white hover:file:bg-[#2d3569] disabled:opacity-50"
@@ -308,11 +404,39 @@ export default function EditResourcePage({ params }: { params: { id: string } })
                   {uploading && (
                     <p className="mt-2 text-sm text-gray-600">Uploading...</p>
                   )}
-                  {uploadedFile && (
-                    <div className="mt-2 p-3 bg-green-50 border border-green-200 rounded-md">
-                      <p className="text-sm text-green-800">
-                        ✓ File uploaded: <strong>{uploadedFile.filename}</strong>
-                      </p>
+                  {uploadedFiles.length > 0 && (
+                    <div className="mt-2 space-y-2">
+                      {uploadedFiles.map((file, index) => (
+                        <div 
+                          key={index}
+                          className={`p-3 rounded-md border ${
+                            file.isPDF 
+                              ? 'bg-blue-50 border-blue-200' 
+                              : file.isAudio 
+                              ? 'bg-purple-50 border-purple-200' 
+                              : 'bg-green-50 border-green-200'
+                          }`}
+                        >
+                          <p className="text-sm font-medium">
+                            {file.isPDF && '📄 PDF: '}
+                            {file.isAudio && '🎵 Audio: '}
+                            {file.isImage && '🖼️ Image: '}
+                            <strong>{file.filename}</strong>
+                            {file.audioCode && (
+                              <span className="ml-2 text-xs bg-purple-200 px-2 py-1 rounded">
+                                Code: {file.audioCode}
+                              </span>
+                            )}
+                          </p>
+                        </div>
+                      ))}
+                      {uploadedFiles.some(f => f.isPDF) && uploadedFiles.some(f => f.isAudio) && (
+                        <div className="mt-2 p-2 bg-blue-100 border border-blue-300 rounded-md">
+                          <p className="text-xs text-blue-800">
+                            ✓ PDF and audio files will be linked together. Students will see the PDF with audio players below.
+                          </p>
+                        </div>
+                      )}
                     </div>
                   )}
                 </>

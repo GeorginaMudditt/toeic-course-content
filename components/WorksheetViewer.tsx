@@ -152,9 +152,60 @@ export default function WorksheetViewer({ assignmentId, resource, initialProgres
       </div>
 
       <div id="worksheet-content" className="border rounded-lg p-6 bg-white mb-4">
-        {resource.content.startsWith('/uploads/') || resource.content.startsWith('uploads/') ? (
-          // File-based content (PDF or Image)
-          (() => {
+        {(() => {
+          // Check if content is JSON (PDF with audio)
+          let contentData: any = null
+          try {
+            if (resource.content.startsWith('{')) {
+              contentData = JSON.parse(resource.content)
+            }
+          } catch (e) {
+            // Not JSON, continue with normal handling
+          }
+
+          if (contentData && contentData.type === 'pdf-with-audio') {
+            // PDF with audio files
+            return (
+              <div className="space-y-4">
+                <div>
+                  <h3 className="text-sm font-medium text-gray-700 mb-2">PDF Document</h3>
+                  <iframe
+                    src={contentData.pdf}
+                    className="w-full h-[800px] border-0"
+                    title={resource.title}
+                  />
+                </div>
+                {contentData.audio && contentData.audio.length > 0 && (
+                  <div className="border-t pt-4">
+                    <h3 className="text-sm font-medium text-gray-700 mb-3">Audio Files</h3>
+                    <p className="text-xs text-gray-500 mb-3">
+                      Click the audio icons on the PDF above, then play the corresponding audio below.
+                    </p>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      {contentData.audio.map((audio: any, index: number) => (
+                        <div key={index} className="bg-gray-50 p-4 rounded-lg border">
+                          <div className="flex items-center justify-between mb-2">
+                            <span className="text-sm font-medium text-gray-700">
+                              Audio {audio.code}
+                            </span>
+                            <span className="text-xs text-gray-500">{audio.filename}</span>
+                          </div>
+                          <audio
+                            controls
+                            className="w-full"
+                            src={audio.path}
+                          >
+                            Your browser does not support the audio element.
+                          </audio>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+            )
+          } else if (resource.content.startsWith('/uploads/') || resource.content.startsWith('uploads/')) {
+            // File-based content (PDF or Image)
             const filePath = resource.content.startsWith('/') ? resource.content : `/${resource.content}`
             const isPDF = filePath.toLowerCase().endsWith('.pdf')
             const isImage = /\.(png|jpg|jpeg)$/i.test(filePath)
@@ -178,14 +229,16 @@ export default function WorksheetViewer({ assignmentId, resource, initialProgres
             } else {
               return <p className="text-gray-500">Unsupported file type</p>
             }
-          })()
-        ) : (
-          // HTML content
-          <div 
-            className="prose max-w-none"
-            dangerouslySetInnerHTML={{ __html: resource.content }}
-          />
-        )}
+          } else {
+            // HTML content
+            return (
+              <div 
+                className="prose max-w-none"
+                dangerouslySetInnerHTML={{ __html: resource.content }}
+              />
+            )
+          }
+        })()}
       </div>
 
       <div className="mt-6">
