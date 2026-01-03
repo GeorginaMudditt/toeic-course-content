@@ -33,10 +33,12 @@ export default function VocabularyLevelPage() {
       if (response.ok && result.data) {
         const progressMap: Record<string, { bronze: boolean; silver: boolean; gold: boolean }> = {}
         result.data.forEach((item: any) => {
-          progressMap[item.topic] = {
-            bronze: item.bronze || false,
-            silver: item.silver || false,
-            gold: item.gold || false
+          // Ensure we're using the exact topic name from the database
+          const topicName = item.topic
+          progressMap[topicName] = {
+            bronze: Boolean(item.bronze),
+            silver: Boolean(item.silver),
+            gold: Boolean(item.gold)
           }
         })
         setTopicProgress(progressMap)
@@ -258,28 +260,52 @@ export default function VocabularyLevelPage() {
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                           {topic.count}
                         </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-center text-2xl">
-                          {progress.bronze ? '🏅' : '○'}
+                        <td className="px-6 py-4 whitespace-nowrap text-center">
+                          {progress.bronze ? (
+                            <span className="text-2xl">🏅</span>
+                          ) : (
+                            <span className="inline-block w-8 h-8 border-2 border-gray-300 rounded-full" style={{ borderColor: levelColor + '40' }}></span>
+                          )}
                         </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-center text-2xl">
-                          {progress.silver ? '🏅' : '○'}
+                        <td className="px-6 py-4 whitespace-nowrap text-center">
+                          {progress.silver ? (
+                            <span className="text-2xl">🏅</span>
+                          ) : (
+                            <span className="inline-block w-8 h-8 border-2 border-gray-300 rounded-full" style={{ borderColor: levelColor + '40' }}></span>
+                          )}
                         </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-center text-2xl">
-                          {progress.gold ? '🏅' : '○'}
+                        <td className="px-6 py-4 whitespace-nowrap text-center">
+                          {progress.gold ? (
+                            <span className="text-2xl">🏅</span>
+                          ) : (
+                            <span className="inline-block w-8 h-8 border-2 border-gray-300 rounded-full" style={{ borderColor: levelColor + '40' }}></span>
+                          )}
                         </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-center text-sm">
+                        <td className="px-6 py-4 whitespace-nowrap text-center">
                           {allCompleted ? (
                             topicToIcon[topic.name] ? (
                               <img 
                                 src={topicToIcon[topic.name]} 
                                 alt={`Completed icon for ${topic.name}`} 
-                                className="h-8 w-8 mx-auto"
+                                className="h-10 w-10 mx-auto object-contain"
+                                onError={(e) => {
+                                  // Fallback to trophy if image fails to load
+                                  const target = e.target as HTMLImageElement
+                                  target.style.display = 'none'
+                                  const parent = target.parentElement
+                                  if (parent && !parent.querySelector('.fallback-trophy')) {
+                                    const fallback = document.createElement('span')
+                                    fallback.className = 'fallback-trophy text-2xl'
+                                    fallback.textContent = '🏆'
+                                    parent.appendChild(fallback)
+                                  }
+                                }}
                               />
                             ) : (
                               <span className="text-2xl">🏆</span>
                             )
                           ) : (
-                            <span className="text-gray-600">{completedCount}/3</span>
+                            <span className="text-gray-600 font-medium">{completedCount}/3</span>
                           )}
                         </td>
                       </tr>
