@@ -42,18 +42,42 @@ function InlineAnswerInput({
 }) {
   if (type === 'radio') {
     return (
-      <div style={{ display: 'inline-flex', alignItems: 'center', gap: '8px' }}>
+      <div style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', zIndex: 1, position: 'relative' }}>
         {['A', 'B', 'C', 'D'].map((option) => (
-          <label key={option} style={{ display: 'flex', alignItems: 'center', gap: '4px', cursor: 'pointer' }}>
+          <label 
+            key={option} 
+            style={{ 
+              display: 'flex', 
+              alignItems: 'center', 
+              gap: '4px', 
+              cursor: 'pointer',
+              userSelect: 'none',
+              pointerEvents: 'auto'
+            }}
+            onClick={(e) => {
+              e.stopPropagation()
+              onChange(option)
+            }}
+          >
             <input
               type="radio"
               name={answerPath}
               value={option}
               checked={value === option}
-              onChange={(e) => onChange(e.target.value)}
-              style={{ width: '16px', height: '16px', cursor: 'pointer' }}
+              onChange={(e) => {
+                e.stopPropagation()
+                onChange(e.target.value)
+              }}
+              onClick={(e) => e.stopPropagation()}
+              style={{ 
+                width: '16px', 
+                height: '16px', 
+                cursor: 'pointer',
+                pointerEvents: 'auto',
+                zIndex: 2
+              }}
             />
-            <span style={{ fontSize: '13px' }}>{option}</span>
+            <span style={{ fontSize: '13px', pointerEvents: 'none' }}>{option}</span>
           </label>
         ))}
       </div>
@@ -78,8 +102,13 @@ function InlineAnswerInput({
   } else if (type === 'textarea') {
     return (
       <textarea
-        value={value}
-        onChange={(e) => onChange(e.target.value)}
+        value={value || ''}
+        onChange={(e) => {
+          e.stopPropagation()
+          onChange(e.target.value)
+        }}
+        onClick={(e) => e.stopPropagation()}
+        onFocus={(e) => e.stopPropagation()}
         style={{
           width: '100%',
           border: '1px solid #d1d5db',
@@ -88,7 +117,10 @@ function InlineAnswerInput({
           fontSize: '13px',
           fontFamily: 'inherit',
           minHeight: '150px',
-          resize: 'vertical'
+          resize: 'vertical',
+          pointerEvents: 'auto',
+          zIndex: 2,
+          position: 'relative'
         }}
         placeholder="Type your written response here..."
       />
@@ -231,40 +263,50 @@ export default function WorksheetViewer({ assignmentId, resource, initialProgres
   
   const placementTestAnswers = getPlacementTestAnswers()
   
-  // Update placement test answer - use useCallback to stabilize the reference
+  // Update placement test answer - use useCallback but read from notes directly to avoid stale closures
   const updatePlacementTestAnswer = useCallback((path: string, value: string) => {
-    const currentAnswers = placementTestAnswers || {}
-    const newAnswers = JSON.parse(JSON.stringify(currentAnswers))
-    
-    // Initialize structure if needed
-    if (!newAnswers.listening) newAnswers.listening = { photographs: {}, conversations: {} }
-    if (!newAnswers.reading) newAnswers.reading = { incompleteSentences: {}, readingComprehension: {} }
-    if (!newAnswers.speaking) newAnswers.speaking = { readAloud: '', expressOpinion: '' }
-    if (!newAnswers.writing) newAnswers.writing = ''
-    if (!newAnswers.writingFileUrl) newAnswers.writingFileUrl = undefined
-    
-    // Handle direct writing and writingFileUrl paths
-    if (path === 'writing') {
-      newAnswers.writing = value
-    } else if (path === 'writingFileUrl') {
-      newAnswers.writingFileUrl = value || undefined
-    } else {
-      // Handle nested paths
-      const keys = path.split('.')
-      let current: any = newAnswers
-      for (let i = 0; i < keys.length - 1; i++) {
-        if (!current[keys[i]]) {
-          current[keys[i]] = {}
+    // Read current notes directly to avoid stale closure
+    setNotes((currentNotes) => {
+      let currentAnswers: any = {}
+      try {
+        if (currentNotes) {
+          currentAnswers = JSON.parse(currentNotes)
         }
-        current = current[keys[i]]
+      } catch (e) {
+        // If notes aren't valid JSON, start fresh
       }
-      current[keys[keys.length - 1]] = value
-    }
-    
-    const newNotes = JSON.stringify(newAnswers, null, 2)
-    setNotes(newNotes)
-    // Auto-save will be handled by the auto-save effect
-  }, [placementTestAnswers])
+      
+      const newAnswers = JSON.parse(JSON.stringify(currentAnswers))
+      
+      // Initialize structure if needed
+      if (!newAnswers.listening) newAnswers.listening = { photographs: {}, conversations: {} }
+      if (!newAnswers.reading) newAnswers.reading = { incompleteSentences: {}, readingComprehension: {} }
+      if (!newAnswers.speaking) newAnswers.speaking = { readAloud: '', expressOpinion: '' }
+      if (!newAnswers.writing) newAnswers.writing = ''
+      if (!newAnswers.writingFileUrl) newAnswers.writingFileUrl = undefined
+      
+      // Handle direct writing and writingFileUrl paths
+      if (path === 'writing') {
+        newAnswers.writing = value
+      } else if (path === 'writingFileUrl') {
+        newAnswers.writingFileUrl = value || undefined
+      } else {
+        // Handle nested paths
+        const keys = path.split('.')
+        let current: any = newAnswers
+        for (let i = 0; i < keys.length - 1; i++) {
+          if (!current[keys[i]]) {
+            current[keys[i]] = {}
+          }
+          current = current[keys[i]]
+        }
+        current[keys[keys.length - 1]] = value
+      }
+      
+      const newNotes = JSON.stringify(newAnswers, null, 2)
+      return newNotes
+    })
+  }, []) // No dependencies - uses functional setState to read current value
   
   const saveProgress = async (notesToSave?: string) => {
     const notesValue = notesToSave || notes
@@ -329,6 +371,46 @@ export default function WorksheetViewer({ assignmentId, resource, initialProgres
         const answerPath = container.getAttribute('data-answer-input')
         if (!answerPath) return
         
+        // Skip if already rendered
+        if ((container as any)._reactRoot) {
+          // Update existing root with new value
+          const root = (container as any)._reactRoot
+          let currentValue = ''
+          if (answerPath === 'writing') {
+            currentValue = placementTestAnswers?.writing || ''
+          } else if (answerPath === 'writingFileUpload') {
+            currentValue = placementTestAnswers?.writingFileUrl || ''
+          } else {
+            const keys = answerPath.split('.')
+            let current: any = placementTestAnswers
+            for (const key of keys) {
+              current = current?.[key]
+            }
+            currentValue = current || ''
+          }
+          
+          let inputType: 'radio' | 'text' | 'textarea' | 'fileUpload' = 'radio'
+          if (answerPath === 'writing') {
+            inputType = 'textarea'
+          } else if (answerPath === 'writingFileUpload') {
+            inputType = 'fileUpload'
+          } else if (answerPath.includes('incompleteSentences')) {
+            inputType = 'text'
+          }
+          
+          root.render(
+            <InlineAnswerInput
+              answerPath={answerPath}
+              value={currentValue}
+              onChange={(value) => updatePlacementTestAnswer(answerPath, value)}
+              type={inputType}
+              assignmentId={assignmentId}
+              onFileUpload={(fileUrl) => updatePlacementTestAnswer('writingFileUrl', fileUrl)}
+            />
+          )
+          return
+        }
+        
         // Get current value
         let currentValue = ''
         if (answerPath === 'writing') {
@@ -358,6 +440,11 @@ export default function WorksheetViewer({ assignmentId, resource, initialProgres
         try {
           // Clear the container first
           container.innerHTML = ''
+          // Make container interactive
+          ;(container as HTMLElement).style.pointerEvents = 'auto'
+          ;(container as HTMLElement).style.position = 'relative'
+          ;(container as HTMLElement).style.zIndex = '1'
+          
           const root = createRoot(container as HTMLElement)
           root.render(
             <InlineAnswerInput
@@ -370,7 +457,8 @@ export default function WorksheetViewer({ assignmentId, resource, initialProgres
             />
           )
           roots.push({ container, root })
-          console.log('Rendered answer input for:', answerPath)
+          ;(container as any)._reactRoot = root
+          console.log('Rendered answer input for:', answerPath, 'type:', inputType)
         } catch (error) {
           console.error('Error rendering inline answer input:', error, answerPath)
         }
@@ -408,7 +496,44 @@ export default function WorksheetViewer({ assignmentId, resource, initialProgres
         if (!answerPath) return
         
         // Skip if already rendered
-        if ((container as any)._reactRoot) return
+        if ((container as any)._reactRoot) {
+          // Update existing root with new value
+          const root = (container as any)._reactRoot
+          let currentValue = ''
+          if (answerPath === 'writing') {
+            currentValue = placementTestAnswers?.writing || ''
+          } else if (answerPath === 'writingFileUpload') {
+            currentValue = placementTestAnswers?.writingFileUrl || ''
+          } else {
+            const keys = answerPath.split('.')
+            let current: any = placementTestAnswers
+            for (const key of keys) {
+              current = current?.[key]
+            }
+            currentValue = current || ''
+          }
+          
+          let inputType: 'radio' | 'text' | 'textarea' | 'fileUpload' = 'radio'
+          if (answerPath === 'writing') {
+            inputType = 'textarea'
+          } else if (answerPath === 'writingFileUpload') {
+            inputType = 'fileUpload'
+          } else if (answerPath.includes('incompleteSentences')) {
+            inputType = 'text'
+          }
+          
+          root.render(
+            <InlineAnswerInput
+              answerPath={answerPath}
+              value={currentValue}
+              onChange={(value) => updatePlacementTestAnswer(answerPath, value)}
+              type={inputType}
+              assignmentId={assignmentId}
+              onFileUpload={(fileUrl) => updatePlacementTestAnswer('writingFileUrl', fileUrl)}
+            />
+          )
+          return
+        }
         
         // Get current value
         let currentValue = ''
@@ -439,6 +564,11 @@ export default function WorksheetViewer({ assignmentId, resource, initialProgres
         try {
           // Clear the container first
           container.innerHTML = ''
+          // Make container interactive
+          ;(container as HTMLElement).style.pointerEvents = 'auto'
+          ;(container as HTMLElement).style.position = 'relative'
+          ;(container as HTMLElement).style.zIndex = '1'
+          
           const root = createRoot(container as HTMLElement)
           root.render(
             <InlineAnswerInput
@@ -451,7 +581,8 @@ export default function WorksheetViewer({ assignmentId, resource, initialProgres
             />
           )
           roots.push({ container, root })
-          console.log('Rendered answer input for:', answerPath)
+          ;(container as any)._reactRoot = root
+          console.log('Rendered answer input for:', answerPath, 'type:', inputType)
         } catch (error) {
           console.error('Error rendering inline answer input:', error, answerPath)
         }
@@ -481,7 +612,7 @@ export default function WorksheetViewer({ assignmentId, resource, initialProgres
         })
       }
     }
-  }, [isPlacementTest, resource.content, notes, assignmentId, updatePlacementTestAnswer, placementTestAnswers]) // Include placementTestAnswers
+  }, [isPlacementTest, resource.content, notes, assignmentId, updatePlacementTestAnswer]) // updatePlacementTestAnswer is stable, notes triggers re-render with new values
 
   useEffect(() => {
     // Auto-save every 30 seconds
