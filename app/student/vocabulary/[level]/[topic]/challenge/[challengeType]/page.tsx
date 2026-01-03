@@ -19,7 +19,8 @@ export default function ChallengePage() {
   const params = useParams()
   const router = useRouter()
   const level = (params.level as string)?.toLowerCase() || 'a1'
-  const topic = decodeURIComponent(params.topic as string)
+  // Normalize topic name: trim and remove extra spaces (matching vocabulary API normalization)
+  const topic = decodeURIComponent(params.topic as string).trim().replace(/\s+/g, ' ')
   const challengeType = params.challengeType as 'bronze' | 'silver' | 'gold'
 
   const [progress, setProgress] = useState({ bronze: false, silver: false, gold: false })
@@ -50,16 +51,21 @@ export default function ChallengePage() {
   useEffect(() => {
     const fetchProgress = async () => {
       try {
-        const response = await fetch(`/api/vocabulary-progress?level=${level}&topic=${encodeURIComponent(topic)}`)
+        // Normalize topic for the query
+        const normalizedTopic = topic.trim().replace(/\s+/g, ' ')
+        const response = await fetch(`/api/vocabulary-progress?level=${level}&topic=${encodeURIComponent(normalizedTopic)}`)
         const result = await response.json()
         
         if (response.ok && result.data && result.data.length > 0) {
           const progressData = result.data[0]
           setProgress({
-            bronze: progressData.bronze || false,
-            silver: progressData.silver || false,
-            gold: progressData.gold || false
+            bronze: Boolean(progressData.bronze),
+            silver: Boolean(progressData.silver),
+            gold: Boolean(progressData.gold)
           })
+          console.log('Progress loaded for challenge page:', { level, topic: normalizedTopic, progress: progressData })
+        } else {
+          console.log('No progress found for:', { level, topic: normalizedTopic })
         }
       } catch (err) {
         // Non-fatal error, progress will default to all false
@@ -110,12 +116,14 @@ export default function ChallengePage() {
   // Save progress to API
   const saveProgress = async (newProgress: { bronze: boolean; silver: boolean; gold: boolean }) => {
     try {
+      // Ensure topic is normalized before sending
+      const normalizedTopic = topic.trim().replace(/\s+/g, ' ')
       const response = await fetch('/api/vocabulary-progress', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           level,
-          topic,
+          topic: normalizedTopic,
           ...newProgress
         })
       })
@@ -124,8 +132,9 @@ export default function ChallengePage() {
       
       if (response.ok && !result.error) {
         setProgress(newProgress)
+        console.log('Progress saved successfully:', { level, topic: normalizedTopic, ...newProgress })
       } else {
-        console.error('Error saving progress:', result.error)
+        console.error('Error saving progress:', result.error, 'Response:', result)
         // Still update local state even if save fails
         setProgress(newProgress)
       }

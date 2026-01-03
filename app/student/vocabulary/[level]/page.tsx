@@ -41,7 +41,11 @@ export default function VocabularyLevelPage() {
             gold: Boolean(item.gold)
           }
         })
+        console.log('Fetched progress from API:', result.data)
+        console.log('Progress map created:', progressMap)
         setTopicProgress(progressMap)
+      } else {
+        console.log('Progress fetch response not OK:', response.status, result)
       }
     } catch (err) {
       // Non-fatal error
@@ -59,22 +63,28 @@ export default function VocabularyLevelPage() {
 
     const handleVisibilityChange = () => {
       if (document.visibilityState === 'visible') {
-        fetchProgress()
+        // Small delay to ensure navigation is complete
+        setTimeout(() => fetchProgress(), 100)
       }
     }
 
     const handleFocus = () => {
-      fetchProgress()
+      setTimeout(() => fetchProgress(), 100)
     }
 
     // Refresh when page becomes visible
     document.addEventListener('visibilitychange', handleVisibilityChange)
     // Also refresh when window gains focus (e.g., switching tabs back)
     window.addEventListener('focus', handleFocus)
+    // Refresh on page load/remount
+    const intervalId = setInterval(() => {
+      fetchProgress()
+    }, 2000) // Refresh every 2 seconds while on page (helps catch updates)
 
     return () => {
       document.removeEventListener('visibilitychange', handleVisibilityChange)
       window.removeEventListener('focus', handleFocus)
+      clearInterval(intervalId)
     }
   }, [level, fetchProgress])
 
@@ -263,6 +273,10 @@ export default function VocabularyLevelPage() {
                   )}
                   {!loading && !error && topics.map((topic) => {
                     const { progress, completedCount, allCompleted } = getCompletionStatus(topic.name)
+                    // Debug: log progress for this topic
+                    if (topic.name.toLowerCase().includes('animal')) {
+                      console.log(`Topic: "${topic.name}", Progress:`, progress, 'All progress keys:', Object.keys(topicProgress))
+                    }
                     return (
                       <tr 
                         key={topic.name}
