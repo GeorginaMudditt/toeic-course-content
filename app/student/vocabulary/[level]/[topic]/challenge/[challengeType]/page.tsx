@@ -309,7 +309,28 @@ export default function ChallengePage() {
       }
     }
     
-    const newProgress = { ...progress, [challengeType]: true }
+    // Fetch latest progress from API before updating to ensure we don't overwrite existing progress
+    let latestProgress = { ...progress }
+    try {
+      const normalizedTopic = topic.trim().replace(/\s+/g, ' ')
+      const response = await fetch(`/api/vocabulary-progress?level=${level}&topic=${encodeURIComponent(normalizedTopic)}`)
+      const result = await response.json()
+      
+      if (response.ok && result.data && result.data.length > 0) {
+        const progressData = result.data[0]
+        latestProgress = {
+          bronze: Boolean(progressData.bronze),
+          silver: Boolean(progressData.silver),
+          gold: Boolean(progressData.gold)
+        }
+      }
+    } catch (err) {
+      console.error('Error fetching latest progress before save:', err)
+      // Continue with current progress state
+    }
+    
+    // Update progress: preserve existing values and set current challenge to true
+    const newProgress = { ...latestProgress, [challengeType]: true }
     await saveProgress(newProgress)
 
     // Show success modal
