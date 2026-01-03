@@ -94,7 +94,7 @@ export default async function StudentDashboard() {
               <h2 className="text-xl font-semibold text-gray-900 mb-2" style={{ color: '#38438f' }}>
                 My Course
               </h2>
-              {firstEnrollment ? (
+              {firstEnrollment && firstEnrollment.course ? (
                 <p className="text-gray-600 text-sm">
                   {formatCourseName(firstEnrollment.course.name, firstEnrollment.course.duration)} - enrolled {formatUKDate(firstEnrollment.enrolledAt)}
                 </p>
