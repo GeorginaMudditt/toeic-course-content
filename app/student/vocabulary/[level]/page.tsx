@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useCallback } from 'react'
 import { useParams, useRouter } from 'next/navigation'
 import { LEVEL_COLORS } from '@/lib/level-colors'
 import Navbar from '@/components/Navbar'
@@ -23,33 +23,58 @@ export default function VocabularyLevelPage() {
   const [topicProgress, setTopicProgress] = useState<Record<string, { bronze: boolean; silver: boolean; gold: boolean }>>({})
 
   // Fetch progress for all topics in this level
-  useEffect(() => {
-    const fetchProgress = async () => {
-      try {
-        const response = await fetch(`/api/vocabulary-progress?level=${level}`)
-        const result = await response.json()
-        
-        if (response.ok && result.data) {
-          const progressMap: Record<string, { bronze: boolean; silver: boolean; gold: boolean }> = {}
-          result.data.forEach((item: any) => {
-            progressMap[item.topic] = {
-              bronze: item.bronze || false,
-              silver: item.silver || false,
-              gold: item.gold || false
-            }
-          })
-          setTopicProgress(progressMap)
-        }
-      } catch (err) {
-        // Non-fatal error
-        console.error('Error loading progress:', err)
-      }
-    }
+  const fetchProgress = useCallback(async () => {
+    if (level !== 'a1') return
     
-    if (level === 'a1') {
-      fetchProgress()
+    try {
+      const response = await fetch(`/api/vocabulary-progress?level=${level}`)
+      const result = await response.json()
+      
+      if (response.ok && result.data) {
+        const progressMap: Record<string, { bronze: boolean; silver: boolean; gold: boolean }> = {}
+        result.data.forEach((item: any) => {
+          progressMap[item.topic] = {
+            bronze: item.bronze || false,
+            silver: item.silver || false,
+            gold: item.gold || false
+          }
+        })
+        setTopicProgress(progressMap)
+      }
+    } catch (err) {
+      // Non-fatal error
+      console.error('Error loading progress:', err)
     }
   }, [level])
+
+  useEffect(() => {
+    fetchProgress()
+  }, [fetchProgress])
+
+  // Refresh progress when page becomes visible (e.g., when navigating back from a challenge)
+  useEffect(() => {
+    if (level !== 'a1') return
+
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === 'visible') {
+        fetchProgress()
+      }
+    }
+
+    const handleFocus = () => {
+      fetchProgress()
+    }
+
+    // Refresh when page becomes visible
+    document.addEventListener('visibilitychange', handleVisibilityChange)
+    // Also refresh when window gains focus (e.g., switching tabs back)
+    window.addEventListener('focus', handleFocus)
+
+    return () => {
+      document.removeEventListener('visibilitychange', handleVisibilityChange)
+      window.removeEventListener('focus', handleFocus)
+    }
+  }, [level, fetchProgress])
 
   // Get progress for a topic from state
   const getTopicProgress = (topicName: string) => {
