@@ -307,17 +307,21 @@ export default function WorksheetViewer({ assignmentId, resource, initialProgres
   useEffect(() => {
     if (!isPlacementTest || !contentRef.current) return
     
-    // Wait for DOM to be ready - use a longer timeout to ensure HTML is fully rendered
-    const timeoutId = setTimeout(() => {
+    // Use MutationObserver to wait for HTML content to be inserted
+    const observer = new MutationObserver(() => {
       if (!contentRef.current) return
       
+      // Look for answer inputs in the entire contentRef, including nested divs
       const answerInputs = contentRef.current.querySelectorAll('[data-answer-input]')
       console.log('Found answer input placeholders:', answerInputs.length)
       
       if (answerInputs.length === 0) {
-        console.warn('No answer input placeholders found in HTML')
+        // Try again after a short delay - HTML might still be rendering
         return
       }
+      
+      // Disconnect observer once we find the elements
+      observer.disconnect()
       
       const roots: Array<{ container: Element; root: any }> = []
       
@@ -376,11 +380,93 @@ export default function WorksheetViewer({ assignmentId, resource, initialProgres
       roots.forEach(({ container, root }) => {
         (container as any)._reactRoot = root
       })
-    }, 200) // Increased timeout to ensure HTML is fully rendered
+    })
+    
+    // Start observing
+    observer.observe(contentRef.current, {
+      childList: true,
+      subtree: true
+    })
+    
+    // Also try immediately in case HTML is already rendered
+    const timeoutId = setTimeout(() => {
+      if (!contentRef.current) return
+      
+      const answerInputs = contentRef.current.querySelectorAll('[data-answer-input]')
+      console.log('Timeout check - Found answer input placeholders:', answerInputs.length)
+      
+      if (answerInputs.length === 0) {
+        console.warn('No answer input placeholders found in HTML after timeout')
+        return
+      }
+      
+      // Process the found inputs (same logic as in observer)
+      const roots: Array<{ container: Element; root: any }> = []
+      
+      answerInputs.forEach((container) => {
+        const answerPath = container.getAttribute('data-answer-input')
+        if (!answerPath) return
+        
+        // Skip if already rendered
+        if ((container as any)._reactRoot) return
+        
+        // Get current value
+        let currentValue = ''
+        if (answerPath === 'writing') {
+          currentValue = placementTestAnswers?.writing || ''
+        } else if (answerPath === 'writingFileUpload') {
+          currentValue = placementTestAnswers?.writingFileUrl || ''
+        } else {
+          const keys = answerPath.split('.')
+          let current: any = placementTestAnswers
+          for (const key of keys) {
+            current = current?.[key]
+          }
+          currentValue = current || ''
+        }
+        
+        // Determine input type
+        let inputType: 'radio' | 'text' | 'textarea' | 'fileUpload' = 'radio'
+        if (answerPath === 'writing') {
+          inputType = 'textarea'
+        } else if (answerPath === 'writingFileUpload') {
+          inputType = 'fileUpload'
+        } else if (answerPath.includes('incompleteSentences')) {
+          inputType = 'text'
+        }
+        
+        // Create React root and render component
+        try {
+          // Clear the container first
+          container.innerHTML = ''
+          const root = createRoot(container as HTMLElement)
+          root.render(
+            <InlineAnswerInput
+              answerPath={answerPath}
+              value={currentValue}
+              onChange={(value) => updatePlacementTestAnswer(answerPath, value)}
+              type={inputType}
+              assignmentId={assignmentId}
+              onFileUpload={(fileUrl) => updatePlacementTestAnswer('writingFileUrl', fileUrl)}
+            />
+          )
+          roots.push({ container, root })
+          console.log('Rendered answer input for:', answerPath)
+        } catch (error) {
+          console.error('Error rendering inline answer input:', error, answerPath)
+        }
+      })
+      
+      // Store roots for cleanup
+      roots.forEach(({ container, root }) => {
+        (container as any)._reactRoot = root
+      })
+    }, 500) // Increased timeout to ensure HTML is fully rendered
     
     // Cleanup function
     return () => {
       clearTimeout(timeoutId)
+      observer.disconnect()
       if (contentRef.current) {
         const answerInputs = contentRef.current.querySelectorAll('[data-answer-input]')
         answerInputs.forEach((container) => {
@@ -395,7 +481,7 @@ export default function WorksheetViewer({ assignmentId, resource, initialProgres
         })
       }
     }
-  }, [isPlacementTest, resource.content, notes, assignmentId, updatePlacementTestAnswer]) // Include updatePlacementTestAnswer in dependencies
+  }, [isPlacementTest, resource.content, notes, assignmentId, updatePlacementTestAnswer, placementTestAnswers]) // Include placementTestAnswers
 
   useEffect(() => {
     // Auto-save every 30 seconds
