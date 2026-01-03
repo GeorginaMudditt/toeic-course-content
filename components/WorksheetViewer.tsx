@@ -4,7 +4,6 @@ import { useState, useEffect, useRef } from 'react'
 import { createRoot } from 'react-dom/client'
 import { jsPDF } from 'jspdf'
 import html2canvas from 'html2canvas'
-import PlacementTestAnswerSheet from './PlacementTestAnswerSheet'
 
 interface Resource {
   id: string
@@ -30,12 +29,16 @@ function InlineAnswerInput({
   answerPath, 
   value, 
   onChange, 
-  type = 'radio' 
+  type = 'radio',
+  assignmentId,
+  onFileUpload
 }: { 
   answerPath: string
   value: string
   onChange: (value: string) => void
-  type?: 'radio' | 'text'
+  type?: 'radio' | 'text' | 'textarea' | 'fileUpload'
+  assignmentId?: string
+  onFileUpload?: (fileUrl: string) => void
 }) {
   if (type === 'radio') {
     return (
@@ -55,7 +58,7 @@ function InlineAnswerInput({
         ))}
       </div>
     )
-  } else {
+  } else if (type === 'text') {
     return (
       <input
         type="text"
@@ -72,7 +75,138 @@ function InlineAnswerInput({
         placeholder="Answer"
       />
     )
+  } else if (type === 'textarea') {
+    return (
+      <textarea
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+        style={{
+          width: '100%',
+          border: '1px solid #d1d5db',
+          borderRadius: '4px',
+          padding: '8px',
+          fontSize: '13px',
+          fontFamily: 'inherit',
+          minHeight: '150px',
+          resize: 'vertical'
+        }}
+        placeholder="Type your written response here..."
+      />
+    )
+  } else if (type === 'fileUpload' && assignmentId && onFileUpload) {
+    // File upload component - simplified without local state
+    const FileUploadComponent = () => {
+      const [uploading, setUploading] = useState(false)
+      
+      const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0]
+        if (!file) return
+
+        const isImage = file.type.startsWith('image/')
+        const isPDF = file.type === 'application/pdf'
+        
+        if (!isImage && !isPDF) {
+          alert('Please upload a JPG, PNG, or PDF file.')
+          e.target.value = ''
+          return
+        }
+
+        const maxSize = 10 * 1024 * 1024 // 10MB
+        if (file.size > maxSize) {
+          alert('File size exceeds 10MB limit. Please choose a smaller file.')
+          e.target.value = ''
+          return
+        }
+
+        setUploading(true)
+        try {
+          const formData = new FormData()
+          formData.append('file', file)
+
+          const response = await fetch(`/api/assignments/${assignmentId}/upload`, {
+            method: 'POST',
+            body: formData
+          })
+
+          if (response.ok) {
+            const data = await response.json()
+            const fileUrl = data.path || data.url || (data.files && data.files[0]?.path)
+            
+            if (fileUrl) {
+              onFileUpload(fileUrl)
+            } else {
+              throw new Error('No file URL returned')
+            }
+          } else {
+            const errorData = await response.json().catch(() => ({ error: 'Upload failed' }))
+            alert(errorData.error || 'Failed to upload file. Please try again.')
+          }
+        } catch (error) {
+          console.error('Error uploading file:', error)
+          alert('Failed to upload file. Please try again.')
+        } finally {
+          setUploading(false)
+          e.target.value = ''
+        }
+      }
+
+      if (value) {
+        // Extract filename from URL
+        const urlParts = value.split('/')
+        const filename = urlParts[urlParts.length - 1]
+        
+        return (
+          <div style={{ marginTop: '10px' }}>
+            <div style={{ padding: '12px', backgroundColor: '#f0fdf4', border: '1px solid #86efac', borderRadius: '4px', marginBottom: '8px' }}>
+              <p style={{ margin: 0, fontSize: '13px', color: '#166534' }}>
+                ✓ File uploaded: <strong>{filename}</strong>
+              </p>
+              <a
+                href={value}
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{ fontSize: '13px', color: '#38438f', textDecoration: 'underline', marginTop: '4px', display: 'inline-block' }}
+              >
+                View uploaded file →
+              </a>
+              <button
+                onClick={() => {
+                  onChange('')
+                  onFileUpload('')
+                }}
+                style={{ fontSize: '13px', color: '#dc2626', marginTop: '8px', display: 'block', background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}
+              >
+                Remove file
+              </button>
+            </div>
+          </div>
+        )
+      }
+
+      return (
+        <div style={{ marginTop: '10px' }}>
+          <input
+            type="file"
+            accept="image/*,.pdf"
+            onChange={handleFileUpload}
+            disabled={uploading}
+            style={{
+              fontSize: '13px',
+              padding: '4px'
+            }}
+          />
+          {uploading && (
+            <p style={{ fontSize: '12px', color: '#666', marginTop: '4px', margin: 0 }}>Uploading file... Please wait.</p>
+          )}
+          <p style={{ fontSize: '12px', color: '#666', marginTop: '4px', margin: 0 }}>Accepted formats: JPG, PNG, PDF (max 10MB)</p>
+        </div>
+      )
+    }
+    
+    return <FileUploadComponent />
   }
+  
+  return null
 }
 
 export default function WorksheetViewer({ assignmentId, resource, initialProgress }: WorksheetViewerProps) {
@@ -107,15 +241,25 @@ export default function WorksheetViewer({ assignmentId, resource, initialProgres
     // Initialize structure if needed
     if (!newAnswers.listening) newAnswers.listening = { photographs: {}, conversations: {} }
     if (!newAnswers.reading) newAnswers.reading = { incompleteSentences: {}, readingComprehension: {} }
+    if (!newAnswers.speaking) newAnswers.speaking = { readAloud: '', expressOpinion: '' }
+    if (!newAnswers.writing) newAnswers.writing = ''
+    if (!newAnswers.writingFileUrl) newAnswers.writingFileUrl = undefined
     
-    for (let i = 0; i < keys.length - 1; i++) {
-      if (!current[keys[i]]) {
-        current[keys[i]] = {}
+    // Handle direct writing and writingFileUrl paths
+    if (path === 'writing') {
+      newAnswers.writing = value
+    } else if (path === 'writingFileUrl') {
+      newAnswers.writingFileUrl = value || undefined
+    } else {
+      // Handle nested paths
+      for (let i = 0; i < keys.length - 1; i++) {
+        if (!current[keys[i]]) {
+          current[keys[i]] = {}
+        }
+        current = current[keys[i]]
       }
-      current = current[keys[i]]
+      current[keys[keys.length - 1]] = value
     }
-    
-    current[keys[keys.length - 1]] = value
     
     const newNotes = JSON.stringify(newAnswers, null, 2)
     setNotes(newNotes)
@@ -141,15 +285,29 @@ export default function WorksheetViewer({ assignmentId, resource, initialProgres
         if (!answerPath) return
         
         // Get current value
-        const keys = answerPath.split('.')
-        let current: any = placementTestAnswers
-        for (const key of keys) {
-          current = current?.[key]
+        let currentValue = ''
+        if (answerPath === 'writing') {
+          currentValue = placementTestAnswers?.writing || ''
+        } else if (answerPath === 'writingFileUpload') {
+          currentValue = placementTestAnswers?.writingFileUrl || ''
+        } else {
+          const keys = answerPath.split('.')
+          let current: any = placementTestAnswers
+          for (const key of keys) {
+            current = current?.[key]
+          }
+          currentValue = current || ''
         }
-        const currentValue = current || ''
         
         // Determine input type
-        const isTextInput = answerPath.includes('incompleteSentences')
+        let inputType: 'radio' | 'text' | 'textarea' | 'fileUpload' = 'radio'
+        if (answerPath === 'writing') {
+          inputType = 'textarea'
+        } else if (answerPath === 'writingFileUpload') {
+          inputType = 'fileUpload'
+        } else if (answerPath.includes('incompleteSentences')) {
+          inputType = 'text'
+        }
         
         // Create React root and render component
         try {
@@ -159,7 +317,9 @@ export default function WorksheetViewer({ assignmentId, resource, initialProgres
               answerPath={answerPath}
               value={currentValue}
               onChange={(value) => updatePlacementTestAnswer(answerPath, value)}
-              type={isTextInput ? 'text' : 'radio'}
+              type={inputType}
+              assignmentId={assignmentId}
+              onFileUpload={(fileUrl) => updatePlacementTestAnswer('writingFileUrl', fileUrl)}
             />
           )
           roots.push({ container, root })
@@ -460,18 +620,8 @@ export default function WorksheetViewer({ assignmentId, resource, initialProgres
         }
         
         if (isPlacementTest) {
-          return (
-            <PlacementTestAnswerSheet
-              key={notes} // Force re-render when notes change
-              assignmentId={assignmentId}
-              initialAnswers={notes}
-              onSave={async (answersJson) => {
-                setNotes(answersJson)
-                // Auto-save the structured answers
-                await saveProgress(answersJson)
-              }}
-            />
-          )
+          // For placement tests, all inputs are now inline - don't show the answer sheet
+          return null
         } else {
           return (
             <div className="mt-6">
