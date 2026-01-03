@@ -218,5 +218,41 @@ DROP TRIGGER IF EXISTS update_progress_updated_at ON "Progress";
 CREATE TRIGGER update_progress_updated_at BEFORE UPDATE ON "Progress"
     FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
 
+-- Step 12: Create VocabularyProgress table
+CREATE TABLE IF NOT EXISTS "VocabularyProgress" (
+    "id" TEXT NOT NULL,
+    "studentId" TEXT NOT NULL,
+    "level" TEXT NOT NULL,
+    "topic" TEXT NOT NULL,
+    "bronze" BOOLEAN NOT NULL DEFAULT false,
+    "silver" BOOLEAN NOT NULL DEFAULT false,
+    "gold" BOOLEAN NOT NULL DEFAULT false,
+    "completedAt" TIMESTAMP(3),
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT "VocabularyProgress_pkey" PRIMARY KEY ("id")
+);
+
+-- Step 13: Create unique constraint for VocabularyProgress
+CREATE UNIQUE INDEX IF NOT EXISTS "VocabularyProgress_studentId_level_topic_key"
+ON "VocabularyProgress"("studentId", "level", "topic");
+
+-- Step 14: Create foreign key for VocabularyProgress
+DO $$ 
+BEGIN
+    IF NOT EXISTS (
+        SELECT 1 FROM pg_constraint WHERE conname = 'VocabularyProgress_studentId_fkey'
+    ) THEN
+        ALTER TABLE "VocabularyProgress" ADD CONSTRAINT "VocabularyProgress_studentId_fkey" 
+        FOREIGN KEY ("studentId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+    END IF;
+END $$;
+
+-- Step 15: Create trigger for VocabularyProgress updatedAt
+DROP TRIGGER IF EXISTS update_vocabularyprogress_updated_at ON "VocabularyProgress";
+CREATE TRIGGER update_vocabularyprogress_updated_at BEFORE UPDATE ON "VocabularyProgress"
+    FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
+
 -- Done! All tables and constraints have been created.
 -- You can verify by running: SELECT table_name FROM information_schema.tables WHERE table_schema = 'public';
