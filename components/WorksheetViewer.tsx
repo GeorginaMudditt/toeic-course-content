@@ -65,10 +65,12 @@ function InlineAnswerInput({
               zIndex: 11
             }}
             onClick={(e) => {
+              e.preventDefault()
               e.stopPropagation()
               onChange(option)
             }}
             onMouseDown={(e) => {
+              e.preventDefault()
               e.stopPropagation()
             }}
           >
@@ -78,14 +80,17 @@ function InlineAnswerInput({
               value={option}
               checked={value === option}
               onChange={(e) => {
+                e.preventDefault()
                 e.stopPropagation()
                 onChange((e.target as HTMLInputElement).value)
               }}
               onClick={(e) => {
+                e.preventDefault()
                 e.stopPropagation()
                 onChange((e.target as HTMLInputElement).value)
               }}
               onMouseDown={(e) => {
+                e.preventDefault()
                 e.stopPropagation()
               }}
               style={{ 
@@ -109,11 +114,41 @@ function InlineAnswerInput({
       </div>
     )
   } else if (type === 'text') {
+    // Store scroll position to prevent page jumping
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+      const scrollY = window.scrollY
+      e.stopPropagation()
+      onChange(e.target.value)
+      // Restore scroll position after state update
+      requestAnimationFrame(() => {
+        window.scrollTo(0, scrollY)
+      })
+    }
+    
     return (
       <input
         type="text"
         value={value}
-        onChange={(e) => onChange(e.target.value)}
+        onChange={handleChange}
+        onKeyDown={(e) => {
+          e.stopPropagation()
+          // Prevent form submission on Enter
+          if (e.key === 'Enter') {
+            e.preventDefault()
+          }
+        }}
+        onKeyPress={(e) => {
+          e.stopPropagation()
+        }}
+        onClick={(e) => {
+          e.stopPropagation()
+        }}
+        onFocus={(e) => {
+          e.stopPropagation()
+        }}
+        onBlur={(e) => {
+          e.stopPropagation()
+        }}
         style={{
           border: '1px solid #d1d5db',
           borderRadius: '4px',
