@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef, useCallback } from 'react'
 import { createRoot } from 'react-dom/client'
 import { jsPDF } from 'jspdf'
 import html2canvas from 'html2canvas'
@@ -231,12 +231,10 @@ export default function WorksheetViewer({ assignmentId, resource, initialProgres
   
   const placementTestAnswers = getPlacementTestAnswers()
   
-  // Update placement test answer
-  const updatePlacementTestAnswer = (path: string, value: string) => {
-    const keys = path.split('.')
+  // Update placement test answer - use useCallback to stabilize the reference
+  const updatePlacementTestAnswer = useCallback((path: string, value: string) => {
     const currentAnswers = placementTestAnswers || {}
     const newAnswers = JSON.parse(JSON.stringify(currentAnswers))
-    let current: any = newAnswers
     
     // Initialize structure if needed
     if (!newAnswers.listening) newAnswers.listening = { photographs: {}, conversations: {} }
@@ -252,6 +250,8 @@ export default function WorksheetViewer({ assignmentId, resource, initialProgres
       newAnswers.writingFileUrl = value || undefined
     } else {
       // Handle nested paths
+      const keys = path.split('.')
+      let current: any = newAnswers
       for (let i = 0; i < keys.length - 1; i++) {
         if (!current[keys[i]]) {
           current[keys[i]] = {}
@@ -263,20 +263,61 @@ export default function WorksheetViewer({ assignmentId, resource, initialProgres
     
     const newNotes = JSON.stringify(newAnswers, null, 2)
     setNotes(newNotes)
-    // Auto-save with the new notes
-    setTimeout(() => {
-      saveProgress(newNotes)
-    }, 500)
+    // Auto-save will be handled by the auto-save effect
+  }, [placementTestAnswers])
+  
+  const saveProgress = async (notesToSave?: string) => {
+    const notesValue = notesToSave || notes
+    setSaving(true)
+    try {
+      const response = await fetch(`/api/progress/${assignmentId}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          notes: notesValue,
+          status: status === 'NOT_STARTED' ? 'IN_PROGRESS' : status
+        })
+      })
+
+      if (response.ok) {
+        setSaved(true)
+        setTimeout(() => setSaved(false), 2000)
+        if (status === 'NOT_STARTED') {
+          setStatus('IN_PROGRESS')
+        }
+      }
+    } catch (error) {
+      console.error('Failed to save progress:', error)
+    } finally {
+      setSaving(false)
+    }
   }
+  
+  // Auto-save placement test answers when notes change
+  useEffect(() => {
+    if (isPlacementTest && notes) {
+      const timeoutId = setTimeout(() => {
+        saveProgress(notes)
+      }, 500)
+      return () => clearTimeout(timeoutId)
+    }
+  }, [notes, isPlacementTest])
   
   // Inject inline answer inputs into HTML content
   useEffect(() => {
     if (!isPlacementTest || !contentRef.current) return
     
-    // Wait for DOM to be ready
+    // Wait for DOM to be ready - use a longer timeout to ensure HTML is fully rendered
     const timeoutId = setTimeout(() => {
-      const answerInputs = contentRef.current?.querySelectorAll('[data-answer-input]')
-      if (!answerInputs) return
+      if (!contentRef.current) return
+      
+      const answerInputs = contentRef.current.querySelectorAll('[data-answer-input]')
+      console.log('Found answer input placeholders:', answerInputs.length)
+      
+      if (answerInputs.length === 0) {
+        console.warn('No answer input placeholders found in HTML')
+        return
+      }
       
       const roots: Array<{ container: Element; root: any }> = []
       
@@ -311,6 +352,8 @@ export default function WorksheetViewer({ assignmentId, resource, initialProgres
         
         // Create React root and render component
         try {
+          // Clear the container first
+          container.innerHTML = ''
           const root = createRoot(container as HTMLElement)
           root.render(
             <InlineAnswerInput
@@ -323,8 +366,9 @@ export default function WorksheetViewer({ assignmentId, resource, initialProgres
             />
           )
           roots.push({ container, root })
+          console.log('Rendered answer input for:', answerPath)
         } catch (error) {
-          console.error('Error rendering inline answer input:', error)
+          console.error('Error rendering inline answer input:', error, answerPath)
         }
       })
       
@@ -332,7 +376,7 @@ export default function WorksheetViewer({ assignmentId, resource, initialProgres
       roots.forEach(({ container, root }) => {
         (container as any)._reactRoot = root
       })
-    }, 100)
+    }, 200) // Increased timeout to ensure HTML is fully rendered
     
     // Cleanup function
     return () => {
@@ -351,7 +395,7 @@ export default function WorksheetViewer({ assignmentId, resource, initialProgres
         })
       }
     }
-  }, [isPlacementTest, resource.content, placementTestAnswers])
+  }, [isPlacementTest, resource.content, notes, assignmentId, updatePlacementTestAnswer]) // Include updatePlacementTestAnswer in dependencies
 
   useEffect(() => {
     // Auto-save every 30 seconds
@@ -362,34 +406,7 @@ export default function WorksheetViewer({ assignmentId, resource, initialProgres
     }, 30000)
 
     return () => clearInterval(autoSave)
-  }, [notes, status])
-
-  const saveProgress = async (notesToSave?: string) => {
-    const notesValue = notesToSave || notes
-    setSaving(true)
-    try {
-      const response = await fetch(`/api/progress/${assignmentId}`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          notes: notesValue,
-          status: status === 'NOT_STARTED' ? 'IN_PROGRESS' : status
-        })
-      })
-
-      if (response.ok) {
-        setSaved(true)
-        setTimeout(() => setSaved(false), 2000)
-        if (status === 'NOT_STARTED') {
-          setStatus('IN_PROGRESS')
-        }
-      }
-    } catch (error) {
-      console.error('Failed to save progress:', error)
-    } finally {
-      setSaving(false)
-    }
-  }
+  }, [notes, status, saveProgress])
 
   const markComplete = async () => {
     setSaving(true)
