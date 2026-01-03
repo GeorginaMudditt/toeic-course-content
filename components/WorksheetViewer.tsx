@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, useRef, useCallback } from 'react'
+import { useState, useEffect, useRef, useCallback, useMemo } from 'react'
 import { createRoot } from 'react-dom/client'
 import { jsPDF } from 'jspdf'
 import html2canvas from 'html2canvas'
@@ -67,11 +67,18 @@ function InlineAnswerInput({
             onClick={(e) => {
               e.preventDefault()
               e.stopPropagation()
+              e.nativeEvent.stopImmediatePropagation()
               onChange(option)
             }}
             onMouseDown={(e) => {
               e.preventDefault()
               e.stopPropagation()
+              e.nativeEvent.stopImmediatePropagation()
+            }}
+            onMouseUp={(e) => {
+              e.preventDefault()
+              e.stopPropagation()
+              e.nativeEvent.stopImmediatePropagation()
             }}
           >
             <input
@@ -82,16 +89,24 @@ function InlineAnswerInput({
               onChange={(e) => {
                 e.preventDefault()
                 e.stopPropagation()
+                e.nativeEvent.stopImmediatePropagation()
                 onChange((e.target as HTMLInputElement).value)
               }}
               onClick={(e) => {
                 e.preventDefault()
                 e.stopPropagation()
+                e.nativeEvent.stopImmediatePropagation()
                 onChange((e.target as HTMLInputElement).value)
               }}
               onMouseDown={(e) => {
                 e.preventDefault()
                 e.stopPropagation()
+                e.nativeEvent.stopImmediatePropagation()
+              }}
+              onMouseUp={(e) => {
+                e.preventDefault()
+                e.stopPropagation()
+                e.nativeEvent.stopImmediatePropagation()
               }}
               style={{ 
                 width: '16px', 
@@ -114,12 +129,31 @@ function InlineAnswerInput({
       </div>
     )
   } else if (type === 'text') {
+    // Use local state to prevent focus loss during parent re-renders
+    const [localValue, setLocalValue] = useState(value)
+    const inputRef = useRef<HTMLInputElement>(null)
+    const isFocusedRef = useRef(false)
+    
+    // Sync with parent value only when not focused
+    useEffect(() => {
+      if (!isFocusedRef.current) {
+        setLocalValue(value)
+      }
+    }, [value])
+    
     // Store scroll position to prevent page jumping
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
       const scrollY = window.scrollY
+      const newValue = e.target.value
       e.stopPropagation()
-      onChange(e.target.value)
-      // Restore scroll position after state update
+      
+      // Update local state immediately for responsive typing
+      setLocalValue(newValue)
+      
+      // Update parent (this triggers auto-save)
+      onChange(newValue)
+      
+      // Restore scroll position
       requestAnimationFrame(() => {
         window.scrollTo(0, scrollY)
       })
@@ -127,9 +161,22 @@ function InlineAnswerInput({
     
     return (
       <input
+        ref={inputRef}
         type="text"
-        value={value}
+        value={localValue}
         onChange={handleChange}
+        onFocus={(e) => {
+          isFocusedRef.current = true
+          e.stopPropagation()
+        }}
+        onBlur={(e) => {
+          isFocusedRef.current = false
+          // Sync with parent value on blur
+          if (localValue !== value) {
+            onChange(localValue)
+          }
+          e.stopPropagation()
+        }}
         onKeyDown={(e) => {
           e.stopPropagation()
           // Prevent form submission on Enter
@@ -141,12 +188,6 @@ function InlineAnswerInput({
           e.stopPropagation()
         }}
         onClick={(e) => {
-          e.stopPropagation()
-        }}
-        onFocus={(e) => {
-          e.stopPropagation()
-        }}
-        onBlur={(e) => {
           e.stopPropagation()
         }}
         style={{
@@ -542,6 +583,7 @@ export default function WorksheetViewer({ assignmentId, resource, initialProgres
   }, [isPlacementTest, resource.content, renderAnswerInput, placementTestAnswers]) // Only recreate when content changes
 
   // Update existing answer inputs when notes/answers change - separate effect
+  // But skip updates for text inputs that are currently focused to prevent losing focus
   useEffect(() => {
     if (!isPlacementTest || !contentRef.current) return
     
@@ -553,9 +595,20 @@ export default function WorksheetViewer({ assignmentId, resource, initialProgres
       
       // Only update if root exists - don't create new ones here
       if ((container as any)._reactRoot) {
+        const inputType = getInputType(answerPath)
+        
+        // For text inputs, check if they're currently focused
+        // If focused, don't re-render to prevent losing focus
+        if (inputType === 'text') {
+          const inputElement = container.querySelector('input[type="text"]') as HTMLInputElement
+          if (inputElement && document.activeElement === inputElement) {
+            // Input is focused, don't re-render - let the controlled component handle updates
+            return
+          }
+        }
+        
         const root = (container as any)._reactRoot
         const currentValue = getAnswerValue(answerPath, placementTestAnswers)
-        const inputType = getInputType(answerPath)
         
         root.render(
           <InlineAnswerInput
