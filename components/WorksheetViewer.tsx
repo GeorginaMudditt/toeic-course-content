@@ -1,6 +1,7 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
+import { createRoot } from 'react-dom/client'
 import { jsPDF } from 'jspdf'
 import html2canvas from 'html2canvas'
 import PlacementTestAnswerSheet from './PlacementTestAnswerSheet'
@@ -24,14 +25,173 @@ interface WorksheetViewerProps {
   initialProgress?: Progress | null
 }
 
+// Inline answer input component for placement test
+function InlineAnswerInput({ 
+  answerPath, 
+  value, 
+  onChange, 
+  type = 'radio' 
+}: { 
+  answerPath: string
+  value: string
+  onChange: (value: string) => void
+  type?: 'radio' | 'text'
+}) {
+  if (type === 'radio') {
+    return (
+      <div style={{ display: 'inline-flex', alignItems: 'center', gap: '8px' }}>
+        {['A', 'B', 'C', 'D'].map((option) => (
+          <label key={option} style={{ display: 'flex', alignItems: 'center', gap: '4px', cursor: 'pointer' }}>
+            <input
+              type="radio"
+              name={answerPath}
+              value={option}
+              checked={value === option}
+              onChange={(e) => onChange(e.target.value)}
+              style={{ width: '16px', height: '16px', cursor: 'pointer' }}
+            />
+            <span style={{ fontSize: '13px' }}>{option}</span>
+          </label>
+        ))}
+      </div>
+    )
+  } else {
+    return (
+      <input
+        type="text"
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+        style={{
+          border: '1px solid #d1d5db',
+          borderRadius: '4px',
+          padding: '4px 8px',
+          fontSize: '13px',
+          width: '120px',
+          marginLeft: '8px'
+        }}
+        placeholder="Answer"
+      />
+    )
+  }
+}
+
 export default function WorksheetViewer({ assignmentId, resource, initialProgress }: WorksheetViewerProps) {
   const [notes, setNotes] = useState(initialProgress?.notes || '')
   const [status, setStatus] = useState(initialProgress?.status || 'NOT_STARTED')
   const [saving, setSaving] = useState(false)
   const [saved, setSaved] = useState(false)
+  const contentRef = useRef<HTMLDivElement>(null)
   
   // Check if this is a Placement Test
   const isPlacementTest = resource.title.toLowerCase().includes('placement test')
+  
+  // Parse placement test answers from notes
+  const getPlacementTestAnswers = () => {
+    if (!isPlacementTest || !notes) return {}
+    try {
+      return JSON.parse(notes)
+    } catch {
+      return {}
+    }
+  }
+  
+  const placementTestAnswers = getPlacementTestAnswers()
+  
+  // Update placement test answer
+  const updatePlacementTestAnswer = (path: string, value: string) => {
+    const keys = path.split('.')
+    const currentAnswers = placementTestAnswers || {}
+    const newAnswers = JSON.parse(JSON.stringify(currentAnswers))
+    let current: any = newAnswers
+    
+    // Initialize structure if needed
+    if (!newAnswers.listening) newAnswers.listening = { photographs: {}, conversations: {} }
+    if (!newAnswers.reading) newAnswers.reading = { incompleteSentences: {}, readingComprehension: {} }
+    
+    for (let i = 0; i < keys.length - 1; i++) {
+      if (!current[keys[i]]) {
+        current[keys[i]] = {}
+      }
+      current = current[keys[i]]
+    }
+    
+    current[keys[keys.length - 1]] = value
+    
+    const newNotes = JSON.stringify(newAnswers, null, 2)
+    setNotes(newNotes)
+    // Auto-save with the new notes
+    setTimeout(() => {
+      saveProgress(newNotes)
+    }, 500)
+  }
+  
+  // Inject inline answer inputs into HTML content
+  useEffect(() => {
+    if (!isPlacementTest || !contentRef.current) return
+    
+    // Wait for DOM to be ready
+    const timeoutId = setTimeout(() => {
+      const answerInputs = contentRef.current?.querySelectorAll('[data-answer-input]')
+      if (!answerInputs) return
+      
+      const roots: Array<{ container: Element; root: any }> = []
+      
+      answerInputs.forEach((container) => {
+        const answerPath = container.getAttribute('data-answer-input')
+        if (!answerPath) return
+        
+        // Get current value
+        const keys = answerPath.split('.')
+        let current: any = placementTestAnswers
+        for (const key of keys) {
+          current = current?.[key]
+        }
+        const currentValue = current || ''
+        
+        // Determine input type
+        const isTextInput = answerPath.includes('incompleteSentences')
+        
+        // Create React root and render component
+        try {
+          const root = createRoot(container as HTMLElement)
+          root.render(
+            <InlineAnswerInput
+              answerPath={answerPath}
+              value={currentValue}
+              onChange={(value) => updatePlacementTestAnswer(answerPath, value)}
+              type={isTextInput ? 'text' : 'radio'}
+            />
+          )
+          roots.push({ container, root })
+        } catch (error) {
+          console.error('Error rendering inline answer input:', error)
+        }
+      })
+      
+      // Store roots for cleanup
+      roots.forEach(({ container, root }) => {
+        (container as any)._reactRoot = root
+      })
+    }, 100)
+    
+    // Cleanup function
+    return () => {
+      clearTimeout(timeoutId)
+      if (contentRef.current) {
+        const answerInputs = contentRef.current.querySelectorAll('[data-answer-input]')
+        answerInputs.forEach((container) => {
+          const root = (container as any)._reactRoot
+          if (root) {
+            try {
+              root.unmount()
+            } catch (error) {
+              // Ignore unmount errors
+            }
+          }
+        })
+      }
+    }
+  }, [isPlacementTest, resource.content, placementTestAnswers])
 
   useEffect(() => {
     // Auto-save every 30 seconds
@@ -44,14 +204,15 @@ export default function WorksheetViewer({ assignmentId, resource, initialProgres
     return () => clearInterval(autoSave)
   }, [notes, status])
 
-  const saveProgress = async () => {
+  const saveProgress = async (notesToSave?: string) => {
+    const notesValue = notesToSave || notes
     setSaving(true)
     try {
       const response = await fetch(`/api/progress/${assignmentId}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          notes,
+          notes: notesValue,
           status: status === 'NOT_STARTED' ? 'IN_PROGRESS' : status
         })
       })
@@ -155,7 +316,7 @@ export default function WorksheetViewer({ assignmentId, resource, initialProgres
         )}
       </div>
 
-      <div id="worksheet-content" className="border rounded-lg p-6 bg-white mb-4">
+      <div id="worksheet-content" ref={contentRef} className="border rounded-lg p-6 bg-white mb-4">
         {(() => {
           // Check if content is JSON (PDF with audio)
           let contentData: any = null
@@ -235,44 +396,102 @@ export default function WorksheetViewer({ assignmentId, resource, initialProgres
             }
           } else {
             // HTML content
-            return (
-              <div 
-                className="prose max-w-none"
-                dangerouslySetInnerHTML={{ __html: resource.content }}
-              />
-            )
+            // Check if content contains an "Answers" section - if so, split and insert textarea before it
+            // Look for h2 heading containing "Answers" (with optional emoji)
+            const answersHeadingRegex = /(<h2[^>]*>.*?Answers.*?<\/h2>)/i
+            const answersMatch = resource.content.match(answersHeadingRegex)
+            
+            if (answersMatch && !isPlacementTest) {
+              // Split content at the Answers heading
+              const answersIndex = resource.content.indexOf(answersMatch[0])
+              const contentBeforeAnswers = resource.content.substring(0, answersIndex)
+              const contentFromAnswers = resource.content.substring(answersIndex)
+              
+              return (
+                <>
+                  <div 
+                    className="prose max-w-none"
+                    dangerouslySetInnerHTML={{ __html: contentBeforeAnswers }}
+                  />
+                  <div className="mt-6 mb-6">
+                    <label htmlFor="notes" className="block text-sm font-medium text-gray-700 mb-2">
+                      Your Work / Answers
+                    </label>
+                    <textarea
+                      id="notes"
+                      rows={10}
+                      value={notes}
+                      onChange={(e) => setNotes(e.target.value)}
+                      className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none"
+                      style={{ borderColor: '#d1d5db' }}
+                      onFocus={(e) => e.currentTarget.style.borderColor = '#38438f'}
+                      onBlur={(e) => e.currentTarget.style.borderColor = '#d1d5db'}
+                      placeholder="Type your answers or work here..."
+                    />
+                  </div>
+                  <div 
+                    className="prose max-w-none"
+                    dangerouslySetInnerHTML={{ __html: contentFromAnswers }}
+                  />
+                </>
+              )
+            } else {
+              // No Answers section found, render normally
+              return (
+                <div 
+                  className="prose max-w-none"
+                  dangerouslySetInnerHTML={{ __html: resource.content }}
+                />
+              )
+            }
           }
         })()}
       </div>
 
-      {/* Show structured answer sheet for Placement Test, otherwise show simple textarea */}
-      {isPlacementTest ? (
-        <PlacementTestAnswerSheet
-          assignmentId={assignmentId}
-          initialAnswers={notes}
-          onSave={async (answersJson) => {
-            setNotes(answersJson)
-            // Auto-save the structured answers
-            await saveProgress()
-          }}
-        />
-      ) : (
-        <div className="mt-6">
-          <label htmlFor="notes" className="block text-sm font-medium text-gray-700 mb-2">
-            Your Work / Answers
-          </label>
-          <textarea
-            id="notes"
-            rows={10}
-            value={notes}
-            onChange={(e) => setNotes(e.target.value)}
-            className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none"
-            onFocus={(e) => e.currentTarget.style.borderColor = '#38438f'}
-            onBlur={(e) => e.currentTarget.style.borderColor = '#d1d5db'}
-            placeholder="Type your answers or work here..."
-          />
-        </div>
-      )}
+      {/* Show structured answer sheet for Placement Test, otherwise show simple textarea (only if not already rendered above) */}
+      {(() => {
+        // Check if textarea was already rendered in the HTML content section
+        const answersHeadingRegex = /(<h2[^>]*>.*?Answers.*?<\/h2>)/i
+        const hasAnswersSection = resource.content.match(answersHeadingRegex) && !resource.content.startsWith('{') && !resource.content.startsWith('/uploads/') && !resource.content.startsWith('uploads/')
+        
+        if (hasAnswersSection && !isPlacementTest) {
+          // Textarea already rendered above, don't render again
+          return null
+        }
+        
+        if (isPlacementTest) {
+          return (
+            <PlacementTestAnswerSheet
+              key={notes} // Force re-render when notes change
+              assignmentId={assignmentId}
+              initialAnswers={notes}
+              onSave={async (answersJson) => {
+                setNotes(answersJson)
+                // Auto-save the structured answers
+                await saveProgress(answersJson)
+              }}
+            />
+          )
+        } else {
+          return (
+            <div className="mt-6">
+              <label htmlFor="notes" className="block text-sm font-medium text-gray-700 mb-2">
+                Your Work / Answers
+              </label>
+              <textarea
+                id="notes"
+                rows={10}
+                value={notes}
+                onChange={(e) => setNotes(e.target.value)}
+                className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none"
+                onFocus={(e) => e.currentTarget.style.borderColor = '#38438f'}
+                onBlur={(e) => e.currentTarget.style.borderColor = '#d1d5db'}
+                placeholder="Type your answers or work here..."
+              />
+            </div>
+          )
+        }
+      })()}
 
       {status !== 'COMPLETED' && (
         <div className="mt-4">
