@@ -105,11 +105,13 @@ export default function StudentAssignmentManager({ student, resources, courses }
         router.refresh()
         setSelectedResources([])
       } else {
-        alert('Failed to assign resources')
+        const errorData = await response.json().catch(() => ({ error: 'Failed to assign resources' }))
+        alert(errorData.error || 'Failed to assign resources')
       }
     } catch (error) {
       console.error('Error assigning resources:', error)
-      alert('Failed to assign resources')
+      const errorMessage = error instanceof Error ? error.message : 'Failed to assign resources'
+      alert(`Error: ${errorMessage}`)
     } finally {
       setLoading(false)
     }

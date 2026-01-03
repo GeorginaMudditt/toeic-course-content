@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
-import { prisma } from '@/lib/prisma'
+import { supabaseServer } from '@/lib/supabase'
+import { randomUUID } from 'crypto'
 
 export async function POST(request: NextRequest) {
   try {
@@ -13,50 +14,90 @@ export async function POST(request: NextRequest) {
 
     const { enrollmentId, resourceIds } = await request.json()
 
-    // Verify enrollment belongs to teacher's course
-    const enrollment = await prisma.enrollment.findUnique({
-      where: { id: enrollmentId },
-      include: { course: true }
-    })
+    if (!enrollmentId || !resourceIds || !Array.isArray(resourceIds) || resourceIds.length === 0) {
+      return NextResponse.json({ error: 'Invalid request: enrollmentId and resourceIds array required' }, { status: 400 })
+    }
 
-    if (!enrollment || enrollment.course.creatorId !== session.user.id) {
+    // Verify enrollment belongs to teacher's course using Supabase
+    const { data: enrollmentData, error: enrollmentError } = await supabaseServer
+      .from('Enrollment')
+      .select('*')
+      .eq('id', enrollmentId)
+      .single()
+
+    if (enrollmentError || !enrollmentData) {
+      console.error('Error fetching enrollment:', enrollmentError)
+      return NextResponse.json({ error: 'Enrollment not found' }, { status: 404 })
+    }
+
+    // Fetch the course to verify ownership
+    const { data: courseData, error: courseError } = await supabaseServer
+      .from('Course')
+      .select('*')
+      .eq('id', enrollmentData.courseId)
+      .single()
+
+    if (courseError || !courseData) {
+      console.error('Error fetching course:', courseError)
+      return NextResponse.json({ error: 'Course not found' }, { status: 404 })
+    }
+
+    if (courseData.creatorId !== session.user.id) {
       return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
     }
 
-    // Get current max order
-    const maxOrder = await prisma.assignment.findFirst({
-      where: { enrollmentId },
-      orderBy: { order: 'desc' }
-    })
+    // Get current max order using Supabase
+    const { data: maxOrderData, error: maxOrderError } = await supabaseServer
+      .from('Assignment')
+      .select('order')
+      .eq('enrollmentId', enrollmentId)
+      .order('order', { ascending: false })
+      .limit(1)
+      .single()
 
-    let nextOrder = (maxOrder?.order || 0) + 1
+    let nextOrder = 1
+    if (!maxOrderError && maxOrderData && maxOrderData.order) {
+      nextOrder = (maxOrderData.order as number) + 1
+    }
 
-    // Create assignments
-    const assignments = await Promise.all(
-      resourceIds.map((resourceId: string) =>
-        prisma.assignment.create({
-          data: {
-            enrollmentId,
-            resourceId,
-            order: nextOrder++
-          }
-        })
-      )
-    )
+    // Create assignments using Supabase
+    const now = new Date().toISOString()
+    const assignmentsToInsert = resourceIds.map((resourceId: string) => ({
+      id: randomUUID(),
+      enrollmentId,
+      resourceId,
+      order: nextOrder++,
+      assignedAt: now
+    }))
 
-    return NextResponse.json(assignments)
-  } catch (error: any) {
-    if (error.code === 'P2002') {
+    const { data: assignments, error: insertError } = await supabaseServer
+      .from('Assignment')
+      .insert(assignmentsToInsert)
+      .select()
+
+    if (insertError) {
+      console.error('Error creating assignments:', insertError)
+      // Check if it's a unique constraint violation (resource already assigned)
+      if (insertError.code === '23505' || insertError.message?.includes('unique')) {
+        return NextResponse.json(
+          { error: 'One or more resources are already assigned to this enrollment' },
+          { status: 400 }
+        )
+      }
       return NextResponse.json(
-        { error: 'One or more resources are already assigned' },
-        { status: 400 }
+        { error: insertError.message || 'Failed to create assignments' },
+        { status: 500 }
       )
     }
+
+    return NextResponse.json(assignments || [])
+  } catch (error: any) {
     console.error('Error creating assignments:', error)
     return NextResponse.json(
-      { error: 'Failed to create assignments' },
+      { error: error.message || 'Failed to create assignments' },
       { status: 500 }
     )
   }
 }
+
 
