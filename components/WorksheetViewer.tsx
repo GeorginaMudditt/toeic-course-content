@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import { jsPDF } from 'jspdf'
 import html2canvas from 'html2canvas'
+import PlacementTestAnswerSheet from './PlacementTestAnswerSheet'
 
 interface Resource {
   id: string
@@ -28,6 +29,9 @@ export default function WorksheetViewer({ assignmentId, resource, initialProgres
   const [status, setStatus] = useState(initialProgress?.status || 'NOT_STARTED')
   const [saving, setSaving] = useState(false)
   const [saved, setSaved] = useState(false)
+  
+  // Check if this is a Placement Test
+  const isPlacementTest = resource.title.toLowerCase().includes('placement test')
 
   useEffect(() => {
     // Auto-save every 30 seconds
@@ -241,21 +245,34 @@ export default function WorksheetViewer({ assignmentId, resource, initialProgres
         })()}
       </div>
 
-      <div className="mt-6">
-        <label htmlFor="notes" className="block text-sm font-medium text-gray-700 mb-2">
-          Your Work / Answers
-        </label>
-        <textarea
-          id="notes"
-          rows={10}
-          value={notes}
-          onChange={(e) => setNotes(e.target.value)}
-          className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none"
-          onFocus={(e) => e.currentTarget.style.borderColor = '#38438f'}
-          onBlur={(e) => e.currentTarget.style.borderColor = '#d1d5db'}
-          placeholder="Type your answers or work here..."
+      {/* Show structured answer sheet for Placement Test, otherwise show simple textarea */}
+      {isPlacementTest ? (
+        <PlacementTestAnswerSheet
+          assignmentId={assignmentId}
+          initialAnswers={notes}
+          onSave={async (answersJson) => {
+            setNotes(answersJson)
+            // Auto-save the structured answers
+            await saveProgress()
+          }}
         />
-      </div>
+      ) : (
+        <div className="mt-6">
+          <label htmlFor="notes" className="block text-sm font-medium text-gray-700 mb-2">
+            Your Work / Answers
+          </label>
+          <textarea
+            id="notes"
+            rows={10}
+            value={notes}
+            onChange={(e) => setNotes(e.target.value)}
+            className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none"
+            onFocus={(e) => e.currentTarget.style.borderColor = '#38438f'}
+            onBlur={(e) => e.currentTarget.style.borderColor = '#d1d5db'}
+            placeholder="Type your answers or work here..."
+          />
+        </div>
+      )}
 
       {status !== 'COMPLETED' && (
         <div className="mt-4">
