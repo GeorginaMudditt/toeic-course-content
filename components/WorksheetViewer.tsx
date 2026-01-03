@@ -79,11 +79,11 @@ function InlineAnswerInput({
               checked={value === option}
               onChange={(e) => {
                 e.stopPropagation()
-                onChange(e.target.value)
+                onChange((e.target as HTMLInputElement).value)
               }}
               onClick={(e) => {
                 e.stopPropagation()
-                onChange(e.target.value)
+                onChange((e.target as HTMLInputElement).value)
               }}
               onMouseDown={(e) => {
                 e.stopPropagation()
