@@ -21,7 +21,9 @@
     "setup:production": "tsx scripts/setup-production.ts",
     "demo:student": "tsx scripts/create-demo-student.ts",
     "update:modal-verbs": "tsx scripts/update-modal-verbs-resource.ts",
-    "update:resource": "tsx scripts/update-resource.ts"
+    "update:resource": "tsx scripts/update-resource.ts",
+    "update:resource:supabase": "tsx scripts/update-resource-supabase.ts",
+    "update:placement-test": "tsx scripts/update-placement-test-with-answer-inputs.ts"
   },
   "dependencies": {
     "@prisma/client": "^5.7.1",

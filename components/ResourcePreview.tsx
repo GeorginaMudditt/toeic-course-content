@@ -1,6 +1,7 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect, useRef, useCallback } from 'react'
+import { createRoot } from 'react-dom/client'
 import { jsPDF } from 'jspdf'
 import html2canvas from 'html2canvas'
 
@@ -18,9 +19,178 @@ interface ResourcePreviewProps {
   showActions?: boolean
 }
 
+// Inline answer input component for placement test (same as WorksheetViewer)
+function InlineAnswerInput({ 
+  answerPath, 
+  value, 
+  onChange, 
+  type = 'radio' 
+}: { 
+  answerPath: string
+  value: string
+  onChange: (value: string) => void
+  type?: 'radio' | 'text'
+}) {
+  if (type === 'radio') {
+    return (
+      <div style={{ display: 'inline-flex', alignItems: 'center', gap: '8px' }}>
+        {['A', 'B', 'C', 'D'].map((option) => (
+          <label key={option} style={{ display: 'flex', alignItems: 'center', gap: '4px', cursor: 'pointer' }}>
+            <input
+              type="radio"
+              name={answerPath}
+              value={option}
+              checked={value === option}
+              onChange={(e) => onChange(e.target.value)}
+              style={{ width: '16px', height: '16px', cursor: 'pointer' }}
+            />
+            <span style={{ fontSize: '13px' }}>{option}</span>
+          </label>
+        ))}
+      </div>
+    )
+  } else {
+    return (
+      <input
+        type="text"
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+        style={{
+          border: '1px solid #d1d5db',
+          borderRadius: '4px',
+          padding: '4px 8px',
+          fontSize: '13px',
+          width: '120px',
+          marginLeft: '8px'
+        }}
+        placeholder="Answer"
+      />
+    )
+  }
+}
+
 export default function ResourcePreview({ resource, showActions = true }: ResourcePreviewProps) {
   const [downloading, setDownloading] = useState(false)
   const [linkCopied, setLinkCopied] = useState(false)
+  const contentRef = useRef<HTMLDivElement>(null)
+  
+  // Check if this is a Placement Test
+  const isPlacementTest = resource.title.toLowerCase().includes('placement test')
+  
+  // Inject inline answer inputs into HTML content (same logic as WorksheetViewer)
+  useEffect(() => {
+    if (!isPlacementTest || !contentRef.current) return
+    
+    // Use MutationObserver to wait for HTML content to be inserted
+    const observer = new MutationObserver(() => {
+      if (!contentRef.current) return
+      
+      // Look for answer inputs in the entire contentRef, including nested divs
+      const answerInputs = contentRef.current.querySelectorAll('[data-answer-input]')
+      
+      if (answerInputs.length === 0) {
+        // Try again after a short delay - HTML might still be rendering
+        return
+      }
+      
+      // Disconnect observer once we find the elements
+      observer.disconnect()
+      
+      answerInputs.forEach((container) => {
+        const answerPath = container.getAttribute('data-answer-input')
+        if (!answerPath) return
+        
+        // Skip if already rendered
+        if ((container as any)._reactRoot) return
+        
+        // Determine input type
+        const isTextInput = answerPath.includes('incompleteSentences')
+        const inputType = isTextInput ? 'text' : 'radio'
+        
+        // Create React root and render component (read-only for preview)
+        try {
+          container.innerHTML = ''
+          const root = createRoot(container as HTMLElement)
+          root.render(
+            <InlineAnswerInput
+              answerPath={answerPath}
+              value=""
+              onChange={() => {}} // No-op for preview
+              type={inputType}
+            />
+          )
+          ;(container as any)._reactRoot = root
+        } catch (error) {
+          console.error('Error rendering inline answer input:', error, answerPath)
+        }
+      })
+    })
+    
+    // Start observing
+    if (contentRef.current) {
+      observer.observe(contentRef.current, {
+        childList: true,
+        subtree: true
+      })
+    }
+    
+    // Also try immediately in case HTML is already rendered
+    const timeoutId = setTimeout(() => {
+      if (!contentRef.current) return
+      
+      const answerInputs = contentRef.current.querySelectorAll('[data-answer-input]')
+      
+      if (answerInputs.length === 0) return
+      
+      answerInputs.forEach((container) => {
+        const answerPath = container.getAttribute('data-answer-input')
+        if (!answerPath) return
+        
+        // Skip if already rendered
+        if ((container as any)._reactRoot) return
+        
+        // Determine input type
+        const isTextInput = answerPath.includes('incompleteSentences')
+        const inputType = isTextInput ? 'text' : 'radio'
+        
+        // Create React root and render component (read-only for preview)
+        try {
+          container.innerHTML = ''
+          const root = createRoot(container as HTMLElement)
+          root.render(
+            <InlineAnswerInput
+              answerPath={answerPath}
+              value=""
+              onChange={() => {}} // No-op for preview
+              type={inputType}
+            />
+          )
+          ;(container as any)._reactRoot = root
+        } catch (error) {
+          console.error('Error rendering inline answer input:', error, answerPath)
+        }
+      })
+    }, 500)
+    
+    // Cleanup function
+    return () => {
+      clearTimeout(timeoutId)
+      observer.disconnect()
+      if (contentRef.current) {
+        const answerInputs = contentRef.current.querySelectorAll('[data-answer-input]')
+        answerInputs.forEach((container) => {
+          const root = (container as any)._reactRoot
+          if (root) {
+            try {
+              root.unmount()
+            } catch (error) {
+              // Ignore unmount errors
+            }
+          }
+        })
+      }
+    }
+  }, [isPlacementTest, resource.content])
 
   const downloadPDF = async () => {
     // If content is already a PDF file, just download it directly
@@ -181,7 +351,7 @@ export default function ResourcePreview({ resource, showActions = true }: Resour
         </div>
       )}
 
-      <div id="resource-content" className="border rounded-lg p-6 bg-white mb-4">
+      <div id="resource-content" ref={contentRef} className="border rounded-lg p-6 bg-white mb-4">
         {(() => {
           // Check if content is JSON (PDF with audio)
           let contentData: any = null
