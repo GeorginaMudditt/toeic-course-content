@@ -82,3 +82,27 @@ input[type="checkbox"]:focus {
   outline-offset: 2px;
 }
 
+/* Ensure placement test answer inputs are always clickable */
+[data-answer-input],
+[data-answer-input] *,
+[data-interactive="true"],
+[data-interactive="true"] * {
+  pointer-events: auto !important;
+}
+
+[data-answer-input] input[type="radio"],
+[data-interactive="true"] input[type="radio"] {
+  cursor: pointer !important;
+  pointer-events: auto !important;
+  position: relative !important;
+  z-index: 12 !important;
+}
+
+[data-answer-input] label,
+[data-interactive="true"] label {
+  cursor: pointer !important;
+  pointer-events: auto !important;
+  position: relative !important;
+  z-index: 11 !important;
+}
+

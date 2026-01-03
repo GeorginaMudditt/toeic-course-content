@@ -42,7 +42,15 @@ function InlineAnswerInput({
 }) {
   if (type === 'radio') {
     return (
-      <div style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', zIndex: 1, position: 'relative' }}>
+      <div style={{ 
+        display: 'inline-flex', 
+        alignItems: 'center', 
+        gap: '8px', 
+        zIndex: 10, 
+        position: 'relative',
+        pointerEvents: 'auto',
+        isolation: 'isolate'
+      }}>
         {['A', 'B', 'C', 'D'].map((option) => (
           <label 
             key={option} 
@@ -52,11 +60,16 @@ function InlineAnswerInput({
               gap: '4px', 
               cursor: 'pointer',
               userSelect: 'none',
-              pointerEvents: 'auto'
+              pointerEvents: 'auto',
+              position: 'relative',
+              zIndex: 11
             }}
             onClick={(e) => {
               e.stopPropagation()
               onChange(option)
+            }}
+            onMouseDown={(e) => {
+              e.stopPropagation()
             }}
           >
             <input
@@ -68,16 +81,29 @@ function InlineAnswerInput({
                 e.stopPropagation()
                 onChange(e.target.value)
               }}
-              onClick={(e) => e.stopPropagation()}
+              onClick={(e) => {
+                e.stopPropagation()
+                onChange(e.target.value)
+              }}
+              onMouseDown={(e) => {
+                e.stopPropagation()
+              }}
               style={{ 
                 width: '16px', 
                 height: '16px', 
                 cursor: 'pointer',
                 pointerEvents: 'auto',
-                zIndex: 2
+                zIndex: 12,
+                position: 'relative',
+                margin: 0,
+                flexShrink: 0
               }}
             />
-            <span style={{ fontSize: '13px', pointerEvents: 'none' }}>{option}</span>
+            <span style={{ 
+              fontSize: '13px', 
+              pointerEvents: 'none',
+              userSelect: 'none'
+            }}>{option}</span>
           </label>
         ))}
       </div>
@@ -345,259 +371,176 @@ export default function WorksheetViewer({ assignmentId, resource, initialProgres
     }
   }, [notes, isPlacementTest])
   
-  // Inject inline answer inputs into HTML content
+  // Helper function to get current value for an answer path
+  const getAnswerValue = useCallback((answerPath: string, answers: any) => {
+    if (answerPath === 'writing') {
+      return answers?.writing || ''
+    } else if (answerPath === 'writingFileUpload') {
+      return answers?.writingFileUrl || ''
+    } else {
+      const keys = answerPath.split('.')
+      let current: any = answers
+      for (const key of keys) {
+        current = current?.[key]
+      }
+      return current || ''
+    }
+  }, [])
+
+  // Helper function to determine input type
+  const getInputType = useCallback((answerPath: string): 'radio' | 'text' | 'textarea' | 'fileUpload' => {
+    if (answerPath === 'writing') {
+      return 'textarea'
+    } else if (answerPath === 'writingFileUpload') {
+      return 'fileUpload'
+    } else if (answerPath.includes('incompleteSentences')) {
+      return 'text'
+    }
+    return 'radio'
+  }, [])
+
+  // Helper function to render or update an answer input
+  const renderAnswerInput = useCallback((container: Element, answerPath: string, answers: any) => {
+    const currentValue = getAnswerValue(answerPath, answers)
+    const inputType = getInputType(answerPath)
+    
+    // If root already exists, just update it
+    if ((container as any)._reactRoot) {
+      const root = (container as any)._reactRoot
+      root.render(
+        <InlineAnswerInput
+          answerPath={answerPath}
+          value={currentValue}
+          onChange={(value) => updatePlacementTestAnswer(answerPath, value)}
+          type={inputType}
+          assignmentId={assignmentId}
+          onFileUpload={(fileUrl) => updatePlacementTestAnswer('writingFileUrl', fileUrl)}
+        />
+      )
+      return
+    }
+    
+    // Create new root
+    try {
+      container.innerHTML = ''
+      const containerEl = container as HTMLElement
+      containerEl.style.pointerEvents = 'auto'
+      containerEl.style.position = 'relative'
+      containerEl.style.zIndex = '10'
+      containerEl.style.isolation = 'isolate'
+      containerEl.setAttribute('data-interactive', 'true')
+      
+      const root = createRoot(containerEl)
+      root.render(
+        <InlineAnswerInput
+          answerPath={answerPath}
+          value={currentValue}
+          onChange={(value) => updatePlacementTestAnswer(answerPath, value)}
+          type={inputType}
+          assignmentId={assignmentId}
+          onFileUpload={(fileUrl) => updatePlacementTestAnswer('writingFileUrl', fileUrl)}
+        />
+      )
+      ;(container as any)._reactRoot = root
+      console.log('Rendered answer input for:', answerPath, 'type:', inputType)
+    } catch (error) {
+      console.error('Error rendering inline answer input:', error, answerPath)
+    }
+  }, [getAnswerValue, getInputType, updatePlacementTestAnswer, assignmentId])
+
+  // Inject inline answer inputs into HTML content - only runs when content changes
   useEffect(() => {
     if (!isPlacementTest || !contentRef.current) return
     
-    // Use MutationObserver to wait for HTML content to be inserted
-    const observer = new MutationObserver(() => {
+    const initializeInputs = () => {
       if (!contentRef.current) return
       
-      // Look for answer inputs in the entire contentRef, including nested divs
       const answerInputs = contentRef.current.querySelectorAll('[data-answer-input]')
       console.log('Found answer input placeholders:', answerInputs.length)
       
       if (answerInputs.length === 0) {
-        // Try again after a short delay - HTML might still be rendering
-        return
+        return false // Not ready yet
       }
-      
-      // Disconnect observer once we find the elements
-      observer.disconnect()
-      
-      const roots: Array<{ container: Element; root: any }> = []
       
       answerInputs.forEach((container) => {
         const answerPath = container.getAttribute('data-answer-input')
         if (!answerPath) return
         
-        // Skip if already rendered
-        if ((container as any)._reactRoot) {
-          // Update existing root with new value
-          const root = (container as any)._reactRoot
-          let currentValue = ''
-          if (answerPath === 'writing') {
-            currentValue = placementTestAnswers?.writing || ''
-          } else if (answerPath === 'writingFileUpload') {
-            currentValue = placementTestAnswers?.writingFileUrl || ''
-          } else {
-            const keys = answerPath.split('.')
-            let current: any = placementTestAnswers
-            for (const key of keys) {
-              current = current?.[key]
-            }
-            currentValue = current || ''
-          }
-          
-          let inputType: 'radio' | 'text' | 'textarea' | 'fileUpload' = 'radio'
-          if (answerPath === 'writing') {
-            inputType = 'textarea'
-          } else if (answerPath === 'writingFileUpload') {
-            inputType = 'fileUpload'
-          } else if (answerPath.includes('incompleteSentences')) {
-            inputType = 'text'
-          }
-          
-          root.render(
-            <InlineAnswerInput
-              answerPath={answerPath}
-              value={currentValue}
-              onChange={(value) => updatePlacementTestAnswer(answerPath, value)}
-              type={inputType}
-              assignmentId={assignmentId}
-              onFileUpload={(fileUrl) => updatePlacementTestAnswer('writingFileUrl', fileUrl)}
-            />
-          )
-          return
-        }
-        
-        // Get current value
-        let currentValue = ''
-        if (answerPath === 'writing') {
-          currentValue = placementTestAnswers?.writing || ''
-        } else if (answerPath === 'writingFileUpload') {
-          currentValue = placementTestAnswers?.writingFileUrl || ''
-        } else {
-          const keys = answerPath.split('.')
-          let current: any = placementTestAnswers
-          for (const key of keys) {
-            current = current?.[key]
-          }
-          currentValue = current || ''
-        }
-        
-        // Determine input type
-        let inputType: 'radio' | 'text' | 'textarea' | 'fileUpload' = 'radio'
-        if (answerPath === 'writing') {
-          inputType = 'textarea'
-        } else if (answerPath === 'writingFileUpload') {
-          inputType = 'fileUpload'
-        } else if (answerPath.includes('incompleteSentences')) {
-          inputType = 'text'
-        }
-        
-        // Create React root and render component
-        try {
-          // Clear the container first
-          container.innerHTML = ''
-          // Make container interactive
-          ;(container as HTMLElement).style.pointerEvents = 'auto'
-          ;(container as HTMLElement).style.position = 'relative'
-          ;(container as HTMLElement).style.zIndex = '1'
-          
-          const root = createRoot(container as HTMLElement)
-          root.render(
-            <InlineAnswerInput
-              answerPath={answerPath}
-              value={currentValue}
-              onChange={(value) => updatePlacementTestAnswer(answerPath, value)}
-              type={inputType}
-              assignmentId={assignmentId}
-              onFileUpload={(fileUrl) => updatePlacementTestAnswer('writingFileUrl', fileUrl)}
-            />
-          )
-          roots.push({ container, root })
-          ;(container as any)._reactRoot = root
-          console.log('Rendered answer input for:', answerPath, 'type:', inputType)
-        } catch (error) {
-          console.error('Error rendering inline answer input:', error, answerPath)
+        // Only create if it doesn't exist - don't recreate
+        if (!(container as any)._reactRoot) {
+          renderAnswerInput(container, answerPath, placementTestAnswers)
         }
       })
       
-      // Store roots for cleanup
-      roots.forEach(({ container, root }) => {
-        (container as any)._reactRoot = root
+      return true // Successfully initialized
+    }
+    
+    // Try immediately
+    if (!initializeInputs()) {
+      // If not ready, use MutationObserver and timeout
+      const observer = new MutationObserver(() => {
+        if (initializeInputs()) {
+          observer.disconnect()
+        }
       })
-    })
-    
-    // Start observing
-    observer.observe(contentRef.current, {
-      childList: true,
-      subtree: true
-    })
-    
-    // Also try immediately in case HTML is already rendered
-    const timeoutId = setTimeout(() => {
-      if (!contentRef.current) return
       
-      const answerInputs = contentRef.current.querySelectorAll('[data-answer-input]')
-      console.log('Timeout check - Found answer input placeholders:', answerInputs.length)
+      observer.observe(contentRef.current, {
+        childList: true,
+        subtree: true
+      })
       
-      if (answerInputs.length === 0) {
-        console.warn('No answer input placeholders found in HTML after timeout')
-        return
+      const timeoutId = setTimeout(() => {
+        observer.disconnect()
+        initializeInputs()
+      }, 500)
+      
+      return () => {
+        clearTimeout(timeoutId)
+        observer.disconnect()
+        // Don't unmount on cleanup - we want to keep the inputs alive
       }
-      
-      // Process the found inputs (same logic as in observer)
-      const roots: Array<{ container: Element; root: any }> = []
-      
-      answerInputs.forEach((container) => {
-        const answerPath = container.getAttribute('data-answer-input')
-        if (!answerPath) return
-        
-        // Skip if already rendered
-        if ((container as any)._reactRoot) {
-          // Update existing root with new value
-          const root = (container as any)._reactRoot
-          let currentValue = ''
-          if (answerPath === 'writing') {
-            currentValue = placementTestAnswers?.writing || ''
-          } else if (answerPath === 'writingFileUpload') {
-            currentValue = placementTestAnswers?.writingFileUrl || ''
-          } else {
-            const keys = answerPath.split('.')
-            let current: any = placementTestAnswers
-            for (const key of keys) {
-              current = current?.[key]
-            }
-            currentValue = current || ''
-          }
-          
-          let inputType: 'radio' | 'text' | 'textarea' | 'fileUpload' = 'radio'
-          if (answerPath === 'writing') {
-            inputType = 'textarea'
-          } else if (answerPath === 'writingFileUpload') {
-            inputType = 'fileUpload'
-          } else if (answerPath.includes('incompleteSentences')) {
-            inputType = 'text'
-          }
-          
-          root.render(
-            <InlineAnswerInput
-              answerPath={answerPath}
-              value={currentValue}
-              onChange={(value) => updatePlacementTestAnswer(answerPath, value)}
-              type={inputType}
-              assignmentId={assignmentId}
-              onFileUpload={(fileUrl) => updatePlacementTestAnswer('writingFileUrl', fileUrl)}
-            />
-          )
-          return
-        }
-        
-        // Get current value
-        let currentValue = ''
-        if (answerPath === 'writing') {
-          currentValue = placementTestAnswers?.writing || ''
-        } else if (answerPath === 'writingFileUpload') {
-          currentValue = placementTestAnswers?.writingFileUrl || ''
-        } else {
-          const keys = answerPath.split('.')
-          let current: any = placementTestAnswers
-          for (const key of keys) {
-            current = current?.[key]
-          }
-          currentValue = current || ''
-        }
-        
-        // Determine input type
-        let inputType: 'radio' | 'text' | 'textarea' | 'fileUpload' = 'radio'
-        if (answerPath === 'writing') {
-          inputType = 'textarea'
-        } else if (answerPath === 'writingFileUpload') {
-          inputType = 'fileUpload'
-        } else if (answerPath.includes('incompleteSentences')) {
-          inputType = 'text'
-        }
-        
-        // Create React root and render component
-        try {
-          // Clear the container first
-          container.innerHTML = ''
-          // Make container interactive
-          ;(container as HTMLElement).style.pointerEvents = 'auto'
-          ;(container as HTMLElement).style.position = 'relative'
-          ;(container as HTMLElement).style.zIndex = '1'
-          
-          const root = createRoot(container as HTMLElement)
-          root.render(
-            <InlineAnswerInput
-              answerPath={answerPath}
-              value={currentValue}
-              onChange={(value) => updatePlacementTestAnswer(answerPath, value)}
-              type={inputType}
-              assignmentId={assignmentId}
-              onFileUpload={(fileUrl) => updatePlacementTestAnswer('writingFileUrl', fileUrl)}
-            />
-          )
-          roots.push({ container, root })
-          ;(container as any)._reactRoot = root
-          console.log('Rendered answer input for:', answerPath, 'type:', inputType)
-        } catch (error) {
-          console.error('Error rendering inline answer input:', error, answerPath)
-        }
-      })
-      
-      // Store roots for cleanup
-      roots.forEach(({ container, root }) => {
-        (container as any)._reactRoot = root
-      })
-    }, 500) // Increased timeout to ensure HTML is fully rendered
+    }
     
-    // Cleanup function
     return () => {
-      clearTimeout(timeoutId)
-      observer.disconnect()
+      // Don't unmount on cleanup - we want to keep the inputs alive
+    }
+  }, [isPlacementTest, resource.content, renderAnswerInput, placementTestAnswers]) // Only recreate when content changes
+
+  // Update existing answer inputs when notes/answers change - separate effect
+  useEffect(() => {
+    if (!isPlacementTest || !contentRef.current) return
+    
+    const answerInputs = contentRef.current.querySelectorAll('[data-answer-input]')
+    
+    answerInputs.forEach((container) => {
+      const answerPath = container.getAttribute('data-answer-input')
+      if (!answerPath) return
+      
+      // Only update if root exists - don't create new ones here
+      if ((container as any)._reactRoot) {
+        const root = (container as any)._reactRoot
+        const currentValue = getAnswerValue(answerPath, placementTestAnswers)
+        const inputType = getInputType(answerPath)
+        
+        root.render(
+          <InlineAnswerInput
+            answerPath={answerPath}
+            value={currentValue}
+            onChange={(value) => updatePlacementTestAnswer(answerPath, value)}
+            type={inputType}
+            assignmentId={assignmentId}
+            onFileUpload={(fileUrl) => updatePlacementTestAnswer('writingFileUrl', fileUrl)}
+          />
+        )
+      }
+    })
+  }, [notes, isPlacementTest, getAnswerValue, getInputType, updatePlacementTestAnswer, assignmentId, placementTestAnswers]) // Update values when notes change
+
+  // Cleanup: Only unmount when component unmounts or resource content changes significantly
+  useEffect(() => {
+    return () => {
+      // This cleanup only runs when component unmounts or when dependencies change
+      // Since resource.content is in the dependency array above, this will clean up old inputs
       if (contentRef.current) {
         const answerInputs = contentRef.current.querySelectorAll('[data-answer-input]')
         answerInputs.forEach((container) => {
@@ -605,6 +548,7 @@ export default function WorksheetViewer({ assignmentId, resource, initialProgres
           if (root) {
             try {
               root.unmount()
+              delete (container as any)._reactRoot
             } catch (error) {
               // Ignore unmount errors
             }
@@ -612,7 +556,7 @@ export default function WorksheetViewer({ assignmentId, resource, initialProgres
         })
       }
     }
-  }, [isPlacementTest, resource.content, notes, assignmentId, updatePlacementTestAnswer]) // updatePlacementTestAnswer is stable, notes triggers re-render with new values
+  }, [resource.content]) // Only cleanup when resource content actually changes
 
   useEffect(() => {
     // Auto-save every 30 seconds
