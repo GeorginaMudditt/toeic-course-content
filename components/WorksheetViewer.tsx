@@ -295,7 +295,7 @@ export default function WorksheetViewer({ assignmentId, resource, initialProgres
       <div className="flex justify-between items-center mb-4">
         <div className="flex items-center space-x-4">
           <button
-            onClick={saveProgress}
+            onClick={() => saveProgress()}
             disabled={saving}
             className="px-4 py-2 text-white rounded-md disabled:opacity-50"
             style={{ backgroundColor: '#38438f' }}
