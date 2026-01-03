@@ -33,7 +33,9 @@ export async function GET(request: NextRequest) {
       query = query.eq('level', level.toLowerCase())
     }
     if (topic) {
-      query = query.eq('topic', decodeURIComponent(topic))
+      // Normalize topic name for matching
+      const normalizedTopic = decodeURIComponent(topic).trim().replace(/\s+/g, ' ')
+      query = query.eq('topic', normalizedTopic)
     }
 
     const { data, error } = await query.order('updatedAt', { ascending: false })

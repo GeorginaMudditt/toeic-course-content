@@ -33,8 +33,8 @@ export default function VocabularyLevelPage() {
       if (response.ok && result.data) {
         const progressMap: Record<string, { bronze: boolean; silver: boolean; gold: boolean }> = {}
         result.data.forEach((item: any) => {
-          // Ensure we're using the exact topic name from the database
-          const topicName = item.topic
+          // Normalize topic name: trim and remove extra spaces (matching vocabulary API normalization)
+          const topicName = item.topic ? item.topic.trim().replace(/\s+/g, ' ') : item.topic
           progressMap[topicName] = {
             bronze: Boolean(item.bronze),
             silver: Boolean(item.silver),
@@ -80,7 +80,22 @@ export default function VocabularyLevelPage() {
 
   // Get progress for a topic from state
   const getTopicProgress = (topicName: string) => {
-    return topicProgress[topicName] || { bronze: false, silver: false, gold: false }
+    // Normalize topic name for matching (trim and remove extra spaces)
+    const normalizedTopic = topicName.trim().replace(/\s+/g, ' ')
+    // Try exact match first, then try case-insensitive match
+    let progress = topicProgress[normalizedTopic] || topicProgress[topicName]
+    
+    // If still not found, try case-insensitive search
+    if (!progress) {
+      const matchingKey = Object.keys(topicProgress).find(
+        key => key.toLowerCase() === normalizedTopic.toLowerCase()
+      )
+      if (matchingKey) {
+        progress = topicProgress[matchingKey]
+      }
+    }
+    
+    return progress || { bronze: false, silver: false, gold: false }
   }
 
   // Handle topic click - navigate to challenge selection
