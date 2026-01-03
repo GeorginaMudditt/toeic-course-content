@@ -62,18 +62,24 @@ export async function POST(request: NextRequest) {
     }
 
     const body = await request.json()
-    const { level, topic, bronze, silver, gold } = body
+    let { level, topic, bronze, silver, gold } = body
 
     if (!level || !topic || typeof bronze !== 'boolean' || typeof silver !== 'boolean' || typeof gold !== 'boolean') {
       return NextResponse.json({ error: 'Invalid request data' }, { status: 400 })
     }
 
+    // Normalize topic name: trim and remove extra spaces (matching vocabulary API normalization)
+    topic = topic.trim().replace(/\s+/g, ' ')
+    const normalizedLevel = level.toLowerCase()
+
+    console.log('Vocabulary progress POST:', { studentId: session.user.id, level: normalizedLevel, topic, bronze, silver, gold })
+
     // Check if progress already exists
     const { data: existing, error: checkError } = await supabaseServer
       .from('VocabularyProgress')
-      .select('id')
+      .select('id, bronze, silver, gold')
       .eq('studentId', session.user.id)
-      .eq('level', level.toLowerCase())
+      .eq('level', normalizedLevel)
       .eq('topic', topic)
       .limit(1)
 
@@ -82,19 +88,24 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: checkError.message }, { status: 500 })
     }
 
+    console.log('Existing progress found:', existing)
+
     const completedAt = bronze && silver && gold ? new Date().toISOString() : null
 
     if (existing && existing.length > 0) {
-      // Update existing record
+      // Update existing record - ensure we preserve all values
+      const updateData = {
+        bronze,
+        silver,
+        gold,
+        completedAt,
+        updatedAt: new Date().toISOString()
+      }
+      console.log('Updating progress with:', updateData)
+      
       const { data, error } = await supabaseServer
         .from('VocabularyProgress')
-        .update({
-          bronze,
-          silver,
-          gold,
-          completedAt,
-          updatedAt: new Date().toISOString()
-        })
+        .update(updateData)
         .eq('id', existing[0].id)
         .select('*')
         .limit(1)
@@ -104,21 +115,25 @@ export async function POST(request: NextRequest) {
         return NextResponse.json({ error: error.message }, { status: 500 })
       }
 
+      console.log('Progress updated successfully:', data?.[0])
       return NextResponse.json({ data: data?.[0] || null, error: null })
     } else {
       // Create new record
+      const insertData = {
+        id: randomUUID(),
+        studentId: session.user.id,
+        level: normalizedLevel,
+        topic,
+        bronze,
+        silver,
+        gold,
+        completedAt
+      }
+      console.log('Creating new progress record with:', insertData)
+      
       const { data, error } = await supabaseServer
         .from('VocabularyProgress')
-        .insert({
-          id: randomUUID(),
-          studentId: session.user.id,
-          level: level.toLowerCase(),
-          topic,
-          bronze,
-          silver,
-          gold,
-          completedAt
-        })
+        .insert(insertData)
         .select('*')
         .limit(1)
 
@@ -127,6 +142,7 @@ export async function POST(request: NextRequest) {
         return NextResponse.json({ error: error.message }, { status: 500 })
       }
 
+      console.log('Progress created successfully:', data?.[0])
       return NextResponse.json({ data: data?.[0] || null, error: null })
     }
   } catch (error: any) {

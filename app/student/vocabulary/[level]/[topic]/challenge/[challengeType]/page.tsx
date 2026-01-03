@@ -118,30 +118,37 @@ export default function ChallengePage() {
     try {
       // Ensure topic is normalized before sending
       const normalizedTopic = topic.trim().replace(/\s+/g, ' ')
+      const payload = {
+        level,
+        topic: normalizedTopic,
+        ...newProgress
+      }
+      console.log('Saving progress with payload:', payload)
+      
       const response = await fetch('/api/vocabulary-progress', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          level,
-          topic: normalizedTopic,
-          ...newProgress
-        })
+        body: JSON.stringify(payload)
       })
 
       const result = await response.json()
+      console.log('Save API response status:', response.status, 'Response:', result)
       
       if (response.ok && !result.error) {
         setProgress(newProgress)
         console.log('Progress saved successfully:', { level, topic: normalizedTopic, ...newProgress })
+        return { success: true, data: result.data }
       } else {
-        console.error('Error saving progress:', result.error, 'Response:', result)
+        console.error('Error saving progress:', result.error, 'Full response:', result, 'Status:', response.status)
         // Still update local state even if save fails
         setProgress(newProgress)
+        return { success: false, error: result.error }
       }
     } catch (err) {
-      console.error('Error saving progress:', err)
+      console.error('Error saving progress (exception):', err)
       // Still update local state even if save fails
       setProgress(newProgress)
+      return { success: false, error: err instanceof Error ? err.message : 'Unknown error' }
     }
   }
 
@@ -323,6 +330,9 @@ export default function ChallengePage() {
           silver: Boolean(progressData.silver),
           gold: Boolean(progressData.gold)
         }
+        console.log('Fetched latest progress before save:', latestProgress)
+      } else {
+        console.log('No existing progress found, using current state:', latestProgress)
       }
     } catch (err) {
       console.error('Error fetching latest progress before save:', err)
@@ -331,7 +341,9 @@ export default function ChallengePage() {
     
     // Update progress: preserve existing values and set current challenge to true
     const newProgress = { ...latestProgress, [challengeType]: true }
-    await saveProgress(newProgress)
+    console.log(`Completing ${challengeType} challenge. Progress to save:`, newProgress)
+    const saveResult = await saveProgress(newProgress)
+    console.log('Save result:', saveResult)
 
     // Show success modal
     setModalState({
