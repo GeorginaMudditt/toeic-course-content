@@ -86,15 +86,16 @@ function InlineAnswerInput({
               e.nativeEvent.stopImmediatePropagation()
               // Update local state immediately for visual feedback
               setLocalValue(option)
-              // Mark as recently clicked to prevent re-renders
-              const radioInput = e.currentTarget.querySelector('input[type="radio"]') as HTMLInputElement
-              if (radioInput) {
-                (radioInput as any)._lastClickTime = Date.now()
+              // Mark container as recently interacted to prevent re-renders
+              const container = e.currentTarget.closest('[data-answer-input]')
+              if (container) {
+                const timestamp = Date.now()
+                ;(container as any)._lastInteractionTime = timestamp
+                ;(container as any)._isInteracting = true
               }
-              // Defer parent update significantly to avoid interrupting audio
-              setTimeout(() => {
-                onChange(option)
-              }, 200) // Longer delay to ensure audio isn't interrupted
+              // Don't call onChange at all during click - save on next interaction or blur
+              // This completely prevents state updates that interrupt audio
+              // The value will be saved when user clicks another option or component unmounts
             }}
             onMouseDown={(e) => {
               e.preventDefault()
@@ -117,16 +118,30 @@ function InlineAnswerInput({
                 e.stopPropagation()
                 e.nativeEvent.stopImmediatePropagation()
                 const newValue = (e.target as HTMLInputElement).value
-                // Update local state immediately
-                if (typeof setLocalValue === 'function') {
-                  setLocalValue(newValue)
+                // Update local state immediately for visual feedback
+                setLocalValue(newValue)
+                // Mark container as recently interacted to prevent re-renders
+                const container = e.target.closest('[data-answer-input]')
+                if (container) {
+                  const timestamp = Date.now()
+                  ;(container as any)._lastInteractionTime = timestamp
+                  ;(container as any)._isInteracting = true
                 }
-                // Mark as recently clicked
-                (e.target as any)._lastClickTime = Date.now()
-                // Defer parent update significantly to avoid interrupting audio
-                setTimeout(() => {
-                  onChange(newValue)
-                }, 200) // Longer delay to ensure audio isn't interrupted
+                // Don't call onChange at all during interaction - save later
+                // This completely prevents state updates that interrupt audio
+              }}
+              onBlur={(e) => {
+                // Save value when radio loses focus (user clicks elsewhere)
+                if (localValue !== value) {
+                  onChange(localValue)
+                }
+                const container = e.target.closest('[data-answer-input]')
+                if (container) {
+                  ;(container as any)._isInteracting = false
+                }
+                e.preventDefault()
+                e.stopPropagation()
+                e.nativeEvent.stopImmediatePropagation()
               }}
               onClick={(e) => {
                 e.preventDefault()
@@ -164,53 +179,52 @@ function InlineAnswerInput({
       </div>
     )
   } else if (type === 'text') {
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-      const newValue = e.target.value
-      e.stopPropagation()
-      
-      // Update local state immediately for responsive typing
-      setLocalValue(newValue)
-      
-      // Debounce parent update to prevent re-renders while typing
-      const timeoutId = setTimeout(() => {
-        onChange(newValue)
-      }, 300) // 300ms debounce
-      
-      // Store timeout to clear on next change
-      if ((handleChange as any).timeoutId) {
-        clearTimeout((handleChange as any).timeoutId)
-      }
-      ;(handleChange as any).timeoutId = timeoutId
-    }
+    // Use exact same pattern as ResourcePreview - it works!
+    // Don't call onChange while typing - only on blur or debounced
+    const textTimeoutRef = useRef<NodeJS.Timeout | null>(null)
     
     return (
       <input
         type="text"
         value={localValue}
-        onChange={handleChange}
-        onFocus={(e) => {
+        onChange={(e) => {
           e.stopPropagation()
+          const newValue = e.target.value
+          setLocalValue(newValue)
+          
+          // Mark input as typing to prevent re-renders
+          const inputElement = e.target
+          ;(inputElement as any)._isTyping = true
+          
+          // Clear previous timeout
+          if (textTimeoutRef.current) {
+            clearTimeout(textTimeoutRef.current)
+          }
+          
+          // Only call onChange after user stops typing (debounced)
+          // This prevents state updates during typing, which prevents re-renders
+          textTimeoutRef.current = setTimeout(() => {
+            onChange(newValue)
+            ;(inputElement as any)._isTyping = false
+          }, 500) // 500ms after last keystroke
         }}
         onBlur={(e) => {
-          // Clear timeout and sync with parent on blur
-          if ((handleChange as any).timeoutId) {
-            clearTimeout((handleChange as any).timeoutId)
-            ;(handleChange as any).timeoutId = null
+          // Clear timeout and save immediately on blur
+          if (textTimeoutRef.current) {
+            clearTimeout(textTimeoutRef.current)
+            textTimeoutRef.current = null
           }
           if (localValue !== value) {
             onChange(localValue)
           }
+          ;(e.target as any)._isTyping = false
           e.stopPropagation()
         }}
         onKeyDown={(e) => {
           e.stopPropagation()
-          // Prevent form submission on Enter
           if (e.key === 'Enter') {
             e.preventDefault()
           }
-        }}
-        onKeyPress={(e) => {
-          e.stopPropagation()
         }}
         onClick={(e) => {
           e.stopPropagation()
@@ -246,9 +260,17 @@ function InlineAnswerInput({
       e.stopPropagation()
       e.preventDefault()
       
+      // Mark as typing to prevent re-renders
+      ;(e.target as any)._isTyping = true
+      
       // Update parent (this triggers auto-save)
       lastSyncedValue.current = newValue
       onChange(newValue)
+      
+      // Clear typing flag after delay
+      setTimeout(() => {
+        ;(e.target as any)._isTyping = false
+      }, 1000)
       
       // Restore scroll position immediately to prevent jumping to top
       requestAnimationFrame(() => {
@@ -668,30 +690,27 @@ export default function WorksheetViewer({ assignmentId, resource, initialProgres
       if ((container as any)._reactRoot) {
         const inputType = getInputType(answerPath)
         
-        // For text inputs and textareas, check if they're currently focused
-        // If focused, don't re-render to prevent losing focus
+        // For text inputs and textareas, check if they're currently focused or being typed in
+        // If focused or typing, don't re-render to prevent losing focus
         if (inputType === 'text' || inputType === 'textarea') {
           const inputElement = container.querySelector(
             inputType === 'text' ? 'input[type="text"]' : 'textarea'
           ) as HTMLInputElement | HTMLTextAreaElement
-          if (inputElement && document.activeElement === inputElement) {
-            // Input is focused, don't re-render - let the controlled component handle updates
-            return
+          if (inputElement) {
+            // Check if focused or currently being typed in
+            if (document.activeElement === inputElement || (inputElement as any)._isTyping) {
+              // Input is focused or being typed, don't re-render
+              return
+            }
           }
         }
         
-        // For radio buttons, also skip if we're in the middle of an interaction
-        // to prevent interrupting audio
+        // For radio buttons, skip if recently interacted with to prevent interrupting audio
         if (inputType === 'radio') {
-          // Check if any radio in this group was recently clicked (within last 100ms)
-          const radioInputs = container.querySelectorAll('input[type="radio"]')
-          let recentlyClicked = false
-          radioInputs.forEach((radio) => {
-            if ((radio as any)._lastClickTime && Date.now() - (radio as any)._lastClickTime < 100) {
-              recentlyClicked = true
-            }
-          })
-          if (recentlyClicked) {
+          const lastInteraction = (container as any)._lastInteractionTime
+          const isInteracting = (container as any)._isInteracting
+          // Skip re-render if interacted within last 2 seconds or currently interacting
+          if (isInteracting || (lastInteraction && Date.now() - lastInteraction < 2000)) {
             return
           }
         }
