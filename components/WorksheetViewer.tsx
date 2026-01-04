@@ -45,11 +45,20 @@ function InlineAnswerInput({
   
   // Sync with parent value when it changes externally (but not when input is focused)
   useEffect(() => {
-    // For text inputs, don't update if focused
-    if (type === 'text') {
-      const inputElement = document.activeElement
-      if (inputElement && inputElement.tagName === 'INPUT' && (inputElement as HTMLInputElement).type === 'text') {
-        return
+    // For text inputs and textareas, don't update if focused or typing
+    if (type === 'text' || type === 'textarea') {
+      const activeElement = document.activeElement
+      if (activeElement) {
+        if (type === 'text' && activeElement.tagName === 'INPUT' && (activeElement as HTMLInputElement).type === 'text') {
+          return
+        }
+        if (type === 'textarea' && activeElement.tagName === 'TEXTAREA') {
+          return
+        }
+        // Also check if element is marked as typing
+        if ((activeElement as any)._isTyping) {
+          return
+        }
       }
     }
     setLocalValue(value)
@@ -259,13 +268,21 @@ function InlineAnswerInput({
   } else if (type === 'textarea') {
     // Use same pattern as text input that works - local state with debouncing
     const textareaTimeoutRef = useRef<NodeJS.Timeout | null>(null)
+    const textareaRef = useRef<HTMLTextAreaElement>(null)
     
     return (
       <textarea
+        ref={textareaRef}
         value={localValue || ''}
         onChange={(e) => {
           e.stopPropagation()
           const newValue = e.target.value
+          const scrollY = window.scrollY
+          const scrollX = window.scrollX
+          
+          // Store cursor position
+          const cursorPos = e.target.selectionStart || newValue.length
+          
           setLocalValue(newValue)
           
           // Mark textarea as typing to prevent re-renders
@@ -282,7 +299,20 @@ function InlineAnswerInput({
           textareaTimeoutRef.current = setTimeout(() => {
             onChange(newValue)
             ;(textareaElement as any)._isTyping = false
+            
+            // Restore scroll position and cursor after state update
+            requestAnimationFrame(() => {
+              window.scrollTo(scrollX, scrollY)
+              if (textareaRef.current && document.activeElement === textareaRef.current) {
+                textareaRef.current.setSelectionRange(cursorPos, cursorPos)
+              }
+            })
           }, 500) // 500ms after last keystroke
+        }}
+        onFocus={(e) => {
+          e.stopPropagation()
+          // Mark as typing when focused to prevent any re-renders
+          ;(e.target as any)._isTyping = true
         }}
         onBlur={(e) => {
           // Clear timeout and save immediately on blur
