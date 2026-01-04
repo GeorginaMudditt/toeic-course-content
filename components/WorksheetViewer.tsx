@@ -40,7 +40,23 @@ function InlineAnswerInput({
   assignmentId?: string
   onFileUpload?: (fileUrl: string) => void
 }) {
+  // Use local state like ResourcePreview - this works!
+  const [localValue, setLocalValue] = useState(value)
+  
+  // Sync with parent value when it changes externally (but not when input is focused)
+  useEffect(() => {
+    // For text inputs, don't update if focused
+    if (type === 'text') {
+      const inputElement = document.activeElement
+      if (inputElement && inputElement.tagName === 'INPUT' && (inputElement as HTMLInputElement).type === 'text') {
+        return
+      }
+    }
+    setLocalValue(value)
+  }, [value, type])
+  
   if (type === 'radio') {
+    
     return (
       <div style={{ 
         display: 'inline-flex', 
@@ -68,10 +84,17 @@ function InlineAnswerInput({
               e.preventDefault()
               e.stopPropagation()
               e.nativeEvent.stopImmediatePropagation()
-              // Use setTimeout to defer state update and prevent interrupting audio
+              // Update local state immediately for visual feedback
+              setLocalValue(option)
+              // Mark as recently clicked to prevent re-renders
+              const radioInput = e.currentTarget.querySelector('input[type="radio"]') as HTMLInputElement
+              if (radioInput) {
+                (radioInput as any)._lastClickTime = Date.now()
+              }
+              // Defer parent update significantly to avoid interrupting audio
               setTimeout(() => {
                 onChange(option)
-              }, 0)
+              }, 200) // Longer delay to ensure audio isn't interrupted
             }}
             onMouseDown={(e) => {
               e.preventDefault()
@@ -88,24 +111,27 @@ function InlineAnswerInput({
               type="radio"
               name={answerPath}
               value={option}
-              checked={value === option}
+              checked={localValue === option}
               onChange={(e) => {
                 e.preventDefault()
                 e.stopPropagation()
                 e.nativeEvent.stopImmediatePropagation()
-                // Use setTimeout to defer state update and prevent interrupting audio
+                const newValue = (e.target as HTMLInputElement).value
+                // Update local state immediately
+                if (typeof setLocalValue === 'function') {
+                  setLocalValue(newValue)
+                }
+                // Mark as recently clicked
+                (e.target as any)._lastClickTime = Date.now()
+                // Defer parent update significantly to avoid interrupting audio
                 setTimeout(() => {
-                  onChange((e.target as HTMLInputElement).value)
-                }, 0)
+                  onChange(newValue)
+                }, 200) // Longer delay to ensure audio isn't interrupted
               }}
               onClick={(e) => {
                 e.preventDefault()
                 e.stopPropagation()
                 e.nativeEvent.stopImmediatePropagation()
-                // Use setTimeout to defer state update and prevent interrupting audio
-                setTimeout(() => {
-                  onChange((e.target as HTMLInputElement).value)
-                }, 0)
               }}
               onMouseDown={(e) => {
                 e.preventDefault()
@@ -138,48 +164,41 @@ function InlineAnswerInput({
       </div>
     )
   } else if (type === 'text') {
-    // Use uncontrolled input with ref to prevent focus loss
-    const inputRef = useRef<HTMLInputElement>(null)
-    const lastSyncedValue = useRef(value)
-    
-    // Only sync when value changes externally (not from user typing)
-    useEffect(() => {
-      if (inputRef.current && document.activeElement !== inputRef.current) {
-        inputRef.current.value = value
-        lastSyncedValue.current = value
-      }
-    }, [value])
-    
-    // Store scroll position to prevent page jumping
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-      const scrollY = window.scrollY
       const newValue = e.target.value
       e.stopPropagation()
-      e.preventDefault()
       
-      // Update parent (this triggers auto-save) - debounced
-      lastSyncedValue.current = newValue
-      onChange(newValue)
+      // Update local state immediately for responsive typing
+      setLocalValue(newValue)
       
-      // Restore scroll position immediately
-      requestAnimationFrame(() => {
-        window.scrollTo(0, scrollY)
-      })
+      // Debounce parent update to prevent re-renders while typing
+      const timeoutId = setTimeout(() => {
+        onChange(newValue)
+      }, 300) // 300ms debounce
+      
+      // Store timeout to clear on next change
+      if ((handleChange as any).timeoutId) {
+        clearTimeout((handleChange as any).timeoutId)
+      }
+      ;(handleChange as any).timeoutId = timeoutId
     }
     
     return (
       <input
-        ref={inputRef}
         type="text"
-        defaultValue={value}
+        value={localValue}
         onChange={handleChange}
         onFocus={(e) => {
           e.stopPropagation()
         }}
         onBlur={(e) => {
-          // Ensure value is synced on blur
-          if (e.target.value !== lastSyncedValue.current) {
-            onChange(e.target.value)
+          // Clear timeout and sync with parent on blur
+          if ((handleChange as any).timeoutId) {
+            clearTimeout((handleChange as any).timeoutId)
+            ;(handleChange as any).timeoutId = null
+          }
+          if (localValue !== value) {
+            onChange(localValue)
           }
           e.stopPropagation()
         }}
@@ -202,7 +221,8 @@ function InlineAnswerInput({
           padding: '4px 8px',
           fontSize: '13px',
           width: '120px',
-          marginLeft: '8px'
+          marginLeft: '8px',
+          pointerEvents: 'auto'
         }}
         placeholder="Answer"
       />
@@ -656,6 +676,22 @@ export default function WorksheetViewer({ assignmentId, resource, initialProgres
           ) as HTMLInputElement | HTMLTextAreaElement
           if (inputElement && document.activeElement === inputElement) {
             // Input is focused, don't re-render - let the controlled component handle updates
+            return
+          }
+        }
+        
+        // For radio buttons, also skip if we're in the middle of an interaction
+        // to prevent interrupting audio
+        if (inputType === 'radio') {
+          // Check if any radio in this group was recently clicked (within last 100ms)
+          const radioInputs = container.querySelectorAll('input[type="radio"]')
+          let recentlyClicked = false
+          radioInputs.forEach((radio) => {
+            if ((radio as any)._lastClickTime && Date.now() - (radio as any)._lastClickTime < 100) {
+              recentlyClicked = true
+            }
+          })
+          if (recentlyClicked) {
             return
           }
         }
