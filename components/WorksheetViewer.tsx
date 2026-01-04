@@ -101,15 +101,12 @@ function InlineAnswerInput({
                 ;(container as any)._isInteracting = true
               }
               
-              // Save new value with very long delay to avoid interrupting audio
-              // This allows audio to play through before any state updates
-              setTimeout(() => {
-                onChange(option)
-                // Clear interaction flag after update
-                if (container) {
-                  ;(container as any)._isInteracting = false
-                }
-              }, 3000) // 3 second delay - enough for audio to finish
+              // Save immediately - no delay
+              onChange(option)
+              // Clear interaction flag after update
+              if (container) {
+                ;(container as any)._isInteracting = false
+              }
             }}
             onMouseDown={(e) => {
               e.preventDefault()
@@ -141,14 +138,12 @@ function InlineAnswerInput({
                   ;(container as any)._lastInteractionTime = timestamp
                   ;(container as any)._isInteracting = true
                 }
-                // Save value with very long delay to avoid interrupting audio
-                setTimeout(() => {
-                  onChange(newValue)
-                  // Clear interaction flag after update
-                  if (container) {
-                    ;(container as any)._isInteracting = false
-                  }
-                }, 3000) // 3 second delay - enough for audio to finish
+                // Save immediately - no delay
+                onChange(newValue)
+                // Clear interaction flag after update
+                if (container) {
+                  ;(container as any)._isInteracting = false
+                }
               }}
               onBlur={(e) => {
                 // Save value when radio loses focus (user clicks elsewhere)
@@ -262,63 +257,46 @@ function InlineAnswerInput({
       />
     )
   } else if (type === 'textarea') {
-    // Use uncontrolled textarea with ref to prevent focus loss and page jumping
-    const textareaRef = useRef<HTMLTextAreaElement>(null)
-    const lastSyncedValue = useRef(value || '')
-    
-    // Only sync when value changes externally (not from user typing)
-    useEffect(() => {
-      if (textareaRef.current && document.activeElement !== textareaRef.current) {
-        textareaRef.current.value = value || ''
-        lastSyncedValue.current = value || ''
-      }
-    }, [value])
-    
-    const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-      const scrollY = window.scrollY
-      const newValue = e.target.value
-      e.stopPropagation()
-      e.preventDefault()
-      
-      // Mark as typing to prevent re-renders
-      ;(e.target as any)._isTyping = true
-      
-      // Update parent (this triggers auto-save)
-      lastSyncedValue.current = newValue
-      onChange(newValue)
-      
-      // Clear typing flag after delay
-      setTimeout(() => {
-        ;(e.target as any)._isTyping = false
-      }, 1000)
-      
-      // Restore scroll position immediately to prevent jumping to top
-      requestAnimationFrame(() => {
-        window.scrollTo(0, scrollY)
-        // Also restore cursor position
-        if (textareaRef.current && document.activeElement === textareaRef.current) {
-          const cursorPos = textareaRef.current.selectionStart || newValue.length
-          textareaRef.current.setSelectionRange(cursorPos, cursorPos)
-        }
-      })
-    }
+    // Use same pattern as text input that works - local state with debouncing
+    const textareaTimeoutRef = useRef<NodeJS.Timeout | null>(null)
     
     return (
       <textarea
-        ref={textareaRef}
-        defaultValue={value || ''}
-        onChange={handleChange}
-        onClick={(e) => {
+        value={localValue || ''}
+        onChange={(e) => {
           e.stopPropagation()
-        }}
-        onFocus={(e) => {
-          e.stopPropagation()
+          const newValue = e.target.value
+          setLocalValue(newValue)
+          
+          // Mark textarea as typing to prevent re-renders
+          const textareaElement = e.target
+          ;(textareaElement as any)._isTyping = true
+          
+          // Clear previous timeout
+          if (textareaTimeoutRef.current) {
+            clearTimeout(textareaTimeoutRef.current)
+          }
+          
+          // Only call onChange after user stops typing (debounced)
+          // This prevents state updates during typing, which prevents re-renders
+          textareaTimeoutRef.current = setTimeout(() => {
+            onChange(newValue)
+            ;(textareaElement as any)._isTyping = false
+          }, 500) // 500ms after last keystroke
         }}
         onBlur={(e) => {
-          // Ensure value is synced on blur
-          if (e.target.value !== lastSyncedValue.current) {
-            onChange(e.target.value)
+          // Clear timeout and save immediately on blur
+          if (textareaTimeoutRef.current) {
+            clearTimeout(textareaTimeoutRef.current)
+            textareaTimeoutRef.current = null
           }
+          if (localValue !== value) {
+            onChange(localValue)
+          }
+          ;(e.target as any)._isTyping = false
+          e.stopPropagation()
+        }}
+        onClick={(e) => {
           e.stopPropagation()
         }}
         onKeyDown={(e) => {
