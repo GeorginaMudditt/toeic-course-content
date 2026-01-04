@@ -84,8 +84,15 @@ function InlineAnswerInput({
               e.preventDefault()
               e.stopPropagation()
               e.nativeEvent.stopImmediatePropagation()
+              
+              // Save previous value immediately if it changed (user switched options)
+              if (localValue !== option && localValue !== value) {
+                onChange(localValue)
+              }
+              
               // Update local state immediately for visual feedback
               setLocalValue(option)
+              
               // Mark container as recently interacted to prevent re-renders
               const container = e.currentTarget.closest('[data-answer-input]')
               if (container) {
@@ -93,9 +100,16 @@ function InlineAnswerInput({
                 ;(container as any)._lastInteractionTime = timestamp
                 ;(container as any)._isInteracting = true
               }
-              // Don't call onChange at all during click - save on next interaction or blur
-              // This completely prevents state updates that interrupt audio
-              // The value will be saved when user clicks another option or component unmounts
+              
+              // Save new value with very long delay to avoid interrupting audio
+              // This allows audio to play through before any state updates
+              setTimeout(() => {
+                onChange(option)
+                // Clear interaction flag after update
+                if (container) {
+                  ;(container as any)._isInteracting = false
+                }
+              }, 3000) // 3 second delay - enough for audio to finish
             }}
             onMouseDown={(e) => {
               e.preventDefault()
@@ -127,8 +141,14 @@ function InlineAnswerInput({
                   ;(container as any)._lastInteractionTime = timestamp
                   ;(container as any)._isInteracting = true
                 }
-                // Don't call onChange at all during interaction - save later
-                // This completely prevents state updates that interrupt audio
+                // Save value with very long delay to avoid interrupting audio
+                setTimeout(() => {
+                  onChange(newValue)
+                  // Clear interaction flag after update
+                  if (container) {
+                    ;(container as any)._isInteracting = false
+                  }
+                }, 3000) // 3 second delay - enough for audio to finish
               }}
               onBlur={(e) => {
                 // Save value when radio loses focus (user clicks elsewhere)
