@@ -29,41 +29,121 @@ function InlineAnswerInput({
   answerPath: string
   value: string
   onChange: (value: string) => void
-  type?: 'radio' | 'text'
+  type?: 'radio' | 'text' | 'textarea'
 }) {
+  const [localValue, setLocalValue] = useState(value)
+  
   if (type === 'radio') {
     return (
-      <div style={{ display: 'inline-flex', alignItems: 'center', gap: '8px' }}>
+      <div style={{ 
+        display: 'inline-flex', 
+        alignItems: 'center', 
+        gap: '8px',
+        pointerEvents: 'auto',
+        zIndex: 10,
+        position: 'relative'
+      }}>
         {['A', 'B', 'C', 'D'].map((option) => (
-          <label key={option} style={{ display: 'flex', alignItems: 'center', gap: '4px', cursor: 'pointer' }}>
+          <label 
+            key={option} 
+            style={{ 
+              display: 'flex', 
+              alignItems: 'center', 
+              gap: '4px', 
+              cursor: 'pointer',
+              pointerEvents: 'auto'
+            }}
+            onClick={(e) => {
+              e.preventDefault()
+              e.stopPropagation()
+              setLocalValue(option)
+              onChange(option)
+            }}
+          >
             <input
               type="radio"
               name={answerPath}
               value={option}
-              checked={value === option}
-              onChange={(e) => onChange(e.target.value)}
-              style={{ width: '16px', height: '16px', cursor: 'pointer' }}
+              checked={localValue === option}
+              onChange={(e) => {
+                e.preventDefault()
+                e.stopPropagation()
+                setLocalValue(e.target.value)
+                onChange(e.target.value)
+              }}
+              onClick={(e) => {
+                e.preventDefault()
+                e.stopPropagation()
+              }}
+              style={{ 
+                width: '16px', 
+                height: '16px', 
+                cursor: 'pointer',
+                pointerEvents: 'auto'
+              }}
             />
-            <span style={{ fontSize: '13px' }}>{option}</span>
+            <span style={{ fontSize: '13px', pointerEvents: 'none' }}>{option}</span>
           </label>
         ))}
       </div>
     )
-  } else {
+  } else if (type === 'text') {
     return (
       <input
         type="text"
-        value={value}
-        onChange={(e) => onChange(e.target.value)}
+        value={localValue}
+        onChange={(e) => {
+          e.stopPropagation()
+          setLocalValue(e.target.value)
+          onChange(e.target.value)
+        }}
+        onKeyDown={(e) => {
+          e.stopPropagation()
+          if (e.key === 'Enter') {
+            e.preventDefault()
+          }
+        }}
+        onClick={(e) => {
+          e.stopPropagation()
+        }}
         style={{
           border: '1px solid #d1d5db',
           borderRadius: '4px',
           padding: '4px 8px',
           fontSize: '13px',
           width: '120px',
-          marginLeft: '8px'
+          marginLeft: '8px',
+          pointerEvents: 'auto'
         }}
         placeholder="Answer"
+      />
+    )
+  } else {
+    return (
+      <textarea
+        value={localValue || ''}
+        onChange={(e) => {
+          e.stopPropagation()
+          setLocalValue(e.target.value)
+          onChange(e.target.value)
+        }}
+        onClick={(e) => {
+          e.stopPropagation()
+        }}
+        style={{
+          width: '100%',
+          border: '1px solid #d1d5db',
+          borderRadius: '4px',
+          padding: '8px',
+          fontSize: '13px',
+          fontFamily: 'inherit',
+          minHeight: '150px',
+          resize: 'vertical',
+          pointerEvents: 'auto',
+          zIndex: 2,
+          position: 'relative'
+        }}
+        placeholder="Type your written response here..."
       />
     )
   }
@@ -104,18 +184,26 @@ export default function ResourcePreview({ resource, showActions = true }: Resour
         if ((container as any)._reactRoot) return
         
         // Determine input type
-        const isTextInput = answerPath.includes('incompleteSentences')
-        const inputType = isTextInput ? 'text' : 'radio'
+        let inputType: 'radio' | 'text' | 'textarea' = 'radio'
+        if (answerPath === 'writing') {
+          inputType = 'textarea'
+        } else if (answerPath.includes('incompleteSentences')) {
+          inputType = 'text'
+        }
         
-        // Create React root and render component (read-only for preview)
+        // Create React root and render component (interactive for preview)
         try {
           container.innerHTML = ''
-          const root = createRoot(container as HTMLElement)
+          const containerEl = container as HTMLElement
+          containerEl.style.pointerEvents = 'auto'
+          containerEl.style.position = 'relative'
+          containerEl.style.zIndex = '10'
+          const root = createRoot(containerEl)
           root.render(
             <InlineAnswerInput
               answerPath={answerPath}
               value=""
-              onChange={() => {}} // No-op for preview
+              onChange={() => {}} // No-op for preview (doesn't save)
               type={inputType}
             />
           )
@@ -150,18 +238,26 @@ export default function ResourcePreview({ resource, showActions = true }: Resour
         if ((container as any)._reactRoot) return
         
         // Determine input type
-        const isTextInput = answerPath.includes('incompleteSentences')
-        const inputType = isTextInput ? 'text' : 'radio'
+        let inputType: 'radio' | 'text' | 'textarea' = 'radio'
+        if (answerPath === 'writing') {
+          inputType = 'textarea'
+        } else if (answerPath.includes('incompleteSentences')) {
+          inputType = 'text'
+        }
         
         // Create React root and render component (read-only for preview)
         try {
           container.innerHTML = ''
-          const root = createRoot(container as HTMLElement)
+          const containerEl = container as HTMLElement
+          containerEl.style.pointerEvents = 'auto'
+          containerEl.style.position = 'relative'
+          containerEl.style.zIndex = '10'
+          const root = createRoot(containerEl)
           root.render(
             <InlineAnswerInput
               answerPath={answerPath}
               value=""
-              onChange={() => {}} // No-op for preview
+              onChange={() => {}} // No-op for preview (doesn't save)
               type={inputType}
             />
           )

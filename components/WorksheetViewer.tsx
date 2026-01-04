@@ -68,7 +68,10 @@ function InlineAnswerInput({
               e.preventDefault()
               e.stopPropagation()
               e.nativeEvent.stopImmediatePropagation()
-              onChange(option)
+              // Use setTimeout to defer state update and prevent interrupting audio
+              setTimeout(() => {
+                onChange(option)
+              }, 0)
             }}
             onMouseDown={(e) => {
               e.preventDefault()
@@ -90,13 +93,19 @@ function InlineAnswerInput({
                 e.preventDefault()
                 e.stopPropagation()
                 e.nativeEvent.stopImmediatePropagation()
-                onChange((e.target as HTMLInputElement).value)
+                // Use setTimeout to defer state update and prevent interrupting audio
+                setTimeout(() => {
+                  onChange((e.target as HTMLInputElement).value)
+                }, 0)
               }}
               onClick={(e) => {
                 e.preventDefault()
                 e.stopPropagation()
                 e.nativeEvent.stopImmediatePropagation()
-                onChange((e.target as HTMLInputElement).value)
+                // Use setTimeout to defer state update and prevent interrupting audio
+                setTimeout(() => {
+                  onChange((e.target as HTMLInputElement).value)
+                }, 0)
               }}
               onMouseDown={(e) => {
                 e.preventDefault()
@@ -129,15 +138,15 @@ function InlineAnswerInput({
       </div>
     )
   } else if (type === 'text') {
-    // Use local state to prevent focus loss during parent re-renders
-    const [localValue, setLocalValue] = useState(value)
+    // Use uncontrolled input with ref to prevent focus loss
     const inputRef = useRef<HTMLInputElement>(null)
-    const isFocusedRef = useRef(false)
+    const lastSyncedValue = useRef(value)
     
-    // Sync with parent value only when not focused
+    // Only sync when value changes externally (not from user typing)
     useEffect(() => {
-      if (!isFocusedRef.current) {
-        setLocalValue(value)
+      if (inputRef.current && document.activeElement !== inputRef.current) {
+        inputRef.current.value = value
+        lastSyncedValue.current = value
       }
     }, [value])
     
@@ -146,14 +155,13 @@ function InlineAnswerInput({
       const scrollY = window.scrollY
       const newValue = e.target.value
       e.stopPropagation()
+      e.preventDefault()
       
-      // Update local state immediately for responsive typing
-      setLocalValue(newValue)
-      
-      // Update parent (this triggers auto-save)
+      // Update parent (this triggers auto-save) - debounced
+      lastSyncedValue.current = newValue
       onChange(newValue)
       
-      // Restore scroll position
+      // Restore scroll position immediately
       requestAnimationFrame(() => {
         window.scrollTo(0, scrollY)
       })
@@ -163,17 +171,15 @@ function InlineAnswerInput({
       <input
         ref={inputRef}
         type="text"
-        value={localValue}
+        defaultValue={value}
         onChange={handleChange}
         onFocus={(e) => {
-          isFocusedRef.current = true
           e.stopPropagation()
         }}
         onBlur={(e) => {
-          isFocusedRef.current = false
-          // Sync with parent value on blur
-          if (localValue !== value) {
-            onChange(localValue)
+          // Ensure value is synced on blur
+          if (e.target.value !== lastSyncedValue.current) {
+            onChange(e.target.value)
           }
           e.stopPropagation()
         }}
@@ -202,15 +208,60 @@ function InlineAnswerInput({
       />
     )
   } else if (type === 'textarea') {
+    // Use uncontrolled textarea with ref to prevent focus loss and page jumping
+    const textareaRef = useRef<HTMLTextAreaElement>(null)
+    const lastSyncedValue = useRef(value || '')
+    
+    // Only sync when value changes externally (not from user typing)
+    useEffect(() => {
+      if (textareaRef.current && document.activeElement !== textareaRef.current) {
+        textareaRef.current.value = value || ''
+        lastSyncedValue.current = value || ''
+      }
+    }, [value])
+    
+    const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+      const scrollY = window.scrollY
+      const newValue = e.target.value
+      e.stopPropagation()
+      e.preventDefault()
+      
+      // Update parent (this triggers auto-save)
+      lastSyncedValue.current = newValue
+      onChange(newValue)
+      
+      // Restore scroll position immediately to prevent jumping to top
+      requestAnimationFrame(() => {
+        window.scrollTo(0, scrollY)
+        // Also restore cursor position
+        if (textareaRef.current && document.activeElement === textareaRef.current) {
+          const cursorPos = textareaRef.current.selectionStart || newValue.length
+          textareaRef.current.setSelectionRange(cursorPos, cursorPos)
+        }
+      })
+    }
+    
     return (
       <textarea
-        value={value || ''}
-        onChange={(e) => {
+        ref={textareaRef}
+        defaultValue={value || ''}
+        onChange={handleChange}
+        onClick={(e) => {
           e.stopPropagation()
-          onChange(e.target.value)
         }}
-        onClick={(e) => e.stopPropagation()}
-        onFocus={(e) => e.stopPropagation()}
+        onFocus={(e) => {
+          e.stopPropagation()
+        }}
+        onBlur={(e) => {
+          // Ensure value is synced on blur
+          if (e.target.value !== lastSyncedValue.current) {
+            onChange(e.target.value)
+          }
+          e.stopPropagation()
+        }}
+        onKeyDown={(e) => {
+          e.stopPropagation()
+        }}
         style={{
           width: '100%',
           border: '1px solid #d1d5db',
@@ -583,7 +634,7 @@ export default function WorksheetViewer({ assignmentId, resource, initialProgres
   }, [isPlacementTest, resource.content, renderAnswerInput, placementTestAnswers]) // Only recreate when content changes
 
   // Update existing answer inputs when notes/answers change - separate effect
-  // But skip updates for text inputs that are currently focused to prevent losing focus
+  // But skip updates for inputs that are currently focused/interactive to prevent losing focus
   useEffect(() => {
     if (!isPlacementTest || !contentRef.current) return
     
@@ -597,10 +648,12 @@ export default function WorksheetViewer({ assignmentId, resource, initialProgres
       if ((container as any)._reactRoot) {
         const inputType = getInputType(answerPath)
         
-        // For text inputs, check if they're currently focused
+        // For text inputs and textareas, check if they're currently focused
         // If focused, don't re-render to prevent losing focus
-        if (inputType === 'text') {
-          const inputElement = container.querySelector('input[type="text"]') as HTMLInputElement
+        if (inputType === 'text' || inputType === 'textarea') {
+          const inputElement = container.querySelector(
+            inputType === 'text' ? 'input[type="text"]' : 'textarea'
+          ) as HTMLInputElement | HTMLTextAreaElement
           if (inputElement && document.activeElement === inputElement) {
             // Input is focused, don't re-render - let the controlled component handle updates
             return
@@ -610,16 +663,21 @@ export default function WorksheetViewer({ assignmentId, resource, initialProgres
         const root = (container as any)._reactRoot
         const currentValue = getAnswerValue(answerPath, placementTestAnswers)
         
-        root.render(
-          <InlineAnswerInput
-            answerPath={answerPath}
-            value={currentValue}
-            onChange={(value) => updatePlacementTestAnswer(answerPath, value)}
-            type={inputType}
-            assignmentId={assignmentId}
-            onFileUpload={(fileUrl) => updatePlacementTestAnswer('writingFileUrl', fileUrl)}
-          />
-        )
+        // Use requestAnimationFrame to batch updates and prevent interrupting interactions
+        requestAnimationFrame(() => {
+          if ((container as any)._reactRoot === root) {
+            root.render(
+              <InlineAnswerInput
+                answerPath={answerPath}
+                value={currentValue}
+                onChange={(value) => updatePlacementTestAnswer(answerPath, value)}
+                type={inputType}
+                assignmentId={assignmentId}
+                onFileUpload={(fileUrl) => updatePlacementTestAnswer('writingFileUrl', fileUrl)}
+              />
+            )
+          }
+        })
       }
     })
   }, [notes, isPlacementTest, getAnswerValue, getInputType, updatePlacementTestAnswer, assignmentId, placementTestAnswers]) // Update values when notes change
