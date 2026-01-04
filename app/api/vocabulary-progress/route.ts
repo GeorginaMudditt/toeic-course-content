@@ -71,6 +71,11 @@ export async function POST(request: NextRequest) {
     // Normalize topic name: trim and remove extra spaces (matching vocabulary API normalization)
     topic = topic.trim().replace(/\s+/g, ' ')
     const normalizedLevel = level.toLowerCase()
+    
+    // Explicitly convert to booleans to ensure they're not strings or other types
+    bronze = Boolean(bronze)
+    silver = Boolean(silver)
+    gold = Boolean(gold)
 
     console.log('Vocabulary progress POST:', { studentId: session.user.id, level: normalizedLevel, topic, bronze, silver, gold })
 
@@ -94,14 +99,16 @@ export async function POST(request: NextRequest) {
 
     if (existing && existing.length > 0) {
       // Update existing record - ensure we preserve all values
+      // Explicitly set all boolean values to ensure they're updated correctly
       const updateData = {
-        bronze,
-        silver,
-        gold,
+        bronze: Boolean(bronze),
+        silver: Boolean(silver),
+        gold: Boolean(gold),
         completedAt,
         updatedAt: new Date().toISOString()
       }
       console.log('Updating progress with:', updateData)
+      console.log('Existing progress before update:', existing[0])
       
       const { data, error } = await supabaseServer
         .from('VocabularyProgress')
@@ -116,6 +123,18 @@ export async function POST(request: NextRequest) {
       }
 
       console.log('Progress updated successfully:', data?.[0])
+      // Verify the update worked by checking the returned data
+      if (data && data[0]) {
+        const updated = data[0]
+        console.log('Verification - Updated values:', {
+          bronze: updated.bronze,
+          silver: updated.silver,
+          gold: updated.gold,
+          bronzeType: typeof updated.bronze,
+          silverType: typeof updated.silver,
+          goldType: typeof updated.gold
+        })
+      }
       return NextResponse.json({ data: data?.[0] || null, error: null })
     } else {
       // Create new record

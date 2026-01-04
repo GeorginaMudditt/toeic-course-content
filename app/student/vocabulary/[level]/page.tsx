@@ -35,10 +35,11 @@ export default function VocabularyLevelPage() {
         result.data.forEach((item: any) => {
           // Normalize topic name: trim and remove extra spaces (matching vocabulary API normalization)
           const topicName = item.topic ? item.topic.trim().replace(/\s+/g, ' ') : item.topic
+          // Explicitly convert to booleans - handle null, undefined, strings, etc.
           progressMap[topicName] = {
-            bronze: Boolean(item.bronze),
-            silver: Boolean(item.silver),
-            gold: Boolean(item.gold)
+            bronze: item.bronze === true || item.bronze === 'true' || item.bronze === 1,
+            silver: item.silver === true || item.silver === 'true' || item.silver === 1,
+            gold: item.gold === true || item.gold === 'true' || item.gold === 1
           }
         })
         console.log('Fetched progress from API:', result.data)
