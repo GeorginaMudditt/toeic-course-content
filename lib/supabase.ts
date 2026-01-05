@@ -21,7 +21,8 @@ export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
 // Server-side Supabase client for authentication (uses service_role key to bypass RLS)
 // This is safe because it's only used server-side in API routes
 // Prefer service_role key, fallback to anon key if not available
-const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY || supabaseAnonKeyexport const supabaseServer = createClient(
+const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY || supabaseAnonKey;
+export const supabaseServer = createClient(
   supabaseUrl, 
   supabaseServiceKey,
   {
