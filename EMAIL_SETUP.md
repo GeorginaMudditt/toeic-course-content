@@ -4,9 +4,20 @@ This project uses **Resend** for sending password reset emails, the same email s
 
 ## Prerequisites
 
-You need a Resend account and API key. The same API key used in new-brizzle-website can be used here.
+You need a Resend account and API key. 
 
-## Step 1: Configure Environment Variables
+**Note**: While you can use the same API key across projects, it's recommended to create a separate API key for this project for better security and monitoring. Each project should have its own API key.
+
+## Step 1: Get Your Resend API Key
+
+1. Go to [Resend API Keys](https://resend.com/api-keys)
+2. Click "Create API Key"
+3. Give it a name like "Brizzle TOEIC Course Content"
+4. Copy the API key (starts with `re_`)
+
+**Important**: Create a new API key specifically for this project. Do not reuse the API key from new-brizzle-website.
+
+## Step 2: Configure Environment Variables
 
 ### Local Development (.env.local)
 
@@ -30,7 +41,7 @@ NEXTAUTH_URL=http://localhost:3000
    - **Key**: `NEXTAUTH_URL`
    - **Value**: `https://toeic-course-content.netlify.app` (or your custom domain)
 
-## Step 2: Verify Domain (If Not Already Done)
+## Step 3: Verify Domain (If Not Already Done)
 
 If you haven't verified `brizzle-english.com` in Resend yet:
 
@@ -41,7 +52,7 @@ If you haven't verified `brizzle-english.com` in Resend yet:
 
 **Note**: If you've already verified the domain for new-brizzle-website, you can skip this step and use the same domain.
 
-## Step 3: Test Email Sending
+## Step 4: Test Email Sending
 
 1. Start your development server: `npm run dev`
 2. Go to the login page
