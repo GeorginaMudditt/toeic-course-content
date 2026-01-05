@@ -66,13 +66,14 @@ export async function POST(request: NextRequest) {
     // Hash new password
     const hashedPassword = await bcrypt.hash(newPassword, 10)
 
-    // Update password only - don't update updatedAt
-    // The database might have a trigger or default that handles updatedAt automatically
-    // If this fails with NOT NULL constraint, we'll need to check the database schema
+    // Update password and updatedAt timestamp
+    // Use camelCase 'updatedAt' like the Resource route does (which works)
+    const now = new Date().toISOString()
     const { error: updateError } = await supabaseServer
       .from('User')
       .update({ 
-        password: hashedPassword
+        password: hashedPassword,
+        updatedAt: now  // Use camelCase as schema defines it
       })
       .eq('id', session.user.id)
 
