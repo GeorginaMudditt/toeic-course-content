@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { supabaseServer } from '@/lib/supabase'
+import { sendPasswordResetEmail } from '@/lib/email'
 import crypto from 'crypto'
 
 export async function POST(request: NextRequest) {
@@ -52,18 +53,24 @@ export async function POST(request: NextRequest) {
         console.error('Error saving reset token:', updateError)
         // Still return success to prevent email enumeration
       } else {
-        // In a production environment, you would send an email here
-        // For now, we'll return the token in the response (only for development)
-        // In production, remove this and send via email
-        console.log('Password reset token for', email, ':', resetToken)
-        console.log('Reset URL:', `${process.env.NEXTAUTH_URL || 'http://localhost:3000'}/reset-password?token=${resetToken}`)
-        
-        // TODO: Send email with reset link
-        // Example: await sendEmail({
-        //   to: user.email,
-        //   subject: 'Password Reset Request',
-        //   html: `Click here to reset your password: ${resetUrl}`
-        // })
+        // Send password reset email
+        const emailResult = await sendPasswordResetEmail({
+          userEmail: user.email,
+          userName: user.name,
+          resetToken
+        })
+
+        if (emailResult.error) {
+          console.error('Error sending password reset email:', emailResult.error)
+          // Still return success to prevent email enumeration
+          // Log the token for manual recovery if needed (development only)
+          if (process.env.NODE_ENV === 'development') {
+            console.log('Password reset token for', email, ':', resetToken)
+            console.log('Reset URL:', `${process.env.NEXTAUTH_URL || 'http://localhost:3000'}/reset-password?token=${resetToken}`)
+          }
+        } else {
+          console.log('Password reset email sent successfully to:', user.email)
+        }
       }
     }
 
