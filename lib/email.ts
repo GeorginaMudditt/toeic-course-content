@@ -1,6 +1,13 @@
 import { Resend } from 'resend'
 
-const resend = new Resend(process.env.RESEND_API_KEY)
+// Initialize Resend lazily to avoid build-time errors when API key is not set
+function getResendClient() {
+  const apiKey = process.env.RESEND_API_KEY
+  if (!apiKey) {
+    return null
+  }
+  return new Resend(apiKey)
+}
 
 interface PasswordResetEmail {
   userEmail: string
@@ -12,7 +19,9 @@ interface PasswordResetEmail {
  * Sends a password reset email to the user
  */
 export async function sendPasswordResetEmail(data: PasswordResetEmail) {
-  if (!process.env.RESEND_API_KEY) {
+  const resend = getResendClient()
+  
+  if (!resend) {
     console.warn('⚠️  RESEND_API_KEY not found. Email not sent.')
     return { error: 'Email service not configured' }
   }
