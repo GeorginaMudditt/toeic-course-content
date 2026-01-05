@@ -3,6 +3,18 @@ import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
 import { supabaseServer } from '@/lib/supabase'
 import bcrypt from 'bcryptjs'
+import { randomBytes } from 'crypto'
+
+// Generate a CUID-like ID (similar to Prisma's cuid())
+// Format: c + timestamp (base36) + random (base36)
+function generateCuid(): string {
+  const timestamp = Date.now().toString(36)
+  // Generate random part using hex and convert to base36-like string
+  const randomHex = randomBytes(6).toString('hex')
+  // Convert hex to a base36-like representation for CUID compatibility
+  const randomPart = parseInt(randomHex, 16).toString(36).padStart(12, '0').substring(0, 12)
+  return `c${timestamp}${randomPart}`
+}
 
 export async function POST(request: NextRequest) {
   try {
@@ -58,10 +70,14 @@ export async function POST(request: NextRequest) {
     // Hash password
     const hashedPassword = await bcrypt.hash(data.password, 10)
 
+    // Generate CUID for the user ID (required by Supabase)
+    const userId = generateCuid()
+
     // Create user
     const { data: newUser, error: createError } = await supabaseServer
       .from('User')
       .insert({
+        id: userId,
         name: data.name.trim(),
         email: normalizedEmail,
         password: hashedPassword,
