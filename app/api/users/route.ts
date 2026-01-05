@@ -73,6 +73,9 @@ export async function POST(request: NextRequest) {
     // Generate CUID for the user ID (required by Supabase)
     const userId = generateCuid()
 
+    // Set timestamps (Supabase doesn't auto-generate like Prisma does)
+    const now = new Date().toISOString()
+
     // Create user
     const { data: newUser, error: createError } = await supabaseServer
       .from('User')
@@ -81,7 +84,9 @@ export async function POST(request: NextRequest) {
         name: data.name.trim(),
         email: normalizedEmail,
         password: hashedPassword,
-        role: data.role || 'STUDENT'
+        role: data.role || 'STUDENT',
+        createdAt: now,
+        updatedAt: now
       })
       .select('id, email, name, role, createdAt, updatedAt')
       .single()
