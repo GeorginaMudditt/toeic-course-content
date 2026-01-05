@@ -689,6 +689,11 @@ export default function WorksheetViewer({ assignmentId, resource, initialProgres
         const answerPath = container.getAttribute('data-answer-input')
         if (!answerPath) return
         
+        // Skip the writing textarea - it's now a direct JSX component, not a portal
+        if (answerPath === 'writing') {
+          return // Skip portal rendering for writing textarea
+        }
+        
         // Only create if it doesn't exist - don't recreate
         if (!(container as any)._reactRoot) {
           renderAnswerInput(container, answerPath, placementTestAnswers)
@@ -734,7 +739,7 @@ export default function WorksheetViewer({ assignmentId, resource, initialProgres
   useEffect(() => {
     if (!isPlacementTest || !contentRef.current) return
     
-    // CRITICAL: If ANY textarea is focused, completely skip ALL updates
+    // CRITICAL: If ANY textarea is focused, completely skip ALL portal updates
     // Check both ref and actual DOM state for reliability
     const anyTextareaFocused = textareaFocusRef.current || 
       Array.from(contentRef.current.querySelectorAll('textarea')).some(
@@ -742,7 +747,7 @@ export default function WorksheetViewer({ assignmentId, resource, initialProgres
       )
     
     if (anyTextareaFocused) {
-      // Textarea is focused - DO NOT update anything, prevent all re-renders
+      // Textarea is focused - DO NOT update portal components, prevent all re-renders
       return
     }
     
@@ -1057,13 +1062,81 @@ export default function WorksheetViewer({ assignmentId, resource, initialProgres
                 </>
               )
             } else {
-              // No Answers section found, render normally
-              return (
-                <div 
-                  className="prose max-w-none"
-                  dangerouslySetInnerHTML={{ __html: resource.content }}
-                />
-              )
+              // No Answers section found
+              if (isPlacementTest) {
+                // For Placement Test, split content at the writing textarea placeholder
+                // and render the textarea directly in JSX (like Modal Verbs) to prevent flickering
+                const writingPlaceholderRegex = /(<div\s+data-answer-input="writing"[^>]*><\/div>)/i
+                const writingMatch = resource.content.match(writingPlaceholderRegex)
+                
+                if (writingMatch) {
+                  const writingIndex = resource.content.indexOf(writingMatch[0])
+                  const contentBeforeWriting = resource.content.substring(0, writingIndex)
+                  const contentAfterWriting = resource.content.substring(writingIndex + writingMatch[0].length)
+                  const writingAnswerValue = getPlacementTestAnswers().writing || ''
+                  
+                  return (
+                    <>
+                      <div 
+                        className="prose max-w-none"
+                        dangerouslySetInnerHTML={{ __html: contentBeforeWriting }}
+                        ref={contentRef}
+                      />
+                      <div style={{ marginTop: '15px' }}>
+                        <label style={{ display: 'block', fontSize: '14px', fontWeight: 600, marginBottom: '8px', color: '#000' }}>
+                          Your Response:
+                        </label>
+                        <textarea
+                          id="placement-writing-textarea"
+                          value={writingAnswerValue}
+                          onChange={(e) => {
+                            updatePlacementTestAnswer('writing', e.target.value)
+                          }}
+                          className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none"
+                          style={{ 
+                            borderColor: '#d1d5db',
+                            borderRadius: '4px',
+                            padding: '8px',
+                            fontSize: '13px',
+                            fontFamily: 'inherit',
+                            minHeight: '150px',
+                            resize: 'vertical'
+                          }}
+                          rows={10}
+                          onFocus={(e) => {
+                            e.currentTarget.style.borderColor = '#38438f'
+                          }}
+                          onBlur={(e) => {
+                            e.currentTarget.style.borderColor = '#d1d5db'
+                          }}
+                          placeholder="Type your response here..."
+                        />
+                        <div 
+                          className="prose max-w-none"
+                          dangerouslySetInnerHTML={{ __html: contentAfterWriting }}
+                        />
+                      </div>
+                    </>
+                  )
+                } else {
+                  // No writing placeholder found, render normally
+                  return (
+                    <div 
+                      className="prose max-w-none"
+                      dangerouslySetInnerHTML={{ __html: resource.content }}
+                      ref={contentRef}
+                    />
+                  )
+                }
+              } else {
+                // Render normally for non-placement tests
+                return (
+                  <div 
+                    className="prose max-w-none"
+                    dangerouslySetInnerHTML={{ __html: resource.content }}
+                  />
+                )
+              }
             }
           }
         })()}
