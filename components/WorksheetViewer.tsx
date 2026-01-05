@@ -736,14 +736,23 @@ export default function WorksheetViewer({ assignmentId, resource, initialProgres
             // Check if focused or currently being typed in
             const isFocused = document.activeElement === inputElement
             const isTyping = (inputElement as any)._isTyping
-            // For textareas, use a longer time window (3 seconds) to prevent re-renders during typing
-            const interactionWindow = inputType === 'textarea' ? 3000 : 1000
-            const hasRecentInteraction = (inputElement as any)._lastInteractionTime && 
-              Date.now() - (inputElement as any)._lastInteractionTime < interactionWindow
             
-            if (isFocused || isTyping || hasRecentInteraction) {
-              // Input is focused, being typed, or recently interacted with - don't re-render
+            // For textareas: NEVER re-render while focused, regardless of pause duration
+            // This allows students to type for long periods (10+ minutes) without interruption
+            if (inputType === 'textarea' && isFocused) {
+              // Textarea is focused - never re-render it, even if student pauses
               return
+            }
+            
+            // For text inputs, use a shorter protection window
+            if (inputType === 'text') {
+              const hasRecentInteraction = (inputElement as any)._lastInteractionTime && 
+                Date.now() - (inputElement as any)._lastInteractionTime < 1000
+              
+              if (isFocused || isTyping || hasRecentInteraction) {
+                // Input is focused, being typed, or recently interacted with - don't re-render
+                return
+              }
             }
           }
         }
