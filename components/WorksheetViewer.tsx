@@ -735,8 +735,14 @@ export default function WorksheetViewer({ assignmentId, resource, initialProgres
     if (!isPlacementTest || !contentRef.current) return
     
     // CRITICAL: If ANY textarea is focused, completely skip ALL updates
-    // Use ref to check focus state (persists across renders)
-    if (textareaFocusRef.current) {
+    // Check both ref and actual DOM state for reliability
+    const anyTextareaFocused = textareaFocusRef.current || 
+      Array.from(contentRef.current.querySelectorAll('textarea')).some(
+        textarea => document.activeElement === textarea
+      )
+    
+    if (anyTextareaFocused) {
+      // Textarea is focused - DO NOT update anything, prevent all re-renders
       return
     }
     
@@ -749,6 +755,13 @@ export default function WorksheetViewer({ assignmentId, resource, initialProgres
       // Only update if root exists - don't create new ones here
       if ((container as any)._reactRoot) {
         const inputType = getInputType(answerPath)
+        
+        // For textareas: NEVER update via root.render() - they manage their own state
+        // This prevents any re-renders that could cause focus loss
+        if (inputType === 'textarea') {
+          // Don't update textareas at all - they use local state and sync on blur
+          return
+        }
         
         // For text inputs, check if they're currently focused or being typed in
         if (inputType === 'text') {
@@ -766,9 +779,6 @@ export default function WorksheetViewer({ assignmentId, resource, initialProgres
           }
         }
         
-        // For textareas: Skip entirely if any textarea is focused (already checked above)
-        // This ensures textareas never get re-rendered while in use
-        
         // For radio buttons, skip if recently interacted with to prevent interrupting audio
         if (inputType === 'radio') {
           const lastInteraction = (container as any)._lastInteractionTime
@@ -784,6 +794,11 @@ export default function WorksheetViewer({ assignmentId, resource, initialProgres
         
         // Use requestAnimationFrame to batch updates and prevent interrupting interactions
         requestAnimationFrame(() => {
+          // Double-check textarea focus state before rendering
+          if (textareaFocusRef.current) {
+            return
+          }
+          
           if ((container as any)._reactRoot === root) {
             root.render(
               <InlineAnswerInput
