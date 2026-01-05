@@ -6,6 +6,7 @@ import { LEVEL_COLORS } from '@/lib/level-colors'
 import Navbar from '@/components/Navbar'
 import ChallengeModal from '@/components/ChallengeModal'
 import Link from 'next/link'
+import { supabase } from '@/lib/supabase'
 
 interface Word {
   word_english: string
@@ -189,15 +190,152 @@ export default function ChallengePage() {
   }
 
   // Play audio for pronunciation
-  const playAudio = (audioUrl: string | null, wordKey: string) => {
-    if (audioUrl) {
-      const audio = new Audio(audioUrl)
-      audio.play()
-        .then(() => {
-          setListenedWords(prev => new Set(prev).add(wordKey))
-        })
-        .catch(err => console.log('Audio playback failed:', err))
+  const playAudio = async (audioUrl: string | null, wordKey: string) => {
+    if (!audioUrl) {
+      console.log('No audio URL provided for:', wordKey)
+      return
     }
+    
+    // Validate and normalize the audio URL
+    let normalizedUrl = audioUrl.trim()
+    
+    // Handle different URL formats
+    // 1. Already a full URL - use as is (most common case)
+    if (normalizedUrl.startsWith('http://') || normalizedUrl.startsWith('https://')) {
+      // URL is already complete - validate it
+      try {
+        new URL(normalizedUrl)
+      } catch (e) {
+        console.error('Invalid full URL format for', wordKey, ':', normalizedUrl)
+        return
+      }
+    }
+    // 2. Supabase storage paths - extract bucket and file path
+    else if (normalizedUrl.includes('/storage/v1/object/')) {
+      // Extract bucket and file path from storage URL
+      // Format: /storage/v1/object/public/bucket/file.mp3 or storage/v1/object/public/bucket/file.mp3
+      const parts = normalizedUrl.split('/storage/v1/object/public/')
+      if (parts.length === 2) {
+        const bucketAndPath = parts[1]
+        const [bucket, ...filePathParts] = bucketAndPath.split('/')
+        const filePath = filePathParts.join('/')
+        
+        // Use Supabase client to get public URL
+        const { data } = supabase.storage.from(bucket).getPublicUrl(filePath)
+        normalizedUrl = data.publicUrl
+        console.log('Converted storage path to public URL:', audioUrl, '->', normalizedUrl)
+      } else {
+        console.error('Invalid Supabase storage path format for', wordKey, ':', normalizedUrl)
+        return
+      }
+    }
+    // 3. Simple file paths - try common buckets
+    else if (normalizedUrl.startsWith('/uploads/') || normalizedUrl.startsWith('uploads/')) {
+      const cleanPath = normalizedUrl.replace(/^\/?uploads\//, '')
+      // Try common bucket names
+      const buckets = ['vocabulary-audio', 'audio', 'resources', 'uploads']
+      let found = false
+      
+      for (const bucket of buckets) {
+        const { data } = supabase.storage.from(bucket).getPublicUrl(cleanPath)
+        // Check if URL is accessible (we'll try to load it)
+        normalizedUrl = data.publicUrl
+        found = true
+        console.log('Trying bucket', bucket, 'for path:', cleanPath, '->', normalizedUrl)
+        break // Use first bucket for now
+      }
+      
+      if (!found) {
+        console.error('Could not determine bucket for path:', normalizedUrl, 'for word:', wordKey)
+        return
+      }
+    }
+    // 4. Invalid format
+    else {
+      console.error('Invalid audio URL format for', wordKey, ':', normalizedUrl)
+      console.error('Expected format: full URL (https://...) or Supabase storage path')
+      console.error('URL formats supported:')
+      console.error('  - Full URL: https://...')
+      console.error('  - Storage path: /storage/v1/object/public/bucket/file.mp3')
+      console.error('  - Upload path: /uploads/file.mp3 or uploads/file.mp3')
+      return
+    }
+    
+    // Validate URL format
+    try {
+      const url = new URL(normalizedUrl)
+      if (!url.protocol.startsWith('http')) {
+        console.error('Invalid audio URL protocol:', normalizedUrl)
+        return
+      }
+    } catch (e) {
+      console.error('Invalid audio URL format (cannot parse as URL):', normalizedUrl, 'for word:', wordKey)
+      return
+    }
+    
+    // Add cache-busting query parameter to prevent old audio from being cached
+    const cacheBuster = `?t=${Date.now()}`
+    const finalUrl = normalizedUrl.includes('?') 
+      ? `${normalizedUrl}&t=${Date.now()}` 
+      : `${normalizedUrl}${cacheBuster}`
+    
+    console.log('Playing audio for:', wordKey, 'Original URL:', audioUrl, 'Final URL:', finalUrl)
+    
+    const audio = new Audio(finalUrl)
+    
+    // Add error handlers for better debugging
+    audio.addEventListener('error', (e) => {
+      console.error('Audio error for', wordKey, ':', e)
+      const error = audio.error
+      if (error) {
+        const errorDetails = {
+          code: error.code,
+          message: error.message,
+          codeName: error.code === MediaError.MEDIA_ERR_ABORTED ? 'MEDIA_ERR_ABORTED' :
+                   error.code === MediaError.MEDIA_ERR_NETWORK ? 'MEDIA_ERR_NETWORK' :
+                   error.code === MediaError.MEDIA_ERR_DECODE ? 'MEDIA_ERR_DECODE' :
+                   error.code === MediaError.MEDIA_ERR_SRC_NOT_SUPPORTED ? 'MEDIA_ERR_SRC_NOT_SUPPORTED' : 'UNKNOWN',
+          url: finalUrl,
+          originalUrl: audioUrl
+        }
+        console.error('Audio error details:', errorDetails)
+        
+        // Show user-friendly error
+        if (error.code === MediaError.MEDIA_ERR_SRC_NOT_SUPPORTED) {
+          console.error('❌ Audio format not supported or file not found:', finalUrl)
+        }
+      }
+    })
+    
+    audio.addEventListener('loadstart', () => {
+      console.log('Audio loading started for:', wordKey)
+    })
+    
+    audio.addEventListener('canplay', () => {
+      console.log('Audio can play for:', wordKey)
+    })
+    
+    audio.addEventListener('loadeddata', () => {
+      console.log('Audio data loaded for:', wordKey)
+    })
+    
+    audio.play()
+      .then(() => {
+        setListenedWords(prev => new Set(prev).add(wordKey))
+        console.log('✅ Audio playback started for:', wordKey)
+      })
+      .catch(err => {
+        console.error('❌ Audio playback failed for', wordKey, ':', err, 'URL:', finalUrl)
+        // Try to get more details about the error
+        if (audio.error) {
+          console.error('Audio element error:', {
+            code: audio.error.code,
+            message: audio.error.message,
+            url: finalUrl,
+            originalUrl: audioUrl
+          })
+        }
+      })
   }
 
   // Drag and drop functions for silver challenge
