@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, useRef, useCallback, useMemo } from 'react'
+import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react'
 import { createRoot } from 'react-dom/client'
 import { jsPDF } from 'jspdf'
 import html2canvas from 'html2canvas'
@@ -24,8 +24,29 @@ interface WorksheetViewerProps {
   initialProgress?: Progress | null
 }
 
+// Memoized content component to prevent re-renders when notes change
+const MemoizedContent = React.memo(function MemoizedContent({
+  html,
+  contentRef
+}: {
+  html: string
+  contentRef?: React.RefObject<HTMLDivElement>
+}) {
+  return (
+    <div 
+      className="prose max-w-none"
+      dangerouslySetInnerHTML={{ __html: html }}
+      ref={contentRef}
+    />
+  )
+}, (prevProps, nextProps) => {
+  // Only re-render if HTML content actually changed
+  return prevProps.html === nextProps.html
+})
+
 // Direct textarea component for Placement Test writing section (like Modal Verbs)
-function PlacementWritingTextarea({
+// Uses local state and debouncing to prevent parent re-renders during typing
+const PlacementWritingTextarea = React.memo(function PlacementWritingTextarea({
   value,
   onChange
 }: {
@@ -35,11 +56,15 @@ function PlacementWritingTextarea({
   const [localValue, setLocalValue] = useState(value)
   const timeoutRef = useRef<NodeJS.Timeout | null>(null)
   const textareaRef = useRef<HTMLTextAreaElement>(null)
+  const isFocusedRef = useRef(false)
+  const lastSyncedValueRef = useRef(value)
   
   // Sync with parent value when it changes externally (but not when focused)
   useEffect(() => {
-    if (document.activeElement !== textareaRef.current) {
+    // Only sync if value actually changed and textarea is not focused
+    if (value !== lastSyncedValueRef.current && !isFocusedRef.current && document.activeElement !== textareaRef.current) {
       setLocalValue(value)
+      lastSyncedValueRef.current = value
     }
   }, [value])
   
@@ -56,24 +81,25 @@ function PlacementWritingTextarea({
           clearTimeout(timeoutRef.current)
         }
         
-        // Debounce the parent update to prevent flickering
-        // Only update parent after user stops typing (like Modal Verbs)
-        timeoutRef.current = setTimeout(() => {
-          onChange(newValue)
-        }, 500) // 500ms after last keystroke
+        // DON'T update parent during typing - only update on blur
+        // This prevents parent re-renders that cause flickering
+        // The parent will be updated when user blurs the textarea
       }}
       onBlur={(e) => {
+        isFocusedRef.current = false
         // Save immediately on blur
         if (timeoutRef.current) {
           clearTimeout(timeoutRef.current)
           timeoutRef.current = null
         }
-        if (localValue !== value) {
+        if (localValue !== lastSyncedValueRef.current) {
           onChange(localValue)
+          lastSyncedValueRef.current = localValue
         }
         e.currentTarget.style.borderColor = '#d1d5db'
       }}
       onFocus={(e) => {
+        isFocusedRef.current = true
         e.currentTarget.style.borderColor = '#38438f'
       }}
       className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none"
@@ -90,7 +116,11 @@ function PlacementWritingTextarea({
       placeholder="Type your response here..."
     />
   )
-}
+}, (prevProps, nextProps) => {
+  // Only re-render if value prop actually changed (not just reference)
+  // This prevents re-renders when parent re-renders but value is the same
+  return prevProps.value === nextProps.value && prevProps.onChange === nextProps.onChange
+})
 
 // Inline answer input component for placement test
 function InlineAnswerInput({ 
@@ -570,6 +600,11 @@ export default function WorksheetViewer({ assignmentId, resource, initialProgres
   }
   
   const placementTestAnswers = getPlacementTestAnswers()
+  
+  // Memoize writing value to prevent unnecessary re-renders
+  const writingAnswerValue = useMemo(() => {
+    return placementTestAnswers.writing || ''
+  }, [placementTestAnswers.writing])
 
   // Track if any textarea is focused using a ref (persists across renders)
   const textareaFocusRef = useRef(false)
@@ -1141,26 +1176,35 @@ export default function WorksheetViewer({ assignmentId, resource, initialProgres
                   const writingIndex = resource.content.indexOf(writingMatch[0])
                   const contentBeforeWriting = resource.content.substring(0, writingIndex)
                   const contentAfterWriting = resource.content.substring(writingIndex + writingMatch[0].length)
-                  const writingAnswerValue = getPlacementTestAnswers().writing || ''
+                  
+                  // Memoize content sections to prevent re-renders when notes change
+                  const memoizedContentBefore = useMemo(() => contentBeforeWriting, [resource.content])
+                  const memoizedContentAfter = useMemo(() => contentAfterWriting, [resource.content])
+                  
+                  // Memoize the onChange callback to prevent re-renders
+                  const handleWritingChange = useCallback((value: string) => {
+                    updatePlacementTestAnswer('writing', value)
+                  }, [updatePlacementTestAnswer])
                   
                   return (
                     <>
-                      <div 
-                        className="prose max-w-none"
-                        dangerouslySetInnerHTML={{ __html: contentBeforeWriting }}
-                        ref={contentRef}
+                      <MemoizedContent 
+                        key="content-before-writing"
+                        html={memoizedContentBefore}
+                        contentRef={contentRef}
                       />
                       <div style={{ marginTop: '15px' }}>
                         <label style={{ display: 'block', fontSize: '14px', fontWeight: 600, marginBottom: '8px', color: '#000' }}>
                           Your Response:
                         </label>
                         <PlacementWritingTextarea
+                          key="placement-writing-textarea"
                           value={writingAnswerValue}
-                          onChange={(value) => updatePlacementTestAnswer('writing', value)}
+                          onChange={handleWritingChange}
                         />
-                        <div 
-                          className="prose max-w-none"
-                          dangerouslySetInnerHTML={{ __html: contentAfterWriting }}
+                        <MemoizedContent 
+                          key="content-after-writing"
+                          html={memoizedContentAfter}
                         />
                       </div>
                     </>
