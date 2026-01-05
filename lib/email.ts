@@ -74,7 +74,7 @@ export async function sendPasswordResetEmail(data: PasswordResetEmail) {
                 <p>You requested to reset your password for your Brizzle TOEIC® account.</p>
                 
                 <div style="text-align: center; margin: 30px 0;">
-                  <a href="${resetUrl}" class="button">Reset Your Password</a>
+                  <a href="${resetUrl}" class="button" style="color: #ffffff !important; text-decoration: none;">Reset Your Password</a>
                 </div>
                 
                 <p>Or copy and paste this link into your browser:</p>
