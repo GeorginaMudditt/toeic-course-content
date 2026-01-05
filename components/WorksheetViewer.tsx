@@ -288,6 +288,7 @@ function InlineAnswerInput({
           // Mark textarea as typing to prevent re-renders
           const textareaElement = e.target
           ;(textareaElement as any)._isTyping = true
+          ;(textareaElement as any)._lastInteractionTime = Date.now()
           
           // Clear previous timeout
           if (textareaTimeoutRef.current) {
@@ -313,6 +314,12 @@ function InlineAnswerInput({
           e.stopPropagation()
           // Mark as typing when focused to prevent any re-renders
           ;(e.target as any)._isTyping = true
+          ;(e.target as any)._lastInteractionTime = Date.now()
+        }}
+        onKeyDown={(e) => {
+          e.stopPropagation()
+          // Track every keystroke to prevent re-renders
+          ;(e.target as any)._lastInteractionTime = Date.now()
         }}
         onBlur={(e) => {
           // Clear timeout and save immediately on blur
@@ -324,13 +331,14 @@ function InlineAnswerInput({
             onChange(localValue)
           }
           ;(e.target as any)._isTyping = false
+          // Keep lastInteractionTime for a bit longer to prevent immediate re-render
+          ;(e.target as any)._lastInteractionTime = Date.now()
           e.stopPropagation()
         }}
         onClick={(e) => {
           e.stopPropagation()
-        }}
-        onKeyDown={(e) => {
-          e.stopPropagation()
+          // Track clicks to prevent re-renders
+          ;(e.target as any)._lastInteractionTime = Date.now()
         }}
         style={{
           width: '100%',
@@ -726,8 +734,15 @@ export default function WorksheetViewer({ assignmentId, resource, initialProgres
           ) as HTMLInputElement | HTMLTextAreaElement
           if (inputElement) {
             // Check if focused or currently being typed in
-            if (document.activeElement === inputElement || (inputElement as any)._isTyping) {
-              // Input is focused or being typed, don't re-render
+            const isFocused = document.activeElement === inputElement
+            const isTyping = (inputElement as any)._isTyping
+            // For textareas, use a longer time window (3 seconds) to prevent re-renders during typing
+            const interactionWindow = inputType === 'textarea' ? 3000 : 1000
+            const hasRecentInteraction = (inputElement as any)._lastInteractionTime && 
+              Date.now() - (inputElement as any)._lastInteractionTime < interactionWindow
+            
+            if (isFocused || isTyping || hasRecentInteraction) {
+              // Input is focused, being typed, or recently interacted with - don't re-render
               return
             }
           }
