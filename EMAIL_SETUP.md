@@ -1,26 +1,19 @@
 # Email Setup Guide for Password Reset
 
-This project uses **Resend** for sending password reset emails, the same email service used in the new-brizzle-website project.
+This project uses **Resend** for sending password reset emails, the same email service used in the new-brizzle-website project. We use Resend instead of Neo SMTP due to reliability and deliverability issues experienced with Neo.
 
 ## Prerequisites
 
-You need a Resend account and API key. If you already have one set up for new-brizzle-website, you can use the same API key.
+You need a Resend account and API key. The same API key used in new-brizzle-website can be used here.
 
-## Step 1: Get Your Resend API Key
-
-1. Go to [Resend Dashboard](https://resend.com/api-keys)
-2. Sign in or create an account
-3. Create a new API key or use an existing one
-4. Copy the API key (starts with `re_`)
-
-## Step 2: Configure Environment Variables
+## Step 1: Configure Environment Variables
 
 ### Local Development (.env.local)
 
 Add to your `.env.local` file:
 
 ```env
-RESEND_API_KEY=re_your_api_key_here
+RESEND_API_KEY=re_4PpA3fsM_7kjhvXPxHwciA9QS72x9XPkq
 NEXTAUTH_URL=http://localhost:3000
 ```
 
@@ -30,12 +23,12 @@ NEXTAUTH_URL=http://localhost:3000
 2. Navigate to **Site settings** → **Environment variables**
 3. Add a new variable:
    - **Key**: `RESEND_API_KEY`
-   - **Value**: Your Resend API key (starts with `re_`)
+   - **Value**: `re_4PpA3fsM_7kjhvXPxHwciA9QS72x9XPkq`
 4. Make sure `NEXTAUTH_URL` is also set to your production URL:
    - **Key**: `NEXTAUTH_URL`
    - **Value**: `https://toeic-course-content.netlify.app` (or your custom domain)
 
-## Step 3: Verify Domain (If Not Already Done)
+## Step 2: Verify Domain (If Not Already Done)
 
 If you haven't verified `brizzle-english.com` in Resend yet:
 
@@ -46,7 +39,7 @@ If you haven't verified `brizzle-english.com` in Resend yet:
 
 **Note**: If you've already verified the domain for new-brizzle-website, you can skip this step and use the same domain.
 
-## Step 4: Test Email Sending
+## Step 3: Test Email Sending
 
 1. Start your development server: `npm run dev`
 2. Go to the login page
@@ -68,6 +61,7 @@ The password reset emails are sent from:
 1. **Check RESEND_API_KEY is set**:
    - Verify the environment variable is set correctly
    - Check Netlify environment variables if in production
+   - Look for console warnings: `⚠️ RESEND_API_KEY not found`
 
 2. **Check Resend Dashboard**:
    - Go to [Resend Logs](https://resend.com/emails)

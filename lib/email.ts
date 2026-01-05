@@ -16,7 +16,7 @@ interface PasswordResetEmail {
 }
 
 /**
- * Sends a password reset email to the user
+ * Sends a password reset email to the user via Resend
  */
 export async function sendPasswordResetEmail(data: PasswordResetEmail) {
   const resend = getResendClient()
@@ -90,6 +90,7 @@ export async function sendPasswordResetEmail(data: PasswordResetEmail) {
       `,
     })
 
+    console.log('Password reset email sent successfully to:', data.userEmail)
     return { success: true }
   } catch (error) {
     console.error('Error sending password reset email:', error)
