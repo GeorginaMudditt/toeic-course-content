@@ -59,7 +59,7 @@ export async function sendPasswordResetEmail(data: PasswordResetEmail) {
               .container { max-width: 600px; margin: 0 auto; padding: 20px; }
               .header { background: linear-gradient(to bottom right, #38438f, #2d3570); color: white; padding: 30px; text-align: center; border-radius: 10px 10px 0 0; }
               .content { background: #f9f9f9; padding: 30px; border-radius: 0 0 10px 10px; }
-              .button { display: inline-block; padding: 12px 24px; background: #38438f; color: white; text-decoration: none; border-radius: 5px; margin: 20px 0; font-weight: 600; }
+              .button { display: inline-block; padding: 12px 24px; background: #38438f; color: #ffffff !important; text-decoration: none; border-radius: 5px; margin: 20px 0; font-weight: 600; }
               .footer { text-align: center; margin-top: 20px; color: #666; font-size: 12px; }
               .warning { background: #fff3cd; border-left: 4px solid #ffc107; padding: 15px; margin: 20px 0; border-radius: 4px; }
             </style>
