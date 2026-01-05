@@ -13,9 +13,11 @@ You need a Resend account and API key. The same API key used in new-brizzle-webs
 Add to your `.env.local` file:
 
 ```env
-RESEND_API_KEY=re_4PpA3fsM_7kjhvXPxHwciA9QS72x9XPkq
+RESEND_API_KEY=re_your_api_key_here
 NEXTAUTH_URL=http://localhost:3000
 ```
+
+**⚠️ Security Note**: Never commit your `.env.local` file to git. It should already be in `.gitignore`.
 
 ### Production (Netlify)
 
@@ -23,7 +25,7 @@ NEXTAUTH_URL=http://localhost:3000
 2. Navigate to **Site settings** → **Environment variables**
 3. Add a new variable:
    - **Key**: `RESEND_API_KEY`
-   - **Value**: `re_4PpA3fsM_7kjhvXPxHwciA9QS72x9XPkq`
+   - **Value**: Your Resend API key (starts with `re_`)
 4. Make sure `NEXTAUTH_URL` is also set to your production URL:
    - **Key**: `NEXTAUTH_URL`
    - **Value**: `https://toeic-course-content.netlify.app` (or your custom domain)
