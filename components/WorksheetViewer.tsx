@@ -24,6 +24,74 @@ interface WorksheetViewerProps {
   initialProgress?: Progress | null
 }
 
+// Direct textarea component for Placement Test writing section (like Modal Verbs)
+function PlacementWritingTextarea({
+  value,
+  onChange
+}: {
+  value: string
+  onChange: (value: string) => void
+}) {
+  const [localValue, setLocalValue] = useState(value)
+  const timeoutRef = useRef<NodeJS.Timeout | null>(null)
+  const textareaRef = useRef<HTMLTextAreaElement>(null)
+  
+  // Sync with parent value when it changes externally (but not when focused)
+  useEffect(() => {
+    if (document.activeElement !== textareaRef.current) {
+      setLocalValue(value)
+    }
+  }, [value])
+  
+  return (
+    <textarea
+      ref={textareaRef}
+      value={localValue}
+      onChange={(e) => {
+        const newValue = e.target.value
+        setLocalValue(newValue)
+        
+        // Clear previous timeout
+        if (timeoutRef.current) {
+          clearTimeout(timeoutRef.current)
+        }
+        
+        // Debounce the parent update to prevent flickering
+        // Only update parent after user stops typing (like Modal Verbs)
+        timeoutRef.current = setTimeout(() => {
+          onChange(newValue)
+        }, 500) // 500ms after last keystroke
+      }}
+      onBlur={(e) => {
+        // Save immediately on blur
+        if (timeoutRef.current) {
+          clearTimeout(timeoutRef.current)
+          timeoutRef.current = null
+        }
+        if (localValue !== value) {
+          onChange(localValue)
+        }
+        e.currentTarget.style.borderColor = '#d1d5db'
+      }}
+      onFocus={(e) => {
+        e.currentTarget.style.borderColor = '#38438f'
+      }}
+      className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none"
+      style={{ 
+        borderColor: '#d1d5db',
+        borderRadius: '4px',
+        padding: '8px',
+        fontSize: '13px',
+        fontFamily: 'inherit',
+        minHeight: '150px',
+        resize: 'vertical'
+      }}
+      rows={10}
+      placeholder="Type your response here..."
+    />
+  )
+}
+
 // Inline answer input component for placement test
 function InlineAnswerInput({ 
   answerPath, 
@@ -1086,30 +1154,9 @@ export default function WorksheetViewer({ assignmentId, resource, initialProgres
                         <label style={{ display: 'block', fontSize: '14px', fontWeight: 600, marginBottom: '8px', color: '#000' }}>
                           Your Response:
                         </label>
-                        <textarea
-                          id="placement-writing-textarea"
+                        <PlacementWritingTextarea
                           value={writingAnswerValue}
-                          onChange={(e) => {
-                            updatePlacementTestAnswer('writing', e.target.value)
-                          }}
-                          className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none"
-                          style={{ 
-                            borderColor: '#d1d5db',
-                            borderRadius: '4px',
-                            padding: '8px',
-                            fontSize: '13px',
-                            fontFamily: 'inherit',
-                            minHeight: '150px',
-                            resize: 'vertical'
-                          }}
-                          rows={10}
-                          onFocus={(e) => {
-                            e.currentTarget.style.borderColor = '#38438f'
-                          }}
-                          onBlur={(e) => {
-                            e.currentTarget.style.borderColor = '#d1d5db'
-                          }}
-                          placeholder="Type your response here..."
+                          onChange={(value) => updatePlacementTestAnswer('writing', value)}
                         />
                         <div 
                           className="prose max-w-none"
