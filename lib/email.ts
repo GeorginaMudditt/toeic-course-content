@@ -33,9 +33,20 @@ export async function sendPasswordResetEmail(data: PasswordResetEmail) {
 
   const resetUrl = `${siteUrl}/reset-password?token=${data.resetToken}`
 
+  // Use noreply@brizzle-english.com (domain is verified in Resend)
+  const fromEmail = 'Brizzle TOEIC® <noreply@brizzle-english.com>'
+  
+  console.log('📤 Attempting to send password reset email:', {
+    from: fromEmail,
+    to: data.userEmail,
+    siteUrl,
+    resetUrl,
+    hasApiKey: !!process.env.RESEND_API_KEY
+  })
+  
   try {
     const result = await resend.emails.send({
-      from: 'Brizzle TOEIC® <noreply@brizzle-english.com>',
+      from: fromEmail,
       to: data.userEmail,
       subject: 'Password Reset Request - Brizzle TOEIC®',
       html: `
