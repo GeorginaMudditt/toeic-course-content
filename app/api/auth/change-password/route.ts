@@ -66,18 +66,14 @@ export async function POST(request: NextRequest) {
     // Hash new password
     const hashedPassword = await bcrypt.hash(newPassword, 10)
 
-    // Update password and updatedAt timestamp
-    // The error suggests the database expects 'updated_at' (snake_case) not 'updatedAt' (camelCase)
-    // Try using the column name as it might be stored in the database
-    const now = new Date().toISOString()
-    
-    // Try with snake_case first (as error message suggests)
+    // Update password only - don't update updatedAt
+    // The database might have a trigger or default that handles updatedAt automatically
+    // If this fails with NOT NULL constraint, we'll need to check the database schema
     const { error: updateError } = await supabaseServer
       .from('User')
       .update({ 
-        password: hashedPassword,
-        updated_at: now  // Try snake_case as error message suggests
-      } as any)  // Type assertion to allow snake_case
+        password: hashedPassword
+      })
       .eq('id', session.user.id)
 
     if (updateError) {
