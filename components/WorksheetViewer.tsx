@@ -31,7 +31,8 @@ function InlineAnswerInput({
   onChange, 
   type = 'radio',
   assignmentId,
-  onFileUpload
+  onFileUpload,
+  onTextareaFocusChange
 }: { 
   answerPath: string
   value: string
@@ -39,6 +40,7 @@ function InlineAnswerInput({
   type?: 'radio' | 'text' | 'textarea' | 'fileUpload'
   assignmentId?: string
   onFileUpload?: (fileUrl: string) => void
+  onTextareaFocusChange?: (focused: boolean) => void
 }) {
   // Use local state like ResourcePreview - this works!
   const [localValue, setLocalValue] = useState(value)
@@ -315,6 +317,8 @@ function InlineAnswerInput({
           // Mark as typing when focused to prevent any re-renders
           ;(e.target as any)._isTyping = true
           ;(e.target as any)._lastInteractionTime = Date.now()
+          // Notify parent that textarea is focused
+          onTextareaFocusChange?.(true)
         }}
         onKeyDown={(e) => {
           e.stopPropagation()
@@ -333,6 +337,11 @@ function InlineAnswerInput({
           ;(e.target as any)._isTyping = false
           // Keep lastInteractionTime for a bit longer to prevent immediate re-render
           ;(e.target as any)._lastInteractionTime = Date.now()
+          // Notify parent that textarea lost focus (with delay to check if moved to another)
+          setTimeout(() => {
+            const stillFocused = document.activeElement?.tagName === 'TEXTAREA'
+            onTextareaFocusChange?.(stillFocused)
+          }, 50)
           e.stopPropagation()
         }}
         onClick={(e) => {
@@ -493,7 +502,10 @@ export default function WorksheetViewer({ assignmentId, resource, initialProgres
   }
   
   const placementTestAnswers = getPlacementTestAnswers()
-  
+
+  // Track if any textarea is focused using a ref (persists across renders)
+  const textareaFocusRef = useRef(false)
+
   // Update placement test answer - use useCallback but read from notes directly to avoid stale closures
   const updatePlacementTestAnswer = useCallback((path: string, value: string) => {
     // Read current notes directly to avoid stale closure
@@ -620,6 +632,9 @@ export default function WorksheetViewer({ assignmentId, resource, initialProgres
           type={inputType}
           assignmentId={assignmentId}
           onFileUpload={(fileUrl) => updatePlacementTestAnswer('writingFileUrl', fileUrl)}
+          onTextareaFocusChange={(focused) => {
+            textareaFocusRef.current = focused
+          }}
         />
       )
       return
@@ -644,6 +659,9 @@ export default function WorksheetViewer({ assignmentId, resource, initialProgres
           type={inputType}
           assignmentId={assignmentId}
           onFileUpload={(fileUrl) => updatePlacementTestAnswer('writingFileUrl', fileUrl)}
+          onTextareaFocusChange={(focused) => {
+            textareaFocusRef.current = focused
+          }}
         />
       )
       ;(container as any)._reactRoot = root
@@ -651,7 +669,7 @@ export default function WorksheetViewer({ assignmentId, resource, initialProgres
     } catch (error) {
       console.error('Error rendering inline answer input:', error, answerPath)
     }
-  }, [getAnswerValue, getInputType, updatePlacementTestAnswer, assignmentId])
+  }, [getAnswerValue, getInputType, updatePlacementTestAnswer, assignmentId, textareaFocusRef])
 
   // Inject inline answer inputs into HTML content - only runs when content changes
   useEffect(() => {
@@ -716,19 +734,9 @@ export default function WorksheetViewer({ assignmentId, resource, initialProgres
   useEffect(() => {
     if (!isPlacementTest || !contentRef.current) return
     
-    // CRITICAL: Check if ANY textarea is focused - if so, skip ALL updates to prevent focus loss
-    const allTextareas = contentRef.current.querySelectorAll('textarea')
-    let anyTextareaFocused = false
-    for (const textarea of Array.from(allTextareas)) {
-      if (document.activeElement === textarea) {
-        anyTextareaFocused = true
-        break
-      }
-    }
-    
-    // If any textarea is focused, completely skip this update cycle
-    // This prevents any re-renders that could cause focus loss or page jumping
-    if (anyTextareaFocused) {
+    // CRITICAL: If ANY textarea is focused, completely skip ALL updates
+    // Use ref to check focus state (persists across renders)
+    if (textareaFocusRef.current) {
       return
     }
     
@@ -785,6 +793,9 @@ export default function WorksheetViewer({ assignmentId, resource, initialProgres
                 type={inputType}
                 assignmentId={assignmentId}
                 onFileUpload={(fileUrl) => updatePlacementTestAnswer('writingFileUrl', fileUrl)}
+                onTextareaFocusChange={(focused) => {
+                  textareaFocusRef.current = focused
+                }}
               />
             )
           }
