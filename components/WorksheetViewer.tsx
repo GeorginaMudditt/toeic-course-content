@@ -716,6 +716,22 @@ export default function WorksheetViewer({ assignmentId, resource, initialProgres
   useEffect(() => {
     if (!isPlacementTest || !contentRef.current) return
     
+    // CRITICAL: Check if ANY textarea is focused - if so, skip ALL updates to prevent focus loss
+    const allTextareas = contentRef.current.querySelectorAll('textarea')
+    let anyTextareaFocused = false
+    for (const textarea of Array.from(allTextareas)) {
+      if (document.activeElement === textarea) {
+        anyTextareaFocused = true
+        break
+      }
+    }
+    
+    // If any textarea is focused, completely skip this update cycle
+    // This prevents any re-renders that could cause focus loss or page jumping
+    if (anyTextareaFocused) {
+      return
+    }
+    
     const answerInputs = contentRef.current.querySelectorAll('[data-answer-input]')
     
     answerInputs.forEach((container) => {
@@ -726,36 +742,24 @@ export default function WorksheetViewer({ assignmentId, resource, initialProgres
       if ((container as any)._reactRoot) {
         const inputType = getInputType(answerPath)
         
-        // For text inputs and textareas, check if they're currently focused or being typed in
-        // If focused or typing, don't re-render to prevent losing focus
-        if (inputType === 'text' || inputType === 'textarea') {
-          const inputElement = container.querySelector(
-            inputType === 'text' ? 'input[type="text"]' : 'textarea'
-          ) as HTMLInputElement | HTMLTextAreaElement
+        // For text inputs, check if they're currently focused or being typed in
+        if (inputType === 'text') {
+          const inputElement = container.querySelector('input[type="text"]') as HTMLInputElement
           if (inputElement) {
-            // Check if focused or currently being typed in
             const isFocused = document.activeElement === inputElement
             const isTyping = (inputElement as any)._isTyping
+            const hasRecentInteraction = (inputElement as any)._lastInteractionTime && 
+              Date.now() - (inputElement as any)._lastInteractionTime < 1000
             
-            // For textareas: NEVER re-render while focused, regardless of pause duration
-            // This allows students to type for long periods (10+ minutes) without interruption
-            if (inputType === 'textarea' && isFocused) {
-              // Textarea is focused - never re-render it, even if student pauses
+            if (isFocused || isTyping || hasRecentInteraction) {
+              // Input is focused, being typed, or recently interacted with - don't re-render
               return
-            }
-            
-            // For text inputs, use a shorter protection window
-            if (inputType === 'text') {
-              const hasRecentInteraction = (inputElement as any)._lastInteractionTime && 
-                Date.now() - (inputElement as any)._lastInteractionTime < 1000
-              
-              if (isFocused || isTyping || hasRecentInteraction) {
-                // Input is focused, being typed, or recently interacted with - don't re-render
-                return
-              }
             }
           }
         }
+        
+        // For textareas: Skip entirely if any textarea is focused (already checked above)
+        // This ensures textareas never get re-rendered while in use
         
         // For radio buttons, skip if recently interacted with to prevent interrupting audio
         if (inputType === 'radio') {
