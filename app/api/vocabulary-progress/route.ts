@@ -80,27 +80,70 @@ export async function POST(request: NextRequest) {
     console.log('Vocabulary progress POST:', { studentId: session.user.id, level: normalizedLevel, topic, bronze, silver, gold })
 
     // Check if progress already exists
-    const { data: existing, error: checkError } = await supabaseServer
+    // Use ilike for case-insensitive matching and trim for whitespace handling
+    // First try exact match, then try case-insensitive match
+    let { data: existing, error: checkError } = await supabaseServer
       .from('VocabularyProgress')
-      .select('id, bronze, silver, gold')
+      .select('id, bronze, silver, gold, topic')
       .eq('studentId', session.user.id)
       .eq('level', normalizedLevel)
       .eq('topic', topic)
+      .order('updatedAt', { ascending: false })
       .limit(1)
+    
+    // If no exact match, try to find by trimming and normalizing topic names
+    if ((!existing || existing.length === 0) && !checkError) {
+      console.log('No exact match found, trying normalized topic matching...')
+      const { data: allRecords, error: fetchError } = await supabaseServer
+        .from('VocabularyProgress')
+        .select('id, bronze, silver, gold, topic')
+        .eq('studentId', session.user.id)
+        .eq('level', normalizedLevel)
+      
+      if (!fetchError && allRecords && allRecords.length > 0) {
+        // Find a record where the normalized topic matches
+        const normalizedTopic = topic.trim().replace(/\s+/g, ' ')
+        console.log('Searching', allRecords.length, 'records for topic:', normalizedTopic)
+        const matchingRecords = allRecords.filter(record => {
+          const recordTopic = (record.topic || '').trim().replace(/\s+/g, ' ')
+          const matches = recordTopic === normalizedTopic
+          if (matches) {
+            console.log('Found match! Record topic:', recordTopic, 'matches normalized:', normalizedTopic)
+          }
+          return matches
+        })
+        if (matchingRecords.length > 0) {
+          existing = matchingRecords
+          console.log('Found existing progress using normalized topic matching:', existing[0])
+        } else {
+          console.log('No matching records found. All topics in DB:', allRecords.map(r => `"${r.topic}"`))
+        }
+      } else if (fetchError) {
+        console.error('Error fetching all records for fallback search:', fetchError)
+      }
+    }
 
     if (checkError) {
       console.error('Error checking existing progress:', checkError)
       return NextResponse.json({ error: checkError.message }, { status: 500 })
     }
 
-    console.log('Existing progress found:', existing)
+    // Ensure existing is an array
+    if (!Array.isArray(existing)) {
+      existing = existing ? [existing] : []
+    }
+
+    console.log('Existing progress found:', existing, 'Length:', existing?.length)
 
     const completedAt = bronze && silver && gold ? new Date().toISOString() : null
 
     if (existing && existing.length > 0) {
       // Update existing record - ensure we preserve all values
       // Explicitly set all boolean values to ensure they're updated correctly
+      const existingRecord = existing[0]
+      const normalizedTopic = topic.trim().replace(/\s+/g, ' ')
       const updateData = {
+        topic: normalizedTopic, // Normalize topic name in database too
         bronze: Boolean(bronze),
         silver: Boolean(silver),
         gold: Boolean(gold),
@@ -108,13 +151,16 @@ export async function POST(request: NextRequest) {
         updatedAt: new Date().toISOString()
       }
       console.log('Updating progress with:', updateData)
-      console.log('Existing progress before update:', existing[0])
+      console.log('Existing progress before update:', existingRecord)
+      console.log('Updating record with ID:', existingRecord.id)
+      console.log('Topic name - incoming:', topic, 'normalized:', normalizedTopic, 'existing:', existingRecord.topic)
       
       const { data, error } = await supabaseServer
         .from('VocabularyProgress')
         .update(updateData)
-        .eq('id', existing[0].id)
+        .eq('id', existingRecord.id)
         .select('*')
+        .order('updatedAt', { ascending: false })
         .limit(1)
 
       if (error) {
@@ -137,15 +183,16 @@ export async function POST(request: NextRequest) {
       }
       return NextResponse.json({ data: data?.[0] || null, error: null })
     } else {
-      // Create new record
+      // Create new record - ensure topic is normalized
+      const normalizedTopic = topic.trim().replace(/\s+/g, ' ')
       const insertData = {
         id: randomUUID(),
         studentId: session.user.id,
         level: normalizedLevel,
-        topic,
-        bronze,
-        silver,
-        gold,
+        topic: normalizedTopic, // Use normalized topic
+        bronze: Boolean(bronze),
+        silver: Boolean(silver),
+        gold: Boolean(gold),
         completedAt
       }
       console.log('Creating new progress record with:', insertData)
@@ -154,6 +201,7 @@ export async function POST(request: NextRequest) {
         .from('VocabularyProgress')
         .insert(insertData)
         .select('*')
+        .order('updatedAt', { ascending: false })
         .limit(1)
 
       if (error) {

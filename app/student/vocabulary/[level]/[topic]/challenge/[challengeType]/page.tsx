@@ -341,9 +341,39 @@ export default function ChallengePage() {
     
     // Update progress: preserve existing values and set current challenge to true
     const newProgress = { ...latestProgress, [challengeType]: true }
-    console.log(`Completing ${challengeType} challenge. Progress to save:`, newProgress)
+    console.log(`Completing ${challengeType} challenge. Current progress state:`, progress, 'Latest from API:', latestProgress, 'New progress to save:', newProgress)
+    
+    // Save progress and wait for it to complete
     const saveResult = await saveProgress(newProgress)
     console.log('Save result:', saveResult)
+    
+    // Verify the save was successful before showing success modal
+    if (!saveResult.success) {
+      console.error('Failed to save progress:', saveResult.error)
+      setModalState({
+        isOpen: true,
+        type: 'error',
+        title: 'Error Saving Progress',
+        message: `There was an error saving your progress. Please try again. Error: ${saveResult.error || 'Unknown error'}`
+      })
+      return
+    }
+
+    // Verify the saved data matches what we expected
+    if (saveResult.data) {
+      const saved = saveResult.data
+      console.log('Verifying saved data:', {
+        expected: newProgress,
+        saved: {
+          bronze: saved.bronze,
+          silver: saved.silver,
+          gold: saved.gold
+        },
+        match: saved.bronze === newProgress.bronze && 
+               saved.silver === newProgress.silver && 
+               saved.gold === newProgress.gold
+      })
+    }
 
     // Show success modal
     setModalState({
@@ -360,6 +390,7 @@ export default function ChallengePage() {
     setModalState(prev => ({ ...prev, isOpen: false }))
     
     // If it was a success modal, navigate to next challenge
+    // Add a small delay to ensure the save is fully committed
     if (wasSuccess) {
       setTimeout(() => {
         if (challengeType === 'bronze') {
@@ -367,9 +398,10 @@ export default function ChallengePage() {
         } else if (challengeType === 'silver') {
           router.push(`/student/vocabulary/${level}/${encodeURIComponent(topic)}/challenge/gold`)
         } else {
+          // When completing gold, go back to the vocabulary list
           router.push(`/student/vocabulary/${level}`)
         }
-      }, 100)
+      }, 500) // Increased delay to ensure save completes
     }
     
     // For gold challenge, after closing error modal, check if we should show help prompt
