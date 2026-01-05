@@ -34,7 +34,7 @@ export async function sendPasswordResetEmail(data: PasswordResetEmail) {
   const resetUrl = `${siteUrl}/reset-password?token=${data.resetToken}`
 
   try {
-    await resend.emails.send({
+    const result = await resend.emails.send({
       from: 'Brizzle TOEIC® <noreply@brizzle-english.com>',
       to: data.userEmail,
       subject: 'Password Reset Request - Brizzle TOEIC®',
@@ -91,9 +91,16 @@ export async function sendPasswordResetEmail(data: PasswordResetEmail) {
     })
 
     console.log('Password reset email sent successfully to:', data.userEmail)
+    console.log('Resend response:', JSON.stringify(result, null, 2))
     return { success: true }
-  } catch (error) {
+  } catch (error: any) {
     console.error('Error sending password reset email:', error)
-    return { error: 'Failed to send email' }
+    console.error('Error details:', {
+      message: error?.message,
+      name: error?.name,
+      stack: error?.stack,
+      response: error?.response
+    })
+    return { error: error?.message || 'Failed to send email', details: error }
   }
 }
