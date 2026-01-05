@@ -30,14 +30,24 @@ export async function POST(request: NextRequest) {
     }
 
     // Get current user to verify password
+    // Note: PostgREST requires .order() before .limit() even when querying by unique ID
     const { data: users, error: fetchError } = await supabaseServer
       .from('User')
       .select('id, password')
       .eq('id', session.user.id)
+      .order('updatedAt', { ascending: false })
       .limit(1)
 
-    if (fetchError || !users || users.length === 0) {
+    if (fetchError) {
       console.error('Error fetching user:', fetchError)
+      return NextResponse.json(
+        { error: `Failed to fetch user: ${fetchError.message || 'Unknown error'}` },
+        { status: 500 }
+      )
+    }
+
+    if (!users || users.length === 0) {
+      console.error('User not found for ID:', session.user.id)
       return NextResponse.json({ error: 'User not found' }, { status: 404 })
     }
 
@@ -68,8 +78,14 @@ export async function POST(request: NextRequest) {
 
     if (updateError) {
       console.error('Error updating password:', updateError)
+      console.error('Update error details:', {
+        code: updateError.code,
+        message: updateError.message,
+        details: updateError.details,
+        hint: updateError.hint
+      })
       return NextResponse.json(
-        { error: 'Failed to update password' },
+        { error: `Failed to update password: ${updateError.message || 'Unknown error'}` },
         { status: 500 }
       )
     }

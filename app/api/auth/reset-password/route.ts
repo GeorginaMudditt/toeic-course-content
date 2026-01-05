@@ -22,10 +22,12 @@ export async function POST(request: NextRequest) {
     }
 
     // Find user by reset token
+    // Note: PostgREST requires .order() before .limit()
     const { data: users, error: fetchError } = await supabaseServer
       .from('User')
       .select('id, resetToken, resetTokenExpiry')
       .eq('resetToken', token)
+      .order('updatedAt', { ascending: false })
       .limit(1)
 
     if (fetchError) {
