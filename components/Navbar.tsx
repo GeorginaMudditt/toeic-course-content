@@ -136,9 +136,9 @@ export default function Navbar() {
               )}
             </div>
           </div>
-          <div className="flex items-center">
+          <div className="flex items-center space-x-4">
             {session?.user?.name && (
-              <div className="flex items-center mr-4">
+              <div className="flex items-center">
                 {(() => {
                   const name = session.user.name
                   const isDemoStudent = name.toLowerCase().includes('demo')
@@ -157,6 +157,12 @@ export default function Navbar() {
                 })()}
               </div>
             )}
+            <Link
+              href={isTeacher ? '/teacher/change-password' : '/student/change-password'}
+              className="text-sm text-gray-500 hover:text-gray-700"
+            >
+              Change Password
+            </Link>
             <button
               onClick={() => signOut()}
               className="text-sm text-gray-500 hover:text-gray-700"

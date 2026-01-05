@@ -29,13 +29,15 @@ enum ProgressStatus {
 }
 
 model User {
-  id            String    @id @default(cuid())
-  email         String    @unique
-  name          String
-  password      String
-  role          UserRole
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
+  id                String    @id @default(cuid())
+  email             String    @unique
+  name              String
+  password          String
+  role              UserRole
+  resetToken        String?   // Token for password reset
+  resetTokenExpiry  DateTime? // Expiry time for reset token
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
   
   // Teacher relationships
   createdResources Resource[] @relation("ResourceCreator")
