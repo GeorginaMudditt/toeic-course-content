@@ -67,7 +67,7 @@ export async function POST(request: NextRequest) {
     const hashedPassword = await bcrypt.hash(newPassword, 10)
 
     // Update password, clear reset token, and update timestamp
-    // Supabase requires explicit updatedAt on update (unlike Prisma which auto-updates)
+    // Use snake_case column name (updated_at) as database expects
     const now = new Date().toISOString()
     const { error: updateError } = await supabaseServer
       .from('User')
@@ -75,8 +75,8 @@ export async function POST(request: NextRequest) {
         password: hashedPassword,
         resetToken: null,
         resetTokenExpiry: null,
-        updatedAt: now
-      })
+        updated_at: now  // Use snake_case as database expects
+      } as any)  // Type assertion to allow snake_case
       .eq('id', user.id)
 
     if (updateError) {
