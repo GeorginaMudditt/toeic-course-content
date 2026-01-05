@@ -34,6 +34,7 @@ model User {
   name              String
   password          String
   role              UserRole
+  avatar            String?   // Avatar: image URL or emoji string
   resetToken        String?   // Token for password reset
   resetTokenExpiry  DateTime? // Expiry time for reset token
   createdAt         DateTime  @default(now())

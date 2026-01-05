@@ -24,7 +24,7 @@ export const authOptions: NextAuthOptions = {
           // Use server client which bypasses RLS (if using service_role key) or has proper RLS policies
           const { data: users, error } = await supabaseServer
             .from('User')
-            .select('id, email, password, name, role')
+            .select('id, email, password, name, role, avatar')
             .eq('email', credentials.email)
             .limit(1)
 
@@ -57,6 +57,7 @@ export const authOptions: NextAuthOptions = {
             email: user.email,
             name: user.name,
             role: user.role,
+            avatar: user.avatar,
           }
         } catch (error) {
           console.error('Authorize error:', error)
@@ -71,6 +72,7 @@ export const authOptions: NextAuthOptions = {
         if (user) {
           if (user.role) token.role = user.role
           if (user.id) token.id = user.id
+          if (user.avatar) token.avatar = user.avatar
         }
         return token
       } catch (error) {
@@ -83,6 +85,7 @@ export const authOptions: NextAuthOptions = {
         if (session?.user && token) {
           if (token.role) session.user.role = token.role as string
           if (token.id) session.user.id = token.id as string
+          if (token.avatar) session.user.avatar = token.avatar as string
         }
         return session
       } catch (error) {

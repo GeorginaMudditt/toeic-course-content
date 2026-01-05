@@ -30,3 +30,4 @@ done
 echo ""
 echo "Could not auto-detect region. Please check your Supabase project settings for the region."
 
+

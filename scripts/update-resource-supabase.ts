@@ -1,8 +1,6 @@
-import { PrismaClient } from '@prisma/client'
+import { supabaseServer } from '../lib/supabase'
 import { readFileSync } from 'fs'
 import { join } from 'path'
-
-const prisma = new PrismaClient()
 
 async function main() {
   // Get resource name from command line argument
@@ -11,9 +9,9 @@ async function main() {
 
   if (!resourceName) {
     console.log('❌ Please provide a resource name as an argument.')
-    console.log('Usage: npm run update:resource "Resource Name" [html-file-name]')
-    console.log('Example: npm run update:resource "Modal Verbs"')
-    console.log('Example: npm run update:resource "Modal Verbs" "custom-file.html"')
+    console.log('Usage: tsx scripts/update-resource-supabase.ts "Resource Name" [html-file-name]')
+    console.log('Example: tsx scripts/update-resource-supabase.ts "Placement Test"')
+    console.log('Example: tsx scripts/update-resource-supabase.ts "Placement Test" "placement-test-html.html"')
     process.exit(1)
   }
 
@@ -32,34 +30,42 @@ async function main() {
   }
 
   // Find the resource by name (case-insensitive, partial match)
-  const resource = await prisma.resource.findFirst({
-    where: {
-      title: {
-        contains: resourceName,
-        mode: 'insensitive'
-      }
-    }
-  })
+  const { data: resources, error: findError } = await supabaseServer
+    .from('Resource')
+    .select('id, title')
+    .ilike('title', `%${resourceName}%`)
 
-  if (!resource) {
+  if (findError) {
+    console.error('❌ Error finding resource:', findError.message)
+    process.exit(1)
+  }
+
+  if (!resources || resources.length === 0) {
     console.log(`❌ Resource "${resourceName}" not found in database.`)
     console.log('Available resources:')
-    const allResources = await prisma.resource.findMany({
-      select: { id: true, title: true },
-      take: 10
-    })
-    allResources.forEach(r => console.log(`   - ${r.title}`))
+    const { data: allResources } = await supabaseServer
+      .from('Resource')
+      .select('id, title')
+      .limit(10)
+    allResources?.forEach(r => console.log(`   - ${r.title}`))
     console.log('\nPlease create the resource first through the web interface, then run this script again.')
     return
   }
 
+  const resource = resources[0]
+
   // Update the resource with the new HTML content
-  const updated = await prisma.resource.update({
-    where: { id: resource.id },
-    data: {
-      content: htmlContent
-    }
-  })
+  const { data: updated, error: updateError } = await supabaseServer
+    .from('Resource')
+    .update({ content: htmlContent })
+    .eq('id', resource.id)
+    .select()
+    .single()
+
+  if (updateError) {
+    console.error('❌ Error updating resource:', updateError.message)
+    process.exit(1)
+  }
 
   console.log('✅ Successfully updated resource!')
   console.log(`   Resource ID: ${updated.id}`)
@@ -72,8 +78,3 @@ main()
     console.error('Error updating resource:', e)
     process.exit(1)
   })
-  .finally(async () => {
-    await prisma.$disconnect()
-  })
-
-

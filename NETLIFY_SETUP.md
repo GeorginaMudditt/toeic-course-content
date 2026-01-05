@@ -84,3 +84,4 @@ Make sure your build settings are:
 - Ensure `NEXTAUTH_URL` matches your actual Netlify site URL
 - Check that you're using HTTPS URLs (Netlify provides HTTPS by default)
 
+

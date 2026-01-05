@@ -18,3 +18,4 @@ ALTER TABLE "Resource" ADD COLUMN IF NOT EXISTS "level" TEXT;
 -- Drop the old difficulty column
 ALTER TABLE "Resource" DROP COLUMN IF EXISTS "difficulty";
 
+

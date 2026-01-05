@@ -49,3 +49,4 @@ After updating environment variables:
 1. Go to Deploys tab
 2. Click "Trigger deploy" → "Clear cache and deploy site"
 
+
