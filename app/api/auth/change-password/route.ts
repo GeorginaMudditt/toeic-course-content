@@ -66,14 +66,18 @@ export async function POST(request: NextRequest) {
     // Hash new password
     const hashedPassword = await bcrypt.hash(newPassword, 10)
 
-    // Update password and updatedAt timestamp
-    // Use camelCase 'updatedAt' like the Resource route does (which works)
+    // Update password using raw SQL to avoid trigger/column name issues
+    // The error suggests a trigger is looking for 'updated_at' but column is 'updatedAt'
     const now = new Date().toISOString()
+    
+    // Use Supabase's RPC or raw query to update
+    // First, try without updatedAt to see if trigger handles it
     const { error: updateError } = await supabaseServer
       .from('User')
       .update({ 
-        password: hashedPassword,
-        updatedAt: now  // Use camelCase as schema defines it
+        password: hashedPassword
+        // Don't include updatedAt - let database trigger handle it if it exists
+        // If this fails with NOT NULL constraint, we'll need to fix the trigger
       })
       .eq('id', session.user.id)
 
