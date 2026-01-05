@@ -66,13 +66,13 @@ export async function POST(request: NextRequest) {
     // Hash new password
     const hashedPassword = await bcrypt.hash(newPassword, 10)
 
-    // Update password and updatedAt timestamp (Supabase doesn't auto-update like Prisma)
-    const now = new Date().toISOString()
+    // Update password
+    // Note: We don't update updatedAt here because PostgreSQL triggers or Supabase might handle it
+    // If the update fails due to NOT NULL constraint, we'll add updatedAt back
     const { error: updateError } = await supabaseServer
       .from('User')
       .update({ 
-        password: hashedPassword,
-        updatedAt: now
+        password: hashedPassword
       })
       .eq('id', session.user.id)
 
