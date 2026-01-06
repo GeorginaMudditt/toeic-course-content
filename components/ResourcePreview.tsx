@@ -54,7 +54,7 @@ function InlineAnswerInput({
               pointerEvents: 'auto'
             }}
             onClick={(e) => {
-              e.preventDefault()
+              // Don't prevent default - allow native label behavior to trigger radio
               e.stopPropagation()
               setLocalValue(option)
               onChange(option)
@@ -66,14 +66,10 @@ function InlineAnswerInput({
               value={option}
               checked={localValue === option}
               onChange={(e) => {
-                e.preventDefault()
+                // Don't prevent default - allow native radio behavior
                 e.stopPropagation()
                 setLocalValue(e.target.value)
                 onChange(e.target.value)
-              }}
-              onClick={(e) => {
-                e.preventDefault()
-                e.stopPropagation()
               }}
               style={{ 
                 width: '16px', 

@@ -190,14 +190,8 @@ function InlineAnswerInput({
               zIndex: 11
             }}
             onClick={(e) => {
-              e.preventDefault()
+              // Don't prevent default - allow native label behavior to trigger radio
               e.stopPropagation()
-              e.nativeEvent.stopImmediatePropagation()
-              
-              // Save previous value immediately if it changed (user switched options)
-              if (localValue !== option && localValue !== value) {
-                onChange(localValue)
-              }
               
               // Update local state immediately for visual feedback
               setLocalValue(option)
@@ -217,16 +211,6 @@ function InlineAnswerInput({
                 ;(container as any)._isInteracting = false
               }
             }}
-            onMouseDown={(e) => {
-              e.preventDefault()
-              e.stopPropagation()
-              e.nativeEvent.stopImmediatePropagation()
-            }}
-            onMouseUp={(e) => {
-              e.preventDefault()
-              e.stopPropagation()
-              e.nativeEvent.stopImmediatePropagation()
-            }}
           >
             <input
               type="radio"
@@ -234,9 +218,8 @@ function InlineAnswerInput({
               value={option}
               checked={localValue === option}
               onChange={(e) => {
-                e.preventDefault()
+                // Don't prevent default - allow native radio behavior
                 e.stopPropagation()
-                e.nativeEvent.stopImmediatePropagation()
                 const newValue = (e.target as HTMLInputElement).value
                 // Update local state immediately for visual feedback
                 setLocalValue(newValue)
@@ -263,24 +246,7 @@ function InlineAnswerInput({
                 if (container) {
                   ;(container as any)._isInteracting = false
                 }
-                e.preventDefault()
                 e.stopPropagation()
-                e.nativeEvent.stopImmediatePropagation()
-              }}
-              onClick={(e) => {
-                e.preventDefault()
-                e.stopPropagation()
-                e.nativeEvent.stopImmediatePropagation()
-              }}
-              onMouseDown={(e) => {
-                e.preventDefault()
-                e.stopPropagation()
-                e.nativeEvent.stopImmediatePropagation()
-              }}
-              onMouseUp={(e) => {
-                e.preventDefault()
-                e.stopPropagation()
-                e.nativeEvent.stopImmediatePropagation()
               }}
               style={{ 
                 width: '16px', 
