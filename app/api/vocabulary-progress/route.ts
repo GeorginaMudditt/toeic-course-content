@@ -185,6 +185,7 @@ export async function POST(request: NextRequest) {
     } else {
       // Create new record - ensure topic is normalized
       const normalizedTopic = topic.trim().replace(/\s+/g, ' ')
+      const now = new Date().toISOString()
       const insertData = {
         id: randomUUID(),
         studentId: session.user.id,
@@ -193,7 +194,9 @@ export async function POST(request: NextRequest) {
         bronze: Boolean(bronze),
         silver: Boolean(silver),
         gold: Boolean(gold),
-        completedAt
+        completedAt,
+        createdAt: now,
+        updatedAt: now
       }
       console.log('Creating new progress record with:', insertData)
       
