@@ -67,13 +67,20 @@ export const authOptions: NextAuthOptions = {
     })
   ],
   callbacks: {
-    async jwt({ token, user }) {
+    async jwt({ token, user, trigger, session }) {
       try {
+        // Initial sign in
         if (user) {
           if (user.role) token.role = user.role
           if (user.id) token.id = user.id
-          if (user.avatar) token.avatar = user.avatar
+          if (user.avatar !== undefined) token.avatar = user.avatar
         }
+        
+        // Handle session updates (e.g., when avatar is changed)
+        if (trigger === 'update' && session?.avatar !== undefined) {
+          token.avatar = session.avatar
+        }
+        
         return token
       } catch (error) {
         console.error('JWT callback error:', error)
@@ -85,7 +92,7 @@ export const authOptions: NextAuthOptions = {
         if (session?.user && token) {
           if (token.role) session.user.role = token.role as string
           if (token.id) session.user.id = token.id as string
-          if (token.avatar) session.user.avatar = token.avatar as string
+          if (token.avatar !== undefined) session.user.avatar = token.avatar as string | null
         }
         return session
       } catch (error) {

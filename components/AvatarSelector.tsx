@@ -45,10 +45,12 @@ export default function AvatarSelector({ currentAvatar, onAvatarChange, onClose 
 
       if (response.ok) {
         const data = await response.json()
+        console.log('Avatar uploaded successfully:', data)
         onAvatarChange?.(data.path)
         onClose?.()
       } else {
         const error = await response.json()
+        console.error('Failed to upload avatar:', error)
         alert(error.error || 'Failed to upload avatar')
       }
     } catch (error) {
@@ -74,10 +76,13 @@ export default function AvatarSelector({ currentAvatar, onAvatarChange, onClose 
       })
 
       if (response.ok) {
+        const data = await response.json()
+        console.log('Avatar updated successfully:', data)
         onAvatarChange?.(emoji)
         onClose?.()
       } else {
         const error = await response.json()
+        console.error('Failed to update avatar:', error)
         alert(error.error || 'Failed to update avatar')
       }
     } catch (error) {

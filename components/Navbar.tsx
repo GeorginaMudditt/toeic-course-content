@@ -284,8 +284,16 @@ export default function Navbar() {
             <AvatarSelector
               currentAvatar={session?.user?.avatar || null}
               onAvatarChange={async (newAvatar) => {
-                await updateSession({ avatar: newAvatar })
-                setShowAvatarSelector(false)
+                console.log('Updating session with avatar:', newAvatar)
+                await updateSession({ 
+                  avatar: newAvatar,
+                  user: {
+                    ...session?.user,
+                    avatar: newAvatar
+                  }
+                })
+                // Force a page refresh to ensure the session is updated
+                window.location.reload()
               }}
               onClose={() => setShowAvatarSelector(false)}
             />
