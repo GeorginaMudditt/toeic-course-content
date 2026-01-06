@@ -184,20 +184,24 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ data: data?.[0] || null, error: null })
     } else {
       // Create new record - ensure topic is normalized
+      // Don't include createdAt/updatedAt - let database defaults handle them
+      // This avoids trigger conflicts with field name casing
       const normalizedTopic = topic.trim().replace(/\s+/g, ' ')
-      const now = new Date().toISOString()
-      const insertData = {
+      const insertData: any = {
         id: randomUUID(),
         studentId: session.user.id,
         level: normalizedLevel,
         topic: normalizedTopic, // Use normalized topic
         bronze: Boolean(bronze),
         silver: Boolean(silver),
-        gold: Boolean(gold),
-        completedAt,
-        createdAt: now,
-        updatedAt: now
+        gold: Boolean(gold)
       }
+      
+      // Only include completedAt if all challenges are complete
+      if (completedAt) {
+        insertData.completedAt = completedAt
+      }
+      
       console.log('Creating new progress record with:', insertData)
       
       const { data, error } = await supabaseServer
