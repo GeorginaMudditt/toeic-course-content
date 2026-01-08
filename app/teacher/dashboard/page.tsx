@@ -55,7 +55,7 @@ export default async function TeacherDashboard() {
           <h1 className="text-3xl font-bold text-gray-900 mb-6">Teacher Dashboard</h1>
           
           <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4 mb-8">
-            <div className="bg-white overflow-hidden shadow rounded-lg">
+            <Link href="/teacher/resources" className="bg-white overflow-hidden shadow rounded-lg hover:shadow-md transition-shadow cursor-pointer">
               <div className="p-5">
                 <div className="flex items-center">
                   <div className="flex-shrink-0">
@@ -70,9 +70,9 @@ export default async function TeacherDashboard() {
                   </div>
                 </div>
               </div>
-            </div>
+            </Link>
 
-            <div className="bg-white overflow-hidden shadow rounded-lg">
+            <Link href="/teacher/students" className="bg-white overflow-hidden shadow rounded-lg hover:shadow-md transition-shadow cursor-pointer">
               <div className="p-5">
                 <div className="flex items-center">
                   <div className="flex-shrink-0">
@@ -87,7 +87,7 @@ export default async function TeacherDashboard() {
                   </div>
                 </div>
               </div>
-            </div>
+            </Link>
 
             <div className="bg-white overflow-hidden shadow rounded-lg">
               <div className="p-5">
