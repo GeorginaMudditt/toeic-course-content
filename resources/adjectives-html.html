@@ -139,29 +139,32 @@
       <p style="font-size: 13px; margin-bottom: 10px;">Use the OSASCOMP order to describe the following items:</p>
       
       <!-- Image Grid: Rearranged layout - 5 columns with suit and skyscraper taking 2 rows each -->
-      <div style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; margin-bottom: 10px;">
-        <!-- Column 1: Motorcycle, Dog -->
-        <div style="text-align: center;">
-          <img src="/images/adjectives/motorcycle.jpg" alt="Motorcycle" style="width: 100%; max-width: 90px; height: auto; border: 1px solid #ddd; border-radius: 4px; margin-bottom: 8px;" />
-          <img src="/images/adjectives/dog.jpg" alt="Dog" style="width: 100%; max-width: 90px; height: auto; border: 1px solid #ddd; border-radius: 4px;" />
+      <div style="display: grid; grid-template-columns: repeat(5, 1fr); grid-template-rows: repeat(2, auto); gap: 8px; margin-bottom: 10px;">
+        <!-- Row 1 -->
+        <div style="text-align: center; grid-column: 1; grid-row: 1;">
+          <img src="/images/adjectives/motorcycle.jpg" alt="Motorcycle" style="width: 100%; max-width: 90px; height: auto; border: 1px solid #ddd; border-radius: 4px;" />
         </div>
-        <!-- Column 2: House, Tennis Player -->
-        <div style="text-align: center;">
-          <img src="/images/adjectives/house.jpg" alt="House" style="width: 100%; max-width: 90px; height: auto; border: 1px solid #ddd; border-radius: 4px; margin-bottom: 8px;" />
-          <img src="/images/adjectives/tennis-player.jpg" alt="Tennis Player" style="width: 100%; max-width: 90px; height: auto; border: 1px solid #ddd; border-radius: 4px;" />
+        <div style="text-align: center; grid-column: 2; grid-row: 1;">
+          <img src="/images/adjectives/house.jpg" alt="House" style="width: 100%; max-width: 90px; height: auto; border: 1px solid #ddd; border-radius: 4px;" />
         </div>
-        <!-- Column 3: Armchair, Jacket -->
-        <div style="text-align: center;">
-          <img src="/images/adjectives/armchair.jpg" alt="Armchair" style="width: 100%; max-width: 90px; height: auto; border: 1px solid #ddd; border-radius: 4px; margin-bottom: 8px;" />
-          <img src="/images/adjectives/jacket.jpg" alt="Jacket" style="width: 100%; max-width: 90px; height: auto; border: 1px solid #ddd; border-radius: 4px;" />
+        <div style="text-align: center; grid-column: 3; grid-row: 1;">
+          <img src="/images/adjectives/armchair.jpg" alt="Armchair" style="width: 100%; max-width: 90px; height: auto; border: 1px solid #ddd; border-radius: 4px;" />
         </div>
-        <!-- Column 4: Suit (takes 2 rows) -->
-        <div style="text-align: center; grid-row: span 2;">
+        <div style="text-align: center; grid-column: 4; grid-row: 1 / 3;">
           <img src="/images/adjectives/man-suit.jpg" alt="Man in Suit" style="width: 100%; max-width: 90px; height: auto; border: 1px solid #ddd; border-radius: 4px;" />
         </div>
-        <!-- Column 5: Skyscraper (takes 2 rows) -->
-        <div style="text-align: center; grid-row: span 2;">
+        <div style="text-align: center; grid-column: 5; grid-row: 1 / 3;">
           <img src="/images/adjectives/skyscraper.jpg" alt="Skyscraper" style="width: 100%; max-width: 90px; height: auto; border: 1px solid #ddd; border-radius: 4px;" />
+        </div>
+        <!-- Row 2 -->
+        <div style="text-align: center; grid-column: 1; grid-row: 2;">
+          <img src="/images/adjectives/dog.jpg" alt="Dog" style="width: 100%; max-width: 90px; height: auto; border: 1px solid #ddd; border-radius: 4px;" />
+        </div>
+        <div style="text-align: center; grid-column: 2; grid-row: 2;">
+          <img src="/images/adjectives/tennis-player.jpg" alt="Tennis Player" style="width: 100%; max-width: 90px; height: auto; border: 1px solid #ddd; border-radius: 4px;" />
+        </div>
+        <div style="text-align: center; grid-column: 3; grid-row: 2;">
+          <img src="/images/adjectives/jacket.jpg" alt="Jacket" style="width: 100%; max-width: 90px; height: auto; border: 1px solid #ddd; border-radius: 4px;" />
         </div>
       </div>
     </div>
