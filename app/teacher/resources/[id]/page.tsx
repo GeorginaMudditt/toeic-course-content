@@ -26,7 +26,7 @@ export default function EditResourcePage({ params }: { params: { id: string } })
     description: '',
     content: '',
     level: '',
-    tags: ''
+    skill: ''
   })
 
   // Extract audio code from filename (e.g., "A1.mp3" or "A1.mp4" -> "A1")
@@ -79,7 +79,7 @@ export default function EditResourcePage({ params }: { params: { id: string } })
           description: data.description || '',
           content: data.content || '',
           level: data.level || '',
-          tags: data.tags || ''
+          skill: data.skill || ''
         })
         setFetching(false)
       })
@@ -185,7 +185,8 @@ export default function EditResourcePage({ params }: { params: { id: string } })
           content,
           type: 'WORKSHEET', // All resources are worksheets
           estimatedHours: 1, // All resources are 1 hour
-          level: formData.level
+          level: formData.level,
+          skill: formData.skill
         })
       })
 
@@ -269,7 +270,6 @@ export default function EditResourcePage({ params }: { params: { id: string } })
                 onBlur={(e) => e.currentTarget.style.borderColor = '#d1d5db'}
                 >
                   <option value="">Select level...</option>
-                  <option value="All">All</option>
                   <option value="A1">A1</option>
                   <option value="A2">A2</option>
                   <option value="B1">B1</option>
@@ -280,19 +280,27 @@ export default function EditResourcePage({ params }: { params: { id: string } })
               </div>
 
               <div>
-                <label htmlFor="tags" className="block text-sm font-medium text-gray-700">
-                  Tags (comma-separated)
+                <label htmlFor="skill" className="block text-sm font-medium text-gray-700">
+                  Skill *
                 </label>
-                <input
-                  type="text"
-                  id="tags"
-                  value={formData.tags}
-                  onChange={(e) => setFormData({ ...formData, tags: e.target.value })}
-                  placeholder="listening, reading, grammar"
+                <select
+                  id="skill"
+                  required
+                  value={formData.skill}
+                  onChange={(e) => setFormData({ ...formData, skill: e.target.value })}
                   className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none"
-                onFocus={(e) => e.currentTarget.style.borderColor = '#38438f'}
-                onBlur={(e) => e.currentTarget.style.borderColor = '#d1d5db'}
-                />
+                  onFocus={(e) => e.currentTarget.style.borderColor = '#38438f'}
+                  onBlur={(e) => e.currentTarget.style.borderColor = '#d1d5db'}
+                >
+                  <option value="">Select skill...</option>
+                  <option value="GRAMMAR">Grammar</option>
+                  <option value="VOCABULARY">Vocabulary</option>
+                  <option value="READING">Reading</option>
+                  <option value="WRITING">Writing</option>
+                  <option value="SPEAKING">Speaking</option>
+                  <option value="LISTENING">Listening</option>
+                  <option value="TESTS">Tests</option>
+                </select>
               </div>
             </div>
 

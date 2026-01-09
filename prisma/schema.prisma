@@ -28,6 +28,16 @@ enum ProgressStatus {
   COMPLETED
 }
 
+enum ResourceSkill {
+  GRAMMAR
+  VOCABULARY
+  READING
+  WRITING
+  SPEAKING
+  LISTENING
+  TESTS
+}
+
 model User {
   id                String    @id @default(cuid())
   email             String    @unique
@@ -57,7 +67,7 @@ model Resource {
   content       String       // JSON or HTML content for the worksheet
   estimatedHours Float       // Estimated time to complete in hours
   level          String       // CEFR level: A1, A2, B1, B2, C1, C2 (required)
-  tags          String?      // Comma-separated tags for filtering
+  skill          ResourceSkill // Skill category: grammar, vocabulary, reading, writing, speaking, listening, tests (required)
   createdAt     DateTime     @default(now())
   updatedAt     DateTime     @updatedAt
   

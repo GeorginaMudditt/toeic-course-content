@@ -79,7 +79,7 @@ export async function PUT(
         content: data.content,
         estimatedHours: data.estimatedHours,
         level: data.level,
-        tags: data.tags || null,
+        skill: data.skill,
         updatedAt: new Date().toISOString()
       })
       .eq('id', params.id)

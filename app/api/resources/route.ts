@@ -29,7 +29,7 @@ export async function POST(request: NextRequest) {
         content: data.content,
         estimatedHours: data.estimatedHours,
         level: data.level,
-        tags: data.tags || null,
+        skill: data.skill,
         creatorId: session.user.id,
         createdAt: now,
         updatedAt: now

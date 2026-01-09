@@ -10,6 +10,7 @@ interface Resource {
   title: string
   description?: string
   level: string
+  skill?: string
   content?: string
   type?: string
 }
@@ -26,14 +27,17 @@ interface Props {
 export default function ResourcesList({ resources }: Props) {
   const router = useRouter()
   const [selectedLevel, setSelectedLevel] = useState<string>('All')
+  const [selectedSkill, setSelectedSkill] = useState<string>('All')
   const [deleteModalOpen, setDeleteModalOpen] = useState(false)
   const [resourceToDelete, setResourceToDelete] = useState<Resource | null>(null)
   const [fullResourceData, setFullResourceData] = useState<FullResource | null>(null)
   const [deleting, setDeleting] = useState(false)
 
-  const filteredResources = selectedLevel === 'All' 
-    ? resources 
-    : resources.filter(resource => resource.level === selectedLevel)
+  const filteredResources = resources.filter(resource => {
+    const levelMatch = selectedLevel === 'All' || resource.level === selectedLevel
+    const skillMatch = selectedSkill === 'All' || resource.skill === selectedSkill
+    return levelMatch && skillMatch
+  })
 
   const handleDeleteClick = async (resource: Resource) => {
     // Fetch full resource data for preview
@@ -103,26 +107,51 @@ export default function ResourcesList({ resources }: Props) {
         </Link>
       </div>
 
-      <div className="mb-4">
-        <label htmlFor="level-filter" className="block text-sm font-medium text-gray-700 mb-2">
-          Filter by Level
-        </label>
-        <select
-          id="level-filter"
-          value={selectedLevel}
-          onChange={(e) => setSelectedLevel(e.target.value)}
-          className="border border-gray-300 rounded-md px-3 py-2 focus:outline-none"
-          onFocus={(e) => e.currentTarget.style.borderColor = '#38438f'}
-          onBlur={(e) => e.currentTarget.style.borderColor = '#d1d5db'}
-        >
-          <option value="All">All</option>
-          <option value="A1">A1</option>
-          <option value="A2">A2</option>
-          <option value="B1">B1</option>
-          <option value="B2">B2</option>
-          <option value="C1">C1</option>
-          <option value="C2">C2</option>
-        </select>
+      <div className="mb-4 grid grid-cols-2 gap-4">
+        <div>
+          <label htmlFor="level-filter" className="block text-sm font-medium text-gray-700 mb-2">
+            Filter by Level
+          </label>
+          <select
+            id="level-filter"
+            value={selectedLevel}
+            onChange={(e) => setSelectedLevel(e.target.value)}
+            className="border border-gray-300 rounded-md px-3 py-2 focus:outline-none w-full"
+            onFocus={(e) => e.currentTarget.style.borderColor = '#38438f'}
+            onBlur={(e) => e.currentTarget.style.borderColor = '#d1d5db'}
+          >
+            <option value="All">All</option>
+            <option value="A1">A1</option>
+            <option value="A2">A2</option>
+            <option value="B1">B1</option>
+            <option value="B2">B2</option>
+            <option value="C1">C1</option>
+            <option value="C2">C2</option>
+          </select>
+        </div>
+
+        <div>
+          <label htmlFor="skill-filter" className="block text-sm font-medium text-gray-700 mb-2">
+            Filter by Skill
+          </label>
+          <select
+            id="skill-filter"
+            value={selectedSkill}
+            onChange={(e) => setSelectedSkill(e.target.value)}
+            className="border border-gray-300 rounded-md px-3 py-2 focus:outline-none w-full"
+            onFocus={(e) => e.currentTarget.style.borderColor = '#38438f'}
+            onBlur={(e) => e.currentTarget.style.borderColor = '#d1d5db'}
+          >
+            <option value="All">All</option>
+            <option value="GRAMMAR">Grammar</option>
+            <option value="VOCABULARY">Vocabulary</option>
+            <option value="READING">Reading</option>
+            <option value="WRITING">Writing</option>
+            <option value="SPEAKING">Speaking</option>
+            <option value="LISTENING">Listening</option>
+            <option value="TESTS">Tests</option>
+          </select>
+        </div>
       </div>
 
       <div className="bg-white shadow rounded-lg overflow-hidden">
@@ -136,6 +165,9 @@ export default function ResourcesList({ resources }: Props) {
                 Level
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Skill
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                 Actions
               </th>
             </tr>
@@ -143,10 +175,10 @@ export default function ResourcesList({ resources }: Props) {
           <tbody className="bg-white divide-y divide-gray-200">
             {filteredResources.length === 0 ? (
               <tr>
-                <td colSpan={3} className="px-6 py-4 text-center text-gray-500">
+                <td colSpan={4} className="px-6 py-4 text-center text-gray-500">
                   {resources.length === 0 
                     ? 'No resources yet. Create your first resource!'
-                    : `No resources found for level ${selectedLevel}.`
+                    : `No resources found for the selected filters.`
                   }
                 </td>
               </tr>
@@ -161,6 +193,9 @@ export default function ResourcesList({ resources }: Props) {
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                     {resource.level || '-'}
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                    {resource.skill ? resource.skill.charAt(0) + resource.skill.slice(1).toLowerCase() : '-'}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                     <Link

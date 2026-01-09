@@ -23,7 +23,8 @@
     "update:modal-verbs": "tsx scripts/update-modal-verbs-resource.ts",
     "update:resource": "tsx scripts/update-resource.ts",
     "update:resource:supabase": "tsx scripts/update-resource-supabase.ts",
-    "update:placement-test": "tsx scripts/update-placement-test-with-answer-inputs.ts"
+    "update:placement-test": "tsx scripts/update-placement-test-with-answer-inputs.ts",
+    "migrate:add-skill": "tsx scripts/migrate-add-skill.ts"
   },
   "dependencies": {
     "@prisma/client": "^5.7.1",
