@@ -2,8 +2,6 @@
 
 import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react'
 import { createRoot } from 'react-dom/client'
-import { jsPDF } from 'jspdf'
-import html2canvas from 'html2canvas'
 
 interface Resource {
   id: string
@@ -949,110 +947,6 @@ export default function WorksheetViewer({ assignmentId, resource, initialProgres
     }
   }
 
-  const downloadPDF = async () => {
-    const element = document.getElementById('worksheet-content')
-    if (!element) return
-
-    try {
-      // Check if content has page-break divs (each page is wrapped in a div with class "page-break")
-      const pageBreakElements = element.querySelectorAll('div.page-break')
-      
-      if (pageBreakElements.length > 0) {
-        // Render each page separately to respect page breaks
-        const pdf = new jsPDF('p', 'mm', 'a4')
-        const imgWidth = 210
-        const pageHeight = 295
-        
-        for (let i = 0; i < pageBreakElements.length; i++) {
-          const pageElement = pageBreakElements[i] as HTMLElement
-          
-          // Create a temporary container for this page with same styling
-          const tempContainer = document.createElement('div')
-          tempContainer.style.position = 'absolute'
-          tempContainer.style.left = '-9999px'
-          tempContainer.style.width = element.offsetWidth + 'px'
-          tempContainer.style.backgroundColor = '#ffffff'
-          tempContainer.style.padding = '20px'
-          tempContainer.style.fontFamily = 'Arial, sans-serif'
-          
-          // Clone the page element
-          const clonedPage = pageElement.cloneNode(true) as HTMLElement
-          tempContainer.appendChild(clonedPage)
-          document.body.appendChild(tempContainer)
-          
-          const canvas = await html2canvas(tempContainer, {
-            scale: 2,
-            useCORS: true,
-            logging: false,
-            backgroundColor: '#ffffff',
-            width: tempContainer.offsetWidth,
-            height: tempContainer.offsetHeight
-          })
-          
-          document.body.removeChild(tempContainer)
-          
-          const imgData = canvas.toDataURL('image/png')
-          const imgHeight = (canvas.height * imgWidth) / canvas.width
-          
-          if (i > 0) {
-            pdf.addPage()
-          }
-          
-          // If content fits on one page, add it
-          if (imgHeight <= pageHeight) {
-            pdf.addImage(imgData, 'PNG', 0, 0, imgWidth, imgHeight)
-          } else {
-            // If content is taller than one page, split it
-            let heightLeft = imgHeight
-            let position = 0
-            
-            pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight)
-            heightLeft -= pageHeight
-            
-            while (heightLeft > 0) {
-              position = heightLeft - imgHeight
-              pdf.addPage()
-              pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight)
-              heightLeft -= pageHeight
-            }
-          }
-        }
-        
-        pdf.save(`${resource.title}.pdf`)
-      } else {
-        // Original approach for content without page breaks
-        const canvas = await html2canvas(element, {
-          scale: 2,
-          useCORS: true,
-          logging: false
-        })
-        
-        const imgData = canvas.toDataURL('image/png')
-        const pdf = new jsPDF('p', 'mm', 'a4')
-        const imgWidth = 210
-        const pageHeight = 295
-        const imgHeight = (canvas.height * imgWidth) / canvas.width
-        let heightLeft = imgHeight
-
-        let position = 0
-
-        pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight)
-        heightLeft -= pageHeight
-
-        while (heightLeft >= 0) {
-          position = heightLeft - imgHeight
-          pdf.addPage()
-          pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight)
-          heightLeft -= pageHeight
-        }
-
-        pdf.save(`${resource.title}.pdf`)
-      }
-    } catch (error) {
-      console.error('Failed to generate PDF:', error)
-      alert('Failed to generate PDF. Please try again.')
-    }
-  }
 
   return (
     <div className="bg-white shadow rounded-lg p-6">
@@ -1067,12 +961,6 @@ export default function WorksheetViewer({ assignmentId, resource, initialProgres
             onMouseLeave={(e) => !e.currentTarget.disabled && (e.currentTarget.style.backgroundColor = '#38438f')}
           >
             {saving ? 'Saving...' : saved ? '✓ Saved' : 'Save Progress'}
-          </button>
-          <button
-            onClick={downloadPDF}
-            className="px-4 py-2 bg-gray-600 text-white rounded-md hover:bg-gray-700"
-          >
-            Download PDF
           </button>
         </div>
         {status === 'COMPLETED' && (

@@ -2,8 +2,6 @@
 
 import { useState, useEffect, useRef, useCallback } from 'react'
 import { createRoot } from 'react-dom/client'
-import { jsPDF } from 'jspdf'
-import html2canvas from 'html2canvas'
 
 interface Resource {
   id: string
@@ -146,7 +144,6 @@ function InlineAnswerInput({
 }
 
 export default function ResourcePreview({ resource, showActions = true }: ResourcePreviewProps) {
-  const [downloading, setDownloading] = useState(false)
   const contentRef = useRef<HTMLDivElement>(null)
   
   // Check if this is a Placement Test
@@ -283,129 +280,6 @@ export default function ResourcePreview({ resource, showActions = true }: Resour
     }
   }, [isPlacementTest, resource.content])
 
-  const downloadPDF = async () => {
-    // If content is already a PDF file, just download it directly
-    if (resource.content.startsWith('/uploads/') || resource.content.startsWith('uploads/')) {
-      const filePath = resource.content.startsWith('/') ? resource.content : `/${resource.content}`
-      if (filePath.toLowerCase().endsWith('.pdf')) {
-        const link = document.createElement('a')
-        link.href = filePath
-        link.download = resource.title + '.pdf'
-        document.body.appendChild(link)
-        link.click()
-        document.body.removeChild(link)
-        return
-      }
-    }
-
-    // For HTML content or images, generate PDF
-    const element = document.getElementById('resource-content')
-    if (!element) return
-
-    setDownloading(true)
-    try {
-      // Check if content has page-break divs (each page is wrapped in a div with class "page-break")
-      const pageBreakElements = element.querySelectorAll('div.page-break')
-      
-      if (pageBreakElements.length > 0) {
-        // Render each page separately to respect page breaks
-        const pdf = new jsPDF('p', 'mm', 'a4')
-        const imgWidth = 210
-        const pageHeight = 295
-        
-        for (let i = 0; i < pageBreakElements.length; i++) {
-          const pageElement = pageBreakElements[i] as HTMLElement
-          
-          // Create a temporary container for this page with same styling
-          const tempContainer = document.createElement('div')
-          tempContainer.style.position = 'absolute'
-          tempContainer.style.left = '-9999px'
-          tempContainer.style.width = element.offsetWidth + 'px'
-          tempContainer.style.backgroundColor = '#ffffff'
-          tempContainer.style.padding = '20px'
-          tempContainer.style.fontFamily = 'Arial, sans-serif'
-          
-          // Clone the page element
-          const clonedPage = pageElement.cloneNode(true) as HTMLElement
-          tempContainer.appendChild(clonedPage)
-          document.body.appendChild(tempContainer)
-          
-          const canvas = await html2canvas(tempContainer, {
-            scale: 2,
-            useCORS: true,
-            logging: false,
-            backgroundColor: '#ffffff',
-            width: tempContainer.offsetWidth,
-            height: tempContainer.offsetHeight
-          })
-          
-          document.body.removeChild(tempContainer)
-          
-          const imgData = canvas.toDataURL('image/png')
-          const imgHeight = (canvas.height * imgWidth) / canvas.width
-          
-          if (i > 0) {
-            pdf.addPage()
-          }
-          
-          // If content fits on one page, add it
-          if (imgHeight <= pageHeight) {
-            pdf.addImage(imgData, 'PNG', 0, 0, imgWidth, imgHeight)
-          } else {
-            // If content is taller than one page, split it
-            let heightLeft = imgHeight
-            let position = 0
-            
-            pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight)
-            heightLeft -= pageHeight
-            
-            while (heightLeft > 0) {
-              position = heightLeft - imgHeight
-              pdf.addPage()
-              pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight)
-              heightLeft -= pageHeight
-            }
-          }
-        }
-        
-        pdf.save(`${resource.title}.pdf`)
-      } else {
-        // Original approach for content without page breaks
-        const canvas = await html2canvas(element, {
-          scale: 2,
-          useCORS: true,
-          logging: false
-        })
-        
-        const imgData = canvas.toDataURL('image/png')
-        const pdf = new jsPDF('p', 'mm', 'a4')
-        const imgWidth = 210
-        const pageHeight = 295
-        const imgHeight = (canvas.height * imgWidth) / canvas.width
-        let heightLeft = imgHeight
-
-        let position = 0
-
-        pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight)
-        heightLeft -= pageHeight
-
-        while (heightLeft >= 0) {
-          position = heightLeft - imgHeight
-          pdf.addPage()
-          pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight)
-          heightLeft -= pageHeight
-        }
-
-        pdf.save(`${resource.title}.pdf`)
-      }
-    } catch (error) {
-      console.error('Failed to generate PDF:', error)
-      alert('Failed to generate PDF. Please try again.')
-    } finally {
-      setDownloading(false)
-    }
-  }
-
   const handlePrint = () => {
     // If content is a PDF file, open it for printing
     if (resource.content.startsWith('/uploads/') || resource.content.startsWith('uploads/')) {
@@ -465,14 +339,6 @@ export default function ResourcePreview({ resource, showActions = true }: Resour
       {showActions && (
         <div className="flex justify-between items-center mb-4 flex-wrap gap-4">
           <div className="flex items-center space-x-3 flex-wrap">
-            <button
-              onClick={downloadPDF}
-              disabled={downloading}
-              className="px-4 py-2 text-white rounded-md disabled:opacity-50 transition-colors hover:bg-[#2d3569]"
-              style={{ backgroundColor: '#38438f' }}
-            >
-              {downloading ? 'Generating PDF...' : (resource.content.startsWith('/uploads/') && resource.content.toLowerCase().endsWith('.pdf') ? '📥 Download PDF' : '📥 Download PDF')}
-            </button>
             <button
               onClick={handlePrint}
               className="px-4 py-2 bg-gray-600 text-white rounded-md hover:bg-gray-700 transition-colors"
