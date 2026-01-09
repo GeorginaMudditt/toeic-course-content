@@ -147,7 +147,6 @@ function InlineAnswerInput({
 
 export default function ResourcePreview({ resource, showActions = true }: ResourcePreviewProps) {
   const [downloading, setDownloading] = useState(false)
-  const [linkCopied, setLinkCopied] = useState(false)
   const contentRef = useRef<HTMLDivElement>(null)
   
   // Check if this is a Placement Test
@@ -305,32 +304,100 @@ export default function ResourcePreview({ resource, showActions = true }: Resour
 
     setDownloading(true)
     try {
-      const canvas = await html2canvas(element, {
-        scale: 2,
-        useCORS: true,
-        logging: false
-      })
+      // Check if content has page-break divs (each page is wrapped in a div with class "page-break")
+      const pageBreakElements = element.querySelectorAll('div.page-break')
       
-      const imgData = canvas.toDataURL('image/png')
-      const pdf = new jsPDF('p', 'mm', 'a4')
-      const imgWidth = 210
-      const pageHeight = 295
-      const imgHeight = (canvas.height * imgWidth) / canvas.width
-      let heightLeft = imgHeight
+      if (pageBreakElements.length > 0) {
+        // Render each page separately to respect page breaks
+        const pdf = new jsPDF('p', 'mm', 'a4')
+        const imgWidth = 210
+        const pageHeight = 295
+        
+        for (let i = 0; i < pageBreakElements.length; i++) {
+          const pageElement = pageBreakElements[i] as HTMLElement
+          
+          // Create a temporary container for this page with same styling
+          const tempContainer = document.createElement('div')
+          tempContainer.style.position = 'absolute'
+          tempContainer.style.left = '-9999px'
+          tempContainer.style.width = element.offsetWidth + 'px'
+          tempContainer.style.backgroundColor = '#ffffff'
+          tempContainer.style.padding = '20px'
+          tempContainer.style.fontFamily = 'Arial, sans-serif'
+          
+          // Clone the page element
+          const clonedPage = pageElement.cloneNode(true) as HTMLElement
+          tempContainer.appendChild(clonedPage)
+          document.body.appendChild(tempContainer)
+          
+          const canvas = await html2canvas(tempContainer, {
+            scale: 2,
+            useCORS: true,
+            logging: false,
+            backgroundColor: '#ffffff',
+            width: tempContainer.offsetWidth,
+            height: tempContainer.offsetHeight
+          })
+          
+          document.body.removeChild(tempContainer)
+          
+          const imgData = canvas.toDataURL('image/png')
+          const imgHeight = (canvas.height * imgWidth) / canvas.width
+          
+          if (i > 0) {
+            pdf.addPage()
+          }
+          
+          // If content fits on one page, add it
+          if (imgHeight <= pageHeight) {
+            pdf.addImage(imgData, 'PNG', 0, 0, imgWidth, imgHeight)
+          } else {
+            // If content is taller than one page, split it
+            let heightLeft = imgHeight
+            let position = 0
+            
+            pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight)
+            heightLeft -= pageHeight
+            
+            while (heightLeft > 0) {
+              position = heightLeft - imgHeight
+              pdf.addPage()
+              pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight)
+              heightLeft -= pageHeight
+            }
+          }
+        }
+        
+        pdf.save(`${resource.title}.pdf`)
+      } else {
+        // Original approach for content without page breaks
+        const canvas = await html2canvas(element, {
+          scale: 2,
+          useCORS: true,
+          logging: false
+        })
+        
+        const imgData = canvas.toDataURL('image/png')
+        const pdf = new jsPDF('p', 'mm', 'a4')
+        const imgWidth = 210
+        const pageHeight = 295
+        const imgHeight = (canvas.height * imgWidth) / canvas.width
+        let heightLeft = imgHeight
 
-      let position = 0
+        let position = 0
 
-      pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight)
-      heightLeft -= pageHeight
-
-      while (heightLeft >= 0) {
-        position = heightLeft - imgHeight
-        pdf.addPage()
         pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight)
         heightLeft -= pageHeight
-      }
 
-      pdf.save(`${resource.title}.pdf`)
+        while (heightLeft >= 0) {
+          position = heightLeft - imgHeight
+          pdf.addPage()
+          pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight)
+          heightLeft -= pageHeight
+        }
+
+        pdf.save(`${resource.title}.pdf`)
+      }
     } catch (error) {
       console.error('Failed to generate PDF:', error)
       alert('Failed to generate PDF. Please try again.')
@@ -393,18 +460,6 @@ export default function ResourcePreview({ resource, showActions = true }: Resour
     }, 250)
   }
 
-  const copyShareLink = async () => {
-    const shareUrl = `${window.location.origin}/teacher/resources/${resource.id}/preview`
-    try {
-      await navigator.clipboard.writeText(shareUrl)
-      setLinkCopied(true)
-      setTimeout(() => setLinkCopied(false), 2000)
-    } catch (error) {
-      console.error('Failed to copy link:', error)
-      alert('Failed to copy link. Please copy it manually.')
-    }
-  }
-
   return (
     <div className="bg-white shadow rounded-lg p-6">
       {showActions && (
@@ -423,12 +478,6 @@ export default function ResourcePreview({ resource, showActions = true }: Resour
               className="px-4 py-2 bg-gray-600 text-white rounded-md hover:bg-gray-700 transition-colors"
             >
               🖨️ Print
-            </button>
-            <button
-              onClick={copyShareLink}
-              className="px-4 py-2 bg-gray-500 text-white rounded-md hover:bg-gray-600 transition-colors"
-            >
-              {linkCopied ? '✓ Link Copied!' : '🔗 Share Link'}
             </button>
           </div>
           <div className="text-sm text-gray-500">
