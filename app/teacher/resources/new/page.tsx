@@ -232,6 +232,7 @@ export default function NewResourcePage() {
                 onBlur={(e) => e.currentTarget.style.borderColor = '#d1d5db'}
                 >
                   <option value="">Select level...</option>
+                  <option value="All">All</option>
                   <option value="A1">A1</option>
                   <option value="A2">A2</option>
                   <option value="B1">B1</option>
