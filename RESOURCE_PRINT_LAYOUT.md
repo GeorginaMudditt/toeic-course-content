@@ -16,7 +16,7 @@ Use this CSS template in all resource HTML files:
 
 ```css
 <style>
-  /* General spacing for online viewing - more space above headings */
+  /* General spacing for online viewing - more space above sections/headings */
   .section {
     margin-top: 24px;
     margin-bottom: 12px;
@@ -24,11 +24,13 @@ Use this CSS template in all resource HTML files:
   .section:first-child {
     margin-top: 0;
   }
-  h2, h3 {
-    margin-top: 24px;
+  /* Headings inside sections get less margin since section already has spacing */
+  .section h2, .section h3 {
+    margin-top: 0;
     margin-bottom: 8px;
   }
-  h2:first-child, h3:first-child {
+  /* Headings outside sections (like main title or answers) get full spacing */
+  h2:first-of-type, h3:first-of-type {
     margin-top: 0;
   }
   
