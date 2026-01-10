@@ -1,14 +1,51 @@
-<!-- PAGE 1: Vocabulary Focuses and Grammar Focus #1 -->
 <style>
   @media print {
-    @page { margin: 1.5cm; }
-    body { margin: 0; padding: 0; }
+    @page { 
+      margin: 1.5cm; 
+      size: A4;
+    }
+    body { 
+      margin: 0; 
+      padding: 0; 
+      orphans: 3;
+      widows: 3;
+    }
+    /* Manual page breaks - use sparingly (e.g., for Answers section) */
     .page-break { page-break-before: always; }
+    
+    /* Sections: Each div containing an h2 or h3 + its content should stay together */
+    .section {
+      page-break-inside: avoid;
+      break-inside: avoid;
+      margin-bottom: 12px;
+    }
+    
+    /* Legacy classes for backward compatibility */
     .no-break { page-break-inside: avoid; break-inside: avoid; }
-    .keep-together { page-break-inside: avoid; break-inside: avoid; }
-    h2, h3 { page-break-after: avoid; break-after: avoid; }
-    table { page-break-inside: avoid; break-inside: avoid; }
-    ul, ol { page-break-inside: avoid; break-inside: avoid; }
+    .keep-together { 
+      page-break-inside: avoid; 
+      break-inside: avoid;
+    }
+    
+    /* Headings should not be orphaned at bottom of page */
+    h1, h2, h3 { 
+      page-break-after: avoid; 
+      break-after: avoid;
+      orphans: 3;
+      widows: 3;
+    }
+    
+    /* Keep tables, lists together */
+    table, ul, ol { 
+      page-break-inside: avoid; 
+      break-inside: avoid; 
+    }
+    
+    /* Optimize spacing for print */
+    .section h2, .section h3 {
+      margin-top: 0;
+      margin-bottom: 4px;
+    }
   }
 </style>
 <div style="max-width: 800px; margin: 0 auto; padding: 20px; font-family: Arial, sans-serif; line-height: 1.4; color: #333;">
@@ -20,7 +57,7 @@
     <h1 style="font-size: 24px; font-weight: bold; margin: 0; color: #000;">Reported Speech</h1>
   </div>
 
-  <div style="margin-bottom: 12px;" class="keep-together">
+  <div class="section">
     <h2 style="font-size: 18px; font-weight: bold; margin-bottom: 4px; color: #000;">Vocabulary Focus #1: Communication Verbs</h2>
     <p style="font-size: 12px; margin-bottom: 6px;">For each verb, write the translation in French. The examples show how each verb is used.</p>
     
@@ -136,7 +173,7 @@
     </div>
   </div>
 
-  <div style="margin-bottom: 12px;" class="keep-together">
+  <div class="section">
     <h2 style="font-size: 18px; font-weight: bold; margin-bottom: 4px; color: #000;">Vocabulary Focus #2: Say or Tell?</h2>
     <p style="font-size: 12px; margin-bottom: 4px;">Complete the sentences with "say" or "tell" (or their conjugated forms).</p>
     <ol style="padding-left: 22px; font-size: 12px; list-style-type: decimal;">
@@ -151,7 +188,7 @@
     </ol>
   </div>
 
-  <div style="margin-bottom: 15px;" class="keep-together">
+  <div class="section">
     <h2 style="font-size: 18px; font-weight: bold; margin-bottom: 4px; color: #000;">Grammar Focus #1: Reporting Speech</h2>
     
     <div style="margin: 10px 0; padding: 12px; background-color: #f9fafb; border: 1px solid #d1d5db; border-radius: 4px; font-size: 12px;">
@@ -183,13 +220,8 @@
     </div>
   </div>
 
-</div>
-
-<!-- PAGE 2: Introduction to Changes, Practice #1 and Speaking #1 -->
-<div style="max-width: 800px; margin: 0 auto; padding: 20px; font-family: Arial, sans-serif; line-height: 1.4; color: #333;" class="page-break">
-  
-  <div style="margin-bottom: 12px;" class="keep-together">
-    <h2 style="font-size: 18px; font-weight: bold; margin-bottom: 4px; margin-top: 0; color: #000;">Changes When Reporting Speech</h2>
+  <div class="section">
+    <h2 style="font-size: 18px; font-weight: bold; margin-bottom: 4px; color: #000;">Changes When Reporting Speech</h2>
     <div style="font-size: 12px; margin-bottom: 8px;">
       <p style="margin-bottom: 6px;"><strong>Change of pronouns:</strong></p>
       <p style="margin-bottom: 6px; padding-left: 15px;">"I'm tired. I've been working since six this morning." → She said she was tired because she had been working since six that morning.</p>
@@ -210,7 +242,7 @@
     </div>
   </div>
 
-  <div style="margin-bottom: 12px;" class="keep-together">
+  <div class="section">
     <h2 style="font-size: 18px; font-weight: bold; margin-bottom: 4px; color: #000;">Practice #1: Reporting Speech</h2>
     <p style="font-size: 12px; margin-bottom: 6px;">Complete the reported speech for each sentence.</p>
     
@@ -255,7 +287,7 @@
     </div>
   </div>
 
-  <div style="margin-bottom: 15px;" class="keep-together">
+  <div class="section">
     <h2 style="font-size: 18px; font-weight: bold; margin-bottom: 4px; color: #000;">Speaking #1: Retell Key Moments</h2>
     <p style="font-size: 12px; margin-bottom: 6px;">Retell some key moments from a book or film using reported speech.</p>
     
@@ -273,7 +305,7 @@
 
 </div>
 
-<!-- PAGE 3: Answers -->
+<!-- Answers Section - Keep on separate page -->
 <div style="max-width: 800px; margin: 0 auto; padding: 20px; font-family: Arial, sans-serif; line-height: 1.4; color: #333;" class="page-break">
   
   <!-- Answers Section -->
