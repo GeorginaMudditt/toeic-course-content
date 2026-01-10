@@ -16,6 +16,22 @@ Use this CSS template in all resource HTML files:
 
 ```css
 <style>
+  /* General spacing for online viewing - more space above headings */
+  .section {
+    margin-top: 24px;
+    margin-bottom: 12px;
+  }
+  .section:first-child {
+    margin-top: 0;
+  }
+  h2, h3 {
+    margin-top: 24px;
+    margin-bottom: 8px;
+  }
+  h2:first-child, h3:first-child {
+    margin-top: 0;
+  }
+  
   @media print {
     @page { 
       margin: 1.5cm; 
@@ -35,6 +51,7 @@ Use this CSS template in all resource HTML files:
       page-break-inside: avoid;
       break-inside: avoid;
       margin-bottom: 12px;
+      margin-top: 0; /* Reduce top margin for print to save space */
     }
     
     /* Legacy classes for backward compatibility */
@@ -58,7 +75,7 @@ Use this CSS template in all resource HTML files:
       break-inside: avoid; 
     }
     
-    /* Optimize spacing for print */
+    /* Optimize spacing for print - headings get less top margin */
     .section h2, .section h3 {
       margin-top: 0;
       margin-bottom: 4px;
