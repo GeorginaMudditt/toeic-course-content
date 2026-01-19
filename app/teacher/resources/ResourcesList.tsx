@@ -13,6 +13,7 @@ interface Resource {
   skill?: string
   content?: string
   type?: string
+  createdAt?: string
 }
 
 interface FullResource extends Resource {
@@ -24,19 +25,51 @@ interface Props {
   resources: Resource[]
 }
 
+type SortOption = 'level' | 'alphabetical' | 'date'
+
 export default function ResourcesList({ resources }: Props) {
   const router = useRouter()
   const [selectedLevel, setSelectedLevel] = useState<string>('All')
   const [selectedSkill, setSelectedSkill] = useState<string>('All')
+  const [sortBy, setSortBy] = useState<SortOption>('date')
   const [deleteModalOpen, setDeleteModalOpen] = useState(false)
   const [resourceToDelete, setResourceToDelete] = useState<Resource | null>(null)
   const [fullResourceData, setFullResourceData] = useState<FullResource | null>(null)
   const [deleting, setDeleting] = useState(false)
 
+  // Filter resources
   const filteredResources = resources.filter(resource => {
     const levelMatch = selectedLevel === 'All' || resource.level === selectedLevel
     const skillMatch = selectedSkill === 'All' || resource.skill === selectedSkill
     return levelMatch && skillMatch
+  })
+
+  // Sort filtered resources
+  const sortedResources = [...filteredResources].sort((a, b) => {
+    switch (sortBy) {
+      case 'level': {
+        // Sort by level: A1, A2, B1, B2, C1, C2
+        const levelOrder: { [key: string]: number } = {
+          'A1': 1, 'A2': 2, 'B1': 3, 'B2': 4, 'C1': 5, 'C2': 6
+        }
+        const aLevel = levelOrder[a.level] || 999
+        const bLevel = levelOrder[b.level] || 999
+        if (aLevel !== bLevel) {
+          return aLevel - bLevel
+        }
+        // If same level, sort alphabetically by title
+        return a.title.localeCompare(b.title)
+      }
+      case 'alphabetical':
+        return a.title.localeCompare(b.title)
+      case 'date':
+      default: {
+        // Sort by date (newest first)
+        const aDate = a.createdAt ? new Date(a.createdAt).getTime() : 0
+        const bDate = b.createdAt ? new Date(b.createdAt).getTime() : 0
+        return bDate - aDate
+      }
+    }
   })
 
   const handleDeleteClick = async (resource: Resource) => {
@@ -107,7 +140,7 @@ export default function ResourcesList({ resources }: Props) {
         </Link>
       </div>
 
-      <div className="mb-4 grid grid-cols-2 gap-4">
+      <div className="mb-4 grid grid-cols-1 md:grid-cols-3 gap-4">
         <div>
           <label htmlFor="level-filter" className="block text-sm font-medium text-gray-700 mb-2">
             Filter by Level
@@ -152,6 +185,24 @@ export default function ResourcesList({ resources }: Props) {
             <option value="TESTS">Tests</option>
           </select>
         </div>
+
+        <div>
+          <label htmlFor="sort-by" className="block text-sm font-medium text-gray-700 mb-2">
+            Sort by
+          </label>
+          <select
+            id="sort-by"
+            value={sortBy}
+            onChange={(e) => setSortBy(e.target.value as SortOption)}
+            className="border border-gray-300 rounded-md px-3 py-2 focus:outline-none w-full"
+            onFocus={(e) => e.currentTarget.style.borderColor = '#38438f'}
+            onBlur={(e) => e.currentTarget.style.borderColor = '#d1d5db'}
+          >
+            <option value="date">Date Added (Newest First)</option>
+            <option value="level">Level</option>
+            <option value="alphabetical">Alphabetically</option>
+          </select>
+        </div>
       </div>
 
       <div className="bg-white shadow rounded-lg overflow-hidden">
@@ -173,7 +224,7 @@ export default function ResourcesList({ resources }: Props) {
             </tr>
           </thead>
           <tbody className="bg-white divide-y divide-gray-200">
-            {filteredResources.length === 0 ? (
+            {sortedResources.length === 0 ? (
               <tr>
                 <td colSpan={4} className="px-6 py-4 text-center text-gray-500">
                   {resources.length === 0 
@@ -183,7 +234,7 @@ export default function ResourcesList({ resources }: Props) {
                 </td>
               </tr>
             ) : (
-              filteredResources.map((resource) => (
+              sortedResources.map((resource) => (
                 <tr key={resource.id}>
                   <td className="px-6 py-4 whitespace-nowrap">
                     <div className="text-sm font-medium text-gray-900">{resource.title}</div>

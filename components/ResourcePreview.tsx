@@ -172,14 +172,17 @@ export default function ResourcePreview({ resource, showActions = true }: Resour
         const answerPath = container.getAttribute('data-answer-input')
         if (!answerPath) return
         
+        // Skip the writing textarea - it's handled separately by splitting content
+        if (answerPath === 'writing' || answerPath === 'writingFileUpload') {
+          return // Skip portal rendering for writing section
+        }
+        
         // Skip if already rendered
         if ((container as any)._reactRoot) return
         
         // Determine input type
         let inputType: 'radio' | 'text' | 'textarea' = 'radio'
-        if (answerPath === 'writing') {
-          inputType = 'textarea'
-        } else if (answerPath.includes('incompleteSentences')) {
+        if (answerPath.includes('incompleteSentences')) {
           inputType = 'text'
         }
         
@@ -226,14 +229,17 @@ export default function ResourcePreview({ resource, showActions = true }: Resour
         const answerPath = container.getAttribute('data-answer-input')
         if (!answerPath) return
         
+        // Skip the writing textarea - it's handled separately by splitting content
+        if (answerPath === 'writing' || answerPath === 'writingFileUpload') {
+          return // Skip portal rendering for writing section
+        }
+        
         // Skip if already rendered
         if ((container as any)._reactRoot) return
         
         // Determine input type
         let inputType: 'radio' | 'text' | 'textarea' = 'radio'
-        if (answerPath === 'writing') {
-          inputType = 'textarea'
-        } else if (answerPath.includes('incompleteSentences')) {
+        if (answerPath.includes('incompleteSentences')) {
           inputType = 'text'
         }
         
@@ -438,12 +444,74 @@ export default function ResourcePreview({ resource, showActions = true }: Resour
             }
           } else {
             // HTML content
-            return (
-              <div 
-                className="prose max-w-none"
-                dangerouslySetInnerHTML={{ __html: resource.content }}
-              />
-            )
+            if (isPlacementTest) {
+              // For Placement Test, split content at the writing textarea placeholder
+              // and render the textarea directly in JSX (like WorksheetViewer) to match student view
+              const writingPlaceholderRegex = /(<div\s+data-answer-input="writing"[^>]*><\/div>)/i
+              const writingMatch = resource.content.match(writingPlaceholderRegex)
+              
+              if (writingMatch) {
+                const writingIndex = resource.content.indexOf(writingMatch[0])
+                const contentBeforeWriting = resource.content.substring(0, writingIndex)
+                const contentAfterWriting = resource.content.substring(writingIndex + writingMatch[0].length)
+                
+                return (
+                  <>
+                    <div 
+                      className="prose max-w-none"
+                      dangerouslySetInnerHTML={{ __html: contentBeforeWriting }}
+                      ref={contentRef}
+                    />
+                    <div style={{ marginTop: '15px' }}>
+                      <label style={{ display: 'block', fontSize: '14px', fontWeight: 600, marginBottom: '8px', color: '#000' }}>
+                        Your Response:
+                      </label>
+                      <textarea
+                        value=""
+                        readOnly
+                        style={{
+                          width: '100%',
+                          border: '1px solid #d1d5db',
+                          borderRadius: '4px',
+                          padding: '8px',
+                          fontSize: '13px',
+                          fontFamily: 'inherit',
+                          minHeight: '150px',
+                          resize: 'vertical',
+                          backgroundColor: '#f9fafb',
+                          color: '#6b7280'
+                        }}
+                        placeholder="Students can type their written response here..."
+                      />
+                      <div style={{ marginTop: '10px', fontSize: '13px', color: '#6b7280' }}>
+                        <p>Students can also upload a handwritten response file.</p>
+                      </div>
+                    </div>
+                    <div 
+                      className="prose max-w-none"
+                      dangerouslySetInnerHTML={{ __html: contentAfterWriting }}
+                    />
+                  </>
+                )
+              } else {
+                // No writing placeholder found, render normally
+                return (
+                  <div 
+                    className="prose max-w-none"
+                    dangerouslySetInnerHTML={{ __html: resource.content }}
+                    ref={contentRef}
+                  />
+                )
+              }
+            } else {
+              // Render normally for non-placement tests
+              return (
+                <div 
+                  className="prose max-w-none"
+                  dangerouslySetInnerHTML={{ __html: resource.content }}
+                />
+              )
+            }
           }
         })()}
       </div>

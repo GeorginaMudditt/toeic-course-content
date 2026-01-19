@@ -20,7 +20,6 @@ export default async function ResourcesPage() {
       .from('Resource')
       .select('*')
       .eq('creatorId', session.user.id)
-      .order('createdAt', { ascending: false })
 
     if (error) {
       console.error('Error loading resources:', error)

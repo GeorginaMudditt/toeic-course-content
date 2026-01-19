@@ -6,6 +6,10 @@ import Navbar from '@/components/Navbar'
 import Link from 'next/link'
 import { formatUKDate, formatCourseName } from '@/lib/date-utils'
 
+// Disable static caching to ensure fresh data
+export const dynamic = 'force-dynamic'
+export const revalidate = 0
+
 export default async function MyCoursePage() {
   const session = await getServerSession(authOptions)
   

@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react'
 import { createRoot } from 'react-dom/client'
+import { useRouter } from 'next/navigation'
 
 interface Resource {
   id: string
@@ -544,10 +545,12 @@ function InlineAnswerInput({
 }
 
 export default function WorksheetViewer({ assignmentId, resource, initialProgress }: WorksheetViewerProps) {
+  const router = useRouter()
   const [notes, setNotes] = useState(initialProgress?.notes || '')
   const [status, setStatus] = useState(initialProgress?.status || 'NOT_STARTED')
   const [saving, setSaving] = useState(false)
   const [saved, setSaved] = useState(false)
+  const [showCompletionModal, setShowCompletionModal] = useState(false)
   const contentRef = useRef<HTMLDivElement>(null)
   
   // Check if this is a Placement Test
@@ -939,9 +942,17 @@ export default function WorksheetViewer({ assignmentId, resource, initialProgres
       if (response.ok) {
         setStatus('COMPLETED')
         setSaved(true)
+        setShowCompletionModal(true)
+        // Refresh the router to update cached data
+        router.refresh()
+      } else {
+        const errorData = await response.json().catch(() => ({ error: 'Unknown error' }))
+        console.error('Failed to mark complete:', errorData)
+        alert(`Failed to mark as complete: ${errorData.error || 'Please try again'}`)
       }
     } catch (error) {
       console.error('Failed to mark complete:', error)
+      alert('Failed to mark as complete. Please check your connection and try again.')
     } finally {
       setSaving(false)
     }
@@ -1208,6 +1219,112 @@ export default function WorksheetViewer({ assignmentId, resource, initialProgres
       <div className="mt-4 text-sm text-gray-500">
         <p>⚠️ This worksheet is unique to you. Do not share the link with anyone.</p>
         <p>Your progress is automatically saved every 30 seconds.</p>
+      </div>
+
+      {/* Completion Modal */}
+      {showCompletionModal && (
+        <CompletionModal
+          isOpen={showCompletionModal}
+          onClose={() => {
+            setShowCompletionModal(false)
+            router.push('/student/course')
+          }}
+          worksheetName={resource.title}
+        />
+      )}
+    </div>
+  )
+}
+
+// Completion Modal Component
+function CompletionModal({
+  isOpen,
+  onClose,
+  worksheetName
+}: {
+  isOpen: boolean
+  onClose: () => void
+  worksheetName: string
+}) {
+  // Close modal on Escape key
+  useEffect(() => {
+    if (!isOpen) return
+    const handleEscape = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') onClose()
+    }
+    document.addEventListener('keydown', handleEscape)
+    return () => document.removeEventListener('keydown', handleEscape)
+  }, [isOpen, onClose])
+
+  // Prevent body scroll when modal is open
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = 'hidden'
+    } else {
+      document.body.style.overflow = 'unset'
+    }
+    return () => {
+      document.body.style.overflow = 'unset'
+    }
+  }, [isOpen])
+
+  if (!isOpen) return null
+
+  return (
+    <div className="fixed inset-0 z-50 overflow-y-auto">
+      {/* Backdrop */}
+      <div
+        className="fixed inset-0 bg-black bg-opacity-50 transition-opacity"
+        onClick={onClose}
+      />
+      
+      {/* Modal */}
+      <div className="flex min-h-full items-center justify-center p-4">
+        <div className="relative bg-white rounded-lg shadow-xl max-w-md w-full transform transition-all">
+          {/* Close button */}
+          <button
+            onClick={onClose}
+            className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 transition-colors"
+            aria-label="Close"
+          >
+            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+
+          {/* Content */}
+          <div className="p-6">
+            {/* Icon */}
+            <div className="flex justify-center mb-4">
+              <div
+                className="w-16 h-16 rounded-full flex items-center justify-center"
+                style={{ backgroundColor: '#38438f20' }}
+              >
+                <span className="text-4xl">🎉</span>
+              </div>
+            </div>
+
+            {/* Title */}
+            <h3 className="text-2xl font-bold text-center mb-3 text-gray-900">
+              Congratulations!
+            </h3>
+
+            {/* Message */}
+            <p className="text-gray-600 text-center mb-6 leading-relaxed">
+              Congratulations on completing <strong>{worksheetName}</strong> 🎉<br />
+              Your teacher will be notified of your progress.
+            </p>
+
+            {/* Button */}
+            <button
+              onClick={onClose}
+              className="w-full py-3 px-4 text-white rounded-md font-semibold transition-opacity hover:opacity-90"
+              style={{ backgroundColor: '#38438f' }}
+            >
+              Back to My Course
+            </button>
+          </div>
+        </div>
       </div>
     </div>
   )
