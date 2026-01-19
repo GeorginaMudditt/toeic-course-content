@@ -183,6 +183,7 @@ export default function ResourcesList({ resources }: Props) {
             <option value="SPEAKING">Speaking</option>
             <option value="LISTENING">Listening</option>
             <option value="TESTS">Tests</option>
+            <option value="REFERENCE">Reference</option>
           </select>
         </div>
 

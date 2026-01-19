@@ -9,6 +9,7 @@ interface Resource {
   title: string
   content: string
   type: string
+  skill?: string
 }
 
 interface Progress {
@@ -555,6 +556,9 @@ export default function WorksheetViewer({ assignmentId, resource, initialProgres
   
   // Check if this is a Placement Test
   const isPlacementTest = resource.title.toLowerCase().includes('placement test')
+  
+  // Check if this is a Reference resource
+  const isReference = resource.skill === 'REFERENCE'
   
   // Parse placement test answers from notes
   const getPlacementTestAnswers = () => {
@@ -1169,6 +1173,11 @@ export default function WorksheetViewer({ assignmentId, resource, initialProgres
 
       {/* Show structured answer sheet for Placement Test, otherwise show simple textarea (only if not already rendered above) */}
       {(() => {
+        // Reference resources don't have a writing area
+        if (isReference) {
+          return null
+        }
+        
         // Check if textarea was already rendered in the HTML content section
         const answersHeadingRegex = /(<h2[^>]*>.*?Answers.*?<\/h2>)/i
         const hasAnswersSection = resource.content.match(answersHeadingRegex) && !resource.content.startsWith('{') && !resource.content.startsWith('/uploads/') && !resource.content.startsWith('uploads/')
@@ -1211,14 +1220,14 @@ export default function WorksheetViewer({ assignmentId, resource, initialProgres
             onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#2d3569'}
             onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#38438f'}
           >
-            Mark as Complete
+            {isReference ? 'Mark as Read' : 'Mark as Complete'}
           </button>
         </div>
       )}
 
       <div className="mt-4 text-sm text-gray-500">
         <p>⚠️ This worksheet is unique to you. Do not share the link with anyone.</p>
-        <p>Your progress is automatically saved every 30 seconds.</p>
+        {!isReference && <p>Your progress is automatically saved every 30 seconds.</p>}
       </div>
 
       {/* Completion Modal */}
@@ -1230,6 +1239,7 @@ export default function WorksheetViewer({ assignmentId, resource, initialProgres
             router.push('/student/course')
           }}
           worksheetName={resource.title}
+          isReference={isReference}
         />
       )}
     </div>
@@ -1240,11 +1250,13 @@ export default function WorksheetViewer({ assignmentId, resource, initialProgres
 function CompletionModal({
   isOpen,
   onClose,
-  worksheetName
+  worksheetName,
+  isReference = false
 }: {
   isOpen: boolean
   onClose: () => void
   worksheetName: string
+  isReference?: boolean
 }) {
   // Close modal on Escape key
   useEffect(() => {
@@ -1306,13 +1318,17 @@ function CompletionModal({
 
             {/* Title */}
             <h3 className="text-2xl font-bold text-center mb-3 text-gray-900">
-              Congratulations!
+              {isReference ? 'Marked as Read!' : 'Congratulations!'}
             </h3>
 
             {/* Message */}
             <p className="text-gray-600 text-center mb-6 leading-relaxed">
-              Congratulations on completing <strong>{worksheetName}</strong> 🎉<br />
-              Your teacher will be notified of your progress.
+              {isReference ? (
+                <>You have marked <strong>{worksheetName}</strong> as read. Your teacher will be notified.</>
+              ) : (
+                <>Congratulations on completing <strong>{worksheetName}</strong> 🎉<br />
+                Your teacher will be notified of your progress.</>
+              )}
             </p>
 
             {/* Button */}

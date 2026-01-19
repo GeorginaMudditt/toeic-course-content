@@ -36,6 +36,7 @@ enum ResourceSkill {
   SPEAKING
   LISTENING
   TESTS
+  REFERENCE
 }
 
 model User {
