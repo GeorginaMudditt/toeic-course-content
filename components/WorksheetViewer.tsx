@@ -1142,67 +1142,66 @@ export default function WorksheetViewer({ assignmentId, resource, initialProgres
             // HTML content
             // Render HTML content as-is to match teacher view exactly
             if (isPlacementTest) {
-                // For Placement Test, split content at the writing textarea placeholder
-                // and render the textarea directly in JSX (like Modal Verbs) to prevent flickering
-                const writingPlaceholderRegex = /(<div\s+data-answer-input="writing"[^>]*><\/div>)/i
-                const writingMatch = resource.content.match(writingPlaceholderRegex)
+              // For Placement Test, split content at the writing textarea placeholder
+              // and render the textarea directly in JSX (like Modal Verbs) to prevent flickering
+              const writingPlaceholderRegex = /(<div\s+data-answer-input="writing"[^>]*><\/div>)/i
+              const writingMatch = resource.content.match(writingPlaceholderRegex)
+              
+              if (writingMatch) {
+                const writingIndex = resource.content.indexOf(writingMatch[0])
+                const contentBeforeWriting = resource.content.substring(0, writingIndex)
+                const contentAfterWriting = resource.content.substring(writingIndex + writingMatch[0].length)
                 
-                if (writingMatch) {
-                  const writingIndex = resource.content.indexOf(writingMatch[0])
-                  const contentBeforeWriting = resource.content.substring(0, writingIndex)
-                  const contentAfterWriting = resource.content.substring(writingIndex + writingMatch[0].length)
-                  
-                  // Memoize content sections to prevent re-renders when notes change
-                  const memoizedContentBefore = useMemo(() => contentBeforeWriting, [resource.content])
-                  const memoizedContentAfter = useMemo(() => contentAfterWriting, [resource.content])
-                  
-                  // Memoize the onChange callback to prevent re-renders
-                  const handleWritingChange = useCallback((value: string) => {
-                    updatePlacementTestAnswer('writing', value)
-                  }, [updatePlacementTestAnswer])
-                  
-                  return (
-                    <>
-                      <MemoizedContent 
-                        key="content-before-writing"
-                        html={memoizedContentBefore}
-                        contentRef={contentRef}
-                      />
-                      <div style={{ marginTop: '15px' }}>
-                        <label style={{ display: 'block', fontSize: '14px', fontWeight: 600, marginBottom: '8px', color: '#000' }}>
-                          Your Response:
-                        </label>
-                        <PlacementWritingTextarea
-                          key="placement-writing-textarea"
-                          value={writingAnswerValue}
-                          onChange={handleWritingChange}
-                        />
-                        <MemoizedContent 
-                          key="content-after-writing"
-                          html={memoizedContentAfter}
-                        />
-                      </div>
-                    </>
-                  )
-                } else {
-                  // No writing placeholder found, render normally
-                  return (
-                    <div 
-                      className="prose max-w-none"
-                      dangerouslySetInnerHTML={{ __html: resource.content }}
-                      ref={contentRef}
+                // Memoize content sections to prevent re-renders when notes change
+                const memoizedContentBefore = useMemo(() => contentBeforeWriting, [resource.content])
+                const memoizedContentAfter = useMemo(() => contentAfterWriting, [resource.content])
+                
+                // Memoize the onChange callback to prevent re-renders
+                const handleWritingChange = useCallback((value: string) => {
+                  updatePlacementTestAnswer('writing', value)
+                }, [updatePlacementTestAnswer])
+                
+                return (
+                  <>
+                    <MemoizedContent 
+                      key="content-before-writing"
+                      html={memoizedContentBefore}
+                      contentRef={contentRef}
                     />
-                  )
-                }
+                    <div style={{ marginTop: '15px' }}>
+                      <label style={{ display: 'block', fontSize: '14px', fontWeight: 600, marginBottom: '8px', color: '#000' }}>
+                        Your Response:
+                      </label>
+                      <PlacementWritingTextarea
+                        key="placement-writing-textarea"
+                        value={writingAnswerValue}
+                        onChange={handleWritingChange}
+                      />
+                      <MemoizedContent 
+                        key="content-after-writing"
+                        html={memoizedContentAfter}
+                      />
+                    </div>
+                  </>
+                )
               } else {
-                // Render normally for non-placement tests (match teacher view exactly)
+                // No writing placeholder found, render normally
                 return (
                   <div 
                     className="prose max-w-none"
                     dangerouslySetInnerHTML={{ __html: resource.content }}
+                    ref={contentRef}
                   />
                 )
               }
+            } else {
+              // Render normally for non-placement tests (match teacher view exactly)
+              return (
+                <div 
+                  className="prose max-w-none"
+                  dangerouslySetInnerHTML={{ __html: resource.content }}
+                />
+              )
             }
           }
         })()}
