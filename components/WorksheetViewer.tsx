@@ -1140,48 +1140,8 @@ export default function WorksheetViewer({ assignmentId, resource, initialProgres
             }
           } else {
             // HTML content
-            // Check if content contains an "Answers" section - if so, split and insert textarea before it
-            // Look for h2 heading containing "Answers" (with optional emoji)
-            const answersHeadingRegex = /(<h2[^>]*>.*?Answers.*?<\/h2>)/i
-            const answersMatch = resource.content.match(answersHeadingRegex)
-            
-            if (answersMatch && !isPlacementTest) {
-              // Split content at the Answers heading
-              const answersIndex = resource.content.indexOf(answersMatch[0])
-              const contentBeforeAnswers = resource.content.substring(0, answersIndex)
-              const contentFromAnswers = resource.content.substring(answersIndex)
-              
-              return (
-                <>
-                  <div 
-                    className="prose max-w-none"
-                    dangerouslySetInnerHTML={{ __html: contentBeforeAnswers }}
-                  />
-                  <div className="mt-6 mb-6">
-                    <label htmlFor="notes" className="block text-sm font-medium text-gray-700 mb-2">
-                      Your Work / Answers
-                    </label>
-                    <textarea
-                      id="notes"
-                      rows={10}
-                      value={notes}
-                      onChange={(e) => setNotes(e.target.value)}
-                      className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none"
-                      style={{ borderColor: '#d1d5db' }}
-                      onFocus={(e) => e.currentTarget.style.borderColor = '#38438f'}
-                      onBlur={(e) => e.currentTarget.style.borderColor = '#d1d5db'}
-                      placeholder="Type your answers or work here..."
-                    />
-                  </div>
-                  <div 
-                    className="prose max-w-none"
-                    dangerouslySetInnerHTML={{ __html: contentFromAnswers }}
-                  />
-                </>
-              )
-            } else {
-              // No Answers section found
-              if (isPlacementTest) {
+            // Render HTML content as-is to match teacher view exactly
+            if (isPlacementTest) {
                 // For Placement Test, split content at the writing textarea placeholder
                 // and render the textarea directly in JSX (like Modal Verbs) to prevent flickering
                 const writingPlaceholderRegex = /(<div\s+data-answer-input="writing"[^>]*><\/div>)/i
@@ -1235,7 +1195,7 @@ export default function WorksheetViewer({ assignmentId, resource, initialProgres
                   )
                 }
               } else {
-                // Render normally for non-placement tests
+                // Render normally for non-placement tests (match teacher view exactly)
                 return (
                   <div 
                     className="prose max-w-none"
@@ -1247,46 +1207,6 @@ export default function WorksheetViewer({ assignmentId, resource, initialProgres
           }
         })()}
       </div>
-
-      {/* Show structured answer sheet for Placement Test, otherwise show simple textarea (only if not already rendered above) */}
-      {(() => {
-        // Reference resources don't have a writing area
-        if (isReference) {
-          return null
-        }
-        
-        // Check if textarea was already rendered in the HTML content section
-        const answersHeadingRegex = /(<h2[^>]*>.*?Answers.*?<\/h2>)/i
-        const hasAnswersSection = resource.content.match(answersHeadingRegex) && !resource.content.startsWith('{') && !resource.content.startsWith('/uploads/') && !resource.content.startsWith('uploads/')
-        
-        if (hasAnswersSection && !isPlacementTest) {
-          // Textarea already rendered above, don't render again
-          return null
-        }
-        
-        if (isPlacementTest) {
-          // For placement tests, all inputs are now inline - don't show the answer sheet
-          return null
-        } else {
-          return (
-            <div className="mt-6">
-              <label htmlFor="notes" className="block text-sm font-medium text-gray-700 mb-2">
-                Your Work / Answers
-              </label>
-              <textarea
-                id="notes"
-                rows={10}
-                value={notes}
-                onChange={(e) => setNotes(e.target.value)}
-                className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none"
-                onFocus={(e) => e.currentTarget.style.borderColor = '#38438f'}
-                onBlur={(e) => e.currentTarget.style.borderColor = '#d1d5db'}
-                placeholder="Type your answers or work here..."
-              />
-            </div>
-          )
-        }
-      })()}
 
       {status !== 'COMPLETED' && (
         <div className="mt-4">
@@ -1304,7 +1224,6 @@ export default function WorksheetViewer({ assignmentId, resource, initialProgres
 
       <div className="mt-4 text-sm text-gray-500">
         <p>⚠️ This worksheet is unique to you. Do not share the link with anyone.</p>
-        {!isReference && <p>Your progress is automatically saved every 30 seconds.</p>}
       </div>
 
       {/* Completion Modal */}
