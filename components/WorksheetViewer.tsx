@@ -962,21 +962,98 @@ export default function WorksheetViewer({ assignmentId, resource, initialProgres
     }
   }
 
+  const handlePrint = () => {
+    // If content is a PDF file, open it for printing
+    if (resource.content.startsWith('/uploads/') || resource.content.startsWith('uploads/')) {
+      const filePath = resource.content.startsWith('/') ? resource.content : `/${resource.content}`
+      if (filePath.toLowerCase().endsWith('.pdf')) {
+        window.open(filePath, '_blank')
+        return
+      }
+    }
+
+    // Check if content is JSON (PDF with audio)
+    let contentData: any = null
+    try {
+      if (resource.content.startsWith('{')) {
+        contentData = JSON.parse(resource.content)
+      }
+    } catch (e) {
+      // Not JSON, continue with normal handling
+    }
+
+    if (contentData && contentData.type === 'pdf-with-audio') {
+      // For PDF with audio, open the PDF for printing
+      window.open(contentData.pdf, '_blank')
+      return
+    }
+
+    // For HTML content or images, use print window
+    const element = document.getElementById('worksheet-content')
+    if (!element) return
+
+    const printWindow = window.open('', '_blank')
+    if (!printWindow) {
+      alert('Please allow pop-ups to print this resource.')
+      return
+    }
+
+    printWindow.document.write(`
+      <!DOCTYPE html>
+      <html>
+        <head>
+          <title>${resource.title}</title>
+          <style>
+            body {
+              font-family: Arial, sans-serif;
+              padding: 20px;
+              margin: 0;
+            }
+            @media print {
+              body { padding: 0; }
+              @page { margin: 1cm; }
+            }
+            img {
+              max-width: 100%;
+              height: auto;
+            }
+          </style>
+        </head>
+        <body>
+          ${element.innerHTML}
+        </body>
+      </html>
+    `)
+    printWindow.document.close()
+    printWindow.focus()
+    setTimeout(() => {
+      printWindow.print()
+      printWindow.close()
+    }, 250)
+  }
 
   return (
     <div className="bg-white shadow rounded-lg p-6">
       <div className="flex justify-between items-center mb-4">
         <div className="flex items-center space-x-4">
           <button
-            onClick={() => saveProgress()}
-            disabled={saving}
-            className="px-4 py-2 text-white rounded-md disabled:opacity-50"
-            style={{ backgroundColor: '#38438f' }}
-            onMouseEnter={(e) => !e.currentTarget.disabled && (e.currentTarget.style.backgroundColor = '#2d3569')}
-            onMouseLeave={(e) => !e.currentTarget.disabled && (e.currentTarget.style.backgroundColor = '#38438f')}
+            onClick={handlePrint}
+            className="px-4 py-2 bg-gray-600 text-white rounded-md hover:bg-gray-700 transition-colors"
           >
-            {saving ? 'Saving...' : saved ? '✓ Saved' : 'Save Progress'}
+            🖨️ Print
           </button>
+          {isPlacementTest && (
+            <button
+              onClick={() => saveProgress()}
+              disabled={saving}
+              className="px-4 py-2 text-white rounded-md disabled:opacity-50"
+              style={{ backgroundColor: '#38438f' }}
+              onMouseEnter={(e) => !e.currentTarget.disabled && (e.currentTarget.style.backgroundColor = '#2d3569')}
+              onMouseLeave={(e) => !e.currentTarget.disabled && (e.currentTarget.style.backgroundColor = '#38438f')}
+            >
+              {saving ? 'Saving...' : saved ? '✓ Saved' : 'Save Progress'}
+            </button>
+          )}
         </div>
         {status === 'COMPLETED' && (
           <span className="text-green-600 font-medium">✓ Completed</span>
