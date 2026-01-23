@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
-import { prisma } from '@/lib/prisma'
+import { supabaseServer } from '@/lib/supabase'
 
 export async function POST(request: NextRequest) {
   try {
@@ -13,30 +13,82 @@ export async function POST(request: NextRequest) {
 
     const { studentId, courseId } = await request.json()
 
-    // Verify course belongs to teacher
-    const course = await prisma.course.findUnique({
-      where: { id: courseId }
-    })
+    if (!studentId || !courseId) {
+      return NextResponse.json(
+        { error: 'Student ID and Course ID are required' },
+        { status: 400 }
+      )
+    }
 
-    if (!course || course.creatorId !== session.user.id) {
+    // Verify course belongs to teacher
+    const { data: course, error: courseError } = await supabaseServer
+      .from('Course')
+      .select('id, creatorId')
+      .eq('id', courseId)
+      .single()
+
+    if (courseError || !course) {
+      return NextResponse.json({ error: 'Course not found' }, { status: 404 })
+    }
+
+    if (course.creatorId !== session.user.id) {
       return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
     }
 
-    const enrollment = await prisma.enrollment.create({
-      data: {
-        studentId,
-        courseId
-      }
-    })
+    // Verify student exists
+    const { data: student, error: studentError } = await supabaseServer
+      .from('User')
+      .select('id, role')
+      .eq('id', studentId)
+      .eq('role', 'STUDENT')
+      .single()
 
-    return NextResponse.json(enrollment)
-  } catch (error: any) {
-    if (error.code === 'P2002') {
+    if (studentError || !student) {
+      return NextResponse.json({ error: 'Student not found' }, { status: 404 })
+    }
+
+    // Check if enrollment already exists
+    const { data: existingEnrollment, error: checkError } = await supabaseServer
+      .from('Enrollment')
+      .select('id')
+      .eq('studentId', studentId)
+      .eq('courseId', courseId)
+      .single()
+
+    if (existingEnrollment && !checkError) {
       return NextResponse.json(
         { error: 'Student is already enrolled in this course' },
         { status: 400 }
       )
     }
+
+    // Create enrollment
+    const { data: enrollment, error: enrollmentError } = await supabaseServer
+      .from('Enrollment')
+      .insert({
+        studentId,
+        courseId
+      })
+      .select()
+      .single()
+
+    if (enrollmentError) {
+      // Check for unique constraint violation
+      if (enrollmentError.code === '23505') {
+        return NextResponse.json(
+          { error: 'Student is already enrolled in this course' },
+          { status: 400 }
+        )
+      }
+      console.error('Error creating enrollment:', enrollmentError)
+      return NextResponse.json(
+        { error: 'Failed to create enrollment' },
+        { status: 500 }
+      )
+    }
+
+    return NextResponse.json(enrollment)
+  } catch (error: any) {
     console.error('Error creating enrollment:', error)
     return NextResponse.json(
       { error: 'Failed to create enrollment' },
