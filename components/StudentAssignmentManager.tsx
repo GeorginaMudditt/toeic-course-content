@@ -9,6 +9,8 @@ interface Resource {
   title: string
   type: string
   estimatedHours: number
+  level?: string
+  skill?: string
 }
 
 interface Course {
@@ -49,9 +51,54 @@ export default function StudentAssignmentManager({ student, resources, courses }
   const [selectedCourse, setSelectedCourse] = useState('')
   const [selectedResources, setSelectedResources] = useState<string[]>([])
   const [loading, setLoading] = useState(false)
+  const [selectedLevels, setSelectedLevels] = useState<string[]>(['All'])
+  const [selectedSkills, setSelectedSkills] = useState<string[]>(['All'])
 
   // Use the utility function directly - it handles all cleaning
   const formatCourseName = formatCourseNameUtil
+
+  // Get unique levels and skills from resources
+  const availableLevels = ['All', 'A1', 'A2', 'B1', 'B2', 'C1', 'C2']
+  const availableSkills = ['All', 'GRAMMAR', 'VOCABULARY', 'READING', 'WRITING', 'SPEAKING', 'LISTENING', 'TESTS', 'REFERENCE']
+
+  // Filter resources based on selected filters
+  const filteredResources = resources.filter((resource) => {
+    // Level filter
+    const levelMatch = selectedLevels.includes('All') || 
+      selectedLevels.includes(resource.level || '')
+    
+    // Skill filter
+    const skillMatch = selectedSkills.includes('All') || 
+      selectedSkills.includes(resource.skill || '')
+    
+    return levelMatch && skillMatch
+  })
+
+  const handleLevelToggle = (level: string) => {
+    if (level === 'All') {
+      setSelectedLevels(['All'])
+    } else {
+      setSelectedLevels((prev) => {
+        const newLevels = prev.includes(level)
+          ? prev.filter(l => l !== level)
+          : [...prev.filter(l => l !== 'All'), level]
+        return newLevels.length === 0 ? ['All'] : newLevels
+      })
+    }
+  }
+
+  const handleSkillToggle = (skill: string) => {
+    if (skill === 'All') {
+      setSelectedSkills(['All'])
+    } else {
+      setSelectedSkills((prev) => {
+        const newSkills = prev.includes(skill)
+          ? prev.filter(s => s !== skill)
+          : [...prev.filter(s => s !== 'All'), skill]
+        return newSkills.length === 0 ? ['All'] : newSkills
+      })
+    }
+  }
 
   const handleEnroll = async () => {
     if (!selectedCourse) {
@@ -205,26 +252,89 @@ export default function StudentAssignmentManager({ student, resources, courses }
                 <p className="text-sm text-gray-500 italic">No resources available. Create resources in the Resource Bank first.</p>
               ) : (
                 <>
-                  <div className="space-y-2 max-h-64 overflow-y-auto mb-4 bg-white p-3 rounded border border-blue-100">
-                    {resources.map((resource) => (
-                      <label key={resource.id} className="flex items-center space-x-2 p-2 hover:bg-blue-50 rounded cursor-pointer">
-                        <input
-                          type="checkbox"
-                          checked={selectedResources.includes(resource.id)}
-                          onChange={(e) => {
-                            if (e.target.checked) {
-                              setSelectedResources([...selectedResources, resource.id])
-                            } else {
-                              setSelectedResources(selectedResources.filter(id => id !== resource.id))
-                            }
-                          }}
-                          className="cursor-pointer"
-                        />
-                        <span className="text-sm text-gray-700">
-                          <span className="font-medium">{resource.title}</span>
-                        </span>
+                  {/* Filters */}
+                  <div className="mb-4 space-y-3">
+                    {/* Level Filter */}
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Filter by Level:
                       </label>
-                    ))}
+                      <div className="flex flex-wrap gap-2">
+                        {availableLevels.map((level) => (
+                          <label
+                            key={level}
+                            className="flex items-center space-x-1 px-3 py-1.5 bg-white border border-gray-300 rounded-md cursor-pointer hover:bg-blue-50 transition-colors"
+                          >
+                            <input
+                              type="checkbox"
+                              checked={selectedLevels.includes(level)}
+                              onChange={() => handleLevelToggle(level)}
+                              className="cursor-pointer"
+                            />
+                            <span className="text-sm text-gray-700">{level}</span>
+                          </label>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* Skill Filter */}
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Filter by Skill:
+                      </label>
+                      <div className="flex flex-wrap gap-2">
+                        {availableSkills.map((skill) => (
+                          <label
+                            key={skill}
+                            className="flex items-center space-x-1 px-3 py-1.5 bg-white border border-gray-300 rounded-md cursor-pointer hover:bg-blue-50 transition-colors"
+                          >
+                            <input
+                              type="checkbox"
+                              checked={selectedSkills.includes(skill)}
+                              onChange={() => handleSkillToggle(skill)}
+                              className="cursor-pointer"
+                            />
+                            <span className="text-sm text-gray-700">{skill}</span>
+                          </label>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Resource List */}
+                  <div className="space-y-2 max-h-64 overflow-y-auto mb-4 bg-white p-3 rounded border border-blue-100">
+                    {filteredResources.length === 0 ? (
+                      <p className="text-sm text-gray-500 italic text-center py-4">
+                        No resources match the selected filters.
+                      </p>
+                    ) : (
+                      filteredResources.map((resource) => (
+                        <label key={resource.id} className="flex items-center space-x-2 p-2 hover:bg-blue-50 rounded cursor-pointer">
+                          <input
+                            type="checkbox"
+                            checked={selectedResources.includes(resource.id)}
+                            onChange={(e) => {
+                              if (e.target.checked) {
+                                setSelectedResources([...selectedResources, resource.id])
+                              } else {
+                                setSelectedResources(selectedResources.filter(id => id !== resource.id))
+                              }
+                            }}
+                            className="cursor-pointer"
+                          />
+                          <span className="text-sm text-gray-700 flex-1">
+                            <span className="font-medium">{resource.title}</span>
+                            {(resource.level || resource.skill) && (
+                              <span className="text-xs text-gray-500 ml-2">
+                                {resource.level && `Level ${resource.level}`}
+                                {resource.level && resource.skill && ' • '}
+                                {resource.skill && resource.skill}
+                              </span>
+                            )}
+                          </span>
+                        </label>
+                      ))
+                    )}
                   </div>
                   <button
                     onClick={() => handleAssignResources(enrollment.id)}
