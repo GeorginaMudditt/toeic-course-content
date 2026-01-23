@@ -4,6 +4,7 @@ import { redirect } from 'next/navigation'
 import { supabaseServer } from '@/lib/supabase'
 import Navbar from '@/components/Navbar'
 import StudentAssignmentManager from '@/components/StudentAssignmentManager'
+import DeleteStudentButton from '@/components/DeleteStudentButton'
 import Link from 'next/link'
 
 export default async function StudentDetailPage({ params }: { params: { id: string } }) {
@@ -176,8 +177,13 @@ export default async function StudentDetailPage({ params }: { params: { id: stri
               </svg>
               Back to list of students
             </Link>
-            <h1 className="text-3xl font-bold text-gray-900">{student.name}</h1>
-            <p className="text-gray-600">{student.email}</p>
+            <div className="flex justify-between items-start">
+              <div>
+                <h1 className="text-3xl font-bold text-gray-900">{student.name}</h1>
+                <p className="text-gray-600">{student.email}</p>
+              </div>
+              <DeleteStudentButton studentId={student.id} studentName={student.name} />
+            </div>
           </div>
 
           <StudentAssignmentManager
