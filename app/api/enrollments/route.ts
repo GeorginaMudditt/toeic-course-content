@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
 import { supabaseServer } from '@/lib/supabase'
+import { randomUUID } from 'crypto'
 
 export async function POST(request: NextRequest) {
   try {
@@ -48,24 +49,28 @@ export async function POST(request: NextRequest) {
     }
 
     // Check if enrollment already exists
-    const { data: existingEnrollment, error: checkError } = await supabaseServer
+    const { data: existingEnrollments, error: checkError } = await supabaseServer
       .from('Enrollment')
       .select('id')
       .eq('studentId', studentId)
       .eq('courseId', courseId)
-      .single()
 
-    if (existingEnrollment && !checkError) {
+    if (checkError) {
+      console.error('Error checking existing enrollment:', checkError)
+      // Continue - might be a network issue, let the insert handle the constraint
+    } else if (existingEnrollments && existingEnrollments.length > 0) {
       return NextResponse.json(
         { error: 'Student is already enrolled in this course' },
         { status: 400 }
       )
     }
 
-    // Create enrollment
+    // Create enrollment with generated ID
+    const enrollmentId = randomUUID()
     const { data: enrollment, error: enrollmentError } = await supabaseServer
       .from('Enrollment')
       .insert({
+        id: enrollmentId,
         studentId,
         courseId
       })
@@ -74,15 +79,16 @@ export async function POST(request: NextRequest) {
 
     if (enrollmentError) {
       // Check for unique constraint violation
-      if (enrollmentError.code === '23505') {
+      if (enrollmentError.code === '23505' || enrollmentError.message?.includes('unique')) {
         return NextResponse.json(
           { error: 'Student is already enrolled in this course' },
           { status: 400 }
         )
       }
       console.error('Error creating enrollment:', enrollmentError)
+      console.error('Enrollment error details:', JSON.stringify(enrollmentError, null, 2))
       return NextResponse.json(
-        { error: 'Failed to create enrollment' },
+        { error: enrollmentError.message || 'Failed to create enrollment' },
         { status: 500 }
       )
     }
