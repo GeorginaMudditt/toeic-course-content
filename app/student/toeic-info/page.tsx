@@ -120,10 +120,10 @@ export default async function TOEICInfoPage() {
                   
                   <div className="space-y-4">
                     <CollapsibleSection title="Listening">
-                      <ul className="space-y-2 ml-4 list-disc text-gray-700 mb-3">
-                        <li>Test takers only listen to each recording ONCE.</li>
-                        <li>The Listening test is adaptive. This means that the results obtained in the first part of the test determine the difficulty level of the questions in the second part of the test.</li>
-                      </ul>
+                      <div className="bg-gray-50 border-l-4 border-gray-300 pl-4 py-2 mb-4 space-y-2">
+                        <p className="text-gray-700 italic">Test takers only listen to each recording ONCE.</p>
+                        <p className="text-gray-700 italic">The Listening test is adaptive. This means that the results obtained in the first part of the test determine the difficulty level of the questions in the second part of the test.</p>
+                      </div>
                       <ul className="space-y-2 ml-4 list-disc text-gray-700">
                         <li>
                           <strong>Photographs (3 questions)</strong> - Test takers see some photos; for each photo they have to choose 
@@ -166,9 +166,9 @@ export default async function TOEICInfoPage() {
                     </CollapsibleSection>
 
                     <CollapsibleSection title="Reading">
-                      <ul className="space-y-2 ml-4 list-disc text-gray-700 mb-3">
-                        <li>The Reading test is adaptive. This means that the results obtained in the first part of the test determine the difficulty level of the questions in the second part of the test.</li>
-                      </ul>
+                      <div className="bg-gray-50 border-l-4 border-gray-300 pl-4 py-2 mb-4">
+                        <p className="text-gray-700 italic">The Reading test is adaptive. This means that the results obtained in the first part of the test determine the difficulty level of the questions in the second part of the test.</p>
+                      </div>
                       <ul className="space-y-2 ml-4 list-disc text-gray-700">
                         <li>
                           <strong>Incomplete Sentences (12 questions)</strong> - Test takers read a phrase with a missing word; they have 
