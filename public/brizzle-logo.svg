@@ -11,19 +11,19 @@
   <g transform="translate(60, 50)">
     <!-- Balloon body with vertical stripes -->
     <!-- Red stripe 1 (top) -->
-    <rect x="-25" y="-35" width="50" height="7" fill="#dc2626"/>
+    <rect x="-25" y="-35" width="50" height="7" fill="#ba3627"/>
     <!-- Blue stripe 1 -->
     <rect x="-25" y="-28" width="50" height="7" fill="#2563eb"/>
     <!-- Red stripe 2 -->
-    <rect x="-25" y="-21" width="50" height="7" fill="#dc2626"/>
+    <rect x="-25" y="-21" width="50" height="7" fill="#ba3627"/>
     <!-- Blue stripe 2 -->
     <rect x="-25" y="-14" width="50" height="7" fill="#2563eb"/>
     <!-- Red stripe 3 -->
-    <rect x="-25" y="-7" width="50" height="7" fill="#dc2626"/>
+    <rect x="-25" y="-7" width="50" height="7" fill="#ba3627"/>
     <!-- Blue stripe 3 -->
     <rect x="-25" y="0" width="50" height="7" fill="#2563eb"/>
     <!-- Red stripe 4 (bottom) -->
-    <rect x="-25" y="7" width="50" height="7" fill="#dc2626"/>
+    <rect x="-25" y="7" width="50" height="7" fill="#ba3627"/>
     
     <!-- Balloon shape outline -->
     <ellipse cx="0" cy="-14" rx="25" ry="35" fill="none" stroke="none"/>

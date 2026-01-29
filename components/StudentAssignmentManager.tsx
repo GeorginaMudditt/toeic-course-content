@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { formatUKDate, formatCourseName as formatCourseNameUtil } from '@/lib/date-utils'
+import { brizzleRed, brizzleRedHover } from '@/lib/brand-colors'
 
 interface Resource {
   id: string
@@ -383,7 +384,10 @@ export default function StudentAssignmentManager({ student, resources, courses }
                       </div>
                       <button
                         onClick={() => handleRemoveAssignment(assignment.id)}
-                        className="text-red-600 hover:text-red-800 text-sm ml-4 flex-shrink-0"
+                        className="text-sm ml-4 flex-shrink-0 transition-colors"
+                        style={{ color: brizzleRed }}
+                        onMouseEnter={(e) => e.currentTarget.style.color = brizzleRedHover}
+                        onMouseLeave={(e) => e.currentTarget.style.color = brizzleRed}
                       >
                         Remove
                       </button>

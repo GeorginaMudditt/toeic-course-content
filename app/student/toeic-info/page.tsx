@@ -120,25 +120,26 @@ export default async function TOEICInfoPage() {
                   
                   <div className="space-y-4">
                     <CollapsibleSection title="Listening">
-                      <p className="text-gray-700 mb-3">
-                        Test takers only listen to the recordings ONCE throughout each part of the listening test.
-                      </p>
+                      <ul className="space-y-2 ml-4 list-disc text-gray-700 mb-3">
+                        <li>Test takers only listen to each recording ONCE.</li>
+                        <li>The Listening test is adaptive. This means that the results obtained in the first part of the test determine the difficulty level of the questions in the second part of the test.</li>
+                      </ul>
                       <ul className="space-y-2 ml-4 list-disc text-gray-700">
                         <li>
-                          <strong>Photographs</strong> - Test takers see some photos; for each photo they have to choose 
+                          <strong>Photographs (3 questions)</strong> - Test takers see some photos; for each photo they have to choose 
                           the sentence that describes it from the 4 options they hear.
                         </li>
                         <li>
-                          <strong>Questions - Responses</strong> - Test takers hear some questions; each time they have 
+                          <strong>Questions - Responses (9 questions)</strong> - Test takers hear some questions; each time they have 
                           to choose the best response from 3 possible options they hear.
                         </li>
                         <li>
-                          <strong>Conversations</strong> - Test takers listen to some dialogues; there are 3 multiple-choice 
+                          <strong>Conversations (18 questions : 6 dialogues with 3 questions each)</strong> - Test takers listen to some dialogues; there are 3 multiple-choice 
                           questions to answer about each dialogue. The questions and the multiple-choice options are shown 
                           on the screen.
                         </li>
                         <li>
-                          <strong>Talks</strong> - Test takers listen to some monologues; there are 3 multiple-choice questions 
+                          <strong>Talks (15 questions : 5 talks with 3 questions each)</strong> - Test takers listen to some monologues; there are 3 multiple-choice questions 
                           to answer about each talk.
                         </li>
                       </ul>
@@ -147,37 +148,40 @@ export default async function TOEICInfoPage() {
                     <CollapsibleSection title="Speaking">
                       <ul className="space-y-2 ml-4 list-disc text-gray-700">
                         <li>
-                          <strong>Read Aloud</strong> - Test takers have time to read the texts first, then they read them aloud. This section tests pronunciation, intonation and stress.
+                          <strong>Read Aloud (2 texts)</strong> - Test takers have time to read the texts first, then they read them aloud. This section tests pronunciation, intonation and stress.
                         </li>
                         <li>
-                          <strong>Photographs</strong> - Test takers see some photos; they have to speak about each picture, describing what they can see.
+                          <strong>Photographs (2 photographs)</strong> - Test takers see some photos; they have to speak about each picture, describing what they can see.
                         </li>
                         <li>
-                          <strong>Questions</strong> - Test takers have to respond to questions on an everyday topic.
+                          <strong>Questions (1 topic, 3 questions)</strong> - Test takers have to respond to questions on an everyday topic.
                         </li>
                         <li>
-                          <strong>Questions Using Information Provided</strong> - Test takers see a schedule of events on the screen; they have to answer questions based on the information provided.
+                          <strong>Questions Using Information Provided (1 schedule, 3 questions)</strong> - Test takers see a schedule of events on the screen; they have to answer questions based on the information provided.
                         </li>
                         <li>
-                          <strong>Opinion</strong> - Test takers are presented with a specific topic; they have to express their opinion on this topic.
+                          <strong>Opinion (1 topic)</strong> - Test takers are presented with a specific topic; they have to express their opinion on this topic.
                         </li>
                       </ul>
                     </CollapsibleSection>
 
                     <CollapsibleSection title="Reading">
+                      <ul className="space-y-2 ml-4 list-disc text-gray-700 mb-3">
+                        <li>The Reading test is adaptive. This means that the results obtained in the first part of the test determine the difficulty level of the questions in the second part of the test.</li>
+                      </ul>
                       <ul className="space-y-2 ml-4 list-disc text-gray-700">
                         <li>
-                          <strong>Incomplete Sentences</strong> - Test takers read a phrase with a missing word; they have 
+                          <strong>Incomplete Sentences (12 questions)</strong> - Test takers read a phrase with a missing word; they have 
                           to choose which word completes the sentence from a choice of 4 options. This section tests grammar 
                           and vocabulary.
                         </li>
                         <li>
-                          <strong>Text Completion</strong> - Test takers read longer texts with 4 blanks each; for each blank, 
+                          <strong>Text Completion (8 questions)</strong> - Test takers read longer texts with 4 blanks each; for each blank, 
                           they must choose how to complete the sentence from 4 options. This section also tests grammar and 
                           vocabulary.
                         </li>
                         <li>
-                          <strong>Reading Comprehension</strong> - Test takers read short texts and answer multiple-choice 
+                          <strong>Reading Comprehension (25 questions)</strong> - Test takers read short texts and answer multiple-choice 
                           comprehension questions about each.
                         </li>
                       </ul>
@@ -186,13 +190,13 @@ export default async function TOEICInfoPage() {
                     <CollapsibleSection title="Writing">
                       <ul className="space-y-2 ml-4 list-disc text-gray-700">
                         <li>
-                          <strong>Photos</strong> - Test takers see a selection of photos, each with two words or phrases to use in a sentence; they must write a sentence to describe each picture, using the two words/phrases given in each case.
+                          <strong>Photos (5 photos)</strong> - Test takers see a selection of photos, each with two words or phrases to use in a sentence; they must write a sentence to describe each picture, using the two words/phrases given in each case.
                         </li>
                         <li>
-                          <strong>Response</strong> - Test takers see email messages, with some information about what they should include in their response; they write a response to the emails.
+                          <strong>Response (2 emails)</strong> - Test takers see email messages, with some information about what they should include in their response; they write a response to the emails.
                         </li>
                         <li>
-                          <strong>Essay</strong> - Test takers are given a topic; they are then asked to give their opinion on the topic. The essay should be a minimum of 300 words.
+                          <strong>Essay (1 topic)</strong> - Test takers are given a topic; they are then asked to give their opinion on the topic. The essay should be a minimum of 300 words.
                         </li>
                       </ul>
                     </CollapsibleSection>

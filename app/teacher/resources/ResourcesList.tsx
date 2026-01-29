@@ -266,7 +266,10 @@ export default function ResourcesList({ resources }: Props) {
                     </Link>
                     <button
                       onClick={() => handleDeleteClick(resource)}
-                      className="text-red-600 hover:text-red-800 transition-colors"
+                      className="transition-colors"
+                      style={{ color: '#ba3627' }}
+                      onMouseEnter={(e) => e.currentTarget.style.color = '#9a2d21'}
+                      onMouseLeave={(e) => e.currentTarget.style.color = '#ba3627'}
                     >
                       Delete
                     </button>
@@ -320,7 +323,10 @@ export default function ResourcesList({ resources }: Props) {
                 <button
                   onClick={handleConfirmDelete}
                   disabled={deleting}
-                  className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 disabled:opacity-50"
+                  className="px-4 py-2 text-white rounded-md disabled:opacity-50 transition-colors"
+                  style={{ backgroundColor: '#ba3627' }}
+                  onMouseEnter={(e) => !e.currentTarget.disabled && (e.currentTarget.style.backgroundColor = '#9a2d21')}
+                  onMouseLeave={(e) => !e.currentTarget.disabled && (e.currentTarget.style.backgroundColor = '#ba3627')}
                 >
                   {deleting ? 'Deleting...' : 'Yes, Delete'}
                 </button>

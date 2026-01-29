@@ -510,7 +510,7 @@ function InlineAnswerInput({
                   onChange('')
                   onFileUpload('')
                 }}
-                style={{ fontSize: '13px', color: '#dc2626', marginTop: '8px', display: 'block', background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}
+                style={{ fontSize: '13px', color: '#ba3627', marginTop: '8px', display: 'block', background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}
               >
                 Remove file
               </button>

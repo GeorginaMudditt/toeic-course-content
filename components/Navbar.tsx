@@ -239,6 +239,19 @@ export default function Navbar() {
                             >
                               Change Password
                             </Link>
+                            {/* View my Contract - only visible for students when contract URL is configured */}
+                            {!isTeacher && process.env.NEXT_PUBLIC_STUDENT_CONTRACT_URL && (
+                              <a
+                                href={process.env.NEXT_PUBLIC_STUDENT_CONTRACT_URL}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                                role="menuitem"
+                                onClick={() => setIsDropdownOpen(false)}
+                              >
+                                View my Contract
+                              </a>
+                            )}
                             <a
                               href="mailto:hello@brizzle-english.com"
                               className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"

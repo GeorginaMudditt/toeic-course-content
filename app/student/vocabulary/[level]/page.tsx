@@ -11,6 +11,14 @@ interface Topic {
   count: number
 }
 
+// Vocabulary list PDF URLs by level
+const VOCABULARY_LIST_PDFS: Record<string, string> = {
+  'a1': 'https://ulrwcortyhassmytkcij.supabase.co/storage/v1/object/sign/vocab_lists/A1%20vocabulary%20list.pdf?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV84YzZhNjMzNi1iOWJkLTRlNDAtOTNmMS0wNmIzYWNkYmU3Y2IiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJ2b2NhYl9saXN0cy9BMSB2b2NhYnVsYXJ5IGxpc3QucGRmIiwiaWF0IjoxNzY5NjY1Mjc5LCJleHAiOjIwODUwMjUyNzl9.krjVIZxJn0FE5qCiDdYB4mLvm73CqQrnHRKlWyyWzgA'
+  // Add more levels here as they become available:
+  // 'a2': 'https://...',
+  // 'b1': 'https://...',
+}
+
 export default function VocabularyLevelPage() {
   const params = useParams()
   const router = useRouter()
@@ -258,7 +266,7 @@ export default function VocabularyLevelPage() {
                   )}
                   {error && !loading && (
                     <tr>
-                      <td colSpan={6} className="px-6 py-4 text-center text-red-600">
+                      <td colSpan={6} className="px-6 py-4 text-center" style={{ color: '#ba3627' }}>
                         {error}
                       </td>
                     </tr>
@@ -344,6 +352,25 @@ export default function VocabularyLevelPage() {
                 </tbody>
               </table>
             </div>
+
+            {/* Download Vocabulary List Button */}
+            {VOCABULARY_LIST_PDFS[level] && (
+              <div className="mt-6 pt-6 border-t border-gray-200">
+                <a
+                  href={VOCABULARY_LIST_PDFS[level]}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  download
+                  className="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white transition-colors hover:opacity-90"
+                  style={{ backgroundColor: levelColor }}
+                >
+                  <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                  </svg>
+                  Full {levelDisplay} Vocabulary List
+                </a>
+              </div>
+            )}
           </div>
         </div>
       </div>

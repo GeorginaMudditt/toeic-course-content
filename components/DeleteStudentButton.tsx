@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
+import { brizzleRed, brizzleRedHover, brizzleRedLight } from '@/lib/brand-colors'
 
 interface DeleteStudentButtonProps {
   studentId: string
@@ -56,7 +57,10 @@ export default function DeleteStudentButton({ studentId, studentName }: DeleteSt
     <>
       <button
         onClick={() => setShowConfirm(true)}
-        className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition-colors"
+        className="px-4 py-2 text-white rounded-md transition-colors"
+        style={{ backgroundColor: brizzleRed }}
+        onMouseEnter={(e) => e.currentTarget.style.backgroundColor = brizzleRedHover}
+        onMouseLeave={(e) => e.currentTarget.style.backgroundColor = brizzleRed}
       >
         Delete Student
       </button>
@@ -91,9 +95,9 @@ export default function DeleteStudentButton({ studentId, studentName }: DeleteSt
                 <div className="flex justify-center mb-4">
                   <div
                     className="w-16 h-16 rounded-full flex items-center justify-center"
-                    style={{ backgroundColor: '#dc262620' }}
+                    style={{ backgroundColor: `${brizzleRed}20` }}
                   >
-                    <svg className="w-8 h-8 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg className="w-8 h-8" fill="none" stroke={brizzleRed} viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
                     </svg>
                   </div>
@@ -111,8 +115,8 @@ export default function DeleteStudentButton({ studentId, studentName }: DeleteSt
                 </p>
 
                 {error && (
-                  <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-md">
-                    <p className="text-sm text-red-600">{error}</p>
+                  <div className="mb-4 p-3 rounded-md" style={{ backgroundColor: brizzleRedLight, border: `1px solid ${brizzleRed}40` }}>
+                    <p className="text-sm" style={{ color: brizzleRed }}>{error}</p>
                   </div>
                 )}
 
@@ -128,7 +132,10 @@ export default function DeleteStudentButton({ studentId, studentName }: DeleteSt
                   <button
                     onClick={handleDelete}
                     disabled={deleting}
-                    className="flex-1 px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="flex-1 px-4 py-2 text-white rounded-md transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                    style={{ backgroundColor: brizzleRed }}
+                    onMouseEnter={(e) => !e.currentTarget.disabled && (e.currentTarget.style.backgroundColor = brizzleRedHover)}
+                    onMouseLeave={(e) => !e.currentTarget.disabled && (e.currentTarget.style.backgroundColor = brizzleRed)}
                   >
                     {deleting ? 'Deleting...' : 'Delete Student'}
                   </button>

@@ -453,7 +453,10 @@ export default function PlacementTestAnswerSheet({
                 setUploadedFileName(null)
                 handleSave(true)
               }}
-              className="text-sm text-red-600 hover:text-red-800 mt-2 block"
+              className="text-sm mt-2 block transition-colors"
+              style={{ color: '#ba3627' }}
+              onMouseEnter={(e) => e.currentTarget.style.color = '#9a2d21'}
+              onMouseLeave={(e) => e.currentTarget.style.color = '#ba3627'}
             >
               Remove file
             </button>

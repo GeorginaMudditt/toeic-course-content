@@ -29,7 +29,7 @@ export async function sendPasswordResetEmail(data: PasswordResetEmail) {
   // Get site URL for absolute links in emails
   const siteUrl = process.env.NEXTAUTH_URL 
     || (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : null)
-    || 'https://toeic-course-content.netlify.app'
+    || 'https://www.brizzle-courses.com'
 
   const resetUrl = `${siteUrl}/reset-password?token=${data.resetToken}`
 
