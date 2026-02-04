@@ -4,6 +4,7 @@ import { redirect } from 'next/navigation'
 import { supabaseServer } from '@/lib/supabase'
 import Navbar from '@/components/Navbar'
 import WorksheetViewer from '@/components/WorksheetViewer'
+import MarkAsViewed from './MarkAsViewed'
 
 export default async function AssignmentPage({ params }: { params: { id: string } }) {
   const session = await getServerSession(authOptions)
@@ -95,6 +96,7 @@ export default async function AssignmentPage({ params }: { params: { id: string 
             )}
           </div>
 
+          <MarkAsViewed assignmentId={assignment.id} hasProgress={!!progress} />
           <WorksheetViewer
             assignmentId={assignment.id}
             resource={resource}

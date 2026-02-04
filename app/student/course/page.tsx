@@ -5,6 +5,7 @@ import { supabaseServer } from '@/lib/supabase'
 import Navbar from '@/components/Navbar'
 import Link from 'next/link'
 import { formatUKDate, formatCourseName } from '@/lib/date-utils'
+import AssignmentsList from './AssignmentsList'
 
 // Disable static caching to ensure fresh data
 export const dynamic = 'force-dynamic'
@@ -155,49 +156,7 @@ export default async function MyCoursePage() {
                   </div>
 
                   <div className="mt-4">
-                    <h3 className="text-sm font-medium text-gray-700 mb-2">Assignments</h3>
-                    <div className="space-y-2">
-                      {enrollment.assignments.length === 0 ? (
-                        <p className="text-sm text-gray-500">No assignments yet.</p>
-                      ) : (
-                        enrollment.assignments.map((assignment: any) => {
-                          const progress = Array.isArray(assignment.progress) ? assignment.progress[0] : null
-                          const status = progress?.status || 'NOT_STARTED'
-                          
-                          return (
-                            <Link
-                              key={assignment.id}
-                              href={`/student/assignment/${assignment.id}`}
-                              className="block p-3 border rounded-lg hover:bg-gray-50 transition"
-                            >
-                              <div className="flex justify-between items-center">
-                                <div>
-                                  <div className="font-medium text-gray-900">
-                                    {assignment.resource?.title || 'Unknown Resource'}
-                                  </div>
-                                  {assignment.resource && (
-                                    <div className="text-sm text-gray-500">
-                                      {assignment.resource.estimatedHours}h • {assignment.resource.type} • Level {assignment.resource.level}
-                                    </div>
-                                  )}
-                                </div>
-                                <div className="text-sm">
-                                  {status === 'COMPLETED' && (
-                                    <span className="text-green-600 font-medium">✓ Completed</span>
-                                  )}
-                                  {status === 'IN_PROGRESS' && (
-                                    <span className="font-medium" style={{ color: '#38438f' }}>In Progress</span>
-                                  )}
-                                  {status === 'NOT_STARTED' && (
-                                    <span className="text-gray-500">Not Started</span>
-                                  )}
-                                </div>
-                              </div>
-                            </Link>
-                          )
-                        })
-                      )}
-                    </div>
+                    <AssignmentsList assignments={enrollment.assignments} />
                   </div>
                 </div>
               ))}
