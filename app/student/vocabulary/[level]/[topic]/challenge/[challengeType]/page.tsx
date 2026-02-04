@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useState, useMemo } from 'react'
-import { useParams, useRouter } from 'next/navigation'
+import { useParams, useRouter, useSearchParams } from 'next/navigation'
 import { LEVEL_COLORS } from '@/lib/level-colors'
 import Navbar from '@/components/Navbar'
 import ChallengeModal from '@/components/ChallengeModal'
@@ -19,10 +19,12 @@ interface Word {
 export default function ChallengePage() {
   const params = useParams()
   const router = useRouter()
+  const searchParams = useSearchParams()
   const level = (params.level as string)?.toLowerCase() || 'a1'
   // Normalize topic name: trim and remove extra spaces (matching vocabulary API normalization)
   const topic = decodeURIComponent(params.topic as string).trim().replace(/\s+/g, ' ')
   const challengeType = params.challengeType as 'bronze' | 'silver' | 'gold'
+  const isViewMode = searchParams.get('view') === 'true'
 
   const [progress, setProgress] = useState({ bronze: false, silver: false, gold: false })
   const [words, setWords] = useState<Word[]>([])
@@ -177,6 +179,8 @@ export default function ChallengePage() {
   }
 
   const isCompleted = progress[challengeType]
+  // In view mode, show the challenge even if completed (but don't allow submission)
+  const shouldShowChallenge = !isCompleted || isViewMode
 
   // Gold challenge shuffled words
   const goldShuffled = useMemo(() => {
@@ -672,20 +676,85 @@ export default function ChallengePage() {
               </div>
             )}
 
-            {isCompleted ? (
+            {isCompleted && !isViewMode ? (
               <div className="text-center py-12">
                 <div className="text-6xl mb-4">✅</div>
                 <p className="text-xl text-gray-700 mb-4">You have already completed this challenge!</p>
-                <Link
-                  href={`/student/vocabulary/${level}`}
-                  className="inline-block px-6 py-2 text-white rounded-md transition-colors"
-                  style={{ backgroundColor: levelColor }}
-                >
-                  Return to Vocabulary Themes
-                </Link>
+                <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+                  <button
+                    onClick={() => router.push(`/student/vocabulary/${level}/${encodeURIComponent(topic)}/challenge/${challengeType}?view=true`)}
+                    className="px-6 py-2 text-white rounded-md transition-opacity hover:opacity-90"
+                    style={{ backgroundColor: levelColor }}
+                  >
+                    View the {topic} challenges again
+                  </button>
+                  <Link
+                    href={`/student/vocabulary/${level}`}
+                    className="inline-block px-6 py-2 border-2 rounded-md transition-colors hover:bg-gray-50"
+                    style={{ borderColor: levelColor, color: levelColor }}
+                  >
+                    Return to Vocabulary Themes
+                  </Link>
+                </div>
+                <p className="text-sm text-gray-500 mt-4">
+                  You can view the challenges again to review the vocabulary and listen to audio, but you won't be able to resubmit them.
+                </p>
               </div>
             ) : (
               <div className="space-y-6">
+                {isViewMode && isCompleted && (
+                  <div className="mb-6 space-y-4">
+                    <div className="bg-blue-50 border-l-4 border-blue-400 p-4">
+                      <div className="flex">
+                        <div className="flex-shrink-0">
+                          <svg className="h-5 w-5 text-blue-400" viewBox="0 0 20 20" fill="currentColor">
+                            <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
+                          </svg>
+                        </div>
+                        <div className="ml-3">
+                          <p className="text-sm text-blue-700">
+                            <strong>View Mode:</strong> You're viewing this completed challenge. You can review the vocabulary and listen to audio, but you cannot resubmit it.
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="flex flex-wrap gap-2">
+                      <button
+                        onClick={() => router.push(`/student/vocabulary/${level}/${encodeURIComponent(topic)}/challenge/bronze?view=true`)}
+                        className={`px-4 py-2 rounded-md text-sm transition-opacity hover:opacity-90 ${
+                          challengeType === 'bronze' 
+                            ? 'text-white' 
+                            : 'border-2 text-gray-700 hover:bg-gray-50'
+                        }`}
+                        style={challengeType === 'bronze' ? { backgroundColor: levelColor } : { borderColor: levelColor, color: levelColor }}
+                      >
+                        Challenge 1 {progress.bronze ? '✓' : ''}
+                      </button>
+                      <button
+                        onClick={() => router.push(`/student/vocabulary/${level}/${encodeURIComponent(topic)}/challenge/silver?view=true`)}
+                        className={`px-4 py-2 rounded-md text-sm transition-opacity hover:opacity-90 ${
+                          challengeType === 'silver' 
+                            ? 'text-white' 
+                            : 'border-2 text-gray-700 hover:bg-gray-50'
+                        }`}
+                        style={challengeType === 'silver' ? { backgroundColor: levelColor } : { borderColor: levelColor, color: levelColor }}
+                      >
+                        Challenge 2 {progress.silver ? '✓' : ''}
+                      </button>
+                      <button
+                        onClick={() => router.push(`/student/vocabulary/${level}/${encodeURIComponent(topic)}/challenge/gold?view=true`)}
+                        className={`px-4 py-2 rounded-md text-sm transition-opacity hover:opacity-90 ${
+                          challengeType === 'gold' 
+                            ? 'text-white' 
+                            : 'border-2 text-gray-700 hover:bg-gray-50'
+                        }`}
+                        style={challengeType === 'gold' ? { backgroundColor: levelColor } : { borderColor: levelColor, color: levelColor }}
+                      >
+                        Challenge 3 {progress.gold ? '✓' : ''}
+                      </button>
+                    </div>
+                  </div>
+                )}
                 {challengeType === 'bronze' && (
                   <div>
                     <div className="mb-6">
@@ -726,18 +795,28 @@ export default function ChallengePage() {
                       <p className="text-gray-500 mb-6">No words found for this theme.</p>
                     )}
                     
-                    <button
-                      onClick={completeChallenge}
-                      disabled={words.length === 0 || listenedWords.size < words.length}
-                      className="px-6 py-3 text-white rounded-md transition-opacity hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed"
-                      style={{ backgroundColor: levelColor }}
-                    >
-                      Complete Challenge 1
-                    </button>
-                    {words.length > 0 && listenedWords.size < words.length && (
-                      <p className="text-sm text-gray-500 mt-2">
-                        Please listen to all {words.length} words before completing (listened: {listenedWords.size}/{words.length})
-                      </p>
+                    {!isViewMode ? (
+                      <>
+                        <button
+                          onClick={completeChallenge}
+                          disabled={words.length === 0 || listenedWords.size < words.length}
+                          className="px-6 py-3 text-white rounded-md transition-opacity hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed"
+                          style={{ backgroundColor: levelColor }}
+                        >
+                          Complete Challenge 1
+                        </button>
+                        {words.length > 0 && listenedWords.size < words.length && (
+                          <p className="text-sm text-gray-500 mt-2">
+                            Please listen to all {words.length} words before completing (listened: {listenedWords.size}/{words.length})
+                          </p>
+                        )}
+                      </>
+                    ) : (
+                      <div className="bg-gray-50 border border-gray-300 rounded-md p-4">
+                        <p className="text-gray-600 text-sm">
+                          <strong>Challenge completed.</strong> You can review the words and listen to audio, but this challenge cannot be resubmitted.
+                        </p>
+                      </div>
                     )}
                   </div>
                 )}
@@ -809,13 +888,21 @@ export default function ChallengePage() {
                       <p className="text-gray-500 mb-6">No words found for this theme.</p>
                     )}
                     
-                    <button
-                      onClick={completeChallenge}
-                      className="px-6 py-3 text-white rounded-md transition-opacity hover:opacity-90"
-                      style={{ backgroundColor: levelColor }}
-                    >
-                      Complete Challenge 2
-                    </button>
+                    {!isViewMode ? (
+                      <button
+                        onClick={completeChallenge}
+                        className="px-6 py-3 text-white rounded-md transition-opacity hover:opacity-90"
+                        style={{ backgroundColor: levelColor }}
+                      >
+                        Complete Challenge 2
+                      </button>
+                    ) : (
+                      <div className="bg-gray-50 border border-gray-300 rounded-md p-4">
+                        <p className="text-gray-600 text-sm">
+                          <strong>Challenge completed.</strong> You can review the words and practice matching, but this challenge cannot be resubmitted.
+                        </p>
+                      </div>
+                    )}
                   </div>
                 )}
 
@@ -885,13 +972,21 @@ export default function ChallengePage() {
                       <p className="text-gray-500 mb-6">No words found for this theme.</p>
                     )}
 
-                    <button
-                      onClick={completeChallenge}
-                      className="px-6 py-3 text-white rounded-md transition-opacity hover:opacity-90"
-                      style={{ backgroundColor: levelColor }}
-                    >
-                      Complete Challenge 3
-                    </button>
+                    {!isViewMode ? (
+                      <button
+                        onClick={completeChallenge}
+                        className="px-6 py-3 text-white rounded-md transition-opacity hover:opacity-90"
+                        style={{ backgroundColor: levelColor }}
+                      >
+                        Complete Challenge 3
+                      </button>
+                    ) : (
+                      <div className="bg-gray-50 border border-gray-300 rounded-md p-4">
+                        <p className="text-gray-600 text-sm">
+                          <strong>Challenge completed.</strong> You can review the words and practice typing, but this challenge cannot be resubmitted.
+                        </p>
+                      </div>
+                    )}
                   </div>
                 )}
               </div>
