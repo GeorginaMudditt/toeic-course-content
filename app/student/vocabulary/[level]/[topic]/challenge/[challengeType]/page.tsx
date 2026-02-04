@@ -682,11 +682,11 @@ export default function ChallengePage() {
                 <p className="text-xl text-gray-700 mb-4">You have already completed this challenge!</p>
                 <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
                   <button
-                    onClick={() => router.push(`/student/vocabulary/${level}/${encodeURIComponent(topic)}/challenge/${challengeType}?view=true`)}
+                    onClick={() => router.push(`/student/vocabulary/${level}/${encodeURIComponent(topic)}/challenge/bronze?view=true`)}
                     className="px-6 py-2 text-white rounded-md transition-opacity hover:opacity-90"
                     style={{ backgroundColor: levelColor }}
                   >
-                    View the {topic} challenges again
+                    View the "{topic}" challenges again
                   </button>
                   <Link
                     href={`/student/vocabulary/${level}`}
