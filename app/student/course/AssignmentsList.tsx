@@ -70,7 +70,7 @@ export default function AssignmentsList({ assignments }: Props) {
     <div>
       <div className="flex justify-between items-center mb-4">
         <h3 className="text-sm font-medium text-gray-700">Assignments</h3>
-        <div className="w-48">
+        <div className="w-72">
           <label htmlFor="sort-by" className="block text-sm font-medium text-gray-700 mb-2">
             Sort by
           </label>
