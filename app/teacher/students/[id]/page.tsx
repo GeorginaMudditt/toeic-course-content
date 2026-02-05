@@ -5,6 +5,7 @@ import { supabaseServer } from '@/lib/supabase'
 import Navbar from '@/components/Navbar'
 import StudentAssignmentManager from '@/components/StudentAssignmentManager'
 import DeleteStudentButton from '@/components/DeleteStudentButton'
+import EditStudentEmail from '@/components/EditStudentEmail'
 import Link from 'next/link'
 
 export default async function StudentDetailPage({ params }: { params: { id: string } }) {
@@ -182,7 +183,10 @@ export default async function StudentDetailPage({ params }: { params: { id: stri
                 <h1 className="text-3xl font-bold text-gray-900">{student.name}</h1>
                 <p className="text-gray-600">{student.email}</p>
               </div>
-              <DeleteStudentButton studentId={student.id} studentName={student.name} />
+              <div className="flex gap-3">
+                <EditStudentEmail studentId={student.id} currentEmail={student.email} />
+                <DeleteStudentButton studentId={student.id} studentName={student.name} />
+              </div>
             </div>
           </div>
 

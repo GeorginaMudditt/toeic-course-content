@@ -3,6 +3,87 @@ import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
 import { supabaseServer } from '@/lib/supabase'
 
+export async function PUT(
+  request: NextRequest,
+  { params }: { params: { id: string } }
+) {
+  try {
+    const session = await getServerSession(authOptions)
+    
+    if (!session || session.user.role !== 'TEACHER') {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+    }
+
+    const data = await request.json()
+
+    // Verify the user exists and is a student
+    const { data: userData, error: userError } = await supabaseServer
+      .from('User')
+      .select('id, role, email')
+      .eq('id', params.id)
+      .eq('role', 'STUDENT')
+      .single()
+
+    if (userError || !userData) {
+      return NextResponse.json({ error: 'Student not found' }, { status: 404 })
+    }
+
+    // Validate email if provided
+    if (data.email) {
+      const normalizedEmail = data.email.toLowerCase().trim()
+      
+      // Check if email is already in use by another user
+      const { data: existingUser, error: checkError } = await supabaseServer
+        .from('User')
+        .select('id')
+        .eq('email', normalizedEmail)
+        .neq('id', params.id)
+        .single()
+
+      if (checkError && checkError.code !== 'PGRST116') { // PGRST116 = no rows returned
+        console.error('Error checking email:', checkError)
+        return NextResponse.json(
+          { error: 'Failed to verify email availability' },
+          { status: 500 }
+        )
+      }
+
+      if (existingUser) {
+        return NextResponse.json(
+          { error: 'Email is already in use' },
+          { status: 400 }
+        )
+      }
+
+      // Update email
+      const { data: updatedUser, error: updateError } = await supabaseServer
+        .from('User')
+        .update({ email: normalizedEmail })
+        .eq('id', params.id)
+        .select()
+        .single()
+
+      if (updateError) {
+        console.error('Error updating email:', updateError)
+        return NextResponse.json(
+          { error: 'Failed to update email' },
+          { status: 500 }
+        )
+      }
+
+      return NextResponse.json({ success: true, user: updatedUser })
+    }
+
+    return NextResponse.json({ error: 'No email provided' }, { status: 400 })
+  } catch (error) {
+    console.error('Error updating student email:', error)
+    return NextResponse.json(
+      { error: 'Failed to update email' },
+      { status: 500 }
+    )
+  }
+}
+
 export async function DELETE(
   request: NextRequest,
   { params }: { params: { id: string } }
