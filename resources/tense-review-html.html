@@ -1,205 +1,440 @@
 <style>
-  /* General spacing for online viewing - more space above sections/headings */
-  .section {
-    margin-top: 24px;
-    margin-bottom: 12px;
-  }
-  .section:first-child {
-    margin-top: 0;
-  }
-  /* Headings inside sections get less margin since section already has spacing */
-  .section h2, .section h3 {
-    margin-top: 0;
-    margin-bottom: 8px;
-  }
-  /* Headings outside sections (like main title or answers) get full spacing */
-  h2:first-of-type, h3:first-of-type {
-    margin-top: 0;
-  }
-  
   @media print {
-    @page { 
-      margin: 1.5cm; 
-      size: A4;
+    @page {
+      margin: 1.5cm;
+      size: A4 portrait;
     }
-    body { 
-      margin: 0; 
-      padding: 0; 
-      orphans: 3;
-      widows: 3;
+    body {
+      margin: 0;
+      padding: 0;
     }
-    /* Manual page breaks - use sparingly (e.g., for Answers section) */
-    .page-break { page-break-before: always; }
-    
-    /* Sections: Each div containing an h2 or h3 + its content should stay together */
-    .section {
+    .page-break {
+      page-break-before: always;
+    }
+    .no-break {
       page-break-inside: avoid;
       break-inside: avoid;
-      margin-bottom: 12px;
-      margin-top: 0; /* Reduce top margin for print to save space */
     }
-    
-    /* Legacy classes for backward compatibility */
-    .no-break { page-break-inside: avoid; break-inside: avoid; }
-    .keep-together { 
-      page-break-inside: avoid; 
+    .keep-together {
+      page-break-inside: avoid;
       break-inside: avoid;
     }
-    
-    /* Headings should not be orphaned at bottom of page */
-    h1, h2, h3 { 
-      page-break-after: avoid; 
+    h2, h3 {
+      page-break-after: avoid;
       break-after: avoid;
-      orphans: 3;
-      widows: 3;
-    }
-    
-    /* Keep tables, lists together */
-    table, ul, ol { 
-      page-break-inside: avoid; 
-      break-inside: avoid; 
-    }
-    
-    /* Optimize spacing for print - headings get less top margin */
-    .section h2, .section h3 {
-      margin-top: 0;
-      margin-bottom: 4px;
     }
   }
 </style>
-<div style="max-width: 800px; margin: 0 auto; padding: 20px; font-family: Arial, sans-serif; line-height: 1.4; color: #333;">
+
+<div style="max-width: 800px; margin: 0 auto; padding: 25px; font-family: Arial, sans-serif; line-height: 1.6; color: #333;">
   
-  <div style="text-align: center; margin-bottom: 8px;" class="no-break">
-    <div style="display: inline-block; margin-bottom: 2px;">
-      <img src="/brizzle-logo.png" alt="Brizzle Logo" style="width: 45px; height: 45px; object-fit: contain;" />
+  <!-- Title Section with Logo -->
+  <div style="text-align: center; margin-bottom: 25px;" class="no-break">
+    <div style="display: inline-block; margin-bottom: 8px;">
+      <img src="/brizzle-logo.png" alt="Brizzle Logo" style="width: 55px; height: 55px; object-fit: contain;" />
     </div>
-    <h1 style="font-size: 24px; font-weight: bold; margin: 0; color: #000;">Tense Review</h1>
+    <h1 style="font-size: 32px; font-weight: bold; margin: 0; color: #1e3a8a;">Tenses</h1>
   </div>
 
-  <div class="section">
-    <h2 style="font-size: 18px; font-weight: bold; margin-bottom: 4px; color: #000;">Speaking #1: Mixed Tenses</h2>
-    <p style="font-size: 12px; margin-bottom: 6px;">Answer the following questions using appropriate tenses.</p>
-    <ul style="margin-left: 22px; padding-left: 15px; font-size: 12px; list-style-type: disc;">
-      <li style="margin-bottom: 6px;">What do you usually do at the weekend?</li>
-      <li style="margin-bottom: 6px;">Did you do anything interesting last week?</li>
-      <li style="margin-bottom: 6px;">What were you doing at this time yesterday?</li>
-      <li style="margin-bottom: 6px;">What's the most interesting book you've ever read?</li>
-      <li style="margin-bottom: 6px;">How long have you been studying English?</li>
-      <li style="margin-bottom: 6px;">What have you been doing recently to improve your English?</li>
-      <li style="margin-bottom: 6px;">What were you like when you were a child?</li>
-      <li style="margin-bottom: 6px;">Can you tell me about one of your best childhood memories?</li>
-    </ul>
+  <!-- PRESENT SIMPLE -->
+  <div style="margin-bottom: 30px; padding: 20px; background: linear-gradient(to bottom, #eff6ff, #ffffff); border-radius: 8px; border-left: 5px solid #3b82f6;" class="keep-together">
+    <h2 style="font-size: 24px; font-weight: bold; margin-bottom: 15px; color: #1e3a8a;">Present simple</h2>
+    
+    <!-- Usage Rules -->
+    <div style="margin-bottom: 15px;">
+      <ul style="margin-left: 0; padding-left: 20px; font-size: 16px; list-style: none;">
+        <li style="margin-bottom: 8px; color: #dc2626;">• for habits (I drink coffee every morning)</li>
+        <li style="margin-bottom: 8px; color: #dc2626;">• for general truths (Water boils at 100 degrees)</li>
+        <li style="margin-bottom: 8px; color: #dc2626;">• for timetables (The train leaves at 8am)</li>
+      </ul>
+    </div>
+
+    <!-- Positive Form -->
+    <div style="margin-bottom: 15px; padding: 12px; background: #fef3c7; border-radius: 6px;">
+      <div style="display: flex; align-items: center; margin-bottom: 8px;">
+        <span style="font-size: 24px; margin-right: 8px;">➕</span>
+        <h3 style="font-size: 18px; font-weight: bold; margin: 0; text-decoration: underline; color: #000;">Positive</h3>
+      </div>
+      <p style="font-size: 16px; margin: 8px 0;"><strong>I live in the south of France.</strong></p>
+      <p style="font-size: 16px; margin: 8px 0;"><strong>He lives in Bristol in the south west of England.</strong></p>
+      <p style="font-size: 16px; margin-top: 10px; font-weight: bold;">Subject + base verb (+s for 3rd person singular)</p>
+    </div>
+
+    <!-- Negative Form -->
+    <div style="margin-bottom: 15px; padding: 12px; background: #fce7f3; border-radius: 6px;">
+      <div style="display: flex; align-items: center; margin-bottom: 8px;">
+        <span style="font-size: 24px; margin-right: 8px;">➖</span>
+        <h3 style="font-size: 18px; font-weight: bold; margin: 0; text-decoration: underline; color: #000;">Negative</h3>
+      </div>
+      <p style="font-size: 16px; margin: 8px 0;"><strong>I do not (don't) drink coffee.</strong></p>
+      <p style="font-size: 16px; margin: 8px 0;"><strong>She does not (doesn't) drink tea.</strong></p>
+      <p style="font-size: 16px; margin-top: 10px; font-weight: bold;">Subject + do/does + not + base verb</p>
+    </div>
+
+    <!-- Question Form -->
+    <div style="padding: 12px; background: #dbeafe; border-radius: 6px;">
+      <div style="display: flex; align-items: center; margin-bottom: 8px;">
+        <span style="font-size: 24px; margin-right: 8px;">❓</span>
+        <h3 style="font-size: 18px; font-weight: bold; margin: 0; text-decoration: underline; color: #000;">Question</h3>
+      </div>
+      <p style="font-size: 16px; margin: 8px 0;"><strong>Do you listen to music at the weekend?</strong></p>
+      <p style="font-size: 16px; margin: 8px 0;"><strong>Does he listen to the radio in the car?</strong></p>
+      <p style="font-size: 16px; margin-top: 10px; font-weight: bold;">Do/Does + subject + base verb + ?</p>
+    </div>
   </div>
 
-  <div class="section">
-    <h2 style="font-size: 18px; font-weight: bold; margin-bottom: 4px; color: #000;">Practice #1: Mixed Tenses (Multiple Choice)</h2>
-    <p style="font-size: 12px; margin-bottom: 6px;">Choose the correct answer (a, b, or c).</p>
-    <ol style="padding-left: 22px; font-size: 12px; list-style-type: decimal;">
-      <li style="margin-bottom: 8px;">I <strong>................</strong> to the gym three times a week.<br>
-        <span style="color: #991b1b;">a) am going &nbsp;&nbsp; b) go &nbsp;&nbsp; c) have gone</span></li>
-      <li style="margin-bottom: 8px;">She <strong>................</strong> her keys yesterday and couldn't get into her house.<br>
-        <span style="color: #991b1b;">a) was losing &nbsp;&nbsp; b) has lost &nbsp;&nbsp; c) lost</span></li>
-      <li style="margin-bottom: 8px;">While we <strong>................</strong> lunch, it started to rain.<br>
-        <span style="color: #991b1b;">a) had &nbsp;&nbsp; b) were having &nbsp;&nbsp; c) have had</span></li>
-      <li style="margin-bottom: 8px;">How long <strong>................</strong> in London?<br>
-        <span style="color: #991b1b;">a) do you live &nbsp;&nbsp; b) are you living &nbsp;&nbsp; c) have you lived</span></li>
-      <li style="margin-bottom: 8px;">I <strong>................</strong> this book for two hours and I still haven't finished it.<br>
-        <span style="color: #991b1b;">a) read &nbsp;&nbsp; b) am reading &nbsp;&nbsp; c) have been reading</span></li>
-      <li style="margin-bottom: 8px;">My brother <strong>................</strong> football every Saturday when he was young.<br>
-        <span style="color: #991b1b;">a) played &nbsp;&nbsp; b) was playing &nbsp;&nbsp; c) has played</span></li>
-      <li style="margin-bottom: 8px;"><strong>................</strong> the new James Bond film yet?<br>
-        <span style="color: #991b1b;">a) Did you see &nbsp;&nbsp; b) Have you seen &nbsp;&nbsp; c) Are you seeing</span></li>
-      <li style="margin-bottom: 8px;">At 9 o'clock last night, I <strong>................</strong> TV.<br>
-        <span style="color: #991b1b;">a) watched &nbsp;&nbsp; b) was watching &nbsp;&nbsp; c) have watched</span></li>
-      <li style="margin-bottom: 8px;">We <strong>................</strong> each other since university.<br>
-        <span style="color: #991b1b;">a) know &nbsp;&nbsp; b) are knowing &nbsp;&nbsp; c) have known</span></li>
-      <li style="margin-bottom: 8px;">She <strong>................</strong> very tired recently because she <strong>................</strong> long hours.<br>
-        <span style="color: #991b1b;">a) is/works &nbsp;&nbsp; b) has been/has been working &nbsp;&nbsp; c) was/worked</span></li>
-    </ol>
+  <!-- PRESENT CONTINUOUS -->
+  <div style="margin-bottom: 30px; padding: 20px; background: linear-gradient(to bottom, #eff6ff, #ffffff); border-radius: 8px; border-left: 5px solid #3b82f6;" class="keep-together">
+    <h2 style="font-size: 24px; font-weight: bold; margin-bottom: 15px; color: #1e3a8a;">Present continuous</h2>
+    
+    <!-- Usage Rules -->
+    <div style="margin-bottom: 15px;">
+      <ul style="margin-left: 0; padding-left: 20px; font-size: 16px; list-style: none;">
+        <li style="margin-bottom: 8px; color: #dc2626;">• for actions happening now (I am writing an email)</li>
+        <li style="margin-bottom: 8px; color: #dc2626;">• for temporary situations (I am living with my parents)</li>
+        <li style="margin-bottom: 8px; color: #dc2626;">• for future arrangements (I am meeting John tomorrow)</li>
+        <li style="margin-bottom: 8px; color: #dc2626;">• for changing situations (The weather is getting colder)</li>
+      </ul>
+    </div>
+
+    <!-- Positive Form -->
+    <div style="margin-bottom: 15px; padding: 12px; background: #fef3c7; border-radius: 6px;">
+      <div style="display: flex; align-items: center; margin-bottom: 8px;">
+        <span style="font-size: 24px; margin-right: 8px;">➕</span>
+        <h3 style="font-size: 18px; font-weight: bold; margin: 0; text-decoration: underline; color: #000;">Positive</h3>
+      </div>
+      <p style="font-size: 16px; margin: 8px 0;"><strong>We are (We're) waiting for the film to start.</strong></p>
+      <p style="font-size: 16px; margin: 8px 0;"><strong>He is (He's) waiting at the bus stop.</strong></p>
+      <p style="font-size: 16px; margin-top: 10px; font-weight: bold;">Subject + am/is/are + verb-ing</p>
+    </div>
+
+    <!-- Negative Form -->
+    <div style="margin-bottom: 15px; padding: 12px; background: #fce7f3; border-radius: 6px;">
+      <div style="display: flex; align-items: center; margin-bottom: 8px;">
+        <span style="font-size: 24px; margin-right: 8px;">➖</span>
+        <h3 style="font-size: 18px; font-weight: bold; margin: 0; text-decoration: underline; color: #000;">Negative</h3>
+      </div>
+      <p style="font-size: 16px; margin: 8px 0;"><strong>I am (I'm) not enjoying this book.</strong></p>
+      <p style="font-size: 16px; margin: 8px 0;"><strong>She is (She's) not enjoying her meal.</strong></p>
+      <p style="font-size: 16px; margin-top: 10px; font-weight: bold;">Subject + am/is/are + not + verb-ing</p>
+    </div>
+
+    <!-- Question Form -->
+    <div style="padding: 12px; background: #dbeafe; border-radius: 6px;">
+      <div style="display: flex; align-items: center; margin-bottom: 8px;">
+        <span style="font-size: 24px; margin-right: 8px;">❓</span>
+        <h3 style="font-size: 18px; font-weight: bold; margin: 0; text-decoration: underline; color: #000;">Question</h3>
+      </div>
+      <p style="font-size: 16px; margin: 8px 0;"><strong>Are you going to the party on Saturday?</strong></p>
+      <p style="font-size: 16px; margin: 8px 0;"><strong>Is he going to school on Monday?</strong></p>
+      <p style="font-size: 16px; margin-top: 10px; font-weight: bold;">Am/Is/Are + subject + verb-ing + ?</p>
+    </div>
   </div>
 
-  <div class="section">
-    <h2 style="font-size: 18px; font-weight: bold; margin-bottom: 4px; color: #000;">Practice #2: Mixed Tenses (Gap Fill)</h2>
-    <p style="font-size: 12px; margin-bottom: 6px;">Fill in the gaps with the correct tense of the verb in brackets.</p>
-    <ol style="padding-left: 22px; font-size: 12px; list-style-type: decimal;">
-      <li style="margin-bottom: 6px;">My neighbour <strong>................</strong> <span style="color: #991b1b;">(water)</span> his garden every morning at 6 AM.</li>
-      <li style="margin-bottom: 6px;">Look! The children <strong>................</strong> <span style="color: #991b1b;">(build)</span> a snowman in the backyard.</li>
-      <li style="margin-bottom: 6px;">We <strong>................</strong> <span style="color: #991b1b;">(miss)</span> the last train because we arrived too late.</li>
-      <li style="margin-bottom: 6px;">While I <strong>................</strong> <span style="color: #991b1b;">(cook)</span> dinner, the phone rang three times.</li>
-      <li style="margin-bottom: 6px;">She <strong>................</strong> <span style="color: #991b1b;">(never/visit)</span> Australia, but she dreams of going there.</li>
-      <li style="margin-bottom: 6px;">How long <strong>................</strong> you <strong>................</strong> <span style="color: #991b1b;">(learn)</span> Spanish? Your pronunciation is excellent!</li>
-      <li style="margin-bottom: 6px;">According to the weather forecast, it <strong>................</strong> <span style="color: #991b1b;">(rain)</span> heavily tomorrow.</li>
-      <li style="margin-bottom: 6px;">I think technology <strong>................</strong> <span style="color: #991b1b;">(change)</span> our lives dramatically in the next decade.</li>
-      <li style="margin-bottom: 6px;">The museum <strong>................</strong> <span style="color: #991b1b;">(close)</span> at 5 PM on weekdays.</li>
-      <li style="margin-bottom: 6px;">Sorry I can't talk right now - I <strong>................</strong> <span style="color: #991b1b;">(attend)</span> an important meeting.</li>
-      <li style="margin-bottom: 6px;">Mozart <strong>................</strong> <span style="color: #991b1b;">(compose)</span> over 600 pieces of music during his short life.</li>
-      <li style="margin-bottom: 6px;">The students <strong>................</strong> <span style="color: #991b1b;">(take)</span> notes when the fire alarm suddenly went off.</li>
-      <li style="margin-bottom: 6px;">Have you seen my keys anywhere? I <strong>................</strong> <span style="color: #991b1b;">(lose)</span> them again!</li>
-      <li style="margin-bottom: 6px;">We <strong>................</strong> <span style="color: #991b1b;">(wait)</span> for the bus for over an hour when it finally arrived.</li>
-      <li style="margin-bottom: 6px;">My parents <strong>................</strong> <span style="color: #991b1b;">(move)</span> to a smaller house next month because they want to downsize.</li>
-      <li style="margin-bottom: 6px;">If I <strong>................</strong> <span style="color: #991b1b;">(finish)</span> work early, I <strong>................</strong> <span style="color: #991b1b;">(go)</span> to the cinema.</li>
-      <li style="margin-bottom: 6px;">If I <strong>................</strong> <span style="color: #991b1b;">(be)</span> you, I <strong>................</strong> <span style="color: #991b1b;">(accept)</span> the job offer.</li>
-      <li style="margin-bottom: 6px;">If I <strong>................</strong> <span style="color: #991b1b;">(know)</span> you were in hospital, I <strong>................</strong> <span style="color: #991b1b;">(come)</span> to visit you.</li>
-    </ol>
+  <!-- Attention Note -->
+  <div style="background: #fef3c7; padding: 15px; border-left: 4px solid #f59e0b; border-radius: 6px; margin-bottom: 30px;" class="no-break">
+    <p style="font-size: 16px; margin: 0; font-weight: 600; margin-bottom: 8px;">Attention !</p>
+    <p style="font-size: 15px; margin: 0;">En français vous utilisez le même temps pour les deux cas ci-dessus. En anglais vous devez faire la différence entre : quelque chose qui est toujours ou souvent vrai (present simple) et quelque chose qui se passe en ce moment (present continuous).</p>
   </div>
 
-  <div class="section">
-    <h2 style="font-size: 18px; font-weight: bold; margin-bottom: 4px; color: #000;">Writing #1: Mixed Tenses</h2>
-    <p style="font-size: 12px; margin-bottom: 6px;">Write a professional profile - similar to what you would post in the 'About' section on LinkedIn. Explain the main achievements of your career so far.</p>
-    <div style="margin-top: 6px; padding: 8px; background-color: #f9fafb; border-left: 3px solid #38438f; font-size: 11px;">
-      <p style="margin: 0;"><strong>Guidelines:</strong> Use a variety of tenses (past, present perfect, present continuous, etc.) to describe your background, current role, and achievements.</p>
+</div>
+
+<!-- PAGE 2: Past Tenses -->
+<div style="max-width: 800px; margin: 0 auto; padding: 25px; font-family: Arial, sans-serif; line-height: 1.6; color: #333;" class="page-break">
+
+  <!-- PAST SIMPLE -->
+  <div style="margin-bottom: 30px; padding: 20px; background: linear-gradient(to bottom, #fef3c7, #ffffff); border-radius: 8px; border-left: 5px solid #f59e0b;" class="keep-together">
+    <h2 style="font-size: 24px; font-weight: bold; margin-bottom: 15px; color: #92400e;">Past simple</h2>
+    
+    <!-- Usage Rules -->
+    <div style="margin-bottom: 15px;">
+      <ul style="margin-left: 0; padding-left: 20px; font-size: 16px; list-style: none;">
+        <li style="margin-bottom: 8px; color: #dc2626;">• for completed actions in the past (I visited Paris last year)</li>
+        <li style="margin-bottom: 8px; color: #dc2626;">• for past states or conditions (She was tired yesterday)</li>
+        <li style="margin-bottom: 8px; color: #dc2626;">• for sequences of past events (He opened the door, walked in, and sat down)</li>
+      </ul>
+    </div>
+
+    <!-- Positive Form -->
+    <div style="margin-bottom: 15px; padding: 12px; background: #fed7aa; border-radius: 6px;">
+      <div style="display: flex; align-items: center; margin-bottom: 8px;">
+        <span style="font-size: 24px; margin-right: 8px;">➕</span>
+        <h3 style="font-size: 18px; font-weight: bold; margin: 0; text-decoration: underline; color: #000;">Positive</h3>
+      </div>
+      <p style="font-size: 16px; margin: 8px 0;"><strong>I went to bed late last night.</strong></p>
+      <p style="font-size: 16px; margin: 8px 0;"><strong>She went to the dentist yesterday.</strong></p>
+      <p style="font-size: 16px; margin-top: 10px; font-weight: bold;">Subject + past tense of verb (+ed or irregular)</p>
+    </div>
+
+    <!-- Negative Form -->
+    <div style="margin-bottom: 15px; padding: 12px; background: #fce7f3; border-radius: 6px;">
+      <div style="display: flex; align-items: center; margin-bottom: 8px;">
+        <span style="font-size: 24px; margin-right: 8px;">➖</span>
+        <h3 style="font-size: 18px; font-weight: bold; margin: 0; text-decoration: underline; color: #000;">Negative</h3>
+      </div>
+      <p style="font-size: 16px; margin: 8px 0;"><strong>I did not (didn't) watch the football.</strong></p>
+      <p style="font-size: 16px; margin: 8px 0;"><strong>She did not (didn't) watch the film.</strong></p>
+      <p style="font-size: 16px; margin-top: 10px; font-weight: bold;">Subject + did + not + base verb</p>
+    </div>
+
+    <!-- Question Form -->
+    <div style="padding: 12px; background: #dbeafe; border-radius: 6px;">
+      <div style="display: flex; align-items: center; margin-bottom: 8px;">
+        <span style="font-size: 24px; margin-right: 8px;">❓</span>
+        <h3 style="font-size: 18px; font-weight: bold; margin: 0; text-decoration: underline; color: #000;">Question</h3>
+      </div>
+      <p style="font-size: 16px; margin: 8px 0;"><strong>Did you work at the weekend?</strong></p>
+      <p style="font-size: 16px; margin: 8px 0;"><strong>Did he work on Tuesday evening?</strong></p>
+      <p style="font-size: 16px; margin-top: 10px; font-weight: bold;">Did + subject + base verb + ?</p>
+    </div>
+  </div>
+
+  <!-- PAST CONTINUOUS -->
+  <div style="margin-bottom: 30px; padding: 20px; background: linear-gradient(to bottom, #fef3c7, #ffffff); border-radius: 8px; border-left: 5px solid #f59e0b;" class="keep-together">
+    <h2 style="font-size: 24px; font-weight: bold; margin-bottom: 15px; color: #92400e;">Past continuous</h2>
+    
+    <!-- Usage Rules -->
+    <div style="margin-bottom: 15px;">
+      <ul style="margin-left: 0; padding-left: 20px; font-size: 16px; list-style: none;">
+        <li style="margin-bottom: 8px; color: #dc2626;">• for actions in progress at a specific time in the past (I was studying at 9pm last night)</li>
+        <li style="margin-bottom: 8px; color: #dc2626;">• for background actions when something else happened (I was cooking when the phone rang)</li>
+        <li style="margin-bottom: 8px; color: #dc2626;">• for two simultaneous past actions (While I was reading, she was watching TV)</li>
+        <li style="margin-bottom: 8px; color: #dc2626;">• for temporary situations in the past (He was living in London at that time)</li>
+      </ul>
+    </div>
+
+    <!-- Positive Form -->
+    <div style="margin-bottom: 15px; padding: 12px; background: #fed7aa; border-radius: 6px;">
+      <div style="display: flex; align-items: center; margin-bottom: 8px;">
+        <span style="font-size: 24px; margin-right: 8px;">➕</span>
+        <h3 style="font-size: 18px; font-weight: bold; margin: 0; text-decoration: underline; color: #000;">Positive</h3>
+      </div>
+      <p style="font-size: 16px; margin: 8px 0;"><strong>I was sitting in the train station for a long time.</strong></p>
+      <p style="font-size: 16px; margin: 8px 0;"><strong>They were sitting in the park when it started to rain.</strong></p>
+      <p style="font-size: 16px; margin-top: 10px; font-weight: bold;">Subject + was/were + verb + ing</p>
+    </div>
+
+    <!-- Negative Form -->
+    <div style="margin-bottom: 15px; padding: 12px; background: #fce7f3; border-radius: 6px;">
+      <div style="display: flex; align-items: center; margin-bottom: 8px;">
+        <span style="font-size: 24px; margin-right: 8px;">➖</span>
+        <h3 style="font-size: 18px; font-weight: bold; margin: 0; text-decoration: underline; color: #000;">Negative</h3>
+      </div>
+      <p style="font-size: 16px; margin: 8px 0;"><strong>She was not (wasn't) sleeping when I phoned her.</strong></p>
+      <p style="font-size: 16px; margin: 8px 0;"><strong>They were not (weren't) sleeping for very long.</strong></p>
+      <p style="font-size: 16px; margin-top: 10px; font-weight: bold;">Subject + was/were + not + verb + ing</p>
+    </div>
+
+    <!-- Question Form -->
+    <div style="padding: 12px; background: #dbeafe; border-radius: 6px;">
+      <div style="display: flex; align-items: center; margin-bottom: 8px;">
+        <span style="font-size: 24px; margin-right: 8px;">❓</span>
+        <h3 style="font-size: 18px; font-weight: bold; margin: 0; text-decoration: underline; color: #000;">Question</h3>
+      </div>
+      <p style="font-size: 16px; margin: 8px 0;"><strong>What were you doing at midnight last night?</strong></p>
+      <p style="font-size: 16px; margin: 8px 0;"><strong>What was he doing when the accident happened?</strong></p>
+      <p style="font-size: 16px; margin-top: 10px; font-weight: bold;">Was/Were + subject + verb + ing + ?</p>
     </div>
   </div>
 
 </div>
 
-<!-- Answers Section - Keep on separate page -->
-<div style="max-width: 800px; margin: 0 auto; padding: 20px; font-family: Arial, sans-serif; line-height: 1.4; color: #333;" class="page-break">
-  
-  <!-- Answers Section -->
-  <div style="margin-top: 0; padding-top: 0;" class="no-break">
-    <h2 style="font-size: 18px; font-weight: bold; margin-bottom: 12px; color: #000;">📝 Answers</h2>
+<!-- PAGE 3: Present Perfect Tenses -->
+<div style="max-width: 800px; margin: 0 auto; padding: 25px; font-family: Arial, sans-serif; line-height: 1.6; color: #333;" class="page-break">
+
+  <!-- PRESENT PERFECT SIMPLE -->
+  <div style="margin-bottom: 30px; padding: 20px; background: linear-gradient(to bottom, #dcfce7, #ffffff); border-radius: 8px; border-left: 5px solid #22c55e;" class="keep-together">
+    <h2 style="font-size: 24px; font-weight: bold; margin-bottom: 15px; color: #166534;">Present perfect simple</h2>
     
+    <!-- Usage Rules -->
     <div style="margin-bottom: 15px;">
-      <h3 style="font-size: 15px; font-weight: bold; margin-bottom: 6px; color: #000;">Practice #1: Mixed Tenses (Multiple Choice) Answers:</h3>
-      <ol style="padding-left: 22px; font-size: 12px; list-style-type: decimal;">
-        <li style="margin-bottom: 4px;">b) go</li>
-        <li style="margin-bottom: 4px;">c) lost</li>
-        <li style="margin-bottom: 4px;">b) were having</li>
-        <li style="margin-bottom: 4px;">c) have you lived</li>
-        <li style="margin-bottom: 4px;">c) have been reading</li>
-        <li style="margin-bottom: 4px;">a) played</li>
-        <li style="margin-bottom: 4px;">b) Have you seen</li>
-        <li style="margin-bottom: 4px;">b) was watching</li>
-        <li style="margin-bottom: 4px;">c) have known</li>
-        <li style="margin-bottom: 4px;">b) has been/has been working</li>
-      </ol>
+      <ul style="margin-left: 0; padding-left: 20px; font-size: 16px; list-style: none;">
+        <li style="margin-bottom: 8px; color: #dc2626;">• for past actions with present relevance (I have lost my keys - they're still lost now)</li>
+        <li style="margin-bottom: 8px; color: #dc2626;">• for experiences up to now (She has visited Japan three times)</li>
+        <li style="margin-bottom: 8px; color: #dc2626;">• for actions that started in the past and continue now (We have lived here for ten years)</li>
+      </ul>
     </div>
 
-    <div style="margin-bottom: 15px;">
-      <h3 style="font-size: 15px; font-weight: bold; margin-bottom: 6px; color: #000;">Practice #2: Mixed Tenses (Gap Fill) Answers:</h3>
-      <ol style="padding-left: 22px; font-size: 12px; list-style-type: decimal;">
-        <li style="margin-bottom: 4px;">waters (Present Simple - habitual action)</li>
-        <li style="margin-bottom: 4px;">are building (Present Continuous - action happening now)</li>
-        <li style="margin-bottom: 4px;">missed (Past Simple - completed action in the past)</li>
-        <li style="margin-bottom: 4px;">was cooking (Past Continuous - action in progress when another action happened)</li>
-        <li style="margin-bottom: 4px;">has never visited (Present Perfect - experience up to now)</li>
-        <li style="margin-bottom: 4px;">have...been learning (Present Perfect Continuous - duration up to now)</li>
-        <li style="margin-bottom: 4px;">will rain / is going to rain (Future - prediction based on evidence)</li>
-        <li style="margin-bottom: 4px;">will change (Future - prediction)</li>
-        <li style="margin-bottom: 4px;">closes (Present Simple - timetable/schedule)</li>
-        <li style="margin-bottom: 4px;">am attending (Present Continuous - action happening now / temporary)</li>
-        <li style="margin-bottom: 4px;">composed (Past Simple - completed action in the past)</li>
-        <li style="margin-bottom: 4px;">were taking (Past Continuous - action in progress when another action happened)</li>
-        <li style="margin-bottom: 4px;">have lost (Present Perfect - recent action with present result)</li>
-        <li style="margin-bottom: 4px;">had been waiting (Past Perfect Continuous - duration up to a point in the past)</li>
-        <li style="margin-bottom: 4px;">are moving / are going to move (Future - planned action)</li>
-        <li style="margin-bottom: 4px;">finish...will go (First conditional - real possibility)</li>
-        <li style="margin-bottom: 4px;">were...would accept (Second conditional - hypothetical situation)</li>
-        <li style="margin-bottom: 4px;">had known...would have come (Third conditional - past hypothetical situation)</li>
-      </ol>
+    <!-- Positive Form -->
+    <div style="margin-bottom: 15px; padding: 12px; background: #fef3c7; border-radius: 6px;">
+      <div style="display: flex; align-items: center; margin-bottom: 8px;">
+        <span style="font-size: 24px; margin-right: 8px;">➕</span>
+        <h3 style="font-size: 18px; font-weight: bold; margin: 0; text-decoration: underline; color: #000;">Positive</h3>
+      </div>
+      <p style="font-size: 16px; margin: 8px 0;"><strong>I have (I've) finished my dinner.</strong></p>
+      <p style="font-size: 16px; margin: 8px 0;"><strong>She has (She's) met some famous actors.</strong></p>
+      <p style="font-size: 16px; margin-top: 10px; font-weight: bold;">Subject + have/has + past participle</p>
     </div>
 
+    <!-- Negative Form -->
+    <div style="margin-bottom: 15px; padding: 12px; background: #fce7f3; border-radius: 6px;">
+      <div style="display: flex; align-items: center; margin-bottom: 8px;">
+        <span style="font-size: 24px; margin-right: 8px;">➖</span>
+        <h3 style="font-size: 18px; font-weight: bold; margin: 0; text-decoration: underline; color: #000;">Negative</h3>
+      </div>
+      <p style="font-size: 16px; margin: 8px 0;"><strong>We have not (haven't) had a chance to clean the house.</strong></p>
+      <p style="font-size: 16px; margin: 8px 0;"><strong>He has not (hasn't) applied for the job yet.</strong></p>
+      <p style="font-size: 16px; margin-top: 10px; font-weight: bold;">Subject + have/has + not + past participle</p>
+    </div>
+
+    <!-- Question Form -->
+    <div style="padding: 12px; background: #dbeafe; border-radius: 6px;">
+      <div style="display: flex; align-items: center; margin-bottom: 8px;">
+        <span style="font-size: 24px; margin-right: 8px;">❓</span>
+        <h3 style="font-size: 18px; font-weight: bold; margin: 0; text-decoration: underline; color: #000;">Question</h3>
+      </div>
+      <p style="font-size: 16px; margin: 8px 0;"><strong>Have you ever been on television?</strong></p>
+      <p style="font-size: 16px; margin: 8px 0;"><strong>Has she fixed the leaking tap yet?</strong></p>
+      <p style="font-size: 16px; margin-top: 10px; font-weight: bold;">Have/Has + subject + past participle + ?</p>
+    </div>
+  </div>
+
+  <!-- PRESENT PERFECT CONTINUOUS -->
+  <div style="margin-bottom: 30px; padding: 20px; background: linear-gradient(to bottom, #dcfce7, #ffffff); border-radius: 8px; border-left: 5px solid #22c55e;" class="keep-together">
+    <h2 style="font-size: 24px; font-weight: bold; margin-bottom: 15px; color: #166534;">Present perfect continuous</h2>
+    
+    <!-- Usage Rules -->
+    <div style="margin-bottom: 15px;">
+      <ul style="margin-left: 0; padding-left: 20px; font-size: 16px; list-style: none;">
+        <li style="margin-bottom: 8px; color: #dc2626;">• for actions that started in the past and are still continuing (I have been studying English for two years)</li>
+        <li style="margin-bottom: 8px; color: #dc2626;">• for recent activities that explain a present situation (I'm tired because I have been working all day)</li>
+        <li style="margin-bottom: 8px; color: #dc2626;">• to emphasise the duration of an ongoing activity (They have been waiting for three hours)</li>
+      </ul>
+    </div>
+
+    <!-- Positive Form -->
+    <div style="margin-bottom: 15px; padding: 12px; background: #fef3c7; border-radius: 6px;">
+      <div style="display: flex; align-items: center; margin-bottom: 8px;">
+        <span style="font-size: 24px; margin-right: 8px;">➕</span>
+        <h3 style="font-size: 18px; font-weight: bold; margin: 0; text-decoration: underline; color: #000;">Positive</h3>
+      </div>
+      <p style="font-size: 16px; margin: 8px 0;"><strong>I have (I've) been studying for my exams.</strong></p>
+      <p style="font-size: 16px; margin: 8px 0;"><strong>She has (She's) been working at the bank for ten years.</strong></p>
+      <p style="font-size: 16px; margin-top: 10px; font-weight: bold;">Subject + have/has + been + verb + ing</p>
+    </div>
+
+    <!-- Negative Form -->
+    <div style="margin-bottom: 15px; padding: 12px; background: #fce7f3; border-radius: 6px;">
+      <div style="display: flex; align-items: center; margin-bottom: 8px;">
+        <span style="font-size: 24px; margin-right: 8px;">➖</span>
+        <h3 style="font-size: 18px; font-weight: bold; margin: 0; text-decoration: underline; color: #000;">Negative</h3>
+      </div>
+      <p style="font-size: 16px; margin: 8px 0;"><strong>She has not (hasn't) been paying attention.</strong></p>
+      <p style="font-size: 16px; margin: 8px 0;"><strong>They have not (haven't) been living together very long.</strong></p>
+      <p style="font-size: 16px; margin-top: 10px; font-weight: bold;">Subject + have/has + not + been + verb + ing</p>
+    </div>
+
+    <!-- Question Form -->
+    <div style="padding: 12px; background: #dbeafe; border-radius: 6px;">
+      <div style="display: flex; align-items: center; margin-bottom: 8px;">
+        <span style="font-size: 24px; margin-right: 8px;">❓</span>
+        <h3 style="font-size: 18px; font-weight: bold; margin: 0; text-decoration: underline; color: #000;">Question</h3>
+      </div>
+      <p style="font-size: 16px; margin: 8px 0;"><strong>How long has it been raining?</strong></p>
+      <p style="font-size: 16px; margin: 8px 0;"><strong>Have you been waiting long?</strong></p>
+      <p style="font-size: 16px; margin-top: 10px; font-weight: bold;">Have/Has + subject + been + verb + ing + ?</p>
+    </div>
+  </div>
+
+</div>
+
+<!-- PAGE 4: Future Tenses -->
+<div style="max-width: 800px; margin: 0 auto; padding: 25px; font-family: Arial, sans-serif; line-height: 1.6; color: #333;" class="page-break">
+
+  <!-- FUTURE: WILL -->
+  <div style="margin-bottom: 30px; padding: 20px; background: linear-gradient(to bottom, #f3e8ff, #ffffff); border-radius: 8px; border-left: 5px solid #a855f7;" class="keep-together">
+    <h2 style="font-size: 24px; font-weight: bold; margin-bottom: 15px; color: #6b21a8;">Future : will</h2>
+    
+    <!-- Usage Rules -->
+    <div style="margin-bottom: 15px;">
+      <ul style="margin-left: 0; padding-left: 20px; font-size: 16px; list-style: none;">
+        <li style="margin-bottom: 8px; color: #dc2626;">• for spontaneous decisions made at the moment of speaking (I'll help you with that)</li>
+        <li style="margin-bottom: 8px; color: #dc2626;">• for predictions about the future (It will rain tomorrow)</li>
+        <li style="margin-bottom: 8px; color: #dc2626;">• for promises and offers (I will call you later)</li>
+        <li style="margin-bottom: 8px; color: #dc2626;">• for future facts and certainties (She will be 30 next year)</li>
+      </ul>
+    </div>
+
+    <!-- Positive Form -->
+    <div style="margin-bottom: 15px; padding: 12px; background: #fef3c7; border-radius: 6px;">
+      <div style="display: flex; align-items: center; margin-bottom: 8px;">
+        <span style="font-size: 24px; margin-right: 8px;">➕</span>
+        <h3 style="font-size: 18px; font-weight: bold; margin: 0; text-decoration: underline; color: #000;">Positive</h3>
+      </div>
+      <p style="font-size: 16px; margin: 8px 0;"><strong>He will (He'll) love Paris.</strong></p>
+      <p style="font-size: 16px; margin: 8px 0;"><strong>I will (I'll) pay you back tomorrow.</strong></p>
+      <p style="font-size: 16px; margin-top: 10px; font-weight: bold;">Subject + will + base verb</p>
+    </div>
+
+    <!-- Negative Form -->
+    <div style="margin-bottom: 15px; padding: 12px; background: #fce7f3; border-radius: 6px;">
+      <div style="display: flex; align-items: center; margin-bottom: 8px;">
+        <span style="font-size: 24px; margin-right: 8px;">➖</span>
+        <h3 style="font-size: 18px; font-weight: bold; margin: 0; text-decoration: underline; color: #000;">Negative</h3>
+      </div>
+      <p style="font-size: 16px; margin: 8px 0;"><strong>I will not (won't) tell anybody.</strong></p>
+      <p style="font-size: 16px; margin: 8px 0;"><strong>They will not (won't) understand this grammar.</strong></p>
+      <p style="font-size: 16px; margin-top: 10px; font-weight: bold;">Subject + will + not + base verb</p>
+    </div>
+
+    <!-- Question Form -->
+    <div style="padding: 12px; background: #dbeafe; border-radius: 6px;">
+      <div style="display: flex; align-items: center; margin-bottom: 8px;">
+        <span style="font-size: 24px; margin-right: 8px;">❓</span>
+        <h3 style="font-size: 18px; font-weight: bold; margin: 0; text-decoration: underline; color: #000;">Question</h3>
+      </div>
+      <p style="font-size: 16px; margin: 8px 0;"><strong>Will you phone me when it is ready?</strong></p>
+      <p style="font-size: 16px; margin: 8px 0;"><strong>What will you say to your dad?</strong></p>
+      <p style="font-size: 16px; margin-top: 10px; font-weight: bold;">Will + subject + base verb + ?</p>
+    </div>
+  </div>
+
+  <!-- FUTURE: GOING TO -->
+  <div style="margin-bottom: 30px; padding: 20px; background: linear-gradient(to bottom, #f3e8ff, #ffffff); border-radius: 8px; border-left: 5px solid #a855f7;" class="keep-together">
+    <h2 style="font-size: 24px; font-weight: bold; margin-bottom: 15px; color: #6b21a8;">Future : going to</h2>
+    
+    <!-- Usage Rules -->
+    <div style="margin-bottom: 15px;">
+      <ul style="margin-left: 0; padding-left: 20px; font-size: 16px; list-style: none;">
+        <li style="margin-bottom: 8px; color: #dc2626;">• for plans and intentions already decided (I'm going to visit my parents this weekend)</li>
+        <li style="margin-bottom: 8px; color: #dc2626;">• for predictions based on present evidence (Look at those clouds - it's going to rain)</li>
+        <li style="margin-bottom: 8px; color: #dc2626;">• for things that seem certain to happen soon (He's going to be late - he's still in bed)</li>
+        <li style="margin-bottom: 8px; color: #dc2626;">• for arranged future events (We're going to have dinner at that new restaurant)</li>
+      </ul>
+    </div>
+
+    <!-- Positive Form -->
+    <div style="margin-bottom: 15px; padding: 12px; background: #fef3c7; border-radius: 6px;">
+      <div style="display: flex; align-items: center; margin-bottom: 8px;">
+        <span style="font-size: 24px; margin-right: 8px;">➕</span>
+        <h3 style="font-size: 18px; font-weight: bold; margin: 0; text-decoration: underline; color: #000;">Positive</h3>
+      </div>
+      <p style="font-size: 16px; margin: 8px 0;"><strong>Look! It is (It's) going to snow.</strong></p>
+      <p style="font-size: 16px; margin: 8px 0;"><strong>I am (I'm) sure we are going to win.</strong></p>
+      <p style="font-size: 16px; margin-top: 10px; font-weight: bold;">Subject + am/is/are + going to + base verb</p>
+    </div>
+
+    <!-- Negative Form -->
+    <div style="margin-bottom: 15px; padding: 12px; background: #fce7f3; border-radius: 6px;">
+      <div style="display: flex; align-items: center; margin-bottom: 8px;">
+        <span style="font-size: 24px; margin-right: 8px;">➖</span>
+        <h3 style="font-size: 18px; font-weight: bold; margin: 0; text-decoration: underline; color: #000;">Negative</h3>
+      </div>
+      <p style="font-size: 16px; margin: 8px 0;"><strong>I am (I'm) not going to see my cousin tonight.</strong></p>
+      <p style="font-size: 16px; margin: 8px 0;"><strong>He is (He's) not going to get there on time.</strong></p>
+      <p style="font-size: 16px; margin-top: 10px; font-weight: bold;">Subject + am/is/are + not + going to + base verb</p>
+    </div>
+
+    <!-- Question Form -->
+    <div style="padding: 12px; background: #dbeafe; border-radius: 6px;">
+      <div style="display: flex; align-items: center; margin-bottom: 8px;">
+        <span style="font-size: 24px; margin-right: 8px;">❓</span>
+        <h3 style="font-size: 18px; font-weight: bold; margin: 0; text-decoration: underline; color: #000;">Question</h3>
+      </div>
+      <p style="font-size: 16px; margin: 8px 0;"><strong>Are you going to make a salad?</strong></p>
+      <p style="font-size: 16px; margin: 8px 0;"><strong>Is he going to help you with your project?</strong></p>
+      <p style="font-size: 16px; margin-top: 10px; font-weight: bold;">Am/Is/Are + subject + going to + base verb + ?</p>
+    </div>
   </div>
 
 </div>
