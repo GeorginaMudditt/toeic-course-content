@@ -54,6 +54,7 @@ export default function StudentAssignmentManager({ student, resources, courses }
   const [loading, setLoading] = useState(false)
   const [selectedLevels, setSelectedLevels] = useState<string[]>(['All'])
   const [selectedSkills, setSelectedSkills] = useState<string[]>(['All'])
+  const [showOnlyUnassigned, setShowOnlyUnassigned] = useState<Record<string, boolean>>({})
 
   // Use the utility function directly - it handles all cleaning
   const formatCourseName = formatCourseNameUtil
@@ -62,18 +63,31 @@ export default function StudentAssignmentManager({ student, resources, courses }
   const availableLevels = ['All', 'A1', 'A2', 'B1', 'B2', 'C1', 'C2']
   const availableSkills = ['All', 'GRAMMAR', 'VOCABULARY', 'READING', 'WRITING', 'SPEAKING', 'LISTENING', 'TESTS', 'REFERENCE']
 
-  // Filter resources based on selected filters
-  const filteredResources = resources.filter((resource) => {
-    // Level filter
-    const levelMatch = selectedLevels.includes('All') || 
-      selectedLevels.includes(resource.level || '')
+  // Helper function to get assigned resource IDs for an enrollment
+  const getAssignedResourceIds = (enrollment: Enrollment): string[] => {
+    return enrollment.assignments.map(assignment => assignment.resource.id)
+  }
+
+  // Filter resources based on selected filters and assigned status
+  const getFilteredResources = (enrollment: Enrollment) => {
+    const assignedResourceIds = getAssignedResourceIds(enrollment)
+    const onlyUnassigned = showOnlyUnassigned[enrollment.id] || false
     
-    // Skill filter
-    const skillMatch = selectedSkills.includes('All') || 
-      selectedSkills.includes(resource.skill || '')
-    
-    return levelMatch && skillMatch
-  })
+    return resources.filter((resource) => {
+      // Level filter
+      const levelMatch = selectedLevels.includes('All') || 
+        selectedLevels.includes(resource.level || '')
+      
+      // Skill filter
+      const skillMatch = selectedSkills.includes('All') || 
+        selectedSkills.includes(resource.skill || '')
+      
+      // Assigned filter
+      const assignedMatch = !onlyUnassigned || !assignedResourceIds.includes(resource.id)
+      
+      return levelMatch && skillMatch && assignedMatch
+    })
+  }
 
   const handleLevelToggle = (level: string) => {
     if (level === 'All') {
@@ -136,6 +150,18 @@ export default function StudentAssignmentManager({ student, resources, courses }
     if (selectedResources.length === 0) {
       alert('Please select at least one resource')
       return
+    }
+
+    // Find the enrollment to check for already assigned resources
+    const enrollment = student.enrollments.find((e: Enrollment) => e.id === enrollmentId)
+    if (enrollment) {
+      const assignedResourceIds = getAssignedResourceIds(enrollment)
+      const alreadyAssigned = selectedResources.filter(id => assignedResourceIds.includes(id))
+      
+      if (alreadyAssigned.length > 0) {
+        alert(`Some selected resources are already assigned. Please uncheck them and try again.`)
+        return
+      }
     }
 
     setLoading(true)
@@ -255,6 +281,26 @@ export default function StudentAssignmentManager({ student, resources, courses }
                 <>
                   {/* Filters */}
                   <div className="mb-4 space-y-3">
+                    {/* Show Only Unassigned Filter */}
+                    <div>
+                      <label className="flex items-center space-x-2 cursor-pointer">
+                        <input
+                          type="checkbox"
+                          checked={showOnlyUnassigned[enrollment.id] || false}
+                          onChange={(e) => {
+                            setShowOnlyUnassigned({
+                              ...showOnlyUnassigned,
+                              [enrollment.id]: e.target.checked
+                            })
+                          }}
+                          className="cursor-pointer"
+                        />
+                        <span className="text-sm font-medium text-gray-700">
+                          Show only unassigned resources
+                        </span>
+                      </label>
+                    </div>
+
                     {/* Level Filter */}
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -304,37 +350,57 @@ export default function StudentAssignmentManager({ student, resources, courses }
 
                   {/* Resource List */}
                   <div className="space-y-2 max-h-64 overflow-y-auto mb-4 bg-white p-3 rounded border border-blue-100">
-                    {filteredResources.length === 0 ? (
+                    {getFilteredResources(enrollment).length === 0 ? (
                       <p className="text-sm text-gray-500 italic text-center py-4">
-                        No resources match the selected filters.
+                        {showOnlyUnassigned[enrollment.id] 
+                          ? 'All resources have been assigned to this enrollment.' 
+                          : 'No resources match the selected filters.'}
                       </p>
                     ) : (
-                      filteredResources.map((resource) => (
-                        <label key={resource.id} className="flex items-center space-x-2 p-2 hover:bg-blue-50 rounded cursor-pointer">
-                          <input
-                            type="checkbox"
-                            checked={selectedResources.includes(resource.id)}
-                            onChange={(e) => {
-                              if (e.target.checked) {
-                                setSelectedResources([...selectedResources, resource.id])
-                              } else {
-                                setSelectedResources(selectedResources.filter(id => id !== resource.id))
-                              }
-                            }}
-                            className="cursor-pointer"
-                          />
-                          <span className="text-sm text-gray-700 flex-1">
-                            <span className="font-medium">{resource.title}</span>
-                            {(resource.level || resource.skill) && (
-                              <span className="text-xs text-gray-500 ml-2">
-                                {resource.level && `Level ${resource.level}`}
-                                {resource.level && resource.skill && ' • '}
-                                {resource.skill && resource.skill}
-                              </span>
-                            )}
-                          </span>
-                        </label>
-                      ))
+                      getFilteredResources(enrollment).map((resource) => {
+                        const assignedResourceIds = getAssignedResourceIds(enrollment)
+                        const isAssigned = assignedResourceIds.includes(resource.id)
+                        return (
+                          <label 
+                            key={resource.id} 
+                            className={`flex items-center space-x-2 p-2 rounded cursor-pointer ${
+                              isAssigned ? 'bg-green-50 hover:bg-green-100' : 'hover:bg-blue-50'
+                            }`}
+                          >
+                            <input
+                              type="checkbox"
+                              checked={selectedResources.includes(resource.id)}
+                              onChange={(e) => {
+                                if (e.target.checked) {
+                                  setSelectedResources([...selectedResources, resource.id])
+                                } else {
+                                  setSelectedResources(selectedResources.filter(id => id !== resource.id))
+                                }
+                              }}
+                              className="cursor-pointer"
+                              disabled={isAssigned}
+                            />
+                            <span className="text-sm text-gray-700 flex-1 flex items-center gap-2">
+                              <span className="font-medium">{resource.title}</span>
+                              {isAssigned && (
+                                <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-green-100 text-green-800">
+                                  <svg className="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                                  </svg>
+                                  Already assigned
+                                </span>
+                              )}
+                              {(resource.level || resource.skill) && (
+                                <span className="text-xs text-gray-500">
+                                  {resource.level && `Level ${resource.level}`}
+                                  {resource.level && resource.skill && ' • '}
+                                  {resource.skill && resource.skill}
+                                </span>
+                              )}
+                            </span>
+                          </label>
+                        )
+                      })
                     )}
                   </div>
                   <button
