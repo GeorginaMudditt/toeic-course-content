@@ -19,11 +19,12 @@ interface Assignment {
 
 interface Props {
   assignments: Assignment[]
+  viewAs?: string
 }
 
 type SortOption = 'date' | 'level' | 'alphabetical'
 
-export default function AssignmentsList({ assignments }: Props) {
+export default function AssignmentsList({ assignments, viewAs }: Props) {
   const [sortBy, setSortBy] = useState<SortOption>('date')
 
   // Check if assignment has been viewed (has progress record)
@@ -100,7 +101,7 @@ export default function AssignmentsList({ assignments }: Props) {
             return (
               <Link
                 key={assignment.id}
-                href={`/student/assignment/${assignment.id}`}
+                href={viewAs ? `/student/assignment/${assignment.id}?viewAs=${viewAs}` : `/student/assignment/${assignment.id}`}
                 className="block p-3 border rounded-lg hover:bg-gray-50 transition"
               >
                 <div className="flex justify-between items-center">

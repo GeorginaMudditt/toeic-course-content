@@ -11,12 +11,19 @@ import AssignmentsList from './AssignmentsList'
 export const dynamic = 'force-dynamic'
 export const revalidate = 0
 
-export default async function MyCoursePage() {
+export default async function MyCoursePage({ searchParams }: { searchParams: { viewAs?: string } }) {
   const session = await getServerSession(authOptions)
+  const viewAs = searchParams?.viewAs
   
-  if (!session || session.user.role !== 'STUDENT') {
+  // Allow teachers to view if they have viewAs parameter
+  if (viewAs && session?.user.role === 'TEACHER') {
+    // Teacher viewing as student - allow access
+  } else if (!session || session.user.role !== 'STUDENT') {
     redirect('/login')
   }
+
+  // Determine which student ID to use
+  const studentId = viewAs || session.user.id
 
   // Use Supabase REST API instead of Prisma for serverless compatibility
   let enrollments: any[] = []
@@ -26,7 +33,7 @@ export default async function MyCoursePage() {
     const { data: enrollmentData, error: enrollmentError } = await supabaseServer
       .from('Enrollment')
       .select('*')
-      .eq('studentId', session.user.id)
+      .eq('studentId', studentId)
 
     if (enrollmentError) {
       console.error('Error loading enrollments:', enrollmentError)
@@ -76,7 +83,7 @@ export default async function MyCoursePage() {
               .from('Progress')
               .select('*')
               .in('assignmentId', assignmentIds)
-              .eq('studentId', session.user.id)
+              .eq('studentId', studentId)
 
             if (progressError) {
               console.error('Error loading progress:', progressError)
@@ -112,7 +119,7 @@ export default async function MyCoursePage() {
       <div className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
         <div className="px-4 py-6 sm:px-0">
           <Link
-            href="/student/dashboard"
+            href={viewAs ? `/teacher/students/${viewAs}/view` : '/student/dashboard'}
             className="inline-flex items-center text-sm text-gray-600 hover:text-gray-900 mb-4 transition-colors"
           >
             <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -156,7 +163,7 @@ export default async function MyCoursePage() {
                   </div>
 
                   <div className="mt-4">
-                    <AssignmentsList assignments={enrollment.assignments} />
+                    <AssignmentsList assignments={enrollment.assignments} viewAs={viewAs} />
                   </div>
                 </div>
               ))}
