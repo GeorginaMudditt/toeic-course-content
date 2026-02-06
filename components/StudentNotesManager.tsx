@@ -113,12 +113,15 @@ export default function StudentNotesManager({ student, enrollments }: Props) {
 
   const insertDate = () => {
     const date = new Date()
-    const dateStr = date.toLocaleDateString('en-GB', { 
-      weekday: 'long', 
-      year: 'numeric', 
-      month: 'long', 
-      day: 'numeric' 
-    })
+    // Format: "Friday 6 February 2026" (no comma)
+    const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
+    const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
+    const dayName = days[date.getDay()]
+    const day = date.getDate()
+    const monthName = months[date.getMonth()]
+    const year = date.getFullYear()
+    const dateStr = `${dayName} ${day} ${monthName} ${year}`
+    
     const dateElement = document.createElement('p')
     dateElement.style.fontWeight = 'bold'
     dateElement.style.marginTop = '16px'
@@ -127,6 +130,20 @@ export default function StudentNotesManager({ student, enrollments }: Props) {
     
     if (editorRef.current) {
       editorRef.current.appendChild(dateElement)
+      editorRef.current.focus()
+    }
+  }
+
+  const setTextColor = (color: string) => {
+    document.execCommand('foreColor', false, color)
+    if (editorRef.current) {
+      editorRef.current.focus()
+    }
+  }
+
+  const setHighlightColor = (color: string) => {
+    document.execCommand('backColor', false, color)
+    if (editorRef.current) {
       editorRef.current.focus()
     }
   }
@@ -201,6 +218,50 @@ export default function StudentNotesManager({ student, enrollments }: Props) {
               <option value="5">Large</option>
               <option value="7">Extra Large</option>
             </select>
+            <div className="border-l border-gray-300 mx-1" />
+            <div className="flex items-center gap-1">
+              <span className="text-xs text-gray-600 px-2">Text:</span>
+              <button
+                type="button"
+                onClick={() => setTextColor('red')}
+                className="w-6 h-6 bg-red-500 border border-gray-300 rounded hover:opacity-80"
+                title="Red Text"
+              />
+              <button
+                type="button"
+                onClick={() => setTextColor('green')}
+                className="w-6 h-6 bg-green-500 border border-gray-300 rounded hover:opacity-80"
+                title="Green Text"
+              />
+              <button
+                type="button"
+                onClick={() => setTextColor('blue')}
+                className="w-6 h-6 bg-blue-500 border border-gray-300 rounded hover:opacity-80"
+                title="Blue Text"
+              />
+            </div>
+            <div className="border-l border-gray-300 mx-1" />
+            <div className="flex items-center gap-1">
+              <span className="text-xs text-gray-600 px-2">Highlight:</span>
+              <button
+                type="button"
+                onClick={() => setHighlightColor('#FFEB3B')}
+                className="w-6 h-6 bg-yellow-300 border border-gray-300 rounded hover:opacity-80"
+                title="Yellow Highlight"
+              />
+              <button
+                type="button"
+                onClick={() => setHighlightColor('#FF9800')}
+                className="w-6 h-6 bg-orange-400 border border-gray-300 rounded hover:opacity-80"
+                title="Orange Highlight"
+              />
+              <button
+                type="button"
+                onClick={() => setHighlightColor('#FF69B4')}
+                className="w-6 h-6 bg-pink-400 border border-gray-300 rounded hover:opacity-80"
+                title="Pink Highlight"
+              />
+            </div>
             <div className="border-l border-gray-300 mx-1" />
             <button
               type="button"

@@ -91,7 +91,7 @@ export default async function StudentViewPage({ params }: { params: { id: string
           <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
             {/* About the TOEIC® 4-Skills Test Card */}
             <Link
-              href="/student/toeic-info"
+              href={`/student/toeic-info?viewAs=${params.id}`}
               className="bg-white shadow rounded-lg p-6 hover:shadow-lg transition-shadow"
             >
               <h2 className="text-xl font-semibold text-gray-900 mb-2" style={{ color: '#38438f' }}>
@@ -104,7 +104,7 @@ export default async function StudentViewPage({ params }: { params: { id: string
 
             {/* Vocabulary by CEFR level Card */}
             <Link
-              href="/student/vocabulary"
+              href={`/student/vocabulary?viewAs=${params.id}`}
               className="bg-white shadow rounded-lg p-6 hover:shadow-lg transition-shadow"
             >
               <h2 className="text-xl font-semibold text-gray-900 mb-2" style={{ color: '#38438f' }}>
@@ -117,7 +117,7 @@ export default async function StudentViewPage({ params }: { params: { id: string
 
             {/* My Course Card */}
             <Link
-              href="/student/course"
+              href={`/student/course?viewAs=${params.id}`}
               className="bg-white shadow rounded-lg p-6 hover:shadow-lg transition-shadow"
             >
               <h2 className="text-xl font-semibold text-gray-900 mb-2" style={{ color: '#38438f' }}>

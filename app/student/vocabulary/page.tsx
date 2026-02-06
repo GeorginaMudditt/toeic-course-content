@@ -5,10 +5,14 @@ import Navbar from '@/components/Navbar'
 import Link from 'next/link'
 import { LEVEL_INFO } from '@/lib/level-colors'
 
-export default async function VocabularyPage() {
+export default async function VocabularyPage({ searchParams }: { searchParams: { viewAs?: string } }) {
   const session = await getServerSession(authOptions)
+  const viewAs = searchParams?.viewAs
   
-  if (!session || session.user.role !== 'STUDENT') {
+  // Allow teachers to view if they have viewAs parameter
+  if (viewAs && session?.user.role === 'TEACHER') {
+    // Teacher viewing as student - allow access
+  } else if (!session || session.user.role !== 'STUDENT') {
     redirect('/login')
   }
 
@@ -18,7 +22,7 @@ export default async function VocabularyPage() {
       <div className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
         <div className="px-4 py-6 sm:px-0">
           <Link
-            href="/student/dashboard"
+            href={viewAs ? `/teacher/students/${viewAs}/view` : '/student/dashboard'}
             className="inline-flex items-center text-sm text-gray-600 hover:text-gray-900 mb-4 transition-colors"
           >
             <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -66,10 +70,14 @@ export default async function VocabularyPage() {
                     : 'cursor-not-allowed opacity-60 relative group'
                 }`
                 
+                const href = viewAs 
+                  ? `/student/vocabulary/${level.id.toLowerCase()}?viewAs=${viewAs}`
+                  : `/student/vocabulary/${level.id.toLowerCase()}`
+                
                 return isA1 ? (
                   <Link
                     key={level.id}
-                    href={`/student/vocabulary/${level.id.toLowerCase()}`}
+                    href={href}
                     className={cardClassName}
                     style={{ borderColor: level.color }}
                   >

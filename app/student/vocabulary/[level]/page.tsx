@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useState, useCallback } from 'react'
-import { useParams, useRouter } from 'next/navigation'
+import { useParams, useRouter, useSearchParams } from 'next/navigation'
 import { LEVEL_COLORS } from '@/lib/level-colors'
 import Navbar from '@/components/Navbar'
 import Link from 'next/link'
@@ -22,7 +22,9 @@ const VOCABULARY_LIST_PDFS: Record<string, string> = {
 export default function VocabularyLevelPage() {
   const params = useParams()
   const router = useRouter()
+  const searchParams = useSearchParams()
   const level = (params.level as string)?.toLowerCase() || 'a1'
+  const viewAs = searchParams?.get('viewAs') || undefined
 
   const [topics, setTopics] = useState<Topic[]>([])
   const [loading, setLoading] = useState(true)
@@ -35,7 +37,10 @@ export default function VocabularyLevelPage() {
     if (level !== 'a1') return
     
     try {
-      const response = await fetch(`/api/vocabulary-progress?level=${level}`)
+      const url = viewAs 
+        ? `/api/vocabulary-progress?level=${level}&studentId=${viewAs}`
+        : `/api/vocabulary-progress?level=${level}`
+      const response = await fetch(url)
       const result = await response.json()
       
       if (response.ok && result.data) {
@@ -60,7 +65,7 @@ export default function VocabularyLevelPage() {
       // Non-fatal error
       console.error('Error loading progress:', err)
     }
-  }, [level])
+  }, [level, viewAs])
 
   useEffect(() => {
     fetchProgress()
@@ -125,7 +130,10 @@ export default function VocabularyLevelPage() {
       : !progress.silver
       ? 'silver'
       : 'gold'
-    router.push(`/student/vocabulary/${level}/${encodeURIComponent(topicName)}/challenge/${nextChallenge}`)
+    const url = viewAs
+      ? `/student/vocabulary/${level}/${encodeURIComponent(topicName)}/challenge/${nextChallenge}?viewAs=${viewAs}`
+      : `/student/vocabulary/${level}/${encodeURIComponent(topicName)}/challenge/${nextChallenge}`
+    router.push(url)
   }
 
   // Get completion status for display
@@ -210,7 +218,7 @@ export default function VocabularyLevelPage() {
       <div className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
         <div className="px-4 py-6 sm:px-0">
           <Link
-            href="/student/vocabulary"
+            href={viewAs ? `/student/vocabulary?viewAs=${viewAs}` : '/student/vocabulary'}
             className="inline-flex items-center text-sm text-gray-600 hover:text-gray-900 mb-4 transition-colors"
           >
             <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
