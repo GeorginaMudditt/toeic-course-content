@@ -52,6 +52,13 @@ export const authOptions: NextAuthOptions = {
           }
 
           console.log('Authorize: Authentication successful')
+          
+          // Update lastSeenAt timestamp
+          await supabaseServer
+            .from('User')
+            .update({ lastSeenAt: new Date().toISOString() })
+            .eq('id', user.id)
+          
           return {
             id: user.id,
             email: user.email,

@@ -48,6 +48,7 @@ model User {
   avatar            String?   // Avatar: image URL or emoji string
   resetToken        String?   // Token for password reset
   resetTokenExpiry  DateTime? // Expiry time for reset token
+  lastSeenAt        DateTime? // Last time the user logged in
   createdAt         DateTime  @default(now())
   updatedAt         DateTime  @updatedAt
   
@@ -140,3 +141,14 @@ model Progress {
   @@unique([assignmentId, studentId])
 }
 
+model CourseNote {
+  id            String    @id @default(cuid())
+  enrollmentId  String    // One note per enrollment (course per student)
+  content       String    // Rich text content (HTML)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  
+  enrollment    Enrollment @relation(fields: [enrollmentId], references: [id])
+  
+  @@unique([enrollmentId])
+}

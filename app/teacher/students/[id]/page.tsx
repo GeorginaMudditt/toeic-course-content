@@ -7,6 +7,9 @@ import StudentAssignmentManager from '@/components/StudentAssignmentManager'
 import DeleteStudentButton from '@/components/DeleteStudentButton'
 import EditStudentEmail from '@/components/EditStudentEmail'
 import Link from 'next/link'
+import { formatUKDate } from '@/lib/date-utils'
+import StudentNotesManager from '@/components/StudentNotesManager'
+import Tabs from '@/components/Tabs'
 
 export default async function StudentDetailPage({ params }: { params: { id: string } }) {
   const session = await getServerSession(authOptions)
@@ -182,18 +185,53 @@ export default async function StudentDetailPage({ params }: { params: { id: stri
               <div>
                 <h1 className="text-3xl font-bold text-gray-900">{student.name}</h1>
                 <p className="text-gray-600">{student.email}</p>
+                {student.lastSeenAt && (
+                  <p className="text-sm text-gray-500 mt-1">
+                    Last seen at {new Date(student.lastSeenAt).toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' })} on {formatUKDate(student.lastSeenAt)}
+                  </p>
+                )}
+                {!student.lastSeenAt && (
+                  <p className="text-sm text-gray-500 mt-1">Never logged in</p>
+                )}
               </div>
               <div className="flex gap-3">
+                <Link
+                  href={`/teacher/students/${student.id}/view`}
+                  className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
+                >
+                  Student View
+                </Link>
                 <EditStudentEmail studentId={student.id} currentEmail={student.email} />
                 <DeleteStudentButton studentId={student.id} studentName={student.name} />
               </div>
             </div>
           </div>
 
-          <StudentAssignmentManager
-            student={student}
-            resources={allResources}
-            courses={courses}
+          <Tabs
+            tabs={[
+              {
+                id: 'assignments',
+                label: 'Assignments',
+                content: (
+                  <StudentAssignmentManager
+                    student={student}
+                    resources={allResources}
+                    courses={courses}
+                  />
+                )
+              },
+              {
+                id: 'notes',
+                label: 'Notes',
+                content: (
+                  <StudentNotesManager
+                    student={student}
+                    enrollments={student.enrollments}
+                  />
+                )
+              }
+            ]}
+            defaultTab="assignments"
           />
         </div>
       </div>
