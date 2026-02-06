@@ -103,6 +103,7 @@ model Enrollment {
   course        Course    @relation(fields: [courseId], references: [id])
   
   assignments   Assignment[]
+  courseNote    CourseNote?
   
   @@unique([studentId, courseId])
 }
