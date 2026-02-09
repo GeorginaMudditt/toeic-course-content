@@ -10,6 +10,8 @@ interface Resource {
   content: string
   type: string
   skill?: string
+  createdAt?: string
+  updatedAt?: string
 }
 
 interface Progress {
@@ -1224,6 +1226,19 @@ export default function WorksheetViewer({ assignmentId, resource, initialProgres
       <div className="mt-4 text-sm text-gray-500">
         <p>⚠️ This worksheet is unique to you. Do not share the link with anyone.</p>
       </div>
+
+      {/* Resource Timestamps */}
+      {(resource.createdAt || resource.updatedAt) && (
+        <div className="mt-4 pt-4 border-t border-gray-200 text-xs text-gray-400 text-center">
+          {resource.createdAt && (
+            <span>Resource created: {new Date(resource.createdAt).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })}</span>
+          )}
+          {resource.createdAt && resource.updatedAt && <span> / </span>}
+          {resource.updatedAt && (
+            <span>Resource last updated: {new Date(resource.updatedAt).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })}</span>
+          )}
+        </div>
+      )}
 
       {/* Completion Modal */}
       {showCompletionModal && (

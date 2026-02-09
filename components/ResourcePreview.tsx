@@ -10,6 +10,8 @@ interface Resource {
   type: string
   description?: string | null
   level?: string | null
+  createdAt?: string
+  updatedAt?: string
 }
 
 interface ResourcePreviewProps {
@@ -520,6 +522,19 @@ export default function ResourcePreview({ resource, showActions = true }: Resour
         <div className="mt-4 text-sm text-gray-500 bg-gray-50 p-4 rounded-lg">
           <p className="font-medium mb-2">💡 Teacher Preview</p>
           <p>This is how students will see this resource. You can download it as PDF, print it, or share the preview link.</p>
+        </div>
+      )}
+
+      {/* Resource Timestamps */}
+      {(resource.createdAt || resource.updatedAt) && (
+        <div className="mt-4 pt-4 border-t border-gray-200 text-xs text-gray-400 text-center">
+          {resource.createdAt && (
+            <span>Resource created: {new Date(resource.createdAt).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })}</span>
+          )}
+          {resource.createdAt && resource.updatedAt && <span> / </span>}
+          {resource.updatedAt && (
+            <span>Resource last updated: {new Date(resource.updatedAt).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })}</span>
+          )}
         </div>
       )}
     </div>
