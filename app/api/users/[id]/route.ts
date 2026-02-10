@@ -189,6 +189,22 @@ export async function DELETE(
       }
     }
 
+    // Delete all course notes for these enrollments
+    if (enrollmentIds.length > 0) {
+      const { error: courseNotesError } = await supabaseServer
+        .from('CourseNote')
+        .delete()
+        .in('enrollmentId', enrollmentIds)
+
+      if (courseNotesError) {
+        console.error('Error deleting course notes:', courseNotesError)
+        return NextResponse.json(
+          { error: 'Failed to delete student course notes' },
+          { status: 500 }
+        )
+      }
+    }
+
     // Delete all enrollments
     if (enrollmentIds.length > 0) {
       const { error: enrollmentsDeleteError } = await supabaseServer
