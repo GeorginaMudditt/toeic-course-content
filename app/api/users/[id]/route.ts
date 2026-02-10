@@ -107,7 +107,7 @@ export async function DELETE(
       return NextResponse.json({ error: 'Student not found' }, { status: 404 })
     }
 
-    // Delete in order: Progress -> Assignments -> Enrollments -> User
+    // Delete in order: Progress -> CourseNotes -> Assignments -> Enrollments -> User
     // First, get all enrollments for this student
     const { data: enrollments, error: enrollmentsError } = await supabaseServer
       .from('Enrollment')
@@ -115,9 +115,9 @@ export async function DELETE(
       .eq('studentId', params.id)
 
     if (enrollmentsError) {
-      console.error('Error fetching enrollments:', enrollmentsError)
+      console.error('Error fetching enrollments:', JSON.stringify(enrollmentsError, null, 2))
       return NextResponse.json(
-        { error: 'Failed to fetch student data' },
+        { error: 'Failed to fetch student data', details: enrollmentsError.message },
         { status: 500 }
       )
     }
@@ -133,9 +133,9 @@ export async function DELETE(
         .in('enrollmentId', enrollmentIds)
 
       if (assignmentsError) {
-        console.error('Error fetching assignments:', assignmentsError)
+        console.error('Error fetching assignments:', JSON.stringify(assignmentsError, null, 2))
         return NextResponse.json(
-          { error: 'Failed to fetch student data' },
+          { error: 'Failed to fetch student data', details: assignmentsError.message },
           { status: 500 }
         )
       }
@@ -143,7 +143,7 @@ export async function DELETE(
       assignmentIds = assignments?.map(a => a.id) || []
     }
 
-    // Delete all progress records for this student
+    // Delete all progress records linked to assignments
     if (assignmentIds.length > 0) {
       const { error: progressError } = await supabaseServer
         .from('Progress')
@@ -151,45 +151,29 @@ export async function DELETE(
         .in('assignmentId', assignmentIds)
 
       if (progressError) {
-        console.error('Error deleting progress:', progressError)
+        console.error('Error deleting progress by assignment:', JSON.stringify(progressError, null, 2))
         return NextResponse.json(
-          { error: 'Failed to delete student progress' },
+          { error: 'Failed to delete student progress', details: progressError.message },
           { status: 500 }
         )
       }
     }
 
-    // Also delete progress records directly linked to student (if any)
+    // Delete all progress records directly linked to student (must be done separately)
     const { error: directProgressError } = await supabaseServer
       .from('Progress')
       .delete()
       .eq('studentId', params.id)
 
     if (directProgressError) {
-      console.error('Error deleting direct progress:', directProgressError)
+      console.error('Error deleting direct progress:', JSON.stringify(directProgressError, null, 2))
       return NextResponse.json(
-        { error: 'Failed to delete student progress' },
+        { error: 'Failed to delete student progress', details: directProgressError.message },
         { status: 500 }
       )
     }
 
-    // Delete all assignments
-    if (assignmentIds.length > 0) {
-      const { error: assignmentsDeleteError } = await supabaseServer
-        .from('Assignment')
-        .delete()
-        .in('id', assignmentIds)
-
-      if (assignmentsDeleteError) {
-        console.error('Error deleting assignments:', assignmentsDeleteError)
-        return NextResponse.json(
-          { error: 'Failed to delete student assignments' },
-          { status: 500 }
-        )
-      }
-    }
-
-    // Delete all course notes for these enrollments
+    // Delete all course notes for these enrollments (must be before deleting enrollments)
     if (enrollmentIds.length > 0) {
       const { error: courseNotesError } = await supabaseServer
         .from('CourseNote')
@@ -197,15 +181,31 @@ export async function DELETE(
         .in('enrollmentId', enrollmentIds)
 
       if (courseNotesError) {
-        console.error('Error deleting course notes:', courseNotesError)
+        console.error('Error deleting course notes:', JSON.stringify(courseNotesError, null, 2))
         return NextResponse.json(
-          { error: 'Failed to delete student course notes' },
+          { error: 'Failed to delete student course notes', details: courseNotesError.message },
           { status: 500 }
         )
       }
     }
 
-    // Delete all enrollments
+    // Delete all assignments (after progress and course notes are deleted)
+    if (assignmentIds.length > 0) {
+      const { error: assignmentsDeleteError } = await supabaseServer
+        .from('Assignment')
+        .delete()
+        .in('id', assignmentIds)
+
+      if (assignmentsDeleteError) {
+        console.error('Error deleting assignments:', JSON.stringify(assignmentsDeleteError, null, 2))
+        return NextResponse.json(
+          { error: 'Failed to delete student assignments', details: assignmentsDeleteError.message },
+          { status: 500 }
+        )
+      }
+    }
+
+    // Delete all enrollments (after assignments and course notes are deleted)
     if (enrollmentIds.length > 0) {
       const { error: enrollmentsDeleteError } = await supabaseServer
         .from('Enrollment')
@@ -213,9 +213,9 @@ export async function DELETE(
         .in('id', enrollmentIds)
 
       if (enrollmentsDeleteError) {
-        console.error('Error deleting enrollments:', enrollmentsDeleteError)
+        console.error('Error deleting enrollments:', JSON.stringify(enrollmentsDeleteError, null, 2))
         return NextResponse.json(
-          { error: 'Failed to delete student enrollments' },
+          { error: 'Failed to delete student enrollments', details: enrollmentsDeleteError.message },
           { status: 500 }
         )
       }
@@ -228,18 +228,19 @@ export async function DELETE(
       .eq('id', params.id)
 
     if (userDeleteError) {
-      console.error('Error deleting user:', userDeleteError)
+      console.error('Error deleting user:', JSON.stringify(userDeleteError, null, 2))
       return NextResponse.json(
-        { error: 'Failed to delete student' },
+        { error: 'Failed to delete student', details: userDeleteError.message },
         { status: 500 }
       )
     }
 
     return NextResponse.json({ success: true })
-  } catch (error) {
+  } catch (error: any) {
     console.error('Error deleting student:', error)
+    console.error('Error details:', JSON.stringify(error, null, 2))
     return NextResponse.json(
-      { error: 'Failed to delete student' },
+      { error: 'Failed to delete student', details: error?.message || String(error) },
       { status: 500 }
     )
   }
