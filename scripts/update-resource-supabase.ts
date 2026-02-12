@@ -1,8 +1,27 @@
-import { supabaseServer } from '../lib/supabase'
+// Load environment variables FIRST before any other imports
+import { config } from 'dotenv'
+import { resolve } from 'path'
+
+// Try .env.local first (Next.js convention), then .env
+const envLocalPath = resolve(process.cwd(), '.env.local')
+const envPath = resolve(process.cwd(), '.env')
+
+config({ path: envLocalPath })
+config({ path: envPath })
+
+// Now import other modules after env vars are loaded
 import { readFileSync } from 'fs'
 import { join } from 'path'
 
+// Import supabase AFTER env vars are loaded
+// We need to dynamically import to ensure env vars are loaded first
+let supabaseServer: any
+
 async function main() {
+  // Dynamically import supabase after env vars are loaded
+  const { supabaseServer: server } = await import('../lib/supabase')
+  supabaseServer = server
+
   // Get resource name from command line argument
   const resourceName = process.argv[2]
   const htmlFileName = process.argv[3] || `${resourceName.toLowerCase().replace(/\s+/g, '-')}-html.html`
@@ -55,9 +74,13 @@ async function main() {
   const resource = resources[0]
 
   // Update the resource with the new HTML content
+  // Explicitly set updatedAt to current timestamp (like the API route does)
   const { data: updated, error: updateError } = await supabaseServer
     .from('Resource')
-    .update({ content: htmlContent })
+    .update({ 
+      content: htmlContent,
+      updatedAt: new Date().toISOString()
+    })
     .eq('id', resource.id)
     .select()
     .single()
