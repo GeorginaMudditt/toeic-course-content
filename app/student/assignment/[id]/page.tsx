@@ -2,6 +2,8 @@ import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
 import { redirect } from 'next/navigation'
 import { supabaseServer } from '@/lib/supabase'
+
+export const dynamic = 'force-dynamic' // Always fetch fresh progress when returning to assignment
 import Navbar from '@/components/Navbar'
 import WorksheetViewer from '@/components/WorksheetViewer'
 import MarkAsViewed from './MarkAsViewed'

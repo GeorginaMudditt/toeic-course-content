@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react'
 import { createRoot } from 'react-dom/client'
+import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 
 interface Resource {
@@ -554,13 +555,30 @@ export default function WorksheetViewer({ assignmentId, resource, initialProgres
   const [saving, setSaving] = useState(false)
   const [saved, setSaved] = useState(false)
   const [showCompletionModal, setShowCompletionModal] = useState(false)
+  const [grammarInputsReady, setGrammarInputsReady] = useState(false)
   const contentRef = useRef<HTMLDivElement>(null)
-  
+  // Ref to hold latest notes for save - avoids stale state when Save clicked right after typing
+  const notesRef = useRef(notes)
+  notesRef.current = notes
+
   // Check if this is a Placement Test
   const isPlacementTest = resource.title.toLowerCase().includes('placement test')
   
   // Check if this is a Reference resource
   const isReference = resource.skill === 'REFERENCE'
+  
+  // Check if this resource has grammar worksheet inputs
+  const hasGrammarInputs = resource.content.includes('data-grammar-input')
+
+  // Defer grammar input injection until after mount/hydration (avoids timing issues)
+  useEffect(() => {
+    if (hasGrammarInputs) {
+      const id = requestAnimationFrame(() => {
+        setGrammarInputsReady(true)
+      })
+      return () => cancelAnimationFrame(id)
+    }
+  }, [hasGrammarInputs])
   
   // Parse placement test answers from notes
   const getPlacementTestAnswers = () => {
@@ -574,6 +592,27 @@ export default function WorksheetViewer({ assignmentId, resource, initialProgres
   
   const placementTestAnswers = getPlacementTestAnswers()
   
+  // Parse grammar worksheet answers from notes
+  const getGrammarAnswers = () => {
+    if (!hasGrammarInputs || !notes) return {}
+    try {
+      const parsed = JSON.parse(notes)
+      // If it's a placement test structure, check for grammarAnswers property
+      if (isPlacementTest && parsed.grammarAnswers) {
+        return parsed.grammarAnswers
+      }
+      // Otherwise, if it's just grammar answers, return the whole thing
+      if (!isPlacementTest) {
+        return parsed
+      }
+      return {}
+    } catch {
+      return {}
+    }
+  }
+  
+  const grammarAnswers = getGrammarAnswers()
+  
   // Memoize writing value to prevent unnecessary re-renders
   const writingAnswerValue = useMemo(() => {
     return placementTestAnswers.writing || ''
@@ -582,6 +621,27 @@ export default function WorksheetViewer({ assignmentId, resource, initialProgres
   // Track if any textarea is focused using a ref (persists across renders)
   const textareaFocusRef = useRef(false)
 
+  // Update grammar worksheet answer - also update notesRef synchronously so Save button gets latest
+  const updateGrammarAnswer = useCallback((inputId: string, value: string) => {
+    const currentNotes = notesRef.current || '{}'
+    let currentData: any = {}
+    try {
+      currentData = JSON.parse(currentNotes)
+    } catch (e) {
+      // If notes aren't valid JSON, start fresh
+    }
+    const newData = JSON.parse(JSON.stringify(currentData))
+    if (isPlacementTest) {
+      if (!newData.grammarAnswers) newData.grammarAnswers = {}
+      newData.grammarAnswers[inputId] = value
+    } else {
+      newData[inputId] = value
+    }
+    const newNotes = JSON.stringify(newData, null, 2)
+    notesRef.current = newNotes // Sync ref before setState so Save gets latest
+    setNotes(newNotes)
+  }, [isPlacementTest])
+  
   // Update placement test answer - use useCallback but read from notes directly to avoid stale closures
   const updatePlacementTestAnswer = useCallback((path: string, value: string) => {
     // Read current notes directly to avoid stale closure
@@ -628,7 +688,8 @@ export default function WorksheetViewer({ assignmentId, resource, initialProgres
   }, []) // No dependencies - uses functional setState to read current value
   
   const saveProgress = async (notesToSave?: string) => {
-    const notesValue = notesToSave || notes
+    // Use notesRef for latest when manual save (avoids stale state if Save clicked right after typing)
+    const notesValue = notesToSave ?? notesRef.current ?? notes
     setSaving(true)
     try {
       const response = await fetch(`/api/progress/${assignmentId}`, {
@@ -657,12 +718,18 @@ export default function WorksheetViewer({ assignmentId, resource, initialProgres
   // Auto-save placement test answers when notes change
   useEffect(() => {
     if (isPlacementTest && notes) {
-      const timeoutId = setTimeout(() => {
-        saveProgress(notes)
-      }, 500)
+      const timeoutId = setTimeout(() => saveProgress(), 500)
       return () => clearTimeout(timeoutId)
     }
   }, [notes, isPlacementTest])
+  
+  // Auto-save grammar worksheet answers when notes change
+  useEffect(() => {
+    if (hasGrammarInputs && !isPlacementTest && notes) {
+      const timeoutId = setTimeout(() => saveProgress(), 1000)
+      return () => clearTimeout(timeoutId)
+    }
+  }, [notes, hasGrammarInputs, isPlacementTest])
   
   // Helper function to get current value for an answer path
   const getAnswerValue = useCallback((answerPath: string, answers: any) => {
@@ -900,27 +967,231 @@ export default function WorksheetViewer({ assignmentId, resource, initialProgres
     })
   }, [notes, isPlacementTest, getAnswerValue, getInputType, updatePlacementTestAnswer, assignmentId, placementTestAnswers]) // Update values when notes change
 
-  // Cleanup: Only unmount when component unmounts or resource content changes significantly
+  // Grammar worksheet input component - supports text input and textarea
+  const GrammarInput = React.memo(function GrammarInput({
+    inputId,
+    value,
+    onChange,
+    inputType = 'text'
+  }: {
+    inputId: string
+    value: string
+    onChange: (value: string) => void
+    inputType?: 'text' | 'textarea'
+  }) {
+    const [localValue, setLocalValue] = useState(value)
+    const timeoutRef = useRef<NodeJS.Timeout | null>(null)
+    const inputRef = useRef<HTMLInputElement | HTMLTextAreaElement>(null)
+    
+    // Sync with parent value when it changes externally (but not when focused)
+    useEffect(() => {
+      if (value !== localValue && document.activeElement !== inputRef.current) {
+        setLocalValue(value)
+      }
+    }, [value])
+    
+    const commonProps = {
+      ref: inputRef,
+      value: localValue,
+      onChange: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+        const newValue = e.target.value
+        setLocalValue(newValue)
+        if (timeoutRef.current) clearTimeout(timeoutRef.current)
+        timeoutRef.current = setTimeout(() => onChange(newValue), 500)
+      },
+      onBlur: () => {
+        if (timeoutRef.current) {
+          clearTimeout(timeoutRef.current)
+          timeoutRef.current = null
+        }
+        if (localValue !== value) onChange(localValue)
+      }
+    }
+    
+    const inputStyle: React.CSSProperties = {
+      border: '1px solid #d1d5db',
+      borderBottom: '2px solid #38438f',
+      borderRadius: '2px',
+      padding: '2px 4px',
+      fontSize: '14px',
+      fontFamily: 'inherit',
+      backgroundColor: '#fff',
+      minWidth: '150px',
+      outline: 'none',
+      display: 'inline-block',
+      verticalAlign: 'baseline'
+    }
+    
+    const textareaStyle: React.CSSProperties = {
+      ...inputStyle,
+      display: 'block',
+      width: '100%',
+      minWidth: '100%',
+      minHeight: '60px',
+      padding: '8px',
+      resize: 'vertical',
+      marginTop: '4px'
+    }
+    
+    if (inputType === 'textarea') {
+      return (
+        <textarea
+          {...commonProps}
+          style={textareaStyle}
+          placeholder="Type your answer here..."
+          rows={2}
+        />
+      )
+    }
+    
+    return (
+      <input
+        {...commonProps}
+        type="text"
+        style={inputStyle}
+        placeholder="Type your answer"
+      />
+    )
+  })
+  
+  // Render grammar worksheet inputs (after grammarInputsReady to avoid hydration timing issues)
+  useEffect(() => {
+    if (!hasGrammarInputs || !grammarInputsReady || !contentRef.current) return
+    
+    const initializeGrammarInputs = () => {
+      if (!contentRef.current) return
+      
+      const grammarInputs = contentRef.current.querySelectorAll('[data-grammar-input]')
+      
+      if (grammarInputs.length === 0) {
+        return false // Not ready yet
+      }
+      
+      grammarInputs.forEach((container) => {
+        const inputId = container.getAttribute('data-grammar-input')
+        if (!inputId) return
+        
+        // Skip if already rendered
+        if ((container as any)._reactRoot) {
+          return
+        }
+        
+        const inputType = container.getAttribute('data-grammar-input-type') === 'textarea' ? 'textarea' : 'text'
+        
+        try {
+          container.innerHTML = ''
+          const containerEl = container as HTMLElement
+          containerEl.style.pointerEvents = 'auto'
+          containerEl.style.position = 'relative'
+          containerEl.style.zIndex = '10'
+          if (inputType === 'textarea') {
+            containerEl.style.display = 'block'
+          }
+          
+          const root = createRoot(containerEl)
+          // Get current grammar answers
+          const currentGrammarAnswers = getGrammarAnswers()
+          const currentValue = currentGrammarAnswers[inputId] || ''
+          
+          root.render(
+            <GrammarInput
+              inputId={inputId}
+              value={currentValue}
+              onChange={(value) => updateGrammarAnswer(inputId, value)}
+              inputType={inputType}
+            />
+          )
+          
+          ;(container as any)._reactRoot = root
+        } catch (error) {
+          console.error('Error rendering grammar input:', error, inputId)
+        }
+      })
+      
+      return true
+    }
+    
+    // Try immediately, then retry (handles hydration/timing)
+    if (!initializeGrammarInputs()) {
+      const timeoutId = setTimeout(() => {
+        initializeGrammarInputs()
+      }, 300)
+      return () => clearTimeout(timeoutId)
+    }
+    
+    return () => {
+      // Don't unmount on cleanup - we want to keep the inputs alive
+    }
+  }, [hasGrammarInputs, grammarInputsReady, resource.content, updateGrammarAnswer])
+  
+  // Update grammar inputs when answers change
+  useEffect(() => {
+    if (!hasGrammarInputs || !contentRef.current) return
+    
+    // Skip updates if any input or textarea is focused to prevent losing focus
+    const anyInputFocused = Array.from(contentRef.current.querySelectorAll('input[type="text"], textarea')).some(
+      el => document.activeElement === el
+    )
+    
+    if (anyInputFocused) {
+      return
+    }
+    
+    // Get current grammar answers from notes
+    const currentGrammarAnswers = getGrammarAnswers()
+    
+    const grammarInputs = contentRef.current.querySelectorAll('[data-grammar-input]')
+    
+    grammarInputs.forEach((container) => {
+      const inputId = container.getAttribute('data-grammar-input')
+      if (!inputId) return
+      
+      const inputType = container.getAttribute('data-grammar-input-type') === 'textarea' ? 'textarea' : 'text'
+      const root = (container as any)._reactRoot
+      if (root) {
+        const currentValue = currentGrammarAnswers[inputId] || ''
+        root.render(
+          <GrammarInput
+            inputId={inputId}
+            value={currentValue}
+            onChange={(value) => updateGrammarAnswer(inputId, value)}
+            inputType={inputType}
+          />
+        )
+      }
+    })
+  }, [notes, hasGrammarInputs, updateGrammarAnswer]) // Use notes to trigger updates when answers change
+  
+  // Cleanup: Defer root unmount to avoid "synchronously unmount while React was rendering" warning
   useEffect(() => {
     return () => {
-      // This cleanup only runs when component unmounts or when dependencies change
-      // Since resource.content is in the dependency array above, this will clean up old inputs
-      if (contentRef.current) {
-        const answerInputs = contentRef.current.querySelectorAll('[data-answer-input]')
+      const content = contentRef.current
+      if (!content) return
+      const unmountRoots = () => {
+        const answerInputs = content.querySelectorAll('[data-answer-input]')
         answerInputs.forEach((container) => {
           const root = (container as any)._reactRoot
           if (root) {
             try {
               root.unmount()
               delete (container as any)._reactRoot
-            } catch (error) {
-              // Ignore unmount errors
-            }
+            } catch (e) { /* ignore */ }
+          }
+        })
+        const grammarInputs = content.querySelectorAll('[data-grammar-input]')
+        grammarInputs.forEach((container) => {
+          const root = (container as any)._reactRoot
+          if (root) {
+            try {
+              root.unmount()
+              delete (container as any)._reactRoot
+            } catch (e) { /* ignore */ }
           }
         })
       }
+      queueMicrotask(unmountRoots) // Defer to avoid sync unmount during render
     }
-  }, [resource.content]) // Only cleanup when resource content actually changes
+  }, [resource.content])
 
   useEffect(() => {
     // Auto-save every 30 seconds
@@ -949,8 +1220,6 @@ export default function WorksheetViewer({ assignmentId, resource, initialProgres
         setStatus('COMPLETED')
         setSaved(true)
         setShowCompletionModal(true)
-        // Refresh the router to update cached data
-        router.refresh()
       } else {
         const errorData = await response.json().catch(() => ({ error: 'Unknown error' }))
         console.error('Failed to mark complete:', errorData)
@@ -1038,13 +1307,19 @@ export default function WorksheetViewer({ assignmentId, resource, initialProgres
     <div className="bg-white shadow rounded-lg p-6">
       <div className="flex justify-between items-center mb-4">
         <div className="flex items-center space-x-4">
+          <Link
+            href="/student/course"
+            className="inline-flex items-center gap-2 px-4 py-2 text-gray-700 bg-gray-100 rounded-md hover:bg-gray-200 transition-colors"
+          >
+            <span aria-hidden>←</span> Return to My Course
+          </Link>
           <button
             onClick={handlePrint}
             className="px-4 py-2 bg-gray-600 text-white rounded-md hover:bg-gray-700 transition-colors"
           >
             🖨️ Print
           </button>
-          {isPlacementTest && (
+          {(isPlacementTest || hasGrammarInputs) && (
             <button
               onClick={() => saveProgress()}
               disabled={saving}
@@ -1053,7 +1328,7 @@ export default function WorksheetViewer({ assignmentId, resource, initialProgres
               onMouseEnter={(e) => !e.currentTarget.disabled && (e.currentTarget.style.backgroundColor = '#2d3569')}
               onMouseLeave={(e) => !e.currentTarget.disabled && (e.currentTarget.style.backgroundColor = '#38438f')}
             >
-              {saving ? 'Saving...' : saved ? '✓ Saved' : 'Save Progress'}
+              {saving ? 'Saving...' : saved ? '✓ Saved' : 'Save Answers'}
             </button>
           )}
         </div>
@@ -1197,13 +1472,24 @@ export default function WorksheetViewer({ assignmentId, resource, initialProgres
                 )
               }
             } else {
-              // Render normally for non-placement tests (match teacher view exactly)
-              return (
-                <div 
-                  className="prose max-w-none"
-                  dangerouslySetInnerHTML={{ __html: resource.content }}
-                />
-              )
+              // Render normally for non-placement tests
+              // If it has grammar inputs, use MemoizedContent to prevent re-renders when notes change
+              // (typing updates notes -> without memo, dangerouslySetInnerHTML would reset DOM and destroy inputs)
+              if (hasGrammarInputs) {
+                return (
+                  <MemoizedContent
+                    html={resource.content}
+                    contentRef={contentRef}
+                  />
+                )
+              } else {
+                return (
+                  <div 
+                    className="prose max-w-none"
+                    dangerouslySetInnerHTML={{ __html: resource.content }}
+                  />
+                )
+              }
             }
           }
         })()}
