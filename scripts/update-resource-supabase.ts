@@ -66,7 +66,7 @@ async function main() {
       .from('Resource')
       .select('id, title')
       .limit(10)
-    allResources?.forEach(r => console.log(`   - ${r.title}`))
+    allResources?.forEach((r: { title: string }) => console.log(`   - ${r.title}`))
     console.log('\nPlease create the resource first through the web interface, then run this script again.')
     return
   }

@@ -48,7 +48,7 @@ async function main() {
   if (hasQuickComparison) {
     // Find the line with Quick Comparison
     const lines = resource.content.split('\n')
-    const quickComparisonLine = lines.find(line => line.includes('Quick Comparison'))
+    const quickComparisonLine = lines.find((line: string) => line.includes('Quick Comparison'))
     if (quickComparisonLine) {
       console.log(`\nQuick Comparison line in database:`)
       console.log(quickComparisonLine.trim().substring(0, 100) + '...')

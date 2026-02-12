@@ -981,17 +981,18 @@ export default function WorksheetViewer({ assignmentId, resource, initialProgres
   }) {
     const [localValue, setLocalValue] = useState(value)
     const timeoutRef = useRef<NodeJS.Timeout | null>(null)
-    const inputRef = useRef<HTMLInputElement | HTMLTextAreaElement>(null)
+    const inputRef = useRef<HTMLInputElement>(null)
+    const textareaRef = useRef<HTMLTextAreaElement>(null)
     
     // Sync with parent value when it changes externally (but not when focused)
     useEffect(() => {
-      if (value !== localValue && document.activeElement !== inputRef.current) {
+      const isFocused = document.activeElement === inputRef.current || document.activeElement === textareaRef.current
+      if (value !== localValue && !isFocused) {
         setLocalValue(value)
       }
     }, [value])
     
-    const commonProps = {
-      ref: inputRef,
+    const commonPropsWithoutRef = {
       value: localValue,
       onChange: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const newValue = e.target.value
@@ -1036,7 +1037,8 @@ export default function WorksheetViewer({ assignmentId, resource, initialProgres
     if (inputType === 'textarea') {
       return (
         <textarea
-          {...commonProps}
+          {...commonPropsWithoutRef}
+          ref={textareaRef}
           style={textareaStyle}
           placeholder="Type your answer here..."
           rows={2}
@@ -1046,7 +1048,8 @@ export default function WorksheetViewer({ assignmentId, resource, initialProgres
     
     return (
       <input
-        {...commonProps}
+        {...commonPropsWithoutRef}
+        ref={inputRef}
         type="text"
         style={inputStyle}
         placeholder="Type your answer"
