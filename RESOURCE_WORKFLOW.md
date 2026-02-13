@@ -31,8 +31,10 @@ For creating resources from scratch or editing HTML directly:
 
 4. **Update the resource in the database**:
    ```bash
-   npm run update:resource "Your Resource Name"
+   npm run update:resource:supabase "Your Resource Name" "your-file-html.html"
    ```
+
+5. **If it's a grammar worksheet:** Add it to `update-all-resources.sh` so it gets updated when running the batch script. See `RESOURCE_UPDATE_COMMANDS.md` for details.
 
 ## Template Features
 
@@ -65,12 +67,12 @@ For optimal 2-page printing:
 
 ### Update Modal Verbs resource:
 ```bash
-npm run update:resource "Modal Verbs"
+npm run update:resource:supabase "Modal Verbs" "modal-verbs-html.html"
 ```
 
 ### Update with custom filename:
 ```bash
-npm run update:resource "My Resource" "custom-file.html"
+npm run update:resource:supabase "My Resource" "custom-file-html.html"
 ```
 
 ## Tips
