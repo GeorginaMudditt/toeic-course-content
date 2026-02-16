@@ -12,9 +12,15 @@ interface Assignment {
     estimatedHours: number
     type: string
     level: string
+    skill?: string
     createdAt: string
   } | null
   progress: any[]
+}
+
+function formatSkill(skill: string | undefined): string {
+  if (!skill) return 'Resource'
+  return skill.charAt(0) + skill.slice(1).toLowerCase()
 }
 
 interface Props {
@@ -117,7 +123,7 @@ export default function AssignmentsList({ assignments, viewAs }: Props) {
                       </div>
                       {assignment.resource && (
                         <div className="text-sm text-gray-500">
-                          {assignment.resource.estimatedHours}h • {assignment.resource.type} • Level {assignment.resource.level}
+                          {assignment.resource.estimatedHours}h • {formatSkill(assignment.resource.skill)} • Level {assignment.resource.level}
                         </div>
                       )}
                     </div>
