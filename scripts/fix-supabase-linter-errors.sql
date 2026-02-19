@@ -40,6 +40,9 @@ ALTER TABLE "public"."Resource" ENABLE ROW LEVEL SECURITY;
 -- Enable RLS on VocabularyProgress table
 ALTER TABLE "public"."VocabularyProgress" ENABLE ROW LEVEL SECURITY;
 
+-- Enable RLS on CourseNote table
+ALTER TABLE "public"."CourseNote" ENABLE ROW LEVEL SECURITY;
+
 -- ============================================================================
 -- PART 2: Create basic RLS policies for service role access
 -- ============================================================================
@@ -168,6 +171,23 @@ CREATE POLICY "Anon cannot access vocabulary progress"
   USING (false)
   WITH CHECK (false);
 
+-- CourseNote table policies
+DROP POLICY IF EXISTS "Service role can access all course notes" ON "public"."CourseNote";
+CREATE POLICY "Service role can access all course notes"
+  ON "public"."CourseNote"
+  FOR ALL
+  TO service_role
+  USING (true)
+  WITH CHECK (true);
+
+DROP POLICY IF EXISTS "Anon cannot access course notes" ON "public"."CourseNote";
+CREATE POLICY "Anon cannot access course notes"
+  ON "public"."CourseNote"
+  FOR ALL
+  TO anon
+  USING (false)
+  WITH CHECK (false);
+
 -- ============================================================================
 -- PART 3: Fix function search_path issues (WARN level)
 -- ============================================================================
@@ -200,31 +220,24 @@ EXCEPTION
     NULL;
 END $$;
 
--- Fix check_sub_account_count function (if it exists)
--- Note: This function might be from another project, but we'll fix it if it exists
+-- Fix check_sub_account_count and raw_sql (any signature - they may have parameters)
+-- Uses dynamic SQL so it works regardless of function arguments
 DO $$
+DECLARE
+  r RECORD;
 BEGIN
-  ALTER FUNCTION "public"."check_sub_account_count"() SET search_path = public, pg_temp;
-EXCEPTION
-  WHEN undefined_function THEN
-    -- Function doesn't exist, skip it
-    NULL;
-  WHEN OTHERS THEN
-    -- Other error (e.g., wrong signature), skip it
-    NULL;
-END $$;
-
--- Fix raw_sql function (if it exists)
-DO $$
-BEGIN
-  ALTER FUNCTION "public"."raw_sql"() SET search_path = public, pg_temp;
-EXCEPTION
-  WHEN undefined_function THEN
-    -- Function doesn't exist, skip it
-    NULL;
-  WHEN OTHERS THEN
-    -- Other error (e.g., wrong signature), skip it
-    NULL;
+  FOR r IN
+    SELECT p.proname, pg_get_function_identity_arguments(p.oid) AS args
+    FROM pg_proc p
+    JOIN pg_namespace n ON p.pronamespace = n.oid
+    WHERE n.nspname = 'public' AND p.proname IN ('check_sub_account_count', 'raw_sql')
+  LOOP
+    IF r.args IS NULL OR r.args = '' THEN
+      EXECUTE format('ALTER FUNCTION public.%I() SET search_path = public, pg_temp', r.proname);
+    ELSE
+      EXECUTE format('ALTER FUNCTION public.%I(%s) SET search_path = public, pg_temp', r.proname, r.args);
+    END IF;
+  END LOOP;
 END $$;
 
 -- Fix update_updated_at_column function (if it exists)
