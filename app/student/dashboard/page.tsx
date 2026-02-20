@@ -52,6 +52,21 @@ export default async function StudentDashboard() {
   // Get the first enrollment for the "My Course" card
   const firstEnrollment = enrollments[0]
 
+  // Fetch document count for the "My Docs" card
+  let documentCount = 0
+  try {
+    const { data: documentsData, error: documentsError } = await supabaseServer
+      .from('StudentDocument')
+      .select('id')
+      .eq('studentId', session.user.id)
+
+    if (!documentsError && documentsData) {
+      documentCount = documentsData.length || 0
+    }
+  } catch (error) {
+    console.error('Error loading document count:', error)
+  }
+
   return (
     <div className="min-h-screen bg-gray-50">
       <Navbar />
@@ -115,6 +130,21 @@ export default async function StudentDashboard() {
               </h2>
               <p className="text-gray-600 text-sm">
                 View notes and corrections from your lessons
+              </p>
+            </Link>
+
+            {/* My Docs Card */}
+            <Link
+              href="/student/docs"
+              className="bg-white shadow rounded-lg p-6 hover:shadow-lg transition-shadow"
+            >
+              <h2 className="text-xl font-semibold text-gray-900 mb-2" style={{ color: '#38438f' }}>
+                My Docs
+              </h2>
+              <p className="text-gray-600 text-sm">
+                {documentCount > 0 
+                  ? `${documentCount} document${documentCount !== 1 ? 's' : ''} available`
+                  : 'View your administrative documents'}
               </p>
             </Link>
           </div>

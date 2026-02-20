@@ -18,7 +18,7 @@ export default function Navbar() {
     if (path === '/teacher/dashboard' || path === '/student/dashboard') {
       return pathname === path
     }
-    if (path === '/student/toeic-info' || path === '/student/vocabulary' || path === '/student/course' || path === '/student/notes') {
+    if (path === '/student/toeic-info' || path === '/student/vocabulary' || path === '/student/course' || path === '/student/notes' || path === '/student/docs') {
       return pathname === path
     }
     return pathname.startsWith(path)
@@ -149,7 +149,7 @@ export default function Navbar() {
                     }`}
                     style={isActive('/student/course') ? { borderColor: '#38438f' } : {}}
                   >
-                    Course
+                    My Course
                   </Link>
                   <Link
                     href="/student/notes"
@@ -161,6 +161,17 @@ export default function Navbar() {
                     style={isActive('/student/notes') ? { borderColor: '#38438f' } : {}}
                   >
                     My Notes
+                  </Link>
+                  <Link
+                    href="/student/docs"
+                    className={`inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium transition-colors ${
+                      isActive('/student/docs')
+                        ? 'text-gray-900'
+                        : 'border-transparent text-gray-500 hover:text-[#38438f] hover:border-[#38438f]'
+                    }`}
+                    style={isActive('/student/docs') ? { borderColor: '#38438f' } : {}}
+                  >
+                    My Docs
                   </Link>
                 </>
               )}

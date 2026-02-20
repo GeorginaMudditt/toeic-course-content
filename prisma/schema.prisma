@@ -59,6 +59,7 @@ model User {
   // Student relationships
   enrollments     Enrollment[]
   progress        Progress[]
+  documents       StudentDocument[]
 }
 
 model Resource {
@@ -152,4 +153,21 @@ model CourseNote {
   enrollment    Enrollment @relation(fields: [enrollmentId], references: [id])
   
   @@unique([enrollmentId])
+}
+
+model StudentDocument {
+  id            String    @id @default(cuid())
+  studentId     String
+  title         String    // Document title (e.g., "Signed Contract", "Terms and Conditions")
+  fileName      String    // Original filename
+  fileUrl       String    // URL to the file in storage (Supabase Storage)
+  fileSize      Int?      // File size in bytes
+  mimeType      String?   // MIME type (e.g., "application/pdf", "image/png")
+  uploadedBy   String    // Teacher ID who uploaded the document
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  
+  student       User      @relation(fields: [studentId], references: [id])
+  
+  @@index([studentId])
 }

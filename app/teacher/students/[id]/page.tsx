@@ -9,6 +9,7 @@ import EditStudentEmail from '@/components/EditStudentEmail'
 import Link from 'next/link'
 import { formatUKDate } from '@/lib/date-utils'
 import StudentNotesManager from '@/components/StudentNotesManager'
+import StudentDocumentManager from '@/components/StudentDocumentManager'
 import Tabs from '@/components/Tabs'
 
 export default async function StudentDetailPage({ params }: { params: { id: string } }) {
@@ -21,6 +22,7 @@ export default async function StudentDetailPage({ params }: { params: { id: stri
   let student: any = null
   let allResources: any[] = []
   let courses: any[] = []
+  let documents: any[] = []
 
   try {
     // Fetch the student
@@ -157,6 +159,19 @@ export default async function StudentDetailPage({ params }: { params: { id: stri
     } else {
       courses = coursesList || []
     }
+
+    // Fetch documents for this student
+    const { data: documentsData, error: documentsError } = await supabaseServer
+      .from('StudentDocument')
+      .select('*')
+      .eq('studentId', params.id)
+      .order('createdAt', { ascending: false })
+
+    if (documentsError) {
+      console.error('Error fetching documents:', documentsError)
+    } else {
+      documents = documentsData || []
+    }
   } catch (error) {
     console.error('Error loading student detail page:', error)
     redirect('/teacher/students')
@@ -227,6 +242,16 @@ export default async function StudentDetailPage({ params }: { params: { id: stri
                   <StudentNotesManager
                     student={student}
                     enrollments={student.enrollments}
+                  />
+                )
+              },
+              {
+                id: 'documents',
+                label: 'Documents',
+                content: (
+                  <StudentDocumentManager
+                    studentId={student.id}
+                    documents={documents}
                   />
                 )
               }

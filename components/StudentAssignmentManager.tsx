@@ -425,41 +425,101 @@ export default function StudentAssignmentManager({ student, resources, courses }
                 </div>
               ) : (
               <div className="space-y-2">
-                {enrollment.assignments.map((assignment, index) => {
-                  const progress = assignment.progress[0]
-                  return (
-                    <div
-                      key={assignment.id}
-                      className="flex justify-between items-start p-3 border rounded-lg bg-white"
-                    >
-                      <div className="flex-1 min-w-0">
-                        <div className="font-medium text-gray-900">
-                          Lesson {assignment.order} : {assignment.resource.title}
-                        </div>
-                        {progress && (
-                          <div className="text-sm mt-1">
-                            Status: <span className={
-                              progress.status === 'COMPLETED' ? 'text-green-600' :
-                              progress.status === 'IN_PROGRESS' ? 'text-blue-600' :
-                              'text-gray-500'
-                            }>
-                              {progress.status}
-                            </span>
-                          </div>
-                        )}
-                      </div>
-                      <button
-                        onClick={() => handleRemoveAssignment(assignment.id)}
-                        className="text-sm ml-4 flex-shrink-0 transition-colors"
-                        style={{ color: brizzleRed }}
-                        onMouseEnter={(e) => e.currentTarget.style.color = brizzleRedHover}
-                        onMouseLeave={(e) => e.currentTarget.style.color = brizzleRed}
-                      >
-                        Remove
-                      </button>
-                    </div>
+                {(() => {
+                  // Separate reference and non-reference assignments
+                  const referenceAssignments = enrollment.assignments.filter(
+                    (assignment) => assignment.resource?.skill === 'REFERENCE'
                   )
-                })}
+                  const lessonAssignments = enrollment.assignments.filter(
+                    (assignment) => assignment.resource?.skill !== 'REFERENCE'
+                  )
+                  
+                  // Sort both by order
+                  const sortedLessonAssignments = [...lessonAssignments].sort((a, b) => a.order - b.order)
+                  const sortedReferenceAssignments = [...referenceAssignments].sort((a, b) => a.order - b.order)
+                  
+                  // Calculate lesson numbers only for non-reference resources
+                  let lessonNumber = 0
+                  
+                  return (
+                    <>
+                      {/* Display lesson assignments with lesson numbers */}
+                      {sortedLessonAssignments.map((assignment) => {
+                        lessonNumber++
+                        const progress = assignment.progress[0]
+                        return (
+                          <div
+                            key={assignment.id}
+                            className="flex justify-between items-start p-3 border rounded-lg bg-white"
+                          >
+                            <div className="flex-1 min-w-0">
+                              <div className="font-medium text-gray-900">
+                                Lesson {lessonNumber} : {assignment.resource.title}
+                              </div>
+                              {progress && (
+                                <div className="text-sm mt-1">
+                                  Status: <span className={
+                                    progress.status === 'COMPLETED' ? 'text-green-600' :
+                                    progress.status === 'IN_PROGRESS' ? 'text-blue-600' :
+                                    'text-gray-500'
+                                  }>
+                                    {progress.status}
+                                  </span>
+                                </div>
+                              )}
+                            </div>
+                            <button
+                              onClick={() => handleRemoveAssignment(assignment.id)}
+                              className="text-sm ml-4 flex-shrink-0 transition-colors"
+                              style={{ color: brizzleRed }}
+                              onMouseEnter={(e) => e.currentTarget.style.color = brizzleRedHover}
+                              onMouseLeave={(e) => e.currentTarget.style.color = brizzleRed}
+                            >
+                              Remove
+                            </button>
+                          </div>
+                        )
+                      })}
+                      
+                      {/* Display reference assignments without lesson numbers */}
+                      {sortedReferenceAssignments.map((assignment) => {
+                        const progress = assignment.progress[0]
+                        return (
+                          <div
+                            key={assignment.id}
+                            className="flex justify-between items-start p-3 border rounded-lg bg-white"
+                          >
+                            <div className="flex-1 min-w-0">
+                              <div className="font-medium text-gray-900">
+                                Reference : {assignment.resource.title}
+                              </div>
+                              {progress && (
+                                <div className="text-sm mt-1">
+                                  Status: <span className={
+                                    progress.status === 'COMPLETED' ? 'text-green-600' :
+                                    progress.status === 'IN_PROGRESS' ? 'text-blue-600' :
+                                    'text-gray-500'
+                                  }>
+                                    {progress.status}
+                                  </span>
+                                </div>
+                              )}
+                            </div>
+                            <button
+                              onClick={() => handleRemoveAssignment(assignment.id)}
+                              className="text-sm ml-4 flex-shrink-0 transition-colors"
+                              style={{ color: brizzleRed }}
+                              onMouseEnter={(e) => e.currentTarget.style.color = brizzleRedHover}
+                              onMouseLeave={(e) => e.currentTarget.style.color = brizzleRed}
+                            >
+                              Remove
+                            </button>
+                          </div>
+                        )
+                      })}
+                    </>
+                  )
+                })()}
               </div>
             )}
             </div>
