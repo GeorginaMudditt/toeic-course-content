@@ -6,8 +6,13 @@ import { AuthProvider } from './providers'
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
-  title: 'TOEIC Course Management',
+  title: 'Brizzle Courses',
   description: 'Tailored TOEIC preparation course management system',
+  icons: {
+    icon: '/brizzle-logo.png',
+    shortcut: '/brizzle-logo.png',
+    apple: '/brizzle-logo.png',
+  },
 }
 
 export default function RootLayout({
