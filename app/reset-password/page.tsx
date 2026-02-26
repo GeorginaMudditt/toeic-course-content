@@ -125,7 +125,7 @@ export default function ResetPasswordPage() {
             />
           </div>
           <h1 className="text-4xl font-extrabold" style={{ color: '#38438f' }}>
-            Brizzle TOEIC®
+            Brizzle E-Learning Platform
           </h1>
           <p className="mt-2 text-center text-sm text-gray-600">
             Set your new password

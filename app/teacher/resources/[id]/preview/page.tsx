@@ -6,6 +6,8 @@ import Navbar from '@/components/Navbar'
 import ResourcePreview from '@/components/ResourcePreview'
 import Link from 'next/link'
 
+export const dynamic = 'force-dynamic' // Always fetch latest resource content from DB (no cache)
+
 export default async function ResourcePreviewPage({ params }: { params: { id: string } }) {
   const session = await getServerSession(authOptions)
   
