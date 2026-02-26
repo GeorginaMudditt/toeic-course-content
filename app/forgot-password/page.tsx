@@ -60,7 +60,7 @@ export default function ForgotPasswordPage() {
               className="mx-auto"
             />
           </div>
-          <h1 className="text-4xl font-extrabold" style={{ color: '#38438f' }}>
+          <h1 className="text-4xl font-extrabold text-center" style={{ color: '#38438f' }}>
             Brizzle E-Learning Platform
           </h1>
           <p className="mt-2 text-center text-sm text-gray-600">
