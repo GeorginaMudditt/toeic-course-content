@@ -119,6 +119,39 @@ export default function Navbar() {
                     Dashboard
                   </Link>
                   <Link
+                    href="/student/course"
+                    className={`inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium transition-colors ${
+                      isActive('/student/course')
+                        ? 'text-gray-900'
+                        : 'border-transparent text-gray-500 hover:text-[#38438f] hover:border-[#38438f]'
+                    }`}
+                    style={isActive('/student/course') ? { borderColor: '#38438f' } : {}}
+                  >
+                    Resources
+                  </Link>
+                  <Link
+                    href="/student/notes"
+                    className={`inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium transition-colors ${
+                      isActive('/student/notes')
+                        ? 'text-gray-900'
+                        : 'border-transparent text-gray-500 hover:text-[#38438f] hover:border-[#38438f]'
+                    }`}
+                    style={isActive('/student/notes') ? { borderColor: '#38438f' } : {}}
+                  >
+                    Notes
+                  </Link>
+                  <Link
+                    href="/student/docs"
+                    className={`inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium transition-colors ${
+                      isActive('/student/docs')
+                        ? 'text-gray-900'
+                        : 'border-transparent text-gray-500 hover:text-[#38438f] hover:border-[#38438f]'
+                    }`}
+                    style={isActive('/student/docs') ? { borderColor: '#38438f' } : {}}
+                  >
+                    Docs
+                  </Link>
+                  <Link
                     href="/student/toeic-info"
                     className={`inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium transition-colors ${
                       isActive('/student/toeic-info')
@@ -139,39 +172,6 @@ export default function Navbar() {
                     style={isActive('/student/vocabulary') ? { borderColor: '#38438f' } : {}}
                   >
                     Vocabulary
-                  </Link>
-                  <Link
-                    href="/student/course"
-                    className={`inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium transition-colors ${
-                      isActive('/student/course')
-                        ? 'text-gray-900'
-                        : 'border-transparent text-gray-500 hover:text-[#38438f] hover:border-[#38438f]'
-                    }`}
-                    style={isActive('/student/course') ? { borderColor: '#38438f' } : {}}
-                  >
-                    My Course
-                  </Link>
-                  <Link
-                    href="/student/notes"
-                    className={`inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium transition-colors ${
-                      isActive('/student/notes')
-                        ? 'text-gray-900'
-                        : 'border-transparent text-gray-500 hover:text-[#38438f] hover:border-[#38438f]'
-                    }`}
-                    style={isActive('/student/notes') ? { borderColor: '#38438f' } : {}}
-                  >
-                    My Notes
-                  </Link>
-                  <Link
-                    href="/student/docs"
-                    className={`inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium transition-colors ${
-                      isActive('/student/docs')
-                        ? 'text-gray-900'
-                        : 'border-transparent text-gray-500 hover:text-[#38438f] hover:border-[#38438f]'
-                    }`}
-                    style={isActive('/student/docs') ? { borderColor: '#38438f' } : {}}
-                  >
-                    My Docs
                   </Link>
                 </>
               )}

@@ -16,7 +16,8 @@ export default function StudentNotesView({ content }: Props) {
         padding: '16px',
         border: '1px solid #e5e7eb',
         borderRadius: '8px',
-        backgroundColor: '#f9fafb',
+        backgroundColor: '#ffffff',
+        color: '#000000',
       }}
     />
   )

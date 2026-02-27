@@ -124,7 +124,7 @@ export default function StudentDocumentManager({ studentId, documents: initialDo
           </div>
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
-              File (PDF, PNG, JPEG - max 10MB)
+              File (PDF, PNG, JPEG - max 25MB)
             </label>
             <input
               id="file-input"

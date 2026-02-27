@@ -46,11 +46,11 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // Validate file size (max 10MB)
-    const maxSize = 10 * 1024 * 1024 // 10MB
+    // Validate file size (max 25MB for student documents e.g. welcome PDFs)
+    const maxSize = 25 * 1024 * 1024 // 25MB
     if (file.size > maxSize) {
       return NextResponse.json(
-        { error: 'File size exceeds limit (10MB)' },
+        { error: 'File size exceeds limit (25MB)' },
         { status: 400 }
       )
     }

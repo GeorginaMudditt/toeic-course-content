@@ -104,48 +104,34 @@ export default async function StudentViewPage({ params }: { params: { id: string
           <h1 className="text-3xl font-bold text-gray-900 mb-8">Dashboard</h1>
 
           <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
-            {/* About the TOEIC® 4-Skills Test Card */}
-            <Link
-              href={`/student/toeic-info?viewAs=${params.id}`}
-              className="bg-white shadow rounded-lg p-6 hover:shadow-lg transition-shadow"
-            >
-              <h2 className="text-xl font-semibold text-gray-900 mb-2" style={{ color: '#38438f' }}>
-                About the TOEIC® 4-Skills Test
-              </h2>
-              <p className="text-gray-600 text-sm">
-                Find out about test duration, format and scoring
-              </p>
-            </Link>
-
-            {/* Vocabulary by CEFR level Card */}
-            <Link
-              href={`/student/vocabulary?viewAs=${params.id}`}
-              className="bg-white shadow rounded-lg p-6 hover:shadow-lg transition-shadow"
-            >
-              <h2 className="text-xl font-semibold text-gray-900 mb-2" style={{ color: '#38438f' }}>
-                Vocabulary by CEFR level
-              </h2>
-              <p className="text-gray-600 text-sm">
-                Test your vocabulary knowledge with these fun activities
-              </p>
-            </Link>
-
-            {/* My Course Card */}
+            {/* My Resources Card (was My Course) */}
             <Link
               href={`/student/course?viewAs=${params.id}`}
               className="bg-white shadow rounded-lg p-6 hover:shadow-lg transition-shadow"
             >
               <h2 className="text-xl font-semibold text-gray-900 mb-2" style={{ color: '#38438f' }}>
-                My Course
+                My Resources
               </h2>
               {firstEnrollment && firstEnrollment.course ? (
-                <p className="text-gray-600 text-sm">
-                  {formatCourseName(firstEnrollment.course.name, firstEnrollment.course.duration)} - enrolled {formatUKDate(firstEnrollment.enrolledAt)}
-                </p>
+                <>
+                  <p className="text-gray-600 text-sm">
+                    <em>
+                      {formatCourseName(firstEnrollment.course.name, firstEnrollment.course.duration)} - enrolled {formatUKDate(firstEnrollment.enrolledAt)}
+                    </em>
+                  </p>
+                  <p className="text-gray-600 text-sm mt-1">
+                    Find all your worksheets for lessons and homework.
+                  </p>
+                </>
               ) : (
-                <p className="text-gray-600 text-sm">
-                  No course enrolled yet
-                </p>
+                <>
+                  <p className="text-gray-600 text-sm">
+                    No course enrolled yet
+                  </p>
+                  <p className="text-gray-600 text-sm mt-1">
+                    Find all your worksheets for lessons and homework.
+                  </p>
+                </>
               )}
             </Link>
 
@@ -158,7 +144,7 @@ export default async function StudentViewPage({ params }: { params: { id: string
                 My Notes
               </h2>
               <p className="text-gray-600 text-sm">
-                View notes and corrections from your lessons
+                View notes, corrections from your lessons, and your attendance.
               </p>
             </Link>
 
@@ -170,10 +156,43 @@ export default async function StudentViewPage({ params }: { params: { id: string
               <h2 className="text-xl font-semibold text-gray-900 mb-2" style={{ color: '#38438f' }}>
                 My Docs
               </h2>
+              <div className="text-gray-600 text-sm space-y-1">
+                <p>
+                  <em>
+                    {documentCount > 0 
+                      ? `${documentCount} document${documentCount !== 1 ? 's' : ''} available`
+                      : 'No documents assigned yet.'}
+                  </em>
+                </p>
+                <p>
+                  View your administrative documentation, such as your contract.
+                </p>
+              </div>
+            </Link>
+
+            {/* About the TOEIC® 4-Skills Test Card */}
+            <Link
+              href={`/student/toeic-info?viewAs=${params.id}`}
+              className="bg-white shadow rounded-lg p-6 hover:shadow-lg transition-shadow"
+            >
+              <h2 className="text-xl font-semibold text-gray-900 mb-2" style={{ color: '#38438f' }}>
+                About the TOEIC® 4-Skills Test
+              </h2>
               <p className="text-gray-600 text-sm">
-                {documentCount > 0 
-                  ? `${documentCount} document${documentCount !== 1 ? 's' : ''} available`
-                  : 'View your administrative documents'}
+                Find out about test duration, format and scoring.
+              </p>
+            </Link>
+
+            {/* Vocabulary by CEFR level Card */}
+            <Link
+              href={`/student/vocabulary?viewAs=${params.id}`}
+              className="bg-white shadow rounded-lg p-6 hover:shadow-lg transition-shadow"
+            >
+              <h2 className="text-xl font-semibold text-gray-900 mb-2" style={{ color: '#38438f' }}>
+                Vocabulary by CEFR level
+              </h2>
+              <p className="text-gray-600 text-sm">
+                Test your vocabulary knowledge with these fun activities.
               </p>
             </Link>
           </div>
