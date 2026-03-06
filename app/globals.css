@@ -106,3 +106,87 @@ input[type="checkbox"]:focus {
   z-index: 11 !important;
 }
 
+/* Placement test Answers section: ensure answer text is always visible */
+.placement-test-answers,
+.placement-test-answers ul,
+.placement-test-answers li,
+.placement-test-answers strong {
+  color: #000 !important;
+  visibility: visible !important;
+}
+.placement-test-answers ul {
+  display: block !important;
+  list-style-type: disc !important;
+  list-style-position: outside !important;
+}
+.placement-test-answers li {
+  display: list-item !important;
+}
+
+/* Placement test Audio Transcripts section: ensure transcript text is always visible */
+.placement-test-transcripts,
+.placement-test-transcripts h2,
+.placement-test-transcripts h3,
+.placement-test-transcripts table,
+.placement-test-transcripts td {
+  color: #000 !important;
+  visibility: visible !important;
+}
+.placement-test-transcripts table {
+  display: table !important;
+  border-collapse: collapse !important;
+}
+.placement-test-transcripts tr {
+  display: table-row !important;
+}
+.placement-test-transcripts td {
+  display: table-cell !important;
+}
+
+/* Final assessment Answers section: ensure answer text is always visible */
+.final-assessment-answers,
+.final-assessment-answers ul,
+.final-assessment-answers li,
+.final-assessment-answers strong {
+  color: #000 !important;
+  visibility: visible !important;
+}
+.final-assessment-answers ul {
+  display: block !important;
+  list-style-type: disc !important;
+  list-style-position: outside !important;
+}
+.final-assessment-answers li {
+  display: list-item !important;
+}
+
+/* Final assessment Audio Transcripts section: ensure transcript text is always visible */
+.final-assessment-transcripts,
+.final-assessment-transcripts h2,
+.final-assessment-transcripts h3,
+.final-assessment-transcripts table,
+.final-assessment-transcripts td {
+  color: #000 !important;
+  visibility: visible !important;
+}
+.final-assessment-transcripts table {
+  display: table !important;
+  border-collapse: collapse !important;
+}
+.final-assessment-transcripts tr {
+  display: table-row !important;
+}
+.final-assessment-transcripts td {
+  display: table-cell !important;
+}
+
+/* Student notes view: force black text when content was saved as white (e.g. dark mode) */
+.student-notes-view [style*="color: white"],
+.student-notes-view [style*="color:white"],
+.student-notes-view [style*="color: rgb(255, 255, 255)"],
+.student-notes-view [style*="color:rgb(255,255,255)"],
+.student-notes-view [style*="color: #fff"],
+.student-notes-view [style*="color:#fff"] {
+  color: #000 !important;
+}
+
