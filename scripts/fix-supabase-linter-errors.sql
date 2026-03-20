@@ -43,6 +43,9 @@ ALTER TABLE "public"."VocabularyProgress" ENABLE ROW LEVEL SECURITY;
 -- Enable RLS on CourseNote table
 ALTER TABLE "public"."CourseNote" ENABLE ROW LEVEL SECURITY;
 
+-- Enable RLS on CourseNoteRevision table
+ALTER TABLE "public"."CourseNoteRevision" ENABLE ROW LEVEL SECURITY;
+
 -- ============================================================================
 -- PART 2: Create basic RLS policies for service role access
 -- ============================================================================
@@ -183,6 +186,23 @@ CREATE POLICY "Service role can access all course notes"
 DROP POLICY IF EXISTS "Anon cannot access course notes" ON "public"."CourseNote";
 CREATE POLICY "Anon cannot access course notes"
   ON "public"."CourseNote"
+  FOR ALL
+  TO anon
+  USING (false)
+  WITH CHECK (false);
+
+-- CourseNoteRevision table policies
+DROP POLICY IF EXISTS "Service role can access all course note revisions" ON "public"."CourseNoteRevision";
+CREATE POLICY "Service role can access all course note revisions"
+  ON "public"."CourseNoteRevision"
+  FOR ALL
+  TO service_role
+  USING (true)
+  WITH CHECK (true);
+
+DROP POLICY IF EXISTS "Anon cannot access course note revisions" ON "public"."CourseNoteRevision";
+CREATE POLICY "Anon cannot access course note revisions"
+  ON "public"."CourseNoteRevision"
   FOR ALL
   TO anon
   USING (false)

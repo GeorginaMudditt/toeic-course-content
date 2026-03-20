@@ -105,6 +105,7 @@ model Enrollment {
   
   assignments   Assignment[]
   courseNote    CourseNote?
+  courseNoteRevisions CourseNoteRevision[]
   
   @@unique([studentId, courseId])
 }
@@ -151,8 +152,22 @@ model CourseNote {
   updatedAt     DateTime  @updatedAt
   
   enrollment    Enrollment @relation(fields: [enrollmentId], references: [id])
+  revisions     CourseNoteRevision[]
   
   @@unique([enrollmentId])
+}
+
+model CourseNoteRevision {
+  id                  String   @id @default(cuid())
+  courseNoteId        String
+  enrollmentId        String
+  content             String
+  createdAt           DateTime @default(now())
+  createdBy           String
+  expectedUpdatedAt  DateTime?
+
+  courseNote          CourseNote @relation(fields: [courseNoteId], references: [id])
+  enrollment          Enrollment @relation(fields: [enrollmentId], references: [id])
 }
 
 model StudentDocument {

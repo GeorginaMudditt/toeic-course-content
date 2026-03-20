@@ -73,6 +73,8 @@ const ensureLeadingEmptyRow = (rows: LessonRow[]): LessonRow[] => {
 export default function StudentNotesManager({ student, enrollments }: Props) {
   const [selectedEnrollment, setSelectedEnrollment] = useState<string>(enrollments[0]?.id ?? '')
   const [content, setContent] = useState<string>('') // Raw content stored in DB (JSON string for new format)
+  const [noteUpdatedAt, setNoteUpdatedAt] = useState<string | null>(null)
+  const [noteLoaded, setNoteLoaded] = useState(false)
   const [loading, setLoading] = useState(false)
   const [saving, setSaving] = useState(false)
   const [lastSaved, setLastSaved] = useState<Date | null>(null)
@@ -84,16 +86,38 @@ export default function StudentNotesManager({ student, enrollments }: Props) {
   // Refs for each contentEditable; we set innerHTML only when that editor does NOT have focus
   const editorRefs = useRef<Record<string, HTMLDivElement | null>>({})
 
+  // Refs used by auto-save so we don't restart intervals on every keystroke.
+  const contentRef = useRef<string>(content)
+  const noteUpdatedAtRef = useRef<string | null>(noteUpdatedAt)
+  const lastSavedContentRef = useRef<string>('')
+  const noteLoadedRef = useRef<boolean>(noteLoaded)
+  const savingRef = useRef<boolean>(false)
+
   // Load note when enrollment changes
   useEffect(() => {
     if (selectedEnrollment) {
+      setNoteLoaded(false)
+      noteLoadedRef.current = false
       loadNote(selectedEnrollment)
     } else {
       setContent('')
+      setNoteUpdatedAt(null)
+      noteUpdatedAtRef.current = null
+      setNoteLoaded(false)
+      noteLoadedRef.current = false
+      lastSavedContentRef.current = ''
       setRows([createEmptyRow()])
       setLegacyContent(null)
     }
   }, [selectedEnrollment])
+
+  useEffect(() => {
+    contentRef.current = content
+  }, [content])
+
+  useEffect(() => {
+    noteUpdatedAtRef.current = noteUpdatedAt
+  }, [noteUpdatedAt])
 
   const loadNote = async (enrollmentId: string) => {
     setLoading(true)
@@ -101,9 +125,17 @@ export default function StudentNotesManager({ student, enrollments }: Props) {
       const response = await fetch(`/api/course-notes/${enrollmentId}`)
       const data = await response.json()
 
-      if (data.note && data.note.content) {
+      if (data.note && typeof data.note.content === 'string') {
         const raw = data.note.content as string
         setContent(raw)
+        contentRef.current = raw
+        lastSavedContentRef.current = raw
+
+        const updatedAt = typeof data.note.updatedAt === 'string' ? data.note.updatedAt : null
+        setNoteUpdatedAt(updatedAt)
+        noteUpdatedAtRef.current = updatedAt
+        setNoteLoaded(true)
+        noteLoadedRef.current = true
 
         // Try to parse as structured notes (JSON)
         try {
@@ -124,6 +156,12 @@ export default function StudentNotesManager({ student, enrollments }: Props) {
       } else {
         // No existing note – start with a single empty row
         setContent('')
+        contentRef.current = ''
+        lastSavedContentRef.current = ''
+        setNoteUpdatedAt(null)
+        noteUpdatedAtRef.current = null
+        setNoteLoaded(true)
+        noteLoadedRef.current = true
         setLegacyContent(null)
         setRows([createEmptyRow()])
       }
@@ -137,42 +175,63 @@ export default function StudentNotesManager({ student, enrollments }: Props) {
 
   const saveNote = async () => {
     if (!selectedEnrollment) return
+    if (!noteLoadedRef.current) return
+    if (savingRef.current) return
 
+    const contentToSave = contentRef.current || ''
+    if (contentToSave === lastSavedContentRef.current) return // nothing changed since last confirmed save
+
+    savingRef.current = true
     setSaving(true)
     try {
-      const contentToSave = content || ''
+      const expectedUpdatedAt = noteUpdatedAtRef.current
 
       const response = await fetch(`/api/course-notes/${selectedEnrollment}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ content: contentToSave }),
+        body: JSON.stringify({ content: contentToSave, expectedUpdatedAt }),
       })
+
+      if (response.status === 409) {
+        // Another tab saved first; prevent overwriting and reload server truth.
+        alert('This note was updated in another tab. Reloading the latest version.')
+        await loadNote(selectedEnrollment)
+        return
+      }
 
       if (!response.ok) {
         throw new Error('Failed to save note')
       }
 
+      const data = await response.json()
+      const nextUpdatedAt = data?.note?.updatedAt
+      const nextUpdatedAtIso = typeof nextUpdatedAt === 'string' ? nextUpdatedAt : null
+
+      setNoteUpdatedAt(nextUpdatedAtIso)
+      noteUpdatedAtRef.current = nextUpdatedAtIso
+      lastSavedContentRef.current = contentToSave
       setLastSaved(new Date())
     } catch (error) {
       console.error('Error saving note:', error)
       alert('Error saving note')
     } finally {
       setSaving(false)
+      savingRef.current = false
     }
   }
 
   // Auto-save every 30 seconds
   useEffect(() => {
-    if (!selectedEnrollment || !content) return
+    if (!selectedEnrollment || !noteLoaded) return
 
     const interval = setInterval(() => {
-      saveNote()
+      void saveNote()
     }, 30000) // 30 seconds
 
     return () => clearInterval(interval)
-  }, [selectedEnrollment, content])
+  }, [selectedEnrollment, noteLoaded])
 
   const syncActiveEditor = () => {
     const selection = document.getSelection()
