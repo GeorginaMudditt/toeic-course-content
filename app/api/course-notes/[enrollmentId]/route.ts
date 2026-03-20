@@ -132,6 +132,8 @@ export async function PUT(
         return NextResponse.json({ error: 'Error creating note' }, { status: 500 })
       }
 
+      // Best-effort revision logging.
+      // The core write (CourseNote) must not fail if revision history is misconfigured.
       const { error: revisionError } = await supabaseServer
         .from('CourseNoteRevision')
         .insert({
@@ -146,7 +148,6 @@ export async function PUT(
 
       if (revisionError) {
         console.error('Error inserting note revision (create):', revisionError)
-        return NextResponse.json({ error: 'Error writing revision log' }, { status: 500 })
       }
 
       return NextResponse.json({ note: createdNote })
@@ -195,7 +196,6 @@ export async function PUT(
 
     if (revisionError) {
       console.error('Error inserting note revision (update):', revisionError)
-      return NextResponse.json({ error: 'Error writing revision log' }, { status: 500 })
     }
 
     return NextResponse.json({ note: updatedNote })
