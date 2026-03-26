@@ -36,9 +36,9 @@ async function main() {
     { name: 'PRO Pack - Launch', duration: 20 },
     { name: 'PRO Pack - Scale', duration: 40 },
     { name: 'PRO Pack - Lead', duration: 60 },
-    { name: 'Travel English', duration: 0 },
-    { name: 'Speak English with Confidence', duration: 0 },
-    { name: 'Serve and Sell in English', duration: 0 }
+    { name: 'Travel English', duration: 10 },
+    { name: 'Speak English with Confidence', duration: 10 },
+    { name: 'Serve and Sell in English', duration: 10 }
   ]
 
   const teacher = await prisma.user.findUnique({

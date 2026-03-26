@@ -59,9 +59,9 @@ const PRESET_COURSE_OPTIONS: PresetCourseOption[] = [
   { id: 'preset_pro_launch_20', name: 'PRO Pack - Launch', duration: 20 },
   { id: 'preset_pro_scale_40', name: 'PRO Pack - Scale', duration: 40 },
   { id: 'preset_pro_lead_60', name: 'PRO Pack - Lead', duration: 60 },
-  { id: 'preset_travel_english', name: 'Travel English', duration: 0 },
-  { id: 'preset_speak_confidence', name: 'Speak English with Confidence', duration: 0 },
-  { id: 'preset_serve_sell', name: 'Serve and Sell in English', duration: 0 },
+  { id: 'preset_travel_english', name: 'Travel English', duration: 10 },
+  { id: 'preset_speak_confidence', name: 'Speak English with Confidence', duration: 10 },
+  { id: 'preset_serve_sell', name: 'Serve and Sell in English', duration: 10 },
 ]
 
 const OTHER_OPTION_VALUE = '__OTHER__'
