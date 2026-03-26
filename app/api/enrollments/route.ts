@@ -52,12 +52,16 @@ export async function POST(request: NextRequest) {
         resolvedCourseId = existingCourses[0].id
       } else {
         const newCourseId = randomUUID()
+        const nowIso = new Date().toISOString()
         const { data: createdCourse, error: createCourseError } = await supabaseServer
           .from('Course')
           .insert({
             id: newCourseId,
             name: normalizedName,
             duration,
+            description: null,
+            createdAt: nowIso,
+            updatedAt: nowIso,
             creatorId: session.user.id,
           })
           .select('id')
