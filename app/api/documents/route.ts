@@ -102,7 +102,7 @@ export async function POST(request: NextRequest) {
       console.error('Database error:', dbError)
       console.error('Database error details:', JSON.stringify(dbError, null, 2))
       // Try to delete uploaded file if database insert fails
-      await supabaseServer.storage.from('resources').remove([filename])
+      await supabaseServer.storage.from('resources').remove([filePath])
       return NextResponse.json(
         { error: `Failed to save document record: ${dbError.message || 'Unknown error'}` },
         { status: 500 }
