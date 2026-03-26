@@ -21,6 +21,10 @@ export function formatCourseName(name: string, duration: number): string {
     .replace(/\s*\(\s*\d+\s*hours?\s*\)/gi, '') // Remove "(X hours)" or "(X Hours)"
     .trim()
   
+  if (!duration || duration <= 0) {
+    return cleanedName
+  }
+
   return `${cleanedName} (${duration} hours)`
 }
 

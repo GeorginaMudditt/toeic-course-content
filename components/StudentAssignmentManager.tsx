@@ -47,9 +47,29 @@ interface Props {
   courses: Course[]
 }
 
+interface PresetCourseOption {
+  id: string
+  name: string
+  duration: number
+}
+
+const PRESET_COURSE_OPTIONS: PresetCourseOption[] = [
+  { id: 'preset_toeic_progress_15', name: 'TOEIC® Pack - Progress', duration: 15 },
+  { id: 'preset_toeic_perform_20', name: 'TOEIC® Pack - Perform', duration: 20 },
+  { id: 'preset_pro_launch_20', name: 'PRO Pack - Launch', duration: 20 },
+  { id: 'preset_pro_scale_40', name: 'PRO Pack - Scale', duration: 40 },
+  { id: 'preset_pro_lead_60', name: 'PRO Pack - Lead', duration: 60 },
+  { id: 'preset_travel_english', name: 'Travel English', duration: 0 },
+  { id: 'preset_speak_confidence', name: 'Speak English with Confidence', duration: 0 },
+  { id: 'preset_serve_sell', name: 'Serve and Sell in English', duration: 0 },
+]
+
+const OTHER_OPTION_VALUE = '__OTHER__'
+
 export default function StudentAssignmentManager({ student, resources, courses }: Props) {
   const router = useRouter()
   const [selectedCourse, setSelectedCourse] = useState('')
+  const [customCourseName, setCustomCourseName] = useState('')
   const [selectedResources, setSelectedResources] = useState<string[]>([])
   const [loading, setLoading] = useState(false)
   const [selectedLevels, setSelectedLevels] = useState<string[]>(['All'])
@@ -58,6 +78,10 @@ export default function StudentAssignmentManager({ student, resources, courses }
 
   // Use the utility function directly - it handles all cleaning
   const formatCourseName = formatCourseNameUtil
+
+  const existingCourseBySignature = new Map(
+    courses.map((course) => [`${course.name.toLowerCase()}__${course.duration}`, course.id])
+  )
 
   // Get unique levels and skills from resources
   const availableLevels = ['All', 'A1', 'A2', 'B1', 'B2', 'C1', 'C2']
@@ -121,22 +145,48 @@ export default function StudentAssignmentManager({ student, resources, courses }
       return
     }
 
+    if (selectedCourse === OTHER_OPTION_VALUE && !customCourseName.trim()) {
+      alert('Please enter a course name for "Other"')
+      return
+    }
+
     setLoading(true)
     try {
+      const payload: any = { studentId: student.id }
+
+      if (selectedCourse === OTHER_OPTION_VALUE) {
+        payload.courseData = {
+          name: customCourseName.trim(),
+          duration: 0,
+        }
+      } else {
+        const preset = PRESET_COURSE_OPTIONS.find((option) => option.id === selectedCourse)
+        if (preset) {
+          const signature = `${preset.name.toLowerCase()}__${preset.duration}`
+          const existingCourseId = existingCourseBySignature.get(signature)
+          if (existingCourseId) {
+            payload.courseId = existingCourseId
+          } else {
+            payload.courseData = { name: preset.name, duration: preset.duration }
+          }
+        } else {
+          payload.courseId = selectedCourse
+        }
+      }
+
       const response = await fetch('/api/enrollments', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          studentId: student.id,
-          courseId: selectedCourse
-        })
+        body: JSON.stringify(payload)
       })
 
       if (response.ok) {
         router.refresh()
         setSelectedCourse('')
+        setCustomCourseName('')
       } else {
-        alert('Failed to enroll student')
+        const errorData = await response.json().catch(() => ({ error: 'Failed to enroll student' }))
+        alert(errorData.error || 'Failed to enroll student')
       }
     } catch (error) {
       console.error('Error enrolling student:', error)
@@ -222,23 +272,38 @@ export default function StudentAssignmentManager({ student, resources, courses }
             First, enroll the student in a course. Then you can assign resources to that course enrollment.
           </p>
           <div className="flex gap-4">
-            <select
-              value={selectedCourse}
-              onChange={(e) => setSelectedCourse(e.target.value)}
-              className="flex-1 border border-gray-300 rounded-md px-3 py-2 focus:outline-none"
-              onFocus={(e) => e.currentTarget.style.borderColor = '#38438f'}
-              onBlur={(e) => e.currentTarget.style.borderColor = '#d1d5db'}
-            >
-              <option value="">Select a course...</option>
-              {courses.map((course) => (
-                <option key={course.id} value={course.id}>
-                  {formatCourseName(course.name, course.duration)}
-                </option>
-              ))}
-            </select>
+            <div className="flex-1 space-y-2">
+              <select
+                value={selectedCourse}
+                onChange={(e) => setSelectedCourse(e.target.value)}
+                className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none"
+                onFocus={(e) => e.currentTarget.style.borderColor = '#38438f'}
+                onBlur={(e) => e.currentTarget.style.borderColor = '#d1d5db'}
+              >
+                <option value="">Select a course...</option>
+                {PRESET_COURSE_OPTIONS.map((course) => (
+                  <option key={course.id} value={course.id}>
+                    {formatCourseName(course.name, course.duration)}
+                  </option>
+                ))}
+                <option value={OTHER_OPTION_VALUE}>Other (custom course)</option>
+              </select>
+
+              {selectedCourse === OTHER_OPTION_VALUE && (
+                <input
+                  type="text"
+                  value={customCourseName}
+                  onChange={(e) => setCustomCourseName(e.target.value)}
+                  placeholder="Enter custom course name"
+                  className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none"
+                  onFocus={(e) => (e.currentTarget.style.borderColor = '#38438f')}
+                  onBlur={(e) => (e.currentTarget.style.borderColor = '#d1d5db')}
+                />
+              )}
+            </div>
             <button
               onClick={handleEnroll}
-              disabled={loading || !selectedCourse}
+              disabled={loading || !selectedCourse || (selectedCourse === OTHER_OPTION_VALUE && !customCourseName.trim())}
               className="px-6 py-2 text-white rounded-md disabled:opacity-50 transition-colors hover:bg-[#2d3569]"
               style={{ backgroundColor: '#38438f' }}
             >

@@ -12,20 +12,71 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
-    const { studentId, courseId } = await request.json()
+    const { studentId, courseId, courseData } = await request.json()
 
-    if (!studentId || !courseId) {
+    if (!studentId || (!courseId && !courseData)) {
       return NextResponse.json(
-        { error: 'Student ID and Course ID are required' },
+        { error: 'Student ID and either Course ID or courseData are required' },
         { status: 400 }
       )
+    }
+
+    let resolvedCourseId: string = courseId
+
+    if (!resolvedCourseId && courseData) {
+      const normalizedName = typeof courseData.name === 'string' ? courseData.name.trim() : ''
+      const duration = Number.isFinite(courseData.duration) ? Number(courseData.duration) : 0
+
+      if (!normalizedName) {
+        return NextResponse.json({ error: 'Course name is required' }, { status: 400 })
+      }
+      if (duration < 0) {
+        return NextResponse.json({ error: 'Course duration must be 0 or more' }, { status: 400 })
+      }
+
+      // Reuse an existing course for this teacher if it already exists.
+      const { data: existingCourses, error: existingCourseError } = await supabaseServer
+        .from('Course')
+        .select('id')
+        .eq('creatorId', session.user.id)
+        .eq('name', normalizedName)
+        .eq('duration', duration)
+        .limit(1)
+
+      if (existingCourseError) {
+        console.error('Error checking existing course:', existingCourseError)
+        return NextResponse.json({ error: 'Failed to verify course' }, { status: 500 })
+      }
+
+      if (existingCourses && existingCourses.length > 0) {
+        resolvedCourseId = existingCourses[0].id
+      } else {
+        const newCourseId = randomUUID()
+        const { data: createdCourse, error: createCourseError } = await supabaseServer
+          .from('Course')
+          .insert({
+            id: newCourseId,
+            name: normalizedName,
+            duration,
+            creatorId: session.user.id,
+          })
+          .select('id')
+          .single()
+
+        if (createCourseError || !createdCourse) {
+          console.error('Error creating course during enrollment:', createCourseError)
+          return NextResponse.json({ error: 'Failed to create course' }, { status: 500 })
+        }
+
+        resolvedCourseId = createdCourse.id
+      }
     }
 
     // Verify course belongs to teacher
     const { data: course, error: courseError } = await supabaseServer
       .from('Course')
       .select('id, creatorId')
-      .eq('id', courseId)
+      .eq('id', resolvedCourseId)
       .single()
 
     if (courseError || !course) {
@@ -53,7 +104,7 @@ export async function POST(request: NextRequest) {
       .from('Enrollment')
       .select('id')
       .eq('studentId', studentId)
-      .eq('courseId', courseId)
+      .eq('courseId', resolvedCourseId)
 
     if (checkError) {
       console.error('Error checking existing enrollment:', checkError)
@@ -72,7 +123,7 @@ export async function POST(request: NextRequest) {
       .insert({
         id: enrollmentId,
         studentId,
-        courseId
+        courseId: resolvedCourseId
       })
       .select()
       .single()
