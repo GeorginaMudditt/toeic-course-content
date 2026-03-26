@@ -30,10 +30,11 @@ export async function DELETE(
       return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
     }
 
-    // Extract file path from URL (remove domain and bucket info)
-    const fileUrl = document.fileUrl
-    const urlParts = fileUrl.split('/resources/')
-    const filePath = urlParts.length > 1 ? `student-docs/${document.studentId}/${urlParts[1].split('?')[0]}` : null
+    // Extract storage object path from signed/public URLs.
+    // We store documents under student-docs/<studentId>/...
+    const fileUrl = decodeURIComponent(document.fileUrl || '')
+    const pathMatch = fileUrl.match(/(student-docs\/[^?]+)/)
+    const filePath = pathMatch ? pathMatch[1] : null
 
     // Delete file from storage if path can be extracted
     if (filePath) {

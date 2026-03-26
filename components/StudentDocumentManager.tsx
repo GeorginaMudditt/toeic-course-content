@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
+import { supabase } from '@/lib/supabase'
 
 interface Document {
   id: string
@@ -17,6 +18,8 @@ interface Props {
   studentId: string
   documents: Document[]
 }
+
+const MAX_UPLOAD_SIZE_BYTES = 25 * 1024 * 1024 // 25MB
 
 export default function StudentDocumentManager({ studentId, documents: initialDocuments }: Props) {
   const router = useRouter()
@@ -49,31 +52,73 @@ export default function StudentDocumentManager({ studentId, documents: initialDo
       return
     }
 
+    if (selectedFile.size > MAX_UPLOAD_SIZE_BYTES) {
+      alert('File size exceeds limit (25MB)')
+      return
+    }
+
     setUploading(true)
     try {
-      const formData = new FormData()
-      formData.append('file', selectedFile)
-      formData.append('studentId', studentId)
-      formData.append('title', documentTitle.trim())
-
-      const response = await fetch('/api/documents', {
+      // Step 1: Ask server for a signed upload token/path.
+      const uploadUrlResponse = await fetch('/api/documents/upload-url', {
         method: 'POST',
-        body: formData
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          studentId,
+          fileName: selectedFile.name,
+          mimeType: selectedFile.type,
+          fileSize: selectedFile.size,
+        }),
       })
 
-      if (response.ok) {
-        const data = await response.json()
-        setDocuments([data.document, ...documents])
-        setSelectedFile(null)
-        setDocumentTitle('')
-        // Reset file input
-        const fileInput = document.getElementById('file-input') as HTMLInputElement
-        if (fileInput) fileInput.value = ''
-        router.refresh()
-      } else {
-        const errorData = await response.json().catch(() => ({ error: 'Failed to upload document' }))
-        alert(errorData.error || 'Failed to upload document')
+      if (!uploadUrlResponse.ok) {
+        const errorData = await uploadUrlResponse.json().catch(() => ({ error: 'Failed to prepare upload' }))
+        alert(errorData.error || 'Failed to prepare upload')
+        return
       }
+
+      const uploadUrlData = await uploadUrlResponse.json()
+      const filePath = uploadUrlData.filePath as string
+      const token = uploadUrlData.token as string
+
+      // Step 2: Upload directly from browser to Supabase Storage.
+      const { error: storageError } = await supabase.storage
+        .from('resources')
+        .uploadToSignedUrl(filePath, token, selectedFile)
+
+      if (storageError) {
+        console.error('Error uploading file to storage:', storageError)
+        alert(storageError.message || 'Failed to upload file to storage')
+        return
+      }
+
+      // Step 3: Save metadata in our database.
+      const response = await fetch('/api/documents', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          studentId,
+          title: documentTitle.trim(),
+          fileName: selectedFile.name,
+          filePath,
+          fileSize: selectedFile.size,
+          mimeType: selectedFile.type,
+        }),
+      })
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({ error: 'Failed to save document record' }))
+        alert(errorData.error || 'Failed to save document record')
+        return
+      }
+
+      const data = await response.json()
+      setDocuments([data.document, ...documents])
+      setSelectedFile(null)
+      setDocumentTitle('')
+      const fileInput = document.getElementById('file-input') as HTMLInputElement
+      if (fileInput) fileInput.value = ''
+      router.refresh()
     } catch (error) {
       console.error('Error uploading document:', error)
       alert('Failed to upload document')
@@ -135,7 +180,7 @@ export default function StudentDocumentManager({ studentId, documents: initialDo
             />
             {selectedFile && (
               <p className="text-sm text-gray-600 mt-2">
-                Selected: {selectedFile.name} ({(selectedFile.size / 1024).toFixed(1)} KB)
+                Selected: {selectedFile.name} ({(selectedFile.size / 1024 / 1024).toFixed(2)} MB)
               </p>
             )}
           </div>

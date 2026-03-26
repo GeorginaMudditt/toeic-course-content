@@ -20,14 +20,7 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    const formData = await request.formData()
-    const file = formData.get('file') as File
-    const studentId = formData.get('studentId') as string
-    const title = formData.get('title') as string
-
-    if (!file) {
-      return NextResponse.json({ error: 'No file provided' }, { status: 400 })
-    }
+    const { studentId, title, fileName, filePath, fileSize, mimeType } = await request.json()
 
     if (!studentId) {
       return NextResponse.json({ error: 'Student ID is required' }, { status: 400 })
@@ -37,64 +30,51 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Document title is required' }, { status: 400 })
     }
 
+    if (!fileName || typeof fileName !== 'string') {
+      return NextResponse.json({ error: 'File name is required' }, { status: 400 })
+    }
+
+    if (!filePath || typeof filePath !== 'string') {
+      return NextResponse.json({ error: 'File path is required' }, { status: 400 })
+    }
+
+    if (!mimeType || typeof mimeType !== 'string') {
+      return NextResponse.json({ error: 'MIME type is required' }, { status: 400 })
+    }
+
+    if (typeof fileSize !== 'number' || fileSize <= 0) {
+      return NextResponse.json({ error: 'Valid file size is required' }, { status: 400 })
+    }
+
     // Validate file type (PDFs and images)
     const allowedTypes = ['application/pdf', 'image/png', 'image/jpeg', 'image/jpg']
-    if (!allowedTypes.includes(file.type)) {
+    if (!allowedTypes.includes(mimeType)) {
       return NextResponse.json(
         { error: 'Invalid file type. Only PDF, PNG, and JPEG files are allowed.' },
         { status: 400 }
       )
     }
 
-    // Validate file size (max 25MB for student documents e.g. welcome PDFs)
     const maxSize = 25 * 1024 * 1024 // 25MB
-    if (file.size > maxSize) {
+    if (fileSize > maxSize) {
       return NextResponse.json(
         { error: 'File size exceeds limit (25MB)' },
         { status: 400 }
       )
     }
 
-    // Generate unique filename
-    const timestamp = Date.now()
-    const random = Math.random().toString(36).substring(2, 9)
-    const sanitizedName = file.name.replace(/[^a-zA-Z0-9.-]/g, '_')
-    const filename = `student-docs/${studentId}/${timestamp}-${random}-${sanitizedName}`
-
-    // Convert file to buffer
-    const bytes = await file.arrayBuffer()
-    const buffer = Buffer.from(bytes)
-
-    // Upload to Supabase Storage
-    const { data: uploadData, error: uploadError } = await supabaseServer.storage
-      .from('resources')
-      .upload(filename, buffer, {
-        contentType: file.type,
-        upsert: false
-      })
-
-    if (uploadError) {
-      console.error('Supabase upload error:', uploadError)
-      return NextResponse.json(
-        { error: uploadError.message || 'Failed to upload file' },
-        { status: 500 }
-      )
-    }
-
-    // Get public URL
-    const { data: urlData } = supabaseServer.storage
-      .from('resources')
-      .getPublicUrl(filename)
-
-    const publicUrl = urlData.publicUrl
-
     // Create signed URL for better access control (optional, expires in 1 year)
     const expiresIn = 365 * 24 * 60 * 60 // 1 year in seconds
     const { data: signedUrlData, error: signedUrlError } = await supabaseServer.storage
       .from('resources')
-      .createSignedUrl(filename, expiresIn)
+      .createSignedUrl(filePath, expiresIn)
 
-    const fileUrl = signedUrlData?.signedUrl || publicUrl
+    if (signedUrlError) {
+      console.error('Error creating signed URL for uploaded document:', signedUrlError)
+      return NextResponse.json({ error: 'Uploaded file not found in storage' }, { status: 400 })
+    }
+
+    const fileUrl = signedUrlData?.signedUrl
 
     // Generate ID and timestamps (Supabase doesn't auto-generate like Prisma)
     const documentId = randomUUID()
@@ -107,10 +87,10 @@ export async function POST(request: NextRequest) {
         id: documentId,
         studentId,
         title: title.trim(),
-        fileName: file.name,
+        fileName,
         fileUrl,
-        fileSize: file.size,
-        mimeType: file.type,
+        fileSize,
+        mimeType,
         uploadedBy: session.user.id,
         createdAt: now,
         updatedAt: now
