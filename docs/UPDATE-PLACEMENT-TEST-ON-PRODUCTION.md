@@ -2,6 +2,8 @@
 
 The placement test **content** is stored in Supabase. Your **deployed site** (brisle-courses.com) uses the Supabase project configured in **Netlify’s environment variables**. To fix missing answers on the live site, you must run the update script against **that** Supabase project.
 
+**Easiest workflow:** Put the same production credentials in your project `.env.local` once (Step 1). Then run `./update-all-resources.sh` anytime—or ask the assistant to run it—and the live site gets the updates. No need to fetch env vars from Netlify each time.
+
 Follow these steps.
 
 ---
@@ -107,3 +109,25 @@ If you still see headings but no content, try:
 | 5 | Hard refresh brisle-courses.com and open the Placement Test again |
 
 You do **not** need to push to GitHub or redeploy for the answers to appear; the live app reads from Supabase on each request. Updating the production Supabase database is enough.
+
+---
+
+## Update ALL resources on production
+
+**Recommended:** Ensure `.env.local` has the same credentials as Netlify (Step 1). To push **every** HTML resource (grammar, vocabulary, speaking, tests) to the live site’s database in one go—for example after changing font sizes across all resources—use the same production credentials with the batch script:
+
+```bash
+NEXT_PUBLIC_SUPABASE_URL="https://YOUR_PROJECT.supabase.co" \
+SUPABASE_SERVICE_ROLE_KEY="YOUR_SERVICE_ROLE_KEY" \
+./update-all-resources.sh
+```
+
+The script uses `.env.local` and updates production. You can run it or ask the assistant to run it.
+
+**Alternative (without storing credentials in .env.local):** Run with credentials in the command:
+
+```bash
+NEXT_PUBLIC_SUPABASE_URL="https://YOUR_PROJECT.supabase.co" \
+SUPABASE_SERVICE_ROLE_KEY="YOUR_SERVICE_ROLE_KEY" \
+./update-all-resources.sh
+```

@@ -686,7 +686,44 @@ export default function WorksheetViewer({ assignmentId, resource, initialProgres
       return newNotes
     })
   }, []) // No dependencies - uses functional setState to read current value
-  
+
+  /** Split placement HTML at writing placeholder — must be useMemo at top level (not inside render IIFE). */
+  const placementHtmlSplit = useMemo((): { before: string; after: string } | null => {
+    if (!isPlacementTest || !resource.content) return null
+    let contentData: unknown = null
+    try {
+      if (resource.content.startsWith('{')) {
+        contentData = JSON.parse(resource.content)
+      }
+    } catch {
+      contentData = null
+    }
+    if (
+      contentData &&
+      typeof contentData === 'object' &&
+      contentData !== null &&
+      (contentData as { type?: string }).type === 'pdf-with-audio'
+    ) {
+      return null
+    }
+    if (resource.content.startsWith('/uploads/') || resource.content.startsWith('uploads/')) {
+      return null
+    }
+    const writingPlaceholderRegex = /(<div\s+data-answer-input="writing"[^>]*><\/div>)/i
+    const writingMatch = resource.content.match(writingPlaceholderRegex)
+    if (!writingMatch) return null
+    const writingIndex = resource.content.indexOf(writingMatch[0])
+    return {
+      before: resource.content.substring(0, writingIndex),
+      after: resource.content.substring(writingIndex + writingMatch[0].length),
+    }
+  }, [isPlacementTest, resource.content])
+
+  const handlePlacementWritingChange = useCallback(
+    (value: string) => updatePlacementTestAnswer('writing', value),
+    [updatePlacementTestAnswer]
+  )
+
   const saveProgress = async (notesToSave?: string) => {
     // Use notesRef for latest when manual save (avoids stale state if Save clicked right after typing)
     const notesValue = notesToSave ?? notesRef.current ?? notes
@@ -1422,45 +1459,32 @@ export default function WorksheetViewer({ assignmentId, resource, initialProgres
             // HTML content
             // Render HTML content as-is to match teacher view exactly
             if (isPlacementTest) {
-              // For Placement Test, split content at the writing textarea placeholder
-              // and render the textarea directly in JSX (like Modal Verbs) to prevent flickering
-              const writingPlaceholderRegex = /(<div\s+data-answer-input="writing"[^>]*><\/div>)/i
-              const writingMatch = resource.content.match(writingPlaceholderRegex)
-              
-              if (writingMatch) {
-                const writingIndex = resource.content.indexOf(writingMatch[0])
-                const contentBeforeWriting = resource.content.substring(0, writingIndex)
-                const contentAfterWriting = resource.content.substring(writingIndex + writingMatch[0].length)
-                
-                // Memoize content sections to prevent re-renders when notes change
-                const memoizedContentBefore = useMemo(() => contentBeforeWriting, [resource.content])
-                const memoizedContentAfter = useMemo(() => contentAfterWriting, [resource.content])
-                
-                // Memoize the onChange callback to prevent re-renders
-                const handleWritingChange = useCallback((value: string) => {
-                  updatePlacementTestAnswer('writing', value)
-                }, [updatePlacementTestAnswer])
-                
+              if (placementHtmlSplit) {
                 return (
                   <>
-                    <MemoizedContent 
+                    <MemoizedContent
                       key="content-before-writing"
-                      html={memoizedContentBefore}
+                      html={placementHtmlSplit.before}
                       contentRef={contentRef}
                     />
                     <div style={{ marginTop: '15px' }}>
-                      <label style={{ display: 'block', fontSize: '14px', fontWeight: 600, marginBottom: '8px', color: '#000' }}>
+                      <label
+                        style={{
+                          display: 'block',
+                          fontSize: '14px',
+                          fontWeight: 600,
+                          marginBottom: '8px',
+                          color: '#000',
+                        }}
+                      >
                         Your Response:
                       </label>
                       <PlacementWritingTextarea
                         key="placement-writing-textarea"
                         value={writingAnswerValue}
-                        onChange={handleWritingChange}
+                        onChange={handlePlacementWritingChange}
                       />
-                      <MemoizedContent 
-                        key="content-after-writing"
-                        html={memoizedContentAfter}
-                      />
+                      <MemoizedContent key="content-after-writing" html={placementHtmlSplit.after} />
                     </div>
                   </>
                 )

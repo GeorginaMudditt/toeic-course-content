@@ -150,6 +150,129 @@ export default function ResourcePreview({ resource, showActions = true }: Resour
   
   // Check if this is a Placement Test
   const isPlacementTest = resource.title.toLowerCase().includes('placement test')
+
+  // Check if this resource has grammar worksheet inputs
+  const hasGrammarInputs = resource.content.includes('data-grammar-input')
+  const [grammarInputsReady, setGrammarInputsReady] = useState(false)
+
+  // Defer grammar injection until after mount/hydration timing is settled
+  useEffect(() => {
+    if (!hasGrammarInputs) return
+    const id = requestAnimationFrame(() => setGrammarInputsReady(true))
+    return () => cancelAnimationFrame(id)
+  }, [hasGrammarInputs])
+
+  // Read-only grammar input (matches WorksheetViewer styling/layout)
+  const GrammarInputPreview = ({ inputType = 'text' }: { inputType?: 'text' | 'textarea' }) => {
+    const inputStyle: { [key: string]: string | number } = {
+      border: '1px solid #d1d5db',
+      borderBottom: '2px solid #38438f',
+      borderRadius: '2px',
+      padding: '2px 4px',
+      fontSize: '14px',
+      fontFamily: 'inherit',
+      backgroundColor: '#fff',
+      minWidth: '150px',
+      outline: 'none',
+      display: 'inline-block',
+      verticalAlign: 'baseline'
+    }
+
+    const textareaStyle: { [key: string]: string | number } = {
+      ...inputStyle,
+      display: 'block',
+      width: '100%',
+      minWidth: '100%',
+      minHeight: '60px',
+      padding: '8px',
+      resize: 'vertical',
+      marginTop: '4px'
+    }
+
+    if (inputType === 'textarea') {
+      return (
+        <textarea
+          readOnly
+          value={'\n\n'}
+          style={textareaStyle}
+          placeholder="Write your answer here..."
+          rows={2}
+        />
+      )
+    }
+
+    return (
+      <input
+        readOnly
+        value="______________"
+        type="text"
+        style={inputStyle}
+        placeholder="Answer"
+      />
+    )
+  }
+
+  // Inject grammar inputs into HTML content (read-only preview)
+  useEffect(() => {
+    if (!hasGrammarInputs || !grammarInputsReady || !contentRef.current) return
+
+    const initializeGrammarInputs = () => {
+      if (!contentRef.current) return false
+
+      const grammarInputs = contentRef.current.querySelectorAll('[data-grammar-input]')
+      if (grammarInputs.length === 0) return false
+
+      grammarInputs.forEach((container) => {
+        const inputId = container.getAttribute('data-grammar-input')
+        if (!inputId) return
+
+        // Skip if already rendered
+        if ((container as any)._reactRoot) return
+
+        const inputType = container.getAttribute('data-grammar-input-type') === 'textarea' ? 'textarea' : 'text'
+
+        try {
+          container.innerHTML = ''
+          const containerEl = container as HTMLElement
+          containerEl.style.pointerEvents = 'auto'
+          containerEl.style.position = 'relative'
+          containerEl.style.zIndex = '10'
+          if (inputType === 'textarea') {
+            containerEl.style.display = 'block'
+          }
+
+          const root = createRoot(containerEl)
+          root.render(<GrammarInputPreview inputType={inputType} />)
+          ;(container as any)._reactRoot = root
+        } catch (error) {
+          console.error('Error rendering grammar input preview:', error, inputId)
+        }
+      })
+
+      return true
+    }
+
+    // Try immediately, then retry (handles timing)
+    if (!initializeGrammarInputs()) {
+      const timeoutId = setTimeout(() => initializeGrammarInputs(), 300)
+      return () => clearTimeout(timeoutId)
+    }
+
+    return () => {
+      if (!contentRef.current) return
+      const grammarInputs = contentRef.current.querySelectorAll('[data-grammar-input]')
+      grammarInputs.forEach((container) => {
+        const root = (container as any)._reactRoot
+        if (root) {
+          try {
+            root.unmount()
+          } catch {
+            // ignore
+          }
+        }
+      })
+    }
+  }, [hasGrammarInputs, grammarInputsReady, resource.content])
   
   // Inject inline answer inputs into HTML content (same logic as WorksheetViewer)
   useEffect(() => {
@@ -322,6 +445,28 @@ export default function ResourcePreview({ resource, showActions = true }: Resour
             @media print {
               body { padding: 0; }
               @page { margin: 1cm; }
+              input[type="text"] {
+                border: 1px solid #9ca3af !important;
+                border-bottom: 2px solid #374151 !important;
+                border-radius: 3px !important;
+                min-width: 120px !important;
+                padding: 2px 6px !important;
+                color: transparent !important;
+                text-shadow: 0 0 0 #111827 !important;
+                background: #fff !important;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+              }
+              textarea {
+                border: 1px solid #9ca3af !important;
+                border-radius: 3px !important;
+                min-height: 70px !important;
+                color: transparent !important;
+                text-shadow: 0 0 0 #111827 !important;
+                background: #fff !important;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+              }
             }
             img {
               max-width: 100%;

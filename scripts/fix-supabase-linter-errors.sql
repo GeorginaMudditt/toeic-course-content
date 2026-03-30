@@ -37,6 +37,64 @@ ALTER TABLE "public"."Progress" ENABLE ROW LEVEL SECURITY;
 -- Enable RLS on Resource table
 ALTER TABLE "public"."Resource" ENABLE ROW LEVEL SECURITY;
 
+-- Enable RLS on Kids archive tables (external linter findings)
+-- These may be created by other parts of your system; we guard with IF EXISTS.
+DO $$
+BEGIN
+  IF EXISTS (
+    SELECT 1
+    FROM information_schema.tables
+    WHERE table_schema = 'public'
+      AND lower(table_name) = 'kids_courses_archive'
+  ) THEN
+    ALTER TABLE "public"."kids_courses_archive" ENABLE ROW LEVEL SECURITY;
+
+    DROP POLICY IF EXISTS "Service role can access all kids_courses_archive" ON "public"."kids_courses_archive";
+    CREATE POLICY "Service role can access all kids_courses_archive"
+      ON "public"."kids_courses_archive"
+      FOR ALL
+      TO service_role
+      USING (true)
+      WITH CHECK (true);
+
+    DROP POLICY IF EXISTS "Anon cannot access kids_courses_archive" ON "public"."kids_courses_archive";
+    CREATE POLICY "Anon cannot access kids_courses_archive"
+      ON "public"."kids_courses_archive"
+      FOR ALL
+      TO anon
+      USING (false)
+      WITH CHECK (false);
+  END IF;
+END $$;
+
+DO $$
+BEGIN
+  IF EXISTS (
+    SELECT 1
+    FROM information_schema.tables
+    WHERE table_schema = 'public'
+      AND lower(table_name) = 'kids_course_registrations_archive'
+  ) THEN
+    ALTER TABLE "public"."kids_course_registrations_archive" ENABLE ROW LEVEL SECURITY;
+
+    DROP POLICY IF EXISTS "Service role can access all kids_course_registrations_archive" ON "public"."kids_course_registrations_archive";
+    CREATE POLICY "Service role can access all kids_course_registrations_archive"
+      ON "public"."kids_course_registrations_archive"
+      FOR ALL
+      TO service_role
+      USING (true)
+      WITH CHECK (true);
+
+    DROP POLICY IF EXISTS "Anon cannot access kids_course_registrations_archive" ON "public"."kids_course_registrations_archive";
+    CREATE POLICY "Anon cannot access kids_course_registrations_archive"
+      ON "public"."kids_course_registrations_archive"
+      FOR ALL
+      TO anon
+      USING (false)
+      WITH CHECK (false);
+  END IF;
+END $$;
+
 -- Enable RLS on VocabularyProgress table
 ALTER TABLE "public"."VocabularyProgress" ENABLE ROW LEVEL SECURITY;
 
@@ -44,7 +102,30 @@ ALTER TABLE "public"."VocabularyProgress" ENABLE ROW LEVEL SECURITY;
 ALTER TABLE "public"."CourseNote" ENABLE ROW LEVEL SECURITY;
 
 -- Enable RLS on CourseNoteRevision table
-ALTER TABLE "public"."CourseNoteRevision" ENABLE ROW LEVEL SECURITY;
+DO $$
+BEGIN
+  IF EXISTS (
+    SELECT 1
+    FROM information_schema.tables
+    WHERE table_schema = 'public'
+      AND lower(table_name) = 'coursenoterevision'
+  ) THEN
+    ALTER TABLE "public"."CourseNoteRevision" ENABLE ROW LEVEL SECURITY;
+  END IF;
+END $$;
+
+-- Enable RLS on StudentDocument table (if present)
+DO $$
+BEGIN
+  IF EXISTS (
+    SELECT 1
+    FROM information_schema.tables
+    WHERE table_schema = 'public'
+      AND lower(table_name) = 'studentdocument'
+  ) THEN
+    ALTER TABLE "public"."StudentDocument" ENABLE ROW LEVEL SECURITY;
+  END IF;
+END $$;
 
 -- ============================================================================
 -- PART 2: Create basic RLS policies for service role access
@@ -192,21 +273,58 @@ CREATE POLICY "Anon cannot access course notes"
   WITH CHECK (false);
 
 -- CourseNoteRevision table policies
-DROP POLICY IF EXISTS "Service role can access all course note revisions" ON "public"."CourseNoteRevision";
-CREATE POLICY "Service role can access all course note revisions"
-  ON "public"."CourseNoteRevision"
-  FOR ALL
-  TO service_role
-  USING (true)
-  WITH CHECK (true);
+DO $$
+BEGIN
+  IF EXISTS (
+    SELECT 1
+    FROM information_schema.tables
+    WHERE table_schema = 'public'
+      AND lower(table_name) = 'coursenoterevision'
+  ) THEN
+    DROP POLICY IF EXISTS "Service role can access all course note revisions" ON "public"."CourseNoteRevision";
+    CREATE POLICY "Service role can access all course note revisions"
+      ON "public"."CourseNoteRevision"
+      FOR ALL
+      TO service_role
+      USING (true)
+      WITH CHECK (true);
 
-DROP POLICY IF EXISTS "Anon cannot access course note revisions" ON "public"."CourseNoteRevision";
-CREATE POLICY "Anon cannot access course note revisions"
-  ON "public"."CourseNoteRevision"
-  FOR ALL
-  TO anon
-  USING (false)
-  WITH CHECK (false);
+    DROP POLICY IF EXISTS "Anon cannot access course note revisions" ON "public"."CourseNoteRevision";
+    CREATE POLICY "Anon cannot access course note revisions"
+      ON "public"."CourseNoteRevision"
+      FOR ALL
+      TO anon
+      USING (false)
+      WITH CHECK (false);
+  END IF;
+END $$;
+
+-- StudentDocument table policies
+DO $$
+BEGIN
+  IF EXISTS (
+    SELECT 1
+    FROM information_schema.tables
+    WHERE table_schema = 'public'
+      AND lower(table_name) = 'studentdocument'
+  ) THEN
+    DROP POLICY IF EXISTS "Service role can access all student documents" ON "public"."StudentDocument";
+    CREATE POLICY "Service role can access all student documents"
+      ON "public"."StudentDocument"
+      FOR ALL
+      TO service_role
+      USING (true)
+      WITH CHECK (true);
+
+    DROP POLICY IF EXISTS "Anon cannot access student documents" ON "public"."StudentDocument";
+    CREATE POLICY "Anon cannot access student documents"
+      ON "public"."StudentDocument"
+      FOR ALL
+      TO anon
+      USING (false)
+      WITH CHECK (false);
+  END IF;
+END $$;
 
 -- ============================================================================
 -- PART 3: Fix function search_path issues (WARN level)
@@ -287,6 +405,8 @@ BEGIN
   ) THEN
     -- Drop the overly permissive policy
     DROP POLICY IF EXISTS "SubAccount" ON "public"."sub_account";
+    -- If this policy was already created in an earlier run, drop it too
+    DROP POLICY IF EXISTS "Users can access own sub_accounts" ON "public"."sub_account";
     
     -- Create a more restrictive policy
     -- Only allow users to access their own sub_accounts

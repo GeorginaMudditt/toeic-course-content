@@ -56,6 +56,7 @@ export default function StudentNotesView({ content }: Props) {
   if (structuredRows) {
     return (
       <div
+        className="student-notes-view"
         style={{
           fontFamily: 'Arial, sans-serif',
           fontSize: '14px',
@@ -113,7 +114,7 @@ export default function StudentNotesView({ content }: Props) {
   // Legacy free-form HTML notes
   return (
     <div
-      className="prose max-w-none"
+      className="student-notes-view prose max-w-none"
       dangerouslySetInnerHTML={{ __html: content }}
       style={{
         fontFamily: 'Arial, sans-serif',
