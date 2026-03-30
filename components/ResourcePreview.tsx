@@ -197,7 +197,6 @@ export default function ResourcePreview({ resource, showActions = true }: Resour
           readOnly
           value={'\n\n'}
           style={textareaStyle}
-          placeholder="Write your answer here..."
           rows={2}
         />
       )
@@ -209,7 +208,6 @@ export default function ResourcePreview({ resource, showActions = true }: Resour
         value=""
         type="text"
         style={inputStyle}
-        placeholder="Answer"
       />
     )
   }
