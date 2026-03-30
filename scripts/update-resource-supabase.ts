@@ -48,30 +48,56 @@ async function main() {
     process.exit(1)
   }
 
-  // Find the resource by name (case-insensitive, partial match)
-  const { data: resources, error: findError } = await supabaseServer
+  // Find the resource: try exact match first (case-insensitive), then partial match
+  // This ensures "Past Continuous" matches only that resource, not "Past Simple and Past Continuous"
+  let resource: { id: string; title: string } | null = null
+
+  const { data: exactMatches, error: exactError } = await supabaseServer
     .from('Resource')
     .select('id, title')
-    .ilike('title', `%${resourceName}%`)
+    .ilike('title', resourceName.trim())
 
-  if (findError) {
-    console.error('❌ Error finding resource:', findError.message)
-    process.exit(1)
+  if (!exactError && exactMatches && exactMatches.length > 0) {
+    resource = exactMatches[0]
   }
 
-  if (!resources || resources.length === 0) {
-    console.log(`❌ Resource "${resourceName}" not found in database.`)
-    console.log('Available resources:')
-    const { data: allResources } = await supabaseServer
+  if (!resource) {
+    const { data: partialMatches, error: findError } = await supabaseServer
       .from('Resource')
       .select('id, title')
-      .limit(10)
-    allResources?.forEach((r: { title: string }) => console.log(`   - ${r.title}`))
-    console.log('\nPlease create the resource first through the web interface, then run this script again.')
-    return
+      .ilike('title', `%${resourceName}%`)
+
+    if (findError) {
+      console.error('❌ Error finding resource:', findError.message)
+      process.exit(1)
+    }
+
+    if (!partialMatches || partialMatches.length === 0) {
+      console.log(`❌ Resource "${resourceName}" not found in database.`)
+      console.log('Available resources:')
+      const { data: allResources } = await supabaseServer
+        .from('Resource')
+        .select('id, title')
+        .limit(10)
+      allResources?.forEach((r: { title: string }) => console.log(`   - ${r.title}`))
+      console.log('\nPlease create the resource first through the web interface, then run this script again.')
+      return
+    }
+
+    resource = partialMatches[0]
+    if (partialMatches.length > 1) {
+      // `resource` is definitely set here, but TS can still consider it possibly-null.
+      console.log(
+        `⚠️  Multiple resources match "${resourceName}"; updating first match: "${partialMatches[0].title}"`
+      )
+    }
   }
 
-  const resource = resources[0]
+  // Extra type guard so `next build` doesn't fail.
+  if (!resource) {
+    console.error(`❌ Resource resolution failed for "${resourceName}".`)
+    process.exit(1)
+  }
 
   // Update the resource with the new HTML content
   // Explicitly set updatedAt to current timestamp (like the API route does)

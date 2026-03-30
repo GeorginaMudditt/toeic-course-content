@@ -302,6 +302,9 @@ export default function EditResourcePage({ params }: { params: { id: string } })
                   <option value="LISTENING">Listening</option>
                   <option value="TESTS">Tests</option>
                   <option value="REFERENCE">Reference</option>
+                  <option value="TRAVEL_ENGLISH">Travel English</option>
+                  <option value="BUSINESS_ENGLISH">Business English</option>
+                  <option value="EVERYDAY_ENGLISH">Everyday English</option>
                 </select>
               </div>
             </div>

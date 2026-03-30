@@ -1,0 +1,9 @@
+-- Migration script to add TRAVEL_ENGLISH, BUSINESS_ENGLISH, EVERYDAY_ENGLISH
+-- to the ResourceSkill enum.
+--
+-- Run this in Supabase SQL Editor.
+
+ALTER TYPE "ResourceSkill" ADD VALUE IF NOT EXISTS 'TRAVEL_ENGLISH';
+ALTER TYPE "ResourceSkill" ADD VALUE IF NOT EXISTS 'BUSINESS_ENGLISH';
+ALTER TYPE "ResourceSkill" ADD VALUE IF NOT EXISTS 'EVERYDAY_ENGLISH';
+

@@ -37,6 +37,9 @@ enum ResourceSkill {
   LISTENING
   TESTS
   REFERENCE
+  TRAVEL_ENGLISH
+  BUSINESS_ENGLISH
+  EVERYDAY_ENGLISH
 }
 
 model User {

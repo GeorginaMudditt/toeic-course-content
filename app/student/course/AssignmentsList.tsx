@@ -20,7 +20,11 @@ interface Assignment {
 
 function formatSkill(skill: string | undefined): string {
   if (!skill) return 'Resource'
-  return skill.charAt(0) + skill.slice(1).toLowerCase()
+  // Convert ENUM-like values into readable labels (TRAVEL_ENGLISH -> Travel English)
+  return skill
+    .split('_')
+    .map((part) => part.charAt(0) + part.slice(1).toLowerCase())
+    .join(' ')
 }
 
 interface Props {

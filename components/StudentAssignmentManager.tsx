@@ -85,7 +85,29 @@ export default function StudentAssignmentManager({ student, resources, courses }
 
   // Get unique levels and skills from resources
   const availableLevels = ['All', 'A1', 'A2', 'B1', 'B2', 'C1', 'C2']
-  const availableSkills = ['All', 'GRAMMAR', 'VOCABULARY', 'READING', 'WRITING', 'SPEAKING', 'LISTENING', 'TESTS', 'REFERENCE']
+  const availableSkills = [
+    'All',
+    'GRAMMAR',
+    'VOCABULARY',
+    'READING',
+    'WRITING',
+    'SPEAKING',
+    'LISTENING',
+    'TESTS',
+    'REFERENCE',
+    'TRAVEL_ENGLISH',
+    'BUSINESS_ENGLISH',
+    'EVERYDAY_ENGLISH'
+  ]
+
+  const formatSkillLabel = (skill: string) => {
+    if (skill === 'All') return 'All'
+    // Convert ENUM-like values into readable labels (TRAVEL_ENGLISH -> Travel English)
+    return skill
+      .split('_')
+      .map((part) => part.charAt(0) + part.slice(1).toLowerCase())
+      .join(' ')
+  }
 
   // Helper function to get assigned resource IDs for an enrollment
   const getAssignedResourceIds = (enrollment: Enrollment): string[] => {
@@ -406,7 +428,7 @@ export default function StudentAssignmentManager({ student, resources, courses }
                               onChange={() => handleSkillToggle(skill)}
                               className="cursor-pointer"
                             />
-                            <span className="text-sm text-gray-700">{skill}</span>
+                              <span className="text-sm text-gray-700">{formatSkillLabel(skill)}</span>
                           </label>
                         ))}
                       </div>

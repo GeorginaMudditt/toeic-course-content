@@ -3,7 +3,19 @@
 
 -- Step 1: Create the ResourceSkill enum type
 DO $$ BEGIN
-    CREATE TYPE "ResourceSkill" AS ENUM ('GRAMMAR', 'VOCABULARY', 'READING', 'WRITING', 'SPEAKING', 'LISTENING', 'TESTS');
+    CREATE TYPE "ResourceSkill" AS ENUM (
+      'GRAMMAR',
+      'VOCABULARY',
+      'READING',
+      'WRITING',
+      'SPEAKING',
+      'LISTENING',
+      'TESTS',
+      'REFERENCE',
+      'TRAVEL_ENGLISH',
+      'BUSINESS_ENGLISH',
+      'EVERYDAY_ENGLISH'
+    );
 EXCEPTION
     WHEN duplicate_object THEN null;
 END $$;

@@ -184,6 +184,9 @@ export default function ResourcesList({ resources }: Props) {
             <option value="LISTENING">Listening</option>
             <option value="TESTS">Tests</option>
             <option value="REFERENCE">Reference</option>
+            <option value="TRAVEL_ENGLISH">Travel English</option>
+            <option value="BUSINESS_ENGLISH">Business English</option>
+            <option value="EVERYDAY_ENGLISH">Everyday English</option>
           </select>
         </div>
 
@@ -247,7 +250,12 @@ export default function ResourcesList({ resources }: Props) {
                     {resource.level || '-'}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                    {resource.skill ? resource.skill.charAt(0) + resource.skill.slice(1).toLowerCase() : '-'}
+                    {resource.skill
+                      ? resource.skill
+                          .split('_')
+                          .map((part) => part.charAt(0) + part.slice(1).toLowerCase())
+                          .join(' ')
+                      : '-'}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                     <Link
