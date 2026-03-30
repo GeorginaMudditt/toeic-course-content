@@ -166,16 +166,18 @@ export default function ResourcePreview({ resource, showActions = true }: Resour
   const GrammarInputPreview = ({ inputType = 'text' }: { inputType?: 'text' | 'textarea' }) => {
     const inputStyle: { [key: string]: string | number } = {
       border: '1px solid #d1d5db',
-      borderBottom: '2px solid #38438f',
       borderRadius: '2px',
       padding: '2px 4px',
       fontSize: '14px',
       fontFamily: 'inherit',
       backgroundColor: '#fff',
-      minWidth: '150px',
+      width: '84px',
+      minWidth: '84px',
+      maxWidth: '100px',
       outline: 'none',
       display: 'inline-block',
-      verticalAlign: 'baseline'
+      verticalAlign: 'baseline',
+      marginLeft: '6px'
     }
 
     const textareaStyle: { [key: string]: string | number } = {
@@ -204,7 +206,7 @@ export default function ResourcePreview({ resource, showActions = true }: Resour
     return (
       <input
         readOnly
-        value="______________"
+        value=""
         type="text"
         style={inputStyle}
         placeholder="Answer"
@@ -447,12 +449,10 @@ export default function ResourcePreview({ resource, showActions = true }: Resour
               @page { margin: 1cm; }
               input[type="text"] {
                 border: 1px solid #9ca3af !important;
-                border-bottom: 2px solid #374151 !important;
                 border-radius: 3px !important;
-                min-width: 120px !important;
+                min-width: 84px !important;
+                max-width: 100px !important;
                 padding: 2px 6px !important;
-                color: transparent !important;
-                text-shadow: 0 0 0 #111827 !important;
                 background: #fff !important;
                 -webkit-print-color-adjust: exact;
                 print-color-adjust: exact;
@@ -461,8 +461,6 @@ export default function ResourcePreview({ resource, showActions = true }: Resour
                 border: 1px solid #9ca3af !important;
                 border-radius: 3px !important;
                 min-height: 70px !important;
-                color: transparent !important;
-                text-shadow: 0 0 0 #111827 !important;
                 background: #fff !important;
                 -webkit-print-color-adjust: exact;
                 print-color-adjust: exact;

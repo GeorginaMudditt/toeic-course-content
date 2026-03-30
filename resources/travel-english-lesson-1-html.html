@@ -35,6 +35,27 @@
     break-inside: avoid;
     margin-bottom: 6px;
   }
+  .reading-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 170px;
+    gap: 14px;
+    align-items: start;
+  }
+  .reading-grid + .reading-grid {
+    margin-top: 14px;
+  }
+  .reading-text {
+    grid-column: 1 / span 2;
+  }
+  .reading-image {
+    grid-column: 3;
+  }
+  .reading-grid.reverse .reading-text {
+    grid-column: 1 / span 2;
+  }
+  .reading-grid.reverse .reading-image {
+    grid-column: 3;
+  }
 
   .exam-header {
     border: 1px solid var(--exam-border);
@@ -146,6 +167,10 @@
     .vocab-three-col {
       columns: 3;
       column-gap: 20px;
+    }
+    .reading-grid {
+      grid-template-columns: 1fr 1fr 150px;
+      gap: 10px;
     }
 
     .exam-header,
@@ -446,40 +471,50 @@
   <div style="margin-bottom: 20px;" class="keep-together">
     <h3 style="font-size: 22px; font-weight: bold; margin-top: 18px; margin-bottom: 12px; color: #000;">Reading: Two different jobs</h3>
 
-    <img
-      src="/images/emma.jpg"
-      alt="Emma"
-      style="width: 180px; max-width: 100%; height: auto; border: 1px solid #ddd; border-radius: 4px; display: block; margin-bottom: 10px;"
-    />
+    <div class="reading-grid">
+      <div class="reading-image">
+        <img
+          src="/images/emma.jpg"
+          alt="Emma"
+          style="width: 100%; max-width: 170px; height: auto; border: 1px solid #ddd; border-radius: 4px; display: block;"
+        />
+      </div>
+      <div class="reading-text">
+        <p style="font-size: 16px; margin-bottom: 10px;">
+          Emma lives in London with her husband. She works in an office. Every morning, she wakes up at seven o'clock. She brushes her teeth and has a shower. Then she prepares breakfast. She usually eats toast and drinks coffee.
+        </p>
+        <p style="font-size: 16px; margin-bottom: 10px;">
+          Emma takes the bus to work because she doesn't have a car. She arrives at work at nine o'clock. She checks her emails and starts her projects. At lunch time, she visits the café near her office with her colleagues. They order sandwiches or salads and talk about work and hobbies.
+        </p>
+        <p style="font-size: 16px; margin-bottom: 0;">
+          After work, Emma goes for a run. She cooks dinner at home with her husband. In the evening, they watch television or listen to music. Sometimes they go to the cinema. They usually go to bed at eleven o'clock.
+        </p>
+      </div>
+    </div>
 
-    <p style="font-size: 16px; margin-bottom: 10px;">
-      Emma lives in London with her husband. She works in an office. Every morning, she wakes up at seven o'clock. She brushes her teeth and has a shower. Then she prepares breakfast. She usually eats toast and drinks coffee.
-    </p>
-    <p style="font-size: 16px; margin-bottom: 10px;">
-      Emma takes the bus to work because she doesn't have a car. She arrives at work at nine o'clock. She checks her emails and starts her projects. At lunch time, she visits the café near her office with her colleagues. They order sandwiches or salads and talk about work and hobbies.
-    </p>
-    <p style="font-size: 16px; margin-bottom: 10px;">
-      After work, Emma goes for a run. She cooks dinner at home with her husband. In the evening, they watch television or listen to music. Sometimes they go to the cinema. They usually go to bed at eleven o'clock.
-    </p>
-
-    <img
-      src="/images/tess.jpg"
-      alt="Tess"
-      style="width: 180px; max-width: 100%; height: auto; border: 1px solid #ddd; border-radius: 4px; display: block; margin-bottom: 10px; margin-top: 14px;"
-    />
-
-    <p style="font-size: 16px; margin-bottom: 10px;">
-      <strong>Tess</strong> is a pilot. She lives in an apartment in New York, but she doesn't spend much time there. Every week, she flies to different countries. She wakes up very early, usually at four o'clock in the morning. She drinks coffee and checks the weather. Then she goes to the airport and prepares her plane for the flight.
-    </p>
-    <p style="font-size: 16px; margin-bottom: 10px;">
-      Tess travels to many places around the world, such as Paris, Tokyo and Sydney. She never has the same day twice. Sometimes she sleeps in hotels in different cities. Her job is exciting but also tiring.
-    </p>
-    <p style="font-size: 16px; margin-bottom: 10px;">
-      When Tess comes home, she is very tired so she doesn't cook dinner. She orders food online. She calls her family and tells them about her trips. She goes to bed early because she travels again the next day. When she has a day off, she plays football.
-    </p>
+    <div class="reading-grid reverse">
+      <div class="reading-text">
+        <p style="font-size: 16px; margin-bottom: 10px;">
+          <strong>Tess</strong> is a pilot. She lives in an apartment in New York, but she doesn't spend much time there. Every week, she flies to different countries. She wakes up very early, usually at four o'clock in the morning. She drinks coffee and checks the weather. Then she goes to the airport and prepares her plane for the flight.
+        </p>
+        <p style="font-size: 16px; margin-bottom: 10px;">
+          Tess travels to many places around the world, such as Paris, Tokyo and Sydney. She never has the same day twice. Sometimes she sleeps in hotels in different cities. Her job is exciting but also tiring.
+        </p>
+        <p style="font-size: 16px; margin-bottom: 0;">
+          When Tess comes home, she is very tired so she doesn't cook dinner. She orders food online. She calls her family and tells them about her trips. She goes to bed early because she travels again the next day. When she has a day off, she plays football.
+        </p>
+      </div>
+      <div class="reading-image">
+        <img
+          src="/images/tess.jpg"
+          alt="Tess"
+          style="width: 100%; max-width: 170px; height: auto; border: 1px solid #ddd; border-radius: 4px; display: block;"
+        />
+      </div>
+    </div>
 
     <!-- Reading comprehension questions -->
-    <div style="margin-bottom: 0;">
+    <div style="margin-bottom: 0; margin-top: 14px;">
       <h3 style="font-size: 19px; font-weight: bold; margin-bottom: 10px; color: #000;">Comprehension questions</h3>
       <ol style="padding-left: 25px; font-size: 16px; list-style-type: decimal;">
         <li style="margin-bottom: 8px;">Who works in an office? <span data-grammar-input="reading-q1" style="display: inline-block; min-width: 180px;"></span></li>
