@@ -16,6 +16,29 @@ interface Word {
   id?: string | number
 }
 
+/** Silver challenge: slots are keyed by word index. Same French twice (e.g. femme → woman/wife) shares one object key if we key by French — this validates by multiset per French string so answers are interchangeable within those slots. */
+function isSilverChallengeCorrect(words: Word[], positions: Record<number, string>): boolean {
+  if (!words.length) return false
+  for (let i = 0; i < words.length; i++) {
+    if (!positions[i]?.trim()) return false
+  }
+  const byFrench = new Map<string, number[]>()
+  words.forEach((w, i) => {
+    const f = w.translation_french
+    if (!byFrench.has(f)) byFrench.set(f, [])
+    byFrench.get(f)!.push(i)
+  })
+  for (const indices of byFrench.values()) {
+    const expected = [...indices].map((i) => words[i].word_english).sort()
+    const actual = [...indices].map((i) => positions[i]).sort()
+    if (expected.length !== actual.length) return false
+    for (let j = 0; j < expected.length; j++) {
+      if (expected[j] !== actual[j]) return false
+    }
+  }
+  return true
+}
+
 export default function ChallengePage() {
   const params = useParams()
   const router = useRouter()
@@ -31,10 +54,10 @@ export default function ChallengePage() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
   const [draggedWord, setDraggedWord] = useState<string | null>(null)
-  const [wordPositions, setWordPositions] = useState<Record<string, string>>({})
+  const [wordPositions, setWordPositions] = useState<Record<number, string>>({})
   const [shuffledWords, setShuffledWords] = useState<string[]>([])
   const [listenedWords, setListenedWords] = useState<Set<string>>(new Set())
-  const [goldInputs, setGoldInputs] = useState<Record<string, string>>({})
+  const [goldInputs, setGoldInputs] = useState<Record<number, string>>({})
   const [goldErrorCount, setGoldErrorCount] = useState(0)
   const [showHelpPrompt, setShowHelpPrompt] = useState(false)
   const [helpModeEnabled, setHelpModeEnabled] = useState(false)
@@ -182,15 +205,15 @@ export default function ChallengePage() {
   // In view mode, show the challenge even if completed (but don't allow submission)
   const shouldShowChallenge = !isCompleted || isViewMode
 
-  // Gold challenge shuffled words
-  const goldShuffled = useMemo(() => {
-    if (challengeType !== 'gold' || !words?.length) return []
-    const list = [...words]
-    return list.sort(() => Math.random() - 0.5)
+  // Gold challenge: shuffle while keeping stable slot indices (duplicate French must not share one input)
+  const goldShuffledSlots = useMemo(() => {
+    if (challengeType !== 'gold' || !words?.length) return [] as { word: Word; slotIndex: number }[]
+    const slots = words.map((w, i) => ({ word: w, slotIndex: i }))
+    return [...slots].sort(() => Math.random() - 0.5)
   }, [challengeType, words])
 
-  const handleGoldInput = (french: string, value: string) => {
-    setGoldInputs(prev => ({ ...prev, [french]: value }))
+  const handleGoldInput = (slotIndex: number, value: string) => {
+    setGoldInputs(prev => ({ ...prev, [slotIndex]: value }))
   }
 
   // Play audio for pronunciation
@@ -353,7 +376,7 @@ export default function ChallengePage() {
     e.dataTransfer.dropEffect = 'move'
   }
 
-  const handleDrop = (e: React.DragEvent, frenchTranslation: string) => {
+  const handleDrop = (e: React.DragEvent, slotIndex: number) => {
     e.preventDefault()
     if (!draggedWord) return
 
@@ -361,7 +384,7 @@ export default function ChallengePage() {
       const newPositions = { ...prev }
 
       // If this drop zone already had a word, return it to the pool
-      const wordBeingReplaced = newPositions[frenchTranslation]
+      const wordBeingReplaced = newPositions[slotIndex]
       if (wordBeingReplaced) {
         setShuffledWords(prevPool => (
           prevPool.includes(wordBeingReplaced) ? prevPool : [...prevPool, wordBeingReplaced]
@@ -370,14 +393,15 @@ export default function ChallengePage() {
 
       // Remove the dragged word from any previous drop zone
       for (const key of Object.keys(newPositions)) {
-        if (newPositions[key] === draggedWord) {
-          delete newPositions[key]
+        const k = Number(key)
+        if (newPositions[k] === draggedWord) {
+          delete newPositions[k]
           break
         }
       }
 
       // Place the dragged word in the current drop zone
-      newPositions[frenchTranslation] = draggedWord
+      newPositions[slotIndex] = draggedWord
 
       // Remove the dragged word from the pool on the right
       setShuffledWords(prevPool => prevPool.filter(w => w !== draggedWord))
@@ -388,11 +412,11 @@ export default function ChallengePage() {
     setDraggedWord(null)
   }
 
-  const removeWord = (frenchTranslation: string) => {
+  const removeWord = (slotIndex: number) => {
     setWordPositions(prev => {
       const newPositions = { ...prev }
-      const removed = newPositions[frenchTranslation]
-      delete newPositions[frenchTranslation]
+      const removed = newPositions[slotIndex]
+      delete newPositions[slotIndex]
       if (removed) {
         // Return the word to the pool on the right (avoid duplicates)
         setShuffledWords(prevPool => (
@@ -419,9 +443,7 @@ export default function ChallengePage() {
     
     // For silver challenge, check if all words are correctly positioned
     if (challengeType === 'silver') {
-      const allCorrect = words.every(word => 
-        wordPositions[word.translation_french] === word.word_english
-      )
+      const allCorrect = isSilverChallengeCorrect(words, wordPositions)
       if (!allCorrect) {
         setModalState({
           isOpen: true,
@@ -435,8 +457,8 @@ export default function ChallengePage() {
     
     // For gold challenge, validate typed answers (strict match)
     if (challengeType === 'gold') {
-      const allCorrect = words.every(word => {
-        const userRaw = goldInputs[word.translation_french] || ''
+      const allCorrect = words.every((word, i) => {
+        const userRaw = goldInputs[i] || ''
         const user = userRaw.replace(/\s+/g, ' ').trim() // tolerate extra spaces only
         return user === word.word_english
       })
@@ -565,10 +587,10 @@ export default function ChallengePage() {
   }
   
   // Check if a gold challenge answer is correct
-  const isGoldAnswerCorrect = (frenchTranslation: string): boolean => {
-    const word = words.find(w => w.translation_french === frenchTranslation)
+  const isGoldAnswerCorrect = (slotIndex: number): boolean => {
+    const word = words[slotIndex]
     if (!word) return false
-    const userRaw = goldInputs[frenchTranslation] || ''
+    const userRaw = goldInputs[slotIndex] || ''
     const user = userRaw.replace(/\s+/g, ' ').trim()
     return user === word.word_english
   }
@@ -865,16 +887,16 @@ export default function ChallengePage() {
                               <div
                                 className="min-h-[60px] border-2 border-dashed rounded p-2 bg-gray-50 transition-colors hover:bg-gray-100"
                                 onDragOver={handleDragOver}
-                                onDrop={(e) => handleDrop(e, word.translation_french)}
+                                onDrop={(e) => handleDrop(e, index)}
                               >
-                                {wordPositions[word.translation_french] ? (
+                                {wordPositions[index] ? (
                                   <div
                                     className="inline-block px-3 py-2 rounded text-white text-sm cursor-pointer transition-opacity hover:opacity-80 break-words"
                                     style={{ backgroundColor: levelColor }}
-                                    onClick={() => removeWord(word.translation_french)}
+                                    onClick={() => removeWord(index)}
                                     title="Click to remove"
                                   >
-                                    {wordPositions[word.translation_french]}
+                                    {wordPositions[index]}
                                   </div>
                                 ) : (
                                   <div className="text-gray-400 text-xs">Drop here</div>
@@ -917,14 +939,14 @@ export default function ChallengePage() {
                       </p>
                     </div>
 
-                    {goldShuffled.length > 0 ? (
+                    {goldShuffledSlots.length > 0 ? (
                       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 mb-6">
-                        {goldShuffled.map((word, index) => {
-                          const hasInput = (goldInputs[word.translation_french] || '').trim().length > 0
-                          const isCorrect = helpModeEnabled && hasInput ? isGoldAnswerCorrect(word.translation_french) : null
+                        {goldShuffledSlots.map(({ word, slotIndex }) => {
+                          const hasInput = (goldInputs[slotIndex] || '').trim().length > 0
+                          const isCorrect = helpModeEnabled && hasInput ? isGoldAnswerCorrect(slotIndex) : null
                           
                           return (
-                            <div key={index} className="border rounded-lg p-4 bg-white">
+                            <div key={slotIndex} className="border rounded-lg p-4 bg-white">
                               <div className="flex items-center justify-between mb-2">
                                 <label className="block font-semibold text-gray-900 text-sm">
                                   {word.translation_french}
@@ -949,8 +971,8 @@ export default function ChallengePage() {
                                     : 'border-gray-300'
                                 }`}
                                 placeholder="English word"
-                                value={goldInputs[word.translation_french] || ''}
-                                onChange={(e) => handleGoldInput(word.translation_french, e.target.value)}
+                                value={goldInputs[slotIndex] || ''}
+                                onChange={(e) => handleGoldInput(slotIndex, e.target.value)}
                                 onFocus={(e) => {
                                   if (!helpModeEnabled || !hasInput) {
                                     e.currentTarget.style.borderColor = levelColor
