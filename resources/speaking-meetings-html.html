@@ -31,6 +31,23 @@
       break-inside: avoid;
     }
   }
+  /* Phrasal verbs: side-by-side on wider screens */
+  .phrasal-match-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 18px;
+    align-items: start;
+  }
+  @media (min-width: 640px) {
+    .phrasal-match-grid {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+  @media print {
+    .phrasal-match-grid {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
 </style>
 
 <div style="max-width: 800px; margin: 0 auto; padding: 25px; font-family: Arial, sans-serif; line-height: 1.6; color: #333;">
@@ -119,7 +136,7 @@
     <p style="font-size: 17px; margin: 0 0 16px 0;">You probably noticed that there are several phrasal verbs in the phrases above. Using phrasal verbs in your spoken English is a great way to elevate your level and show fluency.</p>
     <p style="font-size: 17px; font-weight: 600; margin: 0 0 12px 0; color: #92400e;">Match each of the phrasal verbs to its meaning. Write the correct letter (A–J) in the box after each verb. Each letter is used once.</p>
 
-    <div style="display: grid; grid-template-columns: 1fr; gap: 18px;">
+    <div class="phrasal-match-grid">
       <div style="background: white; padding: 16px; border-radius: 8px; border: 2px solid #fde68a;">
         <h3 style="font-size: 18px; font-weight: bold; margin: 0 0 12px 0; color: #92400e;">Phrasal verbs</h3>
         <ol style="margin: 0; padding-left: 28px; font-size: 17px; list-style-type: decimal; list-style-position: outside;">
