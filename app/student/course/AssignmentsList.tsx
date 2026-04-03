@@ -34,17 +34,39 @@ interface Props {
 
 type SortOption = 'date' | 'level' | 'alphabetical'
 
+type ProgressStatusKey = 'NOT_STARTED' | 'IN_PROGRESS' | 'COMPLETED'
+
+function getAssignmentStatus(assignment: Assignment): ProgressStatusKey {
+  const progress = Array.isArray(assignment.progress) ? assignment.progress[0] : null
+  const raw = progress?.status as string | undefined
+  if (raw === 'IN_PROGRESS' || raw === 'COMPLETED') {
+    return raw
+  }
+  return 'NOT_STARTED'
+}
+
 export default function AssignmentsList({ assignments, viewAs }: Props) {
   const [sortBy, setSortBy] = useState<SortOption>('date')
+  const [showStatuses, setShowStatuses] = useState<Record<ProgressStatusKey, boolean>>({
+    NOT_STARTED: true,
+    IN_PROGRESS: true,
+    COMPLETED: true,
+  })
 
   // Check if assignment has been viewed (has progress record)
   const hasBeenViewed = (assignment: Assignment) => {
     return assignment.progress && assignment.progress.length > 0
   }
 
-  // Sort assignments
+  // Filter by selected statuses, then sort
   const sortedAssignments = useMemo(() => {
-    return [...assignments].sort((a, b) => {
+    const anyStatusSelected =
+      showStatuses.NOT_STARTED || showStatuses.IN_PROGRESS || showStatuses.COMPLETED
+    const filtered = anyStatusSelected
+      ? assignments.filter((a) => showStatuses[getAssignmentStatus(a)])
+      : []
+
+    return [...filtered].sort((a, b) => {
       switch (sortBy) {
         case 'level': {
           // Sort by level: A1, A2, B1, B2, C1, C2
@@ -75,33 +97,87 @@ export default function AssignmentsList({ assignments, viewAs }: Props) {
         }
       }
     })
-  }, [assignments, sortBy])
+  }, [assignments, sortBy, showStatuses])
+
+  const toggleStatus = (key: ProgressStatusKey) => {
+    setShowStatuses((prev) => ({ ...prev, [key]: !prev[key] }))
+  }
+
+  const anyStatusSelected =
+    showStatuses.NOT_STARTED || showStatuses.IN_PROGRESS || showStatuses.COMPLETED
+
+  const emptyMessage = (() => {
+    if (assignments.length === 0) {
+      return 'No assignments yet.'
+    }
+    if (!anyStatusSelected) {
+      return 'Tick at least one status under Show to see assignments.'
+    }
+    if (sortedAssignments.length === 0) {
+      return 'No assignments match the statuses you selected. Try ticking another box.'
+    }
+    return null
+  })()
 
   return (
     <div>
-      <div className="flex justify-between items-center mb-4">
-        <h3 className="text-sm font-medium text-gray-700">Assignments</h3>
-        <div className="w-72">
-          <label htmlFor="sort-by" className="block text-sm font-medium text-gray-700 mb-2">
-            Sort by
-          </label>
-          <select
-            id="sort-by"
-            value={sortBy}
-            onChange={(e) => setSortBy(e.target.value as SortOption)}
-            className="border border-gray-300 rounded-md px-3 py-2 focus:outline-none w-full text-sm"
-            onFocus={(e) => e.currentTarget.style.borderColor = '#38438f'}
-            onBlur={(e) => e.currentTarget.style.borderColor = '#d1d5db'}
-          >
-            <option value="date">Date Added (Newest First)</option>
-            <option value="level">Level</option>
-            <option value="alphabetical">Alphabetically</option>
-          </select>
+      <div className="flex flex-col gap-4 mb-4 sm:flex-row sm:justify-between sm:items-start">
+        <h3 className="text-sm font-medium text-gray-700 shrink-0">Assignments</h3>
+        <div className="flex flex-col gap-4 w-full sm:w-auto sm:items-end">
+          <fieldset className="w-full sm:min-w-[280px] border border-gray-200 rounded-md p-3 bg-gray-50/50">
+            <legend className="text-sm font-medium text-gray-700 px-1">Show</legend>
+            <div className="flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:gap-x-4 sm:gap-y-2">
+              <label className="inline-flex items-center gap-2 text-sm text-gray-700 cursor-pointer">
+                <input
+                  type="checkbox"
+                  className="rounded border-gray-300 text-indigo-900 focus:ring-offset-0 focus:ring-[#38438f]"
+                  checked={showStatuses.NOT_STARTED}
+                  onChange={() => toggleStatus('NOT_STARTED')}
+                />
+                Not started
+              </label>
+              <label className="inline-flex items-center gap-2 text-sm text-gray-700 cursor-pointer">
+                <input
+                  type="checkbox"
+                  className="rounded border-gray-300 text-indigo-900 focus:ring-offset-0 focus:ring-[#38438f]"
+                  checked={showStatuses.IN_PROGRESS}
+                  onChange={() => toggleStatus('IN_PROGRESS')}
+                />
+                In progress
+              </label>
+              <label className="inline-flex items-center gap-2 text-sm text-gray-700 cursor-pointer">
+                <input
+                  type="checkbox"
+                  className="rounded border-gray-300 text-indigo-900 focus:ring-offset-0 focus:ring-[#38438f]"
+                  checked={showStatuses.COMPLETED}
+                  onChange={() => toggleStatus('COMPLETED')}
+                />
+                Completed
+              </label>
+            </div>
+          </fieldset>
+          <div className="w-full sm:w-72">
+            <label htmlFor="sort-by" className="block text-sm font-medium text-gray-700 mb-2">
+              Sort by
+            </label>
+            <select
+              id="sort-by"
+              value={sortBy}
+              onChange={(e) => setSortBy(e.target.value as SortOption)}
+              className="border border-gray-300 rounded-md px-3 py-2 focus:outline-none w-full text-sm"
+              onFocus={(e) => (e.currentTarget.style.borderColor = '#38438f')}
+              onBlur={(e) => (e.currentTarget.style.borderColor = '#d1d5db')}
+            >
+              <option value="date">Date Added (Newest First)</option>
+              <option value="level">Level</option>
+              <option value="alphabetical">Alphabetically</option>
+            </select>
+          </div>
         </div>
       </div>
       <div className="space-y-2">
         {sortedAssignments.length === 0 ? (
-          <p className="text-sm text-gray-500">No assignments yet.</p>
+          <p className="text-sm text-gray-500">{emptyMessage}</p>
         ) : (
           sortedAssignments.map((assignment) => {
             const progress = Array.isArray(assignment.progress) ? assignment.progress[0] : null
