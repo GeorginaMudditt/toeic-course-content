@@ -1,7 +1,8 @@
 'use client'
 
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef, useMemo, Fragment } from 'react'
 import { formatCourseName } from '@/lib/date-utils'
+import { computePackageProgress } from '@/lib/course-notes-lessons'
 
 interface Enrollment {
   id: string
@@ -268,6 +269,15 @@ export default function StudentNotesManager({ student, enrollments }: Props) {
     })
   }
 
+  const activeEnrollment = enrollments.find((e) => e.id === selectedEnrollment)
+  const courseDurationHours = activeEnrollment?.course?.duration ?? 0
+
+  const { lessonNums, lessonsLogged, lessonsRemaining, showLowLessonsWarning, loggedOverPackage } =
+    useMemo(
+      () => computePackageProgress(rows, courseDurationHours),
+      [rows, courseDurationHours]
+    )
+
   const insertDate = () => {
     const date = new Date()
     // Format: "Friday 6 February 2026" (no comma)
@@ -335,6 +345,47 @@ export default function StudentNotesManager({ student, enrollments }: Props) {
 
       {selectedEnrollment && (
         <>
+          {courseDurationHours > 0 && (
+            <div className="mb-4 space-y-2">
+              <p className="text-sm text-gray-700">
+                <span className="font-medium">Hours tracking:</span>{' '}
+                {lessonsLogged} of {courseDurationHours} lesson
+                {courseDurationHours === 1 ? '' : 's'} logged
+                {lessonsRemaining !== null && lessonsRemaining > 0 && (
+                  <>
+                    {' '}
+                    · {lessonsRemaining} remaining in this {courseDurationHours}-hour package
+                  </>
+                )}
+                {lessonsRemaining === 0 && lessonsLogged >= courseDurationHours && (
+                  <> · all lessons in this package are logged</>
+                )}
+              </p>
+              {showLowLessonsWarning && lessonsRemaining !== null && (
+                <div
+                  className="rounded-md border border-amber-300 bg-amber-50 px-3 py-2 text-sm text-amber-950"
+                  role="status"
+                >
+                  <strong>{student.name}</strong> only has{' '}
+                  {lessonsRemaining === 1
+                    ? 'one lesson'
+                    : `${lessonsRemaining} lessons`}{' '}
+                  left in this course. Consider contacting them about extending or booking another
+                  package.
+                </div>
+              )}
+              {loggedOverPackage && (
+                <div
+                  className="rounded-md border border-sky-300 bg-sky-50 px-3 py-2 text-sm text-sky-950"
+                  role="status"
+                >
+                  More lessons are logged than hours in this course package. Consider adding hours if{' '}
+                  {student.name} is continuing.
+                </div>
+              )}
+            </div>
+          )}
+
           {/* Toolbar & actions */}
           <div className="border border-gray-300 rounded-t-lg bg-gray-50 p-2 flex flex-wrap gap-2 items-center">
             <button
@@ -478,10 +529,11 @@ export default function StudentNotesManager({ student, enrollments }: Props) {
                 {rows.map((row, index) => {
                   const isFirstRow = index === 0
                   const rowHasContent = hasContent(row)
+                  const lessonNum = lessonNums[index]
 
                   return (
-                  <>
-                    <tr key={`${index}-meta`} className={isFirstRow ? 'bg-white' : 'bg-gray-50'}>
+                  <Fragment key={`notes-row-${index}`}>
+                    <tr className={isFirstRow ? 'bg-white' : 'bg-gray-50'}>
                       {/* Date */}
                       <td className="px-3 py-2 border-b align-top">
                       <input
@@ -501,6 +553,9 @@ export default function StudentNotesManager({ student, enrollments }: Props) {
                         className="w-full border border-gray-300 rounded px-2 py-1 text-sm focus:outline-none focus:ring-1 focus:ring-[#38438f]"
                         placeholder="e.g. Friday 6 February 2026"
                       />
+                      {lessonNum != null && (
+                        <p className="mt-1 text-xs font-medium text-[#38438f]">(Lesson {lessonNum})</p>
+                      )}
                       </td>
 
                       {/* Attendance */}
@@ -561,7 +616,7 @@ export default function StudentNotesManager({ student, enrollments }: Props) {
 
                     {/* Corrections / Notes editors */}
                     {isFirstRow && !rowHasContent && !showNextLessonEditors ? (
-                      <tr key={`${index}-collapsed`} className="bg-white">
+                      <tr className="bg-white">
                         <td className="px-3 py-3 border-b align-top" colSpan={5}>
                           <button
                             type="button"
@@ -583,7 +638,7 @@ export default function StudentNotesManager({ student, enrollments }: Props) {
                     ) : (
                       <>
                         {/* Corrections editor row */}
-                        <tr key={`${index}-corrections`} className={isFirstRow ? 'bg-white' : 'bg-gray-50'}>
+                        <tr className={isFirstRow ? 'bg-white' : 'bg-gray-50'}>
                           <td className="px-3 py-2 border-b align-top" colSpan={5}>
                             <div className="text-xs font-semibold text-gray-700 mb-1">Corrections</div>
                             <div
@@ -629,7 +684,7 @@ export default function StudentNotesManager({ student, enrollments }: Props) {
                         </tr>
 
                         {/* Notes editor row */}
-                        <tr key={`${index}-notes`} className={isFirstRow ? 'bg-white' : 'bg-gray-50'}>
+                        <tr className={isFirstRow ? 'bg-white' : 'bg-gray-50'}>
                           <td className="px-3 py-2 border-b align-top" colSpan={5}>
                             <div className="text-xs font-semibold text-gray-700 mb-1">Notes</div>
                             <div
@@ -675,7 +730,7 @@ export default function StudentNotesManager({ student, enrollments }: Props) {
                         </tr>
                       </>
                     )}
-                  </>
+                  </Fragment>
                 )})}
               </tbody>
             </table>

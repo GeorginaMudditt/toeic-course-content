@@ -89,7 +89,10 @@ export default async function StudentNotesPage({ searchParams }: { searchParams:
                   </h2>
                   
                   {enrollment.note ? (
-                    <StudentNotesView content={enrollment.note.content} />
+                    <StudentNotesView
+                      content={enrollment.note.content}
+                      courseDurationHours={enrollment.course?.duration ?? null}
+                    />
                   ) : (
                     <div className="text-gray-500 italic py-8 text-center">
                       No notes yet. Your teacher will add notes here during your lessons.
