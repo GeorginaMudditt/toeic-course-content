@@ -21,6 +21,8 @@ export default async function StudentsPage() {
       .from('User')
       .select('*')
       .eq('role', 'STUDENT')
+      // Show most recently active students first (null lastSeenAt values at the end).
+      .order('lastSeenAt', { ascending: false, nullsFirst: false })
       .order('name', { ascending: true })
 
     if (studentError) {

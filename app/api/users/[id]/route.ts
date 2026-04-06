@@ -173,8 +173,21 @@ export async function DELETE(
       )
     }
 
-    // Delete all course notes for these enrollments (must be before deleting enrollments)
+    // Delete course note revisions first to satisfy FK constraints, then course notes.
     if (enrollmentIds.length > 0) {
+      const { error: noteRevisionsError } = await supabaseServer
+        .from('CourseNoteRevision')
+        .delete()
+        .in('enrollmentId', enrollmentIds)
+
+      if (noteRevisionsError) {
+        console.error('Error deleting course note revisions:', JSON.stringify(noteRevisionsError, null, 2))
+        return NextResponse.json(
+          { error: 'Failed to delete student course note revisions', details: noteRevisionsError.message },
+          { status: 500 }
+        )
+      }
+
       const { error: courseNotesError } = await supabaseServer
         .from('CourseNote')
         .delete()
