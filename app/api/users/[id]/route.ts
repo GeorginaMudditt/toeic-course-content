@@ -107,7 +107,8 @@ export async function DELETE(
       return NextResponse.json({ error: 'Student not found' }, { status: 404 })
     }
 
-    // Delete in order: Progress -> CourseNotes -> Assignments -> Enrollments -> User
+    // Delete in order:
+    // Progress -> CourseNoteRevision -> CourseNotes -> Assignments -> Enrollments -> StudentDocuments -> User
     // First, get all enrollments for this student
     const { data: enrollments, error: enrollmentsError } = await supabaseServer
       .from('Enrollment')
@@ -232,6 +233,20 @@ export async function DELETE(
           { status: 500 }
         )
       }
+    }
+
+    // Delete student documents before deleting the user (FK StudentDocument.studentId -> User.id)
+    const { error: documentsDeleteError } = await supabaseServer
+      .from('StudentDocument')
+      .delete()
+      .eq('studentId', params.id)
+
+    if (documentsDeleteError) {
+      console.error('Error deleting student documents:', JSON.stringify(documentsDeleteError, null, 2))
+      return NextResponse.json(
+        { error: 'Failed to delete student documents', details: documentsDeleteError.message },
+        { status: 500 }
+      )
     }
 
     // Finally, delete the user

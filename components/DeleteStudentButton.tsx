@@ -43,7 +43,8 @@ export default function DeleteStudentButton({ studentId, studentName }: DeleteSt
         router.push('/teacher/students')
         router.refresh()
       } else {
-        setError(data.error || 'Failed to delete student')
+        const detailSuffix = data?.details ? ` (${data.details})` : ''
+        setError(`${data?.error || 'Failed to delete student'}${detailSuffix}`)
         setDeleting(false)
       }
     } catch (error: any) {
