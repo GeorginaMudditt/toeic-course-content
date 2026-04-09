@@ -56,6 +56,23 @@
     padding-top: 16px;
     border-top: 2px solid #e5e7eb;
   }
+
+  /* Force visible list markers (some app styles hide them globally). */
+  ol {
+    list-style-type: decimal !important;
+    list-style-position: outside !important;
+    padding-left: 24px !important;
+  }
+
+  ul {
+    list-style-type: disc !important;
+    list-style-position: outside !important;
+    padding-left: 22px !important;
+  }
+
+  li {
+    display: list-item !important;
+  }
 </style>
 
 <div style="max-width: 900px; margin: 0 auto; padding: 20px; font-family: Arial, sans-serif; line-height: 1.45; color: #333;">
@@ -249,8 +266,8 @@
     </ol>
   </div>
 
-  <div class="keep-together">
-    <h2 style="font-size: 22px; font-weight: bold; margin: 0 0 8px;">Note: Prepositions (Quick Awareness)</h2>
+  <div class="keep-together" style="background: #fffbeb; border: 2px solid #f59e0b; border-left: 8px solid #d97706;">
+    <h2 style="font-size: 22px; font-weight: bold; margin: 0 0 8px; color: #92400e !important;">Important Note: Prepositions</h2>
     <p style="font-size: 16px; margin: 0 0 6px;">Look at these phrases from the previous exercise:</p>
     <ul style="margin: 4px 0 8px 20px; font-size: 16px;">
       <li style="margin-bottom: 3px;">in London</li>
