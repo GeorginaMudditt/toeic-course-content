@@ -24,6 +24,23 @@
     }
   }
 
+  /* Force visible list markers (some app styles hide them globally). */
+  ol {
+    list-style-type: decimal !important;
+    list-style-position: outside !important;
+    padding-left: 24px !important;
+  }
+
+  ul {
+    list-style-type: disc !important;
+    list-style-position: outside !important;
+    padding-left: 22px !important;
+  }
+
+  li {
+    display: list-item !important;
+  }
+
   .language-panels-grid {
     display: grid;
     grid-template-columns: 1fr;
@@ -169,7 +186,7 @@
     <p style="font-size: 17px; margin: 0 0 8px 0; font-weight: 600;">So which words do we stress?</p>
     <ul style="margin: 0; padding-left: 24px; font-size: 17px;">
       <li style="margin-bottom: 6px;">We usually stress content words (main verbs, nouns, adjectives).</li>
-      <li style="margin-bottom: 0;">We do not usually stress functional words (auxiliary verbs, articles, prepositions).</li>
+      <li style="margin-bottom: 0;">We do not usually stress functional words (auxiliary verbs, articles, and prepositions).</li>
     </ul>
   </div>
 </div>
