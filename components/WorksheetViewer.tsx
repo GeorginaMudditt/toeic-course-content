@@ -715,7 +715,9 @@ export default function WorksheetViewer({ assignmentId, resource, initialProgres
         matchedSection = answerSections.find((section) => (section.textContent || '').toLowerCase().includes(prefix.toLowerCase()))
       }
 
-      if (!matchedSection) return
+      if (!matchedSection) {
+        return
+      }
 
       const tokens = Array.from(matchedSection.querySelectorAll('strong'))
         .map((el) => (el.textContent || '').trim())
@@ -730,6 +732,30 @@ export default function WorksheetViewer({ assignmentId, resource, initialProgres
         answerMap.set(id, [token])
       })
     })
+
+    // Fallback: if section matching failed (or was partial), map remaining inputs
+    // in DOM order to remaining <strong> tokens in the answers area.
+    if (answerMap.size < allInputs.length) {
+      const usedValues = new Set(Array.from(answerMap.values()).flat())
+      const allStrongTokens = Array.from(answerRoot.querySelectorAll('strong'))
+        .map((el) => (el.textContent || '').trim())
+        .filter(Boolean)
+        .flatMap((token) => expandAnswerVariants(token))
+        .map((token) => normalizeAnswerValue(token))
+        .filter(Boolean)
+        .filter((token) => !usedValues.has(token))
+
+      const unresolvedIds = allInputs
+        .map((el) => el.getAttribute('data-grammar-input') || '')
+        .filter(Boolean)
+        .filter((id) => !answerMap.has(id))
+
+      unresolvedIds.forEach((id, index) => {
+        const token = allStrongTokens[index]
+        if (!token) return
+        answerMap.set(id, [token])
+      })
+    }
 
     return answerMap
   }, [])
@@ -1401,7 +1427,6 @@ export default function WorksheetViewer({ assignmentId, resource, initialProgres
       document.head.appendChild(style)
     }
 
-    const answerMap = buildGrammarAnswerMap()
     const inputContainers = Array.from(contentRef.current.querySelectorAll('[data-grammar-input]')) as HTMLElement[]
     const sectionMap = new Map<HTMLElement, HTMLElement[]>()
 
@@ -1443,7 +1468,10 @@ export default function WorksheetViewer({ assignmentId, resource, initialProgres
       summary.style.fontWeight = '600'
       summary.style.color = '#1f2937'
 
-      const clickHandler = () => runGrammarCheckForContainer(section, answerMap)
+      const clickHandler = () => {
+        const answerMap = buildGrammarAnswerMap()
+        runGrammarCheckForContainer(section, answerMap)
+      }
       button.addEventListener('click', clickHandler)
       cleanupFns.push(() => button.removeEventListener('click', clickHandler))
 
