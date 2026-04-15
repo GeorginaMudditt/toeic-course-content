@@ -27,6 +27,54 @@ interface WorksheetViewerProps {
   initialProgress?: Progress | null
 }
 
+type GrammarCheckStatus = 'correct' | 'incorrect' | 'review'
+
+interface GrammarCheckResult {
+  status: GrammarCheckStatus
+  message: string
+}
+
+const normalizeAnswerValue = (value: string): string => {
+  return value
+    .toLowerCase()
+    .replace(/[’']/g, "'")
+    .replace(/[.,!?;:()[\]"]/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim()
+}
+
+const expandAnswerVariants = (value: string): string[] => {
+  const trimmed = value.trim()
+  if (!trimmed) return []
+
+  const pieces = trimmed
+    .split(/\s*(?:\/| or )\s*/i)
+    .map((part) => part.trim())
+    .filter(Boolean)
+
+  return pieces.length ? pieces : [trimmed]
+}
+
+const buildPrefixLabelRegex = (prefix: string): RegExp | null => {
+  const match = prefix.match(/^([a-zA-Z]+)(\d+)$/)
+  if (!match) return null
+
+  const [, word, number] = match
+  const phraseMap: Record<string, string> = {
+    gf: 'grammar focus',
+    practice: 'practice',
+    vocab: 'vocabulary focus',
+    reading: 'reading',
+    prep: 'prepositions',
+  }
+
+  const phrase = phraseMap[word.toLowerCase()]
+  if (!phrase) return null
+
+  const safePhrase = phrase.replace(/\s+/g, '\\s+')
+  return new RegExp(`${safePhrase}\\s*#?\\s*${number}`, 'i')
+}
+
 // Memoized content component to prevent re-renders when notes change
 const MemoizedContent = React.memo(function MemoizedContent({
   html,
@@ -612,6 +660,139 @@ export default function WorksheetViewer({ assignmentId, resource, initialProgres
   }
   
   const grammarAnswers = getGrammarAnswers()
+
+  const applyGrammarResultStyles = useCallback((field: HTMLInputElement | HTMLTextAreaElement, result: GrammarCheckStatus) => {
+    if (result === 'correct') {
+      field.style.borderColor = '#16a34a'
+      field.style.backgroundColor = '#f0fdf4'
+      return
+    }
+    if (result === 'incorrect') {
+      field.style.borderColor = '#dc2626'
+      field.style.backgroundColor = '#fef2f2'
+      return
+    }
+    field.style.borderColor = '#d97706'
+    field.style.backgroundColor = '#fffbeb'
+  }, [])
+
+  const buildGrammarAnswerMap = useCallback((): Map<string, string[]> => {
+    const answerMap = new Map<string, string[]>()
+    if (!contentRef.current) return answerMap
+
+    const allInputs = Array.from(contentRef.current.querySelectorAll('[data-grammar-input]')) as HTMLElement[]
+    if (!allInputs.length) return answerMap
+
+    const groupedByPrefix = new Map<string, string[]>()
+    allInputs.forEach((el) => {
+      const inputId = el.getAttribute('data-grammar-input')
+      if (!inputId) return
+      const prefix = inputId.split('-')[0]
+      const current = groupedByPrefix.get(prefix) || []
+      current.push(inputId)
+      groupedByPrefix.set(prefix, current)
+    })
+
+    const answerHeading = Array.from(contentRef.current.querySelectorAll('h2, h3')).find((heading) =>
+      /answer/i.test(heading.textContent || '')
+    )
+    if (!answerHeading) return answerMap
+
+    const answerRoot = answerHeading.closest('div') || answerHeading.parentElement
+    if (!answerRoot) return answerMap
+
+    const answerSections = Array.from(answerRoot.querySelectorAll('div')).filter((section) => section.querySelector('h3'))
+
+    groupedByPrefix.forEach((inputIds, prefix) => {
+      const matcher = buildPrefixLabelRegex(prefix)
+      let matchedSection: Element | undefined
+
+      if (matcher) {
+        matchedSection = answerSections.find((section) => matcher.test(section.textContent || ''))
+      }
+
+      if (!matchedSection) {
+        matchedSection = answerSections.find((section) => (section.textContent || '').toLowerCase().includes(prefix.toLowerCase()))
+      }
+
+      if (!matchedSection) return
+
+      const tokens = Array.from(matchedSection.querySelectorAll('strong'))
+        .map((el) => (el.textContent || '').trim())
+        .filter(Boolean)
+        .flatMap((token) => expandAnswerVariants(token))
+        .map((token) => normalizeAnswerValue(token))
+        .filter(Boolean)
+
+      inputIds.forEach((id, index) => {
+        const token = tokens[index]
+        if (!token) return
+        answerMap.set(id, [token])
+      })
+    })
+
+    return answerMap
+  }, [])
+
+  const runGrammarCheckForContainer = useCallback((container: HTMLElement, answerMap: Map<string, string[]>) => {
+    const inputContainers = Array.from(container.querySelectorAll('[data-grammar-input]')) as HTMLElement[]
+    if (!inputContainers.length) return
+
+    let correct = 0
+    let incorrect = 0
+    let review = 0
+
+    inputContainers.forEach((inputContainer) => {
+      const inputId = inputContainer.getAttribute('data-grammar-input')
+      if (!inputId) return
+
+      const field = inputContainer.querySelector('input, textarea') as HTMLInputElement | HTMLTextAreaElement | null
+      if (!field) return
+
+      const value = normalizeAnswerValue(field.value || '')
+      const expected = answerMap.get(inputId) || []
+      const inputType = inputContainer.getAttribute('data-grammar-input-type') === 'textarea' ? 'textarea' : 'text'
+
+      let result: GrammarCheckResult
+      if (!value) {
+        result = { status: 'review', message: 'Add an answer first.' }
+      } else if (inputType === 'textarea') {
+        result = { status: 'review', message: 'Review with your teacher.' }
+      } else if (!expected.length) {
+        result = { status: 'review', message: 'Answer check unavailable.' }
+      } else if (expected.includes(value)) {
+        result = { status: 'correct', message: 'Correct' }
+      } else {
+        result = { status: 'incorrect', message: 'Try again' }
+      }
+
+      applyGrammarResultStyles(field, result.status)
+
+      const existingFeedback = inputContainer.querySelector('.grammar-check-feedback')
+      if (existingFeedback) {
+        existingFeedback.remove()
+      }
+
+      const feedback = document.createElement('div')
+      feedback.className = 'grammar-check-feedback screen-only'
+      feedback.style.marginTop = '4px'
+      feedback.style.fontSize = '12px'
+      feedback.style.fontWeight = '600'
+      feedback.style.color =
+        result.status === 'correct' ? '#166534' : result.status === 'incorrect' ? '#991b1b' : '#92400e'
+      feedback.textContent = result.message
+      inputContainer.appendChild(feedback)
+
+      if (result.status === 'correct') correct += 1
+      else if (result.status === 'incorrect') incorrect += 1
+      else review += 1
+    })
+
+    const resultNode = container.querySelector('.grammar-check-summary') as HTMLElement | null
+    if (resultNode) {
+      resultNode.textContent = `Checked: ${correct} correct, ${incorrect} to retry${review ? `, ${review} to review` : ''}.`
+    }
+  }, [applyGrammarResultStyles])
   
   // Memoize writing value to prevent unnecessary re-renders
   const writingAnswerValue = useMemo(() => {
@@ -1201,6 +1382,85 @@ export default function WorksheetViewer({ assignmentId, resource, initialProgres
       }
     })
   }, [notes, hasGrammarInputs, updateGrammarAnswer]) // Use notes to trigger updates when answers change
+
+  // Add per-section "Check answers" controls for grammar worksheets
+  useEffect(() => {
+    if (!hasGrammarInputs || !contentRef.current || !grammarInputsReady) return
+
+    const styleId = 'grammar-check-screen-only-style'
+    if (!document.getElementById(styleId)) {
+      const style = document.createElement('style')
+      style.id = styleId
+      style.textContent = `
+        @media print {
+          .screen-only {
+            display: none !important;
+          }
+        }
+      `
+      document.head.appendChild(style)
+    }
+
+    const answerMap = buildGrammarAnswerMap()
+    const inputContainers = Array.from(contentRef.current.querySelectorAll('[data-grammar-input]')) as HTMLElement[]
+    const sectionMap = new Map<HTMLElement, HTMLElement[]>()
+
+    inputContainers.forEach((inputContainer) => {
+      const section =
+        (inputContainer.closest('.keep-together') as HTMLElement | null) ||
+        (inputContainer.closest('div') as HTMLElement | null)
+      if (!section) return
+      const current = sectionMap.get(section) || []
+      current.push(inputContainer)
+      sectionMap.set(section, current)
+    })
+
+    const cleanupFns: Array<() => void> = []
+    sectionMap.forEach((_inputs, section) => {
+      if (section.querySelector('.grammar-check-controls')) return
+
+      const controls = document.createElement('div')
+      controls.className = 'grammar-check-controls screen-only'
+      controls.style.display = 'flex'
+      controls.style.alignItems = 'center'
+      controls.style.gap = '10px'
+      controls.style.marginTop = '10px'
+
+      const button = document.createElement('button')
+      button.type = 'button'
+      button.textContent = 'Check answers'
+      button.style.backgroundColor = '#38438f'
+      button.style.color = '#fff'
+      button.style.border = 'none'
+      button.style.borderRadius = '6px'
+      button.style.padding = '6px 10px'
+      button.style.fontSize = '13px'
+      button.style.cursor = 'pointer'
+
+      const summary = document.createElement('div')
+      summary.className = 'grammar-check-summary'
+      summary.style.fontSize = '12px'
+      summary.style.fontWeight = '600'
+      summary.style.color = '#1f2937'
+
+      const clickHandler = () => runGrammarCheckForContainer(section, answerMap)
+      button.addEventListener('click', clickHandler)
+      cleanupFns.push(() => button.removeEventListener('click', clickHandler))
+
+      controls.appendChild(button)
+      controls.appendChild(summary)
+      section.appendChild(controls)
+    })
+
+    return () => {
+      cleanupFns.forEach((fn) => fn())
+      if (!contentRef.current) return
+      const controls = contentRef.current.querySelectorAll('.grammar-check-controls')
+      controls.forEach((control) => control.remove())
+      const feedback = contentRef.current.querySelectorAll('.grammar-check-feedback')
+      feedback.forEach((node) => node.remove())
+    }
+  }, [hasGrammarInputs, grammarInputsReady, resource.content, buildGrammarAnswerMap, runGrammarCheckForContainer])
   
   // Cleanup: Defer root unmount to avoid "synchronously unmount while React was rendering" warning
   useEffect(() => {
@@ -1323,6 +1583,7 @@ export default function WorksheetViewer({ assignmentId, resource, initialProgres
             @media print {
               body { padding: 0; }
               @page { margin: 1cm; }
+              .screen-only { display: none !important; }
             }
             img {
               max-width: 100%;
