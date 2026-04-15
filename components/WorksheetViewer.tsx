@@ -75,6 +75,16 @@ const buildPrefixLabelRegex = (prefix: string): RegExp | null => {
   return new RegExp(`${safePhrase}\\s*#?\\s*${number}`, 'i')
 }
 
+const isAnswerKeyHeading = (rawText: string): boolean => {
+  const text = rawText.toLowerCase().replace(/\s+/g, ' ').trim()
+  if (!text) return false
+  if (text.includes('answer key')) return true
+  if (/^📝\s*answers?$/.test(text)) return true
+  if (/^answers?$/.test(text)) return true
+  if (/^📝\s*answer key$/.test(text)) return true
+  return false
+}
+
 // Memoized content component to prevent re-renders when notes change
 const MemoizedContent = React.memo(function MemoizedContent({
   html,
@@ -694,7 +704,7 @@ export default function WorksheetViewer({ assignmentId, resource, initialProgres
     })
 
     const answerHeading = Array.from(contentRef.current.querySelectorAll('h2, h3')).find((heading) =>
-      /answer/i.test(heading.textContent || '')
+      isAnswerKeyHeading(heading.textContent || '')
     )
     if (!answerHeading) return answerMap
 
