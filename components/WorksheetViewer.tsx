@@ -31,7 +31,6 @@ type GrammarCheckStatus = 'correct' | 'incorrect' | 'review'
 
 interface GrammarCheckResult {
   status: GrammarCheckStatus
-  message: string
 }
 
 const normalizeAnswerValue = (value: string): string => {
@@ -84,6 +83,9 @@ const isAnswerKeyHeading = (rawText: string): boolean => {
   if (/^📝\s*answer key$/.test(text)) return true
   return false
 }
+
+const CHECK_ICON_TICK = `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 20 20' fill='none'%3E%3Ccircle cx='10' cy='10' r='9' fill='%2316a34a'/%3E%3Cpath d='M6 10.5L8.6 13L14 7.5' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E")`
+const CHECK_ICON_CROSS = `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 20 20' fill='none'%3E%3Ccircle cx='10' cy='10' r='9' fill='%23dc2626'/%3E%3Cpath d='M6.5 6.5L13.5 13.5M13.5 6.5L6.5 13.5' stroke='white' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E")`
 
 // Memoized content component to prevent re-renders when notes change
 const MemoizedContent = React.memo(function MemoizedContent({
@@ -672,14 +674,22 @@ export default function WorksheetViewer({ assignmentId, resource, initialProgres
   const grammarAnswers = getGrammarAnswers()
 
   const applyGrammarResultStyles = useCallback((field: HTMLInputElement | HTMLTextAreaElement, result: GrammarCheckStatus) => {
+    field.style.backgroundImage = 'none'
+    field.style.backgroundRepeat = 'no-repeat'
+    field.style.backgroundSize = '14px 14px'
+    field.style.paddingRight = '24px'
+    field.style.backgroundPosition = field.tagName === 'TEXTAREA' ? 'calc(100% - 6px) 8px' : 'calc(100% - 6px) center'
+
     if (result === 'correct') {
       field.style.borderColor = '#16a34a'
       field.style.backgroundColor = '#f0fdf4'
+      field.style.backgroundImage = CHECK_ICON_TICK
       return
     }
     if (result === 'incorrect') {
       field.style.borderColor = '#dc2626'
       field.style.backgroundColor = '#fef2f2'
+      field.style.backgroundImage = CHECK_ICON_CROSS
       return
     }
     field.style.borderColor = '#d97706'
@@ -791,33 +801,18 @@ export default function WorksheetViewer({ assignmentId, resource, initialProgres
 
       let result: GrammarCheckResult
       if (!value) {
-        result = { status: 'review', message: 'Add an answer first.' }
+        result = { status: 'review' }
       } else if (inputType === 'textarea') {
-        result = { status: 'review', message: 'Review with your teacher.' }
+        result = { status: 'review' }
       } else if (!expected.length) {
-        result = { status: 'review', message: 'Answer check unavailable.' }
+        result = { status: 'review' }
       } else if (expected.includes(value)) {
-        result = { status: 'correct', message: 'Correct' }
+        result = { status: 'correct' }
       } else {
-        result = { status: 'incorrect', message: 'Try again' }
+        result = { status: 'incorrect' }
       }
 
       applyGrammarResultStyles(field, result.status)
-
-      const existingFeedback = inputContainer.querySelector('.grammar-check-feedback')
-      if (existingFeedback) {
-        existingFeedback.remove()
-      }
-
-      const feedback = document.createElement('div')
-      feedback.className = 'grammar-check-feedback screen-only'
-      feedback.style.marginTop = '4px'
-      feedback.style.fontSize = '12px'
-      feedback.style.fontWeight = '600'
-      feedback.style.color =
-        result.status === 'correct' ? '#166534' : result.status === 'incorrect' ? '#991b1b' : '#92400e'
-      feedback.textContent = result.message
-      inputContainer.appendChild(feedback)
 
       if (result.status === 'correct') correct += 1
       else if (result.status === 'incorrect') incorrect += 1
@@ -1495,8 +1490,6 @@ export default function WorksheetViewer({ assignmentId, resource, initialProgres
       if (!contentRef.current) return
       const controls = contentRef.current.querySelectorAll('.grammar-check-controls')
       controls.forEach((control) => control.remove())
-      const feedback = contentRef.current.querySelectorAll('.grammar-check-feedback')
-      feedback.forEach((node) => node.remove())
     }
   }, [hasGrammarInputs, grammarInputsReady, resource.content, buildGrammarAnswerMap, runGrammarCheckForContainer])
   
