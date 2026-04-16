@@ -1294,7 +1294,6 @@ export default function WorksheetViewer({ assignmentId, resource, initialProgres
           {...commonPropsWithoutRef}
           ref={textareaRef}
           style={textareaStyle}
-          placeholder="Type your answer here..."
           rows={2}
         />
       )
@@ -1306,7 +1305,6 @@ export default function WorksheetViewer({ assignmentId, resource, initialProgres
         ref={inputRef}
         type="text"
         style={inputStyle}
-        placeholder="Type your answer"
       />
     )
   })
