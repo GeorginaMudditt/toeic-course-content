@@ -84,6 +84,28 @@ const isAnswerKeyHeading = (rawText: string): boolean => {
   return false
 }
 
+const extractAnswerTokens = (scope: ParentNode): string[] => {
+  const strongTokens = Array.from(scope.querySelectorAll('strong'))
+    .map((el) => (el.textContent || '').trim())
+    .filter(Boolean)
+    .flatMap((token) => expandAnswerVariants(token))
+    .map((token) => normalizeAnswerValue(token))
+    .filter(Boolean)
+
+  if (strongTokens.length) return strongTokens
+
+  const list = scope.querySelector('ol, ul')
+
+  if (!list) return []
+
+  return Array.from(list.querySelectorAll('li'))
+    .map((item) => (item.textContent || '').trim())
+    .filter(Boolean)
+    .flatMap((token) => expandAnswerVariants(token))
+    .map((token) => normalizeAnswerValue(token))
+    .filter(Boolean)
+}
+
 const CHECK_ICON_TICK = `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 20 20' fill='none'%3E%3Ccircle cx='10' cy='10' r='9' fill='%2316a34a'/%3E%3Cpath d='M6 10.5L8.6 13L14 7.5' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E")`
 const CHECK_ICON_CROSS = `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 20 20' fill='none'%3E%3Ccircle cx='10' cy='10' r='9' fill='%23dc2626'/%3E%3Cpath d='M6.5 6.5L13.5 13.5M13.5 6.5L6.5 13.5' stroke='white' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E")`
 
@@ -721,30 +743,26 @@ export default function WorksheetViewer({ assignmentId, resource, initialProgres
     const answerRoot = answerHeading.closest('div') || answerHeading.parentElement
     if (!answerRoot) return answerMap
 
-    const answerSections = Array.from(answerRoot.querySelectorAll('div')).filter((section) => section.querySelector('h3'))
+    const answerSectionHeadings = Array.from(answerRoot.querySelectorAll('h3'))
 
     groupedByPrefix.forEach((inputIds, prefix) => {
       const matcher = buildPrefixLabelRegex(prefix)
-      let matchedSection: Element | undefined
+      let matchedHeading: HTMLHeadingElement | undefined
 
       if (matcher) {
-        matchedSection = answerSections.find((section) => matcher.test(section.textContent || ''))
+        matchedHeading = answerSectionHeadings.find((heading) => matcher.test(heading.textContent || '')) as HTMLHeadingElement | undefined
       }
 
-      if (!matchedSection) {
-        matchedSection = answerSections.find((section) => (section.textContent || '').toLowerCase().includes(prefix.toLowerCase()))
+      if (!matchedHeading) {
+        matchedHeading = answerSectionHeadings.find((heading) => (heading.textContent || '').toLowerCase().includes(prefix.toLowerCase())) as HTMLHeadingElement | undefined
       }
 
-      if (!matchedSection) {
+      if (!matchedHeading) {
         return
       }
 
-      const tokens = Array.from(matchedSection.querySelectorAll('strong'))
-        .map((el) => (el.textContent || '').trim())
-        .filter(Boolean)
-        .flatMap((token) => expandAnswerVariants(token))
-        .map((token) => normalizeAnswerValue(token))
-        .filter(Boolean)
+      const matchedSection = matchedHeading.parentElement || matchedHeading
+      const tokens = extractAnswerTokens(matchedSection)
 
       inputIds.forEach((id, index) => {
         const token = tokens[index]
@@ -757,12 +775,9 @@ export default function WorksheetViewer({ assignmentId, resource, initialProgres
     // in DOM order to remaining <strong> tokens in the answers area.
     if (answerMap.size < allInputs.length) {
       const usedValues = new Set(Array.from(answerMap.values()).flat())
-      const allStrongTokens = Array.from(answerRoot.querySelectorAll('strong'))
-        .map((el) => (el.textContent || '').trim())
-        .filter(Boolean)
-        .flatMap((token) => expandAnswerVariants(token))
-        .map((token) => normalizeAnswerValue(token))
-        .filter(Boolean)
+      const allAnswerTokens = answerSectionHeadings
+        .map((heading) => heading.parentElement || heading)
+        .flatMap((section) => extractAnswerTokens(section))
         .filter((token) => !usedValues.has(token))
 
       const unresolvedIds = allInputs
@@ -771,7 +786,7 @@ export default function WorksheetViewer({ assignmentId, resource, initialProgres
         .filter((id) => !answerMap.has(id))
 
       unresolvedIds.forEach((id, index) => {
-        const token = allStrongTokens[index]
+        const token = allAnswerTokens[index]
         if (!token) return
         answerMap.set(id, [token])
       })
