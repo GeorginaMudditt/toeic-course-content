@@ -1221,12 +1221,14 @@ export default function WorksheetViewer({ assignmentId, resource, initialProgres
     inputId,
     value,
     onChange,
-    inputType = 'text'
+    inputType = 'text',
+    width,
   }: {
     inputId: string
     value: string
     onChange: (value: string) => void
     inputType?: 'text' | 'textarea'
+    width?: string
   }) {
     const [localValue, setLocalValue] = useState(value)
     const timeoutRef = useRef<NodeJS.Timeout | null>(null)
@@ -1266,7 +1268,9 @@ export default function WorksheetViewer({ assignmentId, resource, initialProgres
       fontSize: '14px',
       fontFamily: 'inherit',
       backgroundColor: '#fff',
-      minWidth: '150px',
+      minWidth: width || '150px',
+      width: width || 'auto',
+      maxWidth: '100%',
       outline: 'none',
       display: 'inline-block',
       verticalAlign: 'baseline'
@@ -1329,6 +1333,7 @@ export default function WorksheetViewer({ assignmentId, resource, initialProgres
         }
         
         const inputType = container.getAttribute('data-grammar-input-type') === 'textarea' ? 'textarea' : 'text'
+        const configuredWidth = (container as HTMLElement).style.minWidth || (container as HTMLElement).style.width || undefined
         
         try {
           container.innerHTML = ''
@@ -1351,6 +1356,7 @@ export default function WorksheetViewer({ assignmentId, resource, initialProgres
               value={currentValue}
               onChange={(value) => updateGrammarAnswer(inputId, value)}
               inputType={inputType}
+              width={configuredWidth}
             />
           )
           
@@ -1399,6 +1405,7 @@ export default function WorksheetViewer({ assignmentId, resource, initialProgres
       if (!inputId) return
       
       const inputType = container.getAttribute('data-grammar-input-type') === 'textarea' ? 'textarea' : 'text'
+      const configuredWidth = (container as HTMLElement).style.minWidth || (container as HTMLElement).style.width || undefined
       const root = (container as any)._reactRoot
       if (root) {
         const currentValue = currentGrammarAnswers[inputId] || ''
@@ -1408,6 +1415,7 @@ export default function WorksheetViewer({ assignmentId, resource, initialProgres
             value={currentValue}
             onChange={(value) => updateGrammarAnswer(inputId, value)}
             inputType={inputType}
+            width={configuredWidth}
           />
         )
       }
