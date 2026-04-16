@@ -1269,8 +1269,9 @@ export default function WorksheetViewer({ assignmentId, resource, initialProgres
       fontFamily: 'inherit',
       backgroundColor: '#fff',
       minWidth: width || '150px',
-      width: '100%',
+      width: width || '150px',
       maxWidth: '100%',
+      boxSizing: 'border-box',
       outline: 'none',
       display: 'inline-block',
       verticalAlign: 'baseline'
