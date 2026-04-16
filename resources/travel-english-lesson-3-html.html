@@ -86,6 +86,40 @@
     color: #1e3a8a;
   }
 
+  /* Force visible markers (global app styles can hide them). */
+  ol {
+    list-style-type: decimal !important;
+    list-style-position: outside !important;
+    padding-left: 24px !important;
+  }
+
+  .alpha-list {
+    list-style-type: upper-alpha !important;
+    list-style-position: outside !important;
+    padding-left: 24px !important;
+  }
+
+  ul {
+    list-style-type: disc !important;
+    list-style-position: outside !important;
+    padding-left: 22px !important;
+  }
+
+  li {
+    display: list-item !important;
+  }
+
+  .pronunciation-table th,
+  .pronunciation-table td {
+    text-align: center;
+  }
+
+  .pronunciation-table ul {
+    list-style-position: inside !important;
+    padding-left: 0 !important;
+    margin-left: 0 !important;
+  }
+
   .audio-player-box {
     border: 1px solid #bfdbfe;
     border-radius: 8px;
@@ -164,7 +198,7 @@
           </ol>
         </td>
         <td>
-          <ol type="A" style="margin: 0; padding-left: 24px; font-size: 16px;">
+          <ol type="A" class="alpha-list" style="margin: 0; font-size: 16px;">
             <li style="margin-bottom: 6px;">I have two brothers, who are twins. They are younger than me.</li>
             <li style="margin-bottom: 6px;">I work on Saturday mornings and go running with a running club on Sunday mornings. I spend the rest of the time with my family.</li>
             <li style="margin-bottom: 6px;">Yes, I am. My husband's name is Tom and he is French.</li>
@@ -179,10 +213,10 @@
         </td>
       </tr>
     </table>
-    <p style="font-size: 16px; margin: 12px 0 6px;"><strong>Now answer the questions about yourself.</strong></p>
-    <span data-grammar-input="practice1-self" data-grammar-input-type="textarea" style="display: block;"></span>
-    <p style="font-size: 16px; margin: 10px 0 6px;"><strong>What tense(s) are we using in these questions and answers? Why?</strong></p>
-    <span data-grammar-input="practice1-tense" data-grammar-input-type="textarea" style="display: block;"></span>
+    <ul style="font-size: 16px; margin: 12px 0 0;">
+      <li style="margin-bottom: 5px;">Now answer the questions about yourself.</li>
+      <li>What tense(s) are we using in these questions and answers? Why?</li>
+    </ul>
   </div>
 
   <div class="keep-together">
@@ -205,7 +239,7 @@
           </ol>
         </td>
         <td>
-          <ol type="A" style="margin: 0; padding-left: 24px; font-size: 16px;">
+          <ol type="A" class="alpha-list" style="margin: 0; font-size: 16px;">
             <li style="margin-bottom: 6px;">We stayed for 10 days.</li>
             <li style="margin-bottom: 6px;">We met some of Tom's grandmother's family, who live there.</li>
             <li style="margin-bottom: 6px;">I loved it. It is a beautiful country.</li>
@@ -220,16 +254,16 @@
         </td>
       </tr>
     </table>
-    <p style="font-size: 16px; margin: 12px 0 6px;"><strong>Now answer the questions about yourself.</strong></p>
-    <span data-grammar-input="practice2-self" data-grammar-input-type="textarea" style="display: block;"></span>
-    <p style="font-size: 16px; margin: 10px 0 6px;"><strong>What tense(s) are we using in these questions and answers? Why?</strong></p>
-    <span data-grammar-input="practice2-tense" data-grammar-input-type="textarea" style="display: block;"></span>
+    <ul style="font-size: 16px; margin: 12px 0 0;">
+      <li style="margin-bottom: 5px;">Now answer the questions about yourself.</li>
+      <li>What tense(s) are we using in these questions and answers? Why?</li>
+    </ul>
   </div>
 
   <div class="keep-together">
     <h2 style="font-size: 22px; font-weight: 700; margin-bottom: 10px;">Pronunciation #1</h2>
     <p style="font-size: 16px; margin: 0 0 10px;">Regular past tense verbs end in <strong>-ed</strong> in English. However, these verb endings are pronounced in different ways.</p>
-    <table>
+    <table class="pronunciation-table">
       <tr>
         <th style="width: 33%;">/d/</th>
         <th style="width: 33%;">/t/</th>

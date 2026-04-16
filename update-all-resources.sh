@@ -25,6 +25,8 @@ npm run update:resource:supabase "Gerunds and Infinitives" "gerunds-and-infiniti
 npm run update:resource:supabase "Inversion" "inversion-html.html"
 npm run update:resource:supabase "Irregular Verbs" "irregular-verbs-html.html"
 npm run update:resource:supabase "Travel English Lesson 1" "travel-english-lesson-1-html.html"
+npm run update:resource:supabase "Travel English Lesson 2" "travel-english-lesson-2-html.html"
+npm run update:resource:supabase "Travel English Lesson 3" "travel-english-lesson-3-html.html"
 npm run update:resource:supabase "Modal Verbs" "modal-verbs-html.html"
 npm run update:resource:supabase "Mixed Tense Review" "mixed-tense-review-html.html"
 npm run update:resource:supabase "Mixed Tenses" "mixed-tenses-html.html"
