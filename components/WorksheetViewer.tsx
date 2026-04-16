@@ -1269,7 +1269,7 @@ export default function WorksheetViewer({ assignmentId, resource, initialProgres
       fontFamily: 'inherit',
       backgroundColor: '#fff',
       minWidth: width || '150px',
-      width: width || 'auto',
+      width: '100%',
       maxWidth: '100%',
       outline: 'none',
       display: 'inline-block',
@@ -1341,6 +1341,14 @@ export default function WorksheetViewer({ assignmentId, resource, initialProgres
           containerEl.style.pointerEvents = 'auto'
           containerEl.style.position = 'relative'
           containerEl.style.zIndex = '10'
+          if (inputType !== 'textarea') {
+            containerEl.style.display = 'inline-block'
+            if (configuredWidth) {
+              containerEl.style.minWidth = configuredWidth
+              containerEl.style.width = configuredWidth
+              containerEl.style.maxWidth = configuredWidth
+            }
+          }
           if (inputType === 'textarea') {
             containerEl.style.display = 'block'
           }
