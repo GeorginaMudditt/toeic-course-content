@@ -695,7 +695,7 @@ export default function WorksheetViewer({ assignmentId, resource, initialProgres
   
   const grammarAnswers = getGrammarAnswers()
 
-  const applyGrammarResultStyles = useCallback((field: HTMLInputElement | HTMLTextAreaElement, result: GrammarCheckStatus) => {
+  const applyGrammarResultStyles = useCallback((field: HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement, result: GrammarCheckStatus) => {
     field.style.backgroundImage = 'none'
     field.style.backgroundRepeat = 'no-repeat'
     field.style.backgroundSize = '14px 14px'
@@ -807,12 +807,13 @@ export default function WorksheetViewer({ assignmentId, resource, initialProgres
       const inputId = inputContainer.getAttribute('data-grammar-input')
       if (!inputId) return
 
-      const field = inputContainer.querySelector('input, textarea') as HTMLInputElement | HTMLTextAreaElement | null
+      const field = inputContainer.querySelector('input, textarea, select') as HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement | null
       if (!field) return
 
       const value = normalizeAnswerValue(field.value || '')
       const expected = answerMap.get(inputId) || []
-      const inputType = inputContainer.getAttribute('data-grammar-input-type') === 'textarea' ? 'textarea' : 'text'
+      const rawType = inputContainer.getAttribute('data-grammar-input-type')
+      const inputType = rawType === 'textarea' ? 'textarea' : rawType === 'select' ? 'select' : 'text'
 
       let result: GrammarCheckResult
       if (!value) {
