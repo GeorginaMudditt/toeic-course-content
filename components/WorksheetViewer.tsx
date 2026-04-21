@@ -1231,28 +1231,34 @@ export default function WorksheetViewer({ assignmentId, resource, initialProgres
     })
   }, [notes, isPlacementTest, getAnswerValue, getInputType, updatePlacementTestAnswer, assignmentId, placementTestAnswers]) // Update values when notes change
 
-  // Grammar worksheet input component - supports text input and textarea
+  // Grammar worksheet input component - supports text input, textarea and select
   const GrammarInput = React.memo(function GrammarInput({
     inputId,
     value,
     onChange,
     inputType = 'text',
     width,
+    options = [],
   }: {
     inputId: string
     value: string
     onChange: (value: string) => void
-    inputType?: 'text' | 'textarea'
+    inputType?: 'text' | 'textarea' | 'select'
     width?: string
+    options?: string[]
   }) {
     const [localValue, setLocalValue] = useState(value)
     const timeoutRef = useRef<NodeJS.Timeout | null>(null)
     const inputRef = useRef<HTMLInputElement>(null)
     const textareaRef = useRef<HTMLTextAreaElement>(null)
+    const selectRef = useRef<HTMLSelectElement>(null)
     
     // Sync with parent value when it changes externally (but not when focused)
     useEffect(() => {
-      const isFocused = document.activeElement === inputRef.current || document.activeElement === textareaRef.current
+      const isFocused =
+        document.activeElement === inputRef.current ||
+        document.activeElement === textareaRef.current ||
+        document.activeElement === selectRef.current
       if (value !== localValue && !isFocused) {
         setLocalValue(value)
       }
@@ -1313,6 +1319,34 @@ export default function WorksheetViewer({ assignmentId, resource, initialProgres
         />
       )
     }
+
+    if (inputType === 'select') {
+      return (
+        <select
+          ref={selectRef}
+          value={localValue}
+          onChange={(e) => {
+            const newValue = e.target.value
+            setLocalValue(newValue)
+            onChange(newValue)
+          }}
+          style={{
+            ...inputStyle,
+            padding: '4px 8px',
+            height: '32px',
+            minWidth: width || '180px',
+            width: width || '180px'
+          }}
+        >
+          <option value="">Select...</option>
+          {options.map((option) => (
+            <option key={option} value={option}>
+              {option}
+            </option>
+          ))}
+        </select>
+      )
+    }
     
     return (
       <input
@@ -1346,7 +1380,18 @@ export default function WorksheetViewer({ assignmentId, resource, initialProgres
           return
         }
         
-        const inputType = container.getAttribute('data-grammar-input-type') === 'textarea' ? 'textarea' : 'text'
+        const inputTypeAttr = container.getAttribute('data-grammar-input-type')
+        const inputType =
+          inputTypeAttr === 'textarea'
+            ? 'textarea'
+            : inputTypeAttr === 'select'
+              ? 'select'
+              : 'text'
+        const options =
+          (container.getAttribute('data-grammar-input-options') || '')
+            .split('|')
+            .map((option) => option.trim())
+            .filter(Boolean)
         const configuredWidth = (container as HTMLElement).style.minWidth || (container as HTMLElement).style.width || undefined
         
         try {
@@ -1379,6 +1424,7 @@ export default function WorksheetViewer({ assignmentId, resource, initialProgres
               onChange={(value) => updateGrammarAnswer(inputId, value)}
               inputType={inputType}
               width={configuredWidth}
+              options={options}
             />
           )
           
@@ -1426,7 +1472,18 @@ export default function WorksheetViewer({ assignmentId, resource, initialProgres
       const inputId = container.getAttribute('data-grammar-input')
       if (!inputId) return
       
-      const inputType = container.getAttribute('data-grammar-input-type') === 'textarea' ? 'textarea' : 'text'
+      const inputTypeAttr = container.getAttribute('data-grammar-input-type')
+      const inputType =
+        inputTypeAttr === 'textarea'
+          ? 'textarea'
+          : inputTypeAttr === 'select'
+            ? 'select'
+            : 'text'
+      const options =
+        (container.getAttribute('data-grammar-input-options') || '')
+          .split('|')
+          .map((option) => option.trim())
+          .filter(Boolean)
       const configuredWidth = (container as HTMLElement).style.minWidth || (container as HTMLElement).style.width || undefined
       const root = (container as any)._reactRoot
       if (root) {
@@ -1438,6 +1495,7 @@ export default function WorksheetViewer({ assignmentId, resource, initialProgres
             onChange={(value) => updateGrammarAnswer(inputId, value)}
             inputType={inputType}
             width={configuredWidth}
+            options={options}
           />
         )
       }
