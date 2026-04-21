@@ -1550,6 +1550,7 @@ export default function WorksheetViewer({ assignmentId, resource, initialProgres
 
     const cleanupFns: Array<() => void> = []
     sectionMap.forEach((_inputs, section) => {
+      if (section.getAttribute('data-grammar-check-disabled') === 'true') return
       if (section.querySelector('.grammar-check-controls')) return
 
       const controls = document.createElement('div')
