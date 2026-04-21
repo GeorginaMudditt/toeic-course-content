@@ -42,6 +42,14 @@ const normalizeAnswerValue = (value: string): string => {
     .trim()
 }
 
+const textareaAnswerMatches = (value: string, expected: string[]): boolean => {
+  if (!value || !expected.length) return false
+  return expected.some((token) => {
+    if (!token) return false
+    return value === token || value.includes(token) || token.includes(value)
+  })
+}
+
 const expandAnswerVariants = (value: string): string[] => {
   const trimmed = value.trim()
   if (!trimmed) return []
@@ -819,7 +827,13 @@ export default function WorksheetViewer({ assignmentId, resource, initialProgres
       if (!value) {
         result = { status: 'review' }
       } else if (inputType === 'textarea') {
-        result = { status: 'review' }
+        if (!expected.length) {
+          result = { status: 'review' }
+        } else if (textareaAnswerMatches(value, expected)) {
+          result = { status: 'correct' }
+        } else {
+          result = { status: 'incorrect' }
+        }
       } else if (!expected.length) {
         result = { status: 'review' }
       } else if (expected.includes(value)) {
