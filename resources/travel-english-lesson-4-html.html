@@ -88,6 +88,34 @@
     text-align: center;
   }
 
+  .category-input-stack {
+    display: grid;
+    gap: 6px;
+    text-align: left;
+  }
+
+  .category-input-line {
+    display: block;
+    min-height: 22px;
+    border-bottom: 1px solid #94a3b8;
+    width: 100%;
+  }
+
+  .word-bank-box {
+    border: 1px solid #cfd6df;
+    border-radius: 8px;
+    background: #f8fafc;
+    padding: 10px 12px;
+    margin-top: 6px;
+  }
+
+  .word-bank-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(120px, 1fr));
+    gap: 8px 20px;
+    font-size: 16px;
+  }
+
   /* Force visible markers (global app styles can hide them). */
   ol {
     list-style-type: decimal !important;
@@ -245,7 +273,7 @@
 
   <div class="keep-together">
     <h2 style="font-size: 22px; font-weight: 700; margin-bottom: 10px;">Vocabulary #1: Descriptive Words</h2>
-    <p style="font-size: 16px; margin: 0 0 10px;">Put descriptive adjectives into the correct category.</p>
+    <p style="font-size: 16px; margin: 0 0 10px;">Put four descriptive adjectives into each category.</p>
     <table class="category-table">
       <thead>
         <tr>
@@ -260,20 +288,98 @@
       </thead>
       <tbody>
         <tr>
-          <td><span data-grammar-input="te4-v1-c1" style="display: inline-block; min-height: 70px; width: 100%;"></span></td>
-          <td><span data-grammar-input="te4-v1-c2" style="display: inline-block; min-height: 70px; width: 100%;"></span></td>
-          <td><span data-grammar-input="te4-v1-c3" style="display: inline-block; min-height: 70px; width: 100%;"></span></td>
-          <td><span data-grammar-input="te4-v1-c4" style="display: inline-block; min-height: 70px; width: 100%;"></span></td>
-          <td><span data-grammar-input="te4-v1-c5" style="display: inline-block; min-height: 70px; width: 100%;"></span></td>
-          <td><span data-grammar-input="te4-v1-c6" style="display: inline-block; min-height: 70px; width: 100%;"></span></td>
-          <td><span data-grammar-input="te4-v1-c7" style="display: inline-block; min-height: 70px; width: 100%;"></span></td>
+          <td>
+            <div class="category-input-stack">
+              <span data-grammar-input="te4-v1-c1-1" class="category-input-line"></span>
+              <span data-grammar-input="te4-v1-c1-2" class="category-input-line"></span>
+              <span data-grammar-input="te4-v1-c1-3" class="category-input-line"></span>
+              <span data-grammar-input="te4-v1-c1-4" class="category-input-line"></span>
+            </div>
+          </td>
+          <td>
+            <div class="category-input-stack">
+              <span data-grammar-input="te4-v1-c2-1" class="category-input-line"></span>
+              <span data-grammar-input="te4-v1-c2-2" class="category-input-line"></span>
+              <span data-grammar-input="te4-v1-c2-3" class="category-input-line"></span>
+              <span data-grammar-input="te4-v1-c2-4" class="category-input-line"></span>
+            </div>
+          </td>
+          <td>
+            <div class="category-input-stack">
+              <span data-grammar-input="te4-v1-c3-1" class="category-input-line"></span>
+              <span data-grammar-input="te4-v1-c3-2" class="category-input-line"></span>
+              <span data-grammar-input="te4-v1-c3-3" class="category-input-line"></span>
+              <span data-grammar-input="te4-v1-c3-4" class="category-input-line"></span>
+            </div>
+          </td>
+          <td>
+            <div class="category-input-stack">
+              <span data-grammar-input="te4-v1-c4-1" class="category-input-line"></span>
+              <span data-grammar-input="te4-v1-c4-2" class="category-input-line"></span>
+              <span data-grammar-input="te4-v1-c4-3" class="category-input-line"></span>
+              <span data-grammar-input="te4-v1-c4-4" class="category-input-line"></span>
+            </div>
+          </td>
+          <td>
+            <div class="category-input-stack">
+              <span data-grammar-input="te4-v1-c5-1" class="category-input-line"></span>
+              <span data-grammar-input="te4-v1-c5-2" class="category-input-line"></span>
+              <span data-grammar-input="te4-v1-c5-3" class="category-input-line"></span>
+              <span data-grammar-input="te4-v1-c5-4" class="category-input-line"></span>
+            </div>
+          </td>
+          <td>
+            <div class="category-input-stack">
+              <span data-grammar-input="te4-v1-c6-1" class="category-input-line"></span>
+              <span data-grammar-input="te4-v1-c6-2" class="category-input-line"></span>
+              <span data-grammar-input="te4-v1-c6-3" class="category-input-line"></span>
+              <span data-grammar-input="te4-v1-c6-4" class="category-input-line"></span>
+            </div>
+          </td>
+          <td>
+            <div class="category-input-stack">
+              <span data-grammar-input="te4-v1-c7-1" class="category-input-line"></span>
+              <span data-grammar-input="te4-v1-c7-2" class="category-input-line"></span>
+              <span data-grammar-input="te4-v1-c7-3" class="category-input-line"></span>
+              <span data-grammar-input="te4-v1-c7-4" class="category-input-line"></span>
+            </div>
+          </td>
         </tr>
       </tbody>
     </table>
     <p style="font-size: 16px; margin: 12px 0 4px;"><strong>Word bank:</strong></p>
-    <p style="font-size: 16px; margin: 0;">
-      delicious, tasty, fresh, spicy, stunning, touristy, peaceful, lively, sunny, cloudy, warm, cool, comfortable, spacious, luxurious, cosy, exciting, relaxing, interesting, unforgettable, friendly, helpful, professional, welcoming, affordable, expensive, cheap, overpriced
-    </p>
+    <div class="word-bank-box">
+      <div class="word-bank-grid">
+        <span>luxurious</span>
+        <span>warm</span>
+        <span>friendly</span>
+        <span>affordable</span>
+        <span>spicy</span>
+        <span>unforgettable</span>
+        <span>touristy</span>
+        <span>tasty</span>
+        <span>professional</span>
+        <span>cloudy</span>
+        <span>stunning</span>
+        <span>cool</span>
+        <span>expensive</span>
+        <span>interesting</span>
+        <span>welcoming</span>
+        <span>comfortable</span>
+        <span>overpriced</span>
+        <span>sunny</span>
+        <span>lively</span>
+        <span>peaceful</span>
+        <span>fresh</span>
+        <span>cheap</span>
+        <span>exciting</span>
+        <span>helpful</span>
+        <span>delicious</span>
+        <span>cosy</span>
+        <span>spacious</span>
+        <span>relaxing</span>
+      </div>
+    </div>
 
     <div style="margin-top: 14px;">
       <p style="font-size: 16px; margin: 0 0 8px;">As well as learning adjectives, learn common collocations (words that often go together):</p>
