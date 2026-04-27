@@ -135,7 +135,7 @@
 
   @media print {
     @page {
-      margin: 1.5cm;
+      margin: 1.2cm;
     }
 
     body {
@@ -143,21 +143,79 @@
       padding: 0;
     }
 
-    .page-break {
-      page-break-before: always;
+    /* Tighter print layout to reduce wasted space/paper. */
+    div[style*="max-width: 900px"] {
+      max-width: 100% !important;
+      padding: 0 !important;
+      line-height: 1.25 !important;
+      font-size: 14px !important;
+    }
+
+    h1 {
+      font-size: 24px !important;
+      margin-bottom: 2px !important;
+    }
+
+    h2 {
+      font-size: 18px !important;
+      margin-bottom: 6px !important;
+    }
+
+    h3 {
+      font-size: 16px !important;
+      margin-bottom: 6px !important;
+    }
+
+    p,
+    li,
+    th,
+    td,
+    .word-bank-grid {
+      font-size: 14px !important;
     }
 
     .keep-together {
-      break-inside: avoid;
-      page-break-inside: avoid;
+      break-inside: auto;
+      page-break-inside: auto;
       background: #fff;
       border-color: #d1d5db;
+      padding: 8px 10px;
+      margin-bottom: 10px;
     }
 
     h2,
     h3 {
       break-after: avoid;
       page-break-after: avoid;
+    }
+
+    table,
+    tr,
+    td,
+    th {
+      page-break-inside: auto;
+    }
+
+    th,
+    td {
+      padding: 5px;
+    }
+
+    .category-input-stack {
+      gap: 3px;
+    }
+
+    .category-input-line {
+      min-height: 16px;
+    }
+
+    .word-bank-box {
+      padding: 7px 8px;
+    }
+
+    .answer-block {
+      margin-top: 10px;
+      padding-top: 10px;
     }
   }
 </style>
@@ -417,7 +475,7 @@
   </div>
 </div>
 
-<div style="max-width: 900px; margin: 0 auto; padding: 20px; font-family: Arial, sans-serif; line-height: 1.45; color: #333;" class="page-break">
+<div style="max-width: 900px; margin: 0 auto; padding: 20px; font-family: Arial, sans-serif; line-height: 1.45; color: #333;">
   <div class="answer-block">
     <h2 style="font-size: 22px; font-weight: 700; margin: 0 0 12px;">Answers</h2>
 
