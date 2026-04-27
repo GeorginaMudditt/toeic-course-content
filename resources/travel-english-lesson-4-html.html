@@ -217,6 +217,24 @@
       margin-top: 10px;
       padding-top: 10px;
     }
+
+    /* Explicit print pagination for in-person paper lessons. */
+    .section-vocab {
+      break-before: page;
+      page-break-before: always;
+      break-inside: avoid;
+      page-break-inside: avoid;
+    }
+
+    .section-practice2 {
+      break-before: page;
+      page-break-before: always;
+    }
+
+    .section-answers-container {
+      break-before: auto !important;
+      page-break-before: auto !important;
+    }
   }
 </style>
 
@@ -229,7 +247,7 @@
     <h2 style="font-size: 22px; margin: 0; font-weight: 700;">Theme 2: Conversation</h2>
   </div>
 
-  <div class="keep-together">
+  <div class="keep-together section-warmup">
     <h2 style="font-size: 22px; font-weight: 700; margin-bottom: 10px;">Warm-up</h2>
     <p style="font-size: 16px; margin: 0 0 8px;">Answer the questions.</p>
     <ul style="font-size: 16px; margin: 0;">
@@ -241,7 +259,7 @@
     </ul>
   </div>
 
-  <div class="keep-together">
+  <div class="keep-together section-practice1">
     <h2 style="font-size: 22px; font-weight: 700; margin-bottom: 10px;">Practice #1: Starting and Continuing a Conversation</h2>
     <p style="font-size: 16px; margin: 0 0 10px;">Match each dialogue with the best follow-up question or comment. Write the correct letter in the third column.</p>
     <table>
@@ -329,7 +347,7 @@
     </ul>
   </div>
 
-  <div class="keep-together">
+  <div class="keep-together section-vocab">
     <h2 style="font-size: 22px; font-weight: 700; margin-bottom: 10px;">Vocabulary #1: Descriptive Words</h2>
     <p style="font-size: 16px; margin: 0 0 10px;">Put four descriptive adjectives into each category.</p>
     <table class="category-table">
@@ -463,7 +481,7 @@
     </div>
   </div>
 
-  <div class="keep-together">
+  <div class="keep-together section-practice2">
     <h2 style="font-size: 22px; font-weight: 700; margin-bottom: 10px;">Practice #2: Comparing and Preferences</h2>
     <p style="font-size: 16px; margin: 0 0 8px;">Answer the following questions. Give reasons for your preferences.</p>
     <ul style="font-size: 16px; margin: 0;">
@@ -475,7 +493,7 @@
   </div>
 </div>
 
-<div style="max-width: 900px; margin: 0 auto; padding: 20px; font-family: Arial, sans-serif; line-height: 1.45; color: #333;">
+<div style="max-width: 900px; margin: 0 auto; padding: 20px; font-family: Arial, sans-serif; line-height: 1.45; color: #333;" class="section-answers-container">
   <div class="answer-block">
     <h2 style="font-size: 22px; font-weight: 700; margin: 0 0 12px;">Answers</h2>
 
