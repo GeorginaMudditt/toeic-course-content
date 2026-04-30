@@ -65,6 +65,7 @@ npm run update:resource:supabase "Speaking Work Life Balance" "speaking-work-lif
 npm run update:resource:supabase "Speaking Workplace" "speaking-workplace-html.html"
 npm run update:resource:supabase "Meetings" "speaking-meetings-html.html"
 npm run update:resource:supabase "Presentations" "speaking-presentations-html.html"
+npm run update:resource:supabase "Argumentation" "speaking-argumentation-html.html"
 
 # Tests
 npm run update:resource:supabase "Placement Test" "placement-test-html.html"
