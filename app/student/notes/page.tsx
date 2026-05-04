@@ -42,7 +42,7 @@ export default async function StudentNotesPage({ searchParams }: { searchParams:
         const enrollmentIds = enrollmentData.map(e => e.id)
         const { data: notesData, error: notesError } = await supabaseServer
           .from('CourseNote')
-          .select('*')
+          .select('id, enrollmentId, content, createdAt, updatedAt')
           .in('enrollmentId', enrollmentIds)
 
         // Combine enrollments with courses and notes

@@ -4,6 +4,7 @@ import { authOptions } from '@/lib/auth'
 import { supabaseServer } from '@/lib/supabase'
 import bcrypt from 'bcryptjs'
 import { randomBytes } from 'crypto'
+import { normalizeStudentLifecycleStatus } from '@/lib/student-lifecycle-status'
 
 // Generate a CUID-like ID (similar to Prisma's cuid())
 // Format: c + timestamp (base36) + random (base36)
@@ -76,19 +77,29 @@ export async function POST(request: NextRequest) {
     // Set timestamps (Supabase doesn't auto-generate like Prisma does)
     const now = new Date().toISOString()
 
+    const role = data.role || 'STUDENT'
+
+    const insertRow: Record<string, unknown> = {
+      id: userId,
+      name: data.name.trim(),
+      email: normalizedEmail,
+      password: hashedPassword,
+      role,
+      createdAt: now,
+      updatedAt: now,
+    }
+
+    if (role === 'STUDENT') {
+      insertRow.studentLifecycleStatus = normalizeStudentLifecycleStatus(
+        data.studentLifecycleStatus
+      )
+    }
+
     // Create user
     const { data: newUser, error: createError } = await supabaseServer
       .from('User')
-      .insert({
-        id: userId,
-        name: data.name.trim(),
-        email: normalizedEmail,
-        password: hashedPassword,
-        role: data.role || 'STUDENT',
-        createdAt: now,
-        updatedAt: now
-      })
-      .select('id, email, name, role, createdAt, updatedAt')
+      .insert(insertRow)
+      .select('id, email, name, role, studentLifecycleStatus, createdAt, updatedAt')
       .single()
 
     if (createError) {

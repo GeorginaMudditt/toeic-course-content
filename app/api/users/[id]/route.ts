@@ -2,6 +2,69 @@ import { NextRequest, NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
 import { supabaseServer } from '@/lib/supabase'
+import {
+  isValidStudentLifecycleStatus,
+  type StudentLifecycleStatus,
+} from '@/lib/student-lifecycle-status'
+
+export async function PATCH(
+  request: NextRequest,
+  { params }: { params: { id: string } }
+) {
+  try {
+    const session = await getServerSession(authOptions)
+
+    if (!session || session.user.role !== 'TEACHER') {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+    }
+
+    const body = await request.json()
+    const rawStatus = body.studentLifecycleStatus
+
+    if (rawStatus === undefined || typeof rawStatus !== 'string') {
+      return NextResponse.json({ error: 'studentLifecycleStatus is required' }, { status: 400 })
+    }
+
+    if (!isValidStudentLifecycleStatus(rawStatus)) {
+      return NextResponse.json({ error: 'Invalid studentLifecycleStatus' }, { status: 400 })
+    }
+
+    const studentLifecycleStatus: StudentLifecycleStatus = rawStatus
+
+    const { data: userData, error: userError } = await supabaseServer
+      .from('User')
+      .select('id, role')
+      .eq('id', params.id)
+      .eq('role', 'STUDENT')
+      .single()
+
+    if (userError || !userData) {
+      return NextResponse.json({ error: 'Student not found' }, { status: 404 })
+    }
+
+    const now = new Date().toISOString()
+
+    const { data: updatedUser, error: updateError } = await supabaseServer
+      .from('User')
+      .update({ studentLifecycleStatus, updatedAt: now })
+      .eq('id', params.id)
+      .select('id, email, name, studentLifecycleStatus')
+      .single()
+
+    if (updateError) {
+      console.error('Error updating student status:', updateError)
+      return NextResponse.json(
+        { error: updateError.message || 'Failed to update status' },
+        { status: 500 }
+      )
+    }
+
+    return NextResponse.json({ success: true, user: updatedUser })
+  } catch (error) {
+    console.error('Error in PATCH /api/users/[id]:', error)
+    return NextResponse.json({ error: 'Failed to update status' }, { status: 500 })
+  }
+}
 
 export async function PUT(
   request: NextRequest,

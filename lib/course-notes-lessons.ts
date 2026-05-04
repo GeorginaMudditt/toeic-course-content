@@ -115,3 +115,17 @@ export function computePackageProgress(rows: NotesRowWithDate[], courseDurationH
     loggedOverPackage,
   }
 }
+
+/** Count lesson rows that have a logged date (independent of package size). */
+export function countLoggedLessonsFromNotesContent(content: string): number {
+  try {
+    const parsed = JSON.parse(content) as { version?: number; rows?: NotesRowWithDate[] }
+    if (parsed?.version === 1 && Array.isArray(parsed.rows)) {
+      const { lessonsLogged } = computePackageProgress(parsed.rows, 1)
+      return lessonsLogged
+    }
+  } catch {
+    // legacy HTML or empty
+  }
+  return 0
+}

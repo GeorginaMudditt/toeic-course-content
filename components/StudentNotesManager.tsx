@@ -80,6 +80,7 @@ export default function StudentNotesManager({ student, enrollments }: Props) {
   const [saving, setSaving] = useState(false)
   const [lastSaved, setLastSaved] = useState<Date | null>(null)
   const [rows, setRows] = useState<LessonRow[]>([createEmptyRow()])
+  const [teacherPrivateContent, setTeacherPrivateContent] = useState('')
   const [legacyContent, setLegacyContent] = useState<string | null>(null) // For any old free-form notes
   const [showNextLessonEditors, setShowNextLessonEditors] = useState(false)
   // Track which editor has focus — we never overwrite that div's DOM so cursor and content stay correct
@@ -89,8 +90,10 @@ export default function StudentNotesManager({ student, enrollments }: Props) {
 
   // Refs used by auto-save so we don't restart intervals on every keystroke.
   const contentRef = useRef<string>(content)
+  const teacherPrivateContentRef = useRef<string>('')
   const noteUpdatedAtRef = useRef<string | null>(noteUpdatedAt)
-  const lastSavedContentRef = useRef<string>('')
+  const lastSavedStudentContentRef = useRef<string>('')
+  const lastSavedTeacherContentRef = useRef<string>('')
   const noteLoadedRef = useRef<boolean>(noteLoaded)
   const savingRef = useRef<boolean>(false)
 
@@ -106,7 +109,10 @@ export default function StudentNotesManager({ student, enrollments }: Props) {
       noteUpdatedAtRef.current = null
       setNoteLoaded(false)
       noteLoadedRef.current = false
-      lastSavedContentRef.current = ''
+      lastSavedStudentContentRef.current = ''
+      lastSavedTeacherContentRef.current = ''
+      teacherPrivateContentRef.current = ''
+      setTeacherPrivateContent('')
       setRows([createEmptyRow()])
       setLegacyContent(null)
     }
@@ -130,7 +136,13 @@ export default function StudentNotesManager({ student, enrollments }: Props) {
         const raw = data.note.content as string
         setContent(raw)
         contentRef.current = raw
-        lastSavedContentRef.current = raw
+        lastSavedStudentContentRef.current = raw
+
+        const teacherRaw =
+          typeof data.note.teacherPrivateContent === 'string' ? data.note.teacherPrivateContent : ''
+        setTeacherPrivateContent(teacherRaw)
+        teacherPrivateContentRef.current = teacherRaw
+        lastSavedTeacherContentRef.current = teacherRaw
 
         const updatedAt = typeof data.note.updatedAt === 'string' ? data.note.updatedAt : null
         setNoteUpdatedAt(updatedAt)
@@ -158,7 +170,10 @@ export default function StudentNotesManager({ student, enrollments }: Props) {
         // No existing note – start with a single empty row
         setContent('')
         contentRef.current = ''
-        lastSavedContentRef.current = ''
+        lastSavedStudentContentRef.current = ''
+        setTeacherPrivateContent('')
+        teacherPrivateContentRef.current = ''
+        lastSavedTeacherContentRef.current = ''
         setNoteUpdatedAt(null)
         noteUpdatedAtRef.current = null
         setNoteLoaded(true)
@@ -180,7 +195,13 @@ export default function StudentNotesManager({ student, enrollments }: Props) {
     if (savingRef.current) return
 
     const contentToSave = contentRef.current || ''
-    if (contentToSave === lastSavedContentRef.current) return // nothing changed since last confirmed save
+    const teacherToSave = teacherPrivateContentRef.current ?? ''
+    if (
+      contentToSave === lastSavedStudentContentRef.current &&
+      teacherToSave === lastSavedTeacherContentRef.current
+    ) {
+      return
+    }
 
     savingRef.current = true
     setSaving(true)
@@ -192,7 +213,11 @@ export default function StudentNotesManager({ student, enrollments }: Props) {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ content: contentToSave, expectedUpdatedAt }),
+        body: JSON.stringify({
+          content: contentToSave,
+          teacherPrivateContent: teacherToSave,
+          expectedUpdatedAt,
+        }),
       })
 
       if (response.status === 409) {
@@ -212,7 +237,8 @@ export default function StudentNotesManager({ student, enrollments }: Props) {
 
       setNoteUpdatedAt(nextUpdatedAtIso)
       noteUpdatedAtRef.current = nextUpdatedAtIso
-      lastSavedContentRef.current = contentToSave
+      lastSavedStudentContentRef.current = contentToSave
+      lastSavedTeacherContentRef.current = teacherToSave
       setLastSaved(new Date())
     } catch (error) {
       console.error('Error saving note:', error)
@@ -345,6 +371,37 @@ export default function StudentNotesManager({ student, enrollments }: Props) {
 
       {selectedEnrollment && (
         <>
+          {/* Private notes first — otherwise this sits below a long lesson table and is easy to miss */}
+          <div className="mb-8 rounded-lg border border-amber-200 bg-amber-50/60 p-4">
+            <h2 className="text-lg font-semibold text-gray-900">Notes for teacher (private)</h2>
+            <p className="text-sm text-gray-700 mt-1 mb-3">
+              Not shown to students — only visible here in the teacher portal. Use for admin, billing,
+              or internal reminders.
+            </p>
+            <textarea
+              value={teacherPrivateContent}
+              onChange={(e) => {
+                const v = e.target.value
+                setTeacherPrivateContent(v)
+                teacherPrivateContentRef.current = v
+              }}
+              rows={6}
+              className="w-full border border-amber-300/80 rounded-md px-3 py-2 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-[#38438f] font-sans bg-white"
+              placeholder="Internal notes (students cannot see this)…"
+            />
+            <p className="text-xs text-amber-900/80 mt-2">
+              Saved with the same <span className="font-medium">Save</span> button below and by auto-save.
+            </p>
+          </div>
+
+          <div className="mb-6">
+            <h2 className="text-lg font-semibold text-gray-900">Notes for student</h2>
+            <p className="text-sm text-gray-600 mt-1">
+              Attendance, lesson topics, corrections, and notes below are visible to the student on{' '}
+              <span className="font-medium">My Notes</span>.
+            </p>
+          </div>
+
           {courseDurationHours > 0 && (
             <div className="mb-4 space-y-2">
               <p className="text-sm text-gray-700">
@@ -374,7 +431,7 @@ export default function StudentNotesManager({ student, enrollments }: Props) {
                   package.
                 </div>
               )}
-              {loggedOverPackage && (
+                {loggedOverPackage && (
                 <div
                   className="rounded-md border border-sky-300 bg-sky-50 px-3 py-2 text-sm text-sky-950"
                   role="status"
@@ -383,6 +440,12 @@ export default function StudentNotesManager({ student, enrollments }: Props) {
                   {student.name} is continuing.
                 </div>
               )}
+              <p className="text-xs text-gray-500">
+                When dated lessons reach half the package ({Math.ceil(courseDurationHours / 2)} of{' '}
+                {courseDurationHours} for this course), saving notes sends a one-time email to{' '}
+                <span className="font-medium">hello@brizzle-english.com</span> for admin follow-up
+                (invoice, midpoint questionnaire, etc.).
+              </p>
             </div>
           )}
 

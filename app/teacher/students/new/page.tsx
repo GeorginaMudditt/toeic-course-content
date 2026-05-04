@@ -3,6 +3,12 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Navbar from '@/components/Navbar'
+import {
+  STUDENT_LIFECYCLE_LABELS,
+  STUDENT_LIFECYCLE_STATUS_VALUES,
+  STUDENT_LIFECYCLE_VISUAL,
+  type StudentLifecycleStatus,
+} from '@/lib/student-lifecycle-status'
 
 export default function NewStudentPage() {
   const router = useRouter()
@@ -11,7 +17,8 @@ export default function NewStudentPage() {
   const [formData, setFormData] = useState({
     name: '',
     email: '',
-    password: ''
+    password: '',
+    studentLifecycleStatus: 'ACTIVE_STUDENT' as StudentLifecycleStatus,
   })
   const [error, setError] = useState('')
 
@@ -25,8 +32,11 @@ export default function NewStudentPage() {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          ...formData,
-          role: 'STUDENT'
+          name: formData.name,
+          email: formData.email,
+          password: formData.password,
+          role: 'STUDENT',
+          studentLifecycleStatus: formData.studentLifecycleStatus,
         })
       })
 
@@ -89,6 +99,31 @@ export default function NewStudentPage() {
                 onFocus={(e) => e.currentTarget.style.borderColor = '#38438f'}
                 onBlur={(e) => e.currentTarget.style.borderColor = '#d1d5db'}
               />
+            </div>
+
+            <div>
+              <label htmlFor="studentLifecycleStatus" className="block text-sm font-medium text-gray-700">
+                Status *
+              </label>
+              <select
+                id="studentLifecycleStatus"
+                value={formData.studentLifecycleStatus}
+                onChange={(e) =>
+                  setFormData({
+                    ...formData,
+                    studentLifecycleStatus: e.target.value as StudentLifecycleStatus,
+                  })
+                }
+                className={`mt-1 block w-full border-2 rounded-md px-3 py-2 font-medium focus:outline-none focus:ring-2 ${
+                  STUDENT_LIFECYCLE_VISUAL[formData.studentLifecycleStatus].selectClass
+                }`}
+              >
+                {STUDENT_LIFECYCLE_STATUS_VALUES.map((value) => (
+                  <option key={value} value={value}>
+                    {STUDENT_LIFECYCLE_LABELS[value]}
+                  </option>
+                ))}
+              </select>
             </div>
 
             <div>

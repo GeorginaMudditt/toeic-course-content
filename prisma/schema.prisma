@@ -52,6 +52,8 @@ model User {
   resetToken        String?   // Token for password reset
   resetTokenExpiry  DateTime? // Expiry time for reset token
   lastSeenAt        DateTime? // Last time the user logged in
+  /// For students: ACTIVE_STUDENT | PAST_STUDENT | TESTING | EDITING. Null for teachers or legacy rows.
+  studentLifecycleStatus String?
   createdAt         DateTime  @default(now())
   updatedAt         DateTime  @updatedAt
   
@@ -150,7 +152,9 @@ model Progress {
 model CourseNote {
   id            String    @id @default(cuid())
   enrollmentId  String    // One note per enrollment (course per student)
-  content       String    // Rich text content (HTML)
+  content       String    // Structured / student-visible lesson notes (JSON or legacy HTML)
+  teacherPrivateContent String @default("") // Admin-only; never shown to students
+  midpointNotificationSentAt DateTime? // When midpoint email was sent (one-time per enrollment)
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
   

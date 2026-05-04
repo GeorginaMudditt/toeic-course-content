@@ -3,6 +3,85 @@ import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
 import { supabaseServer } from '@/lib/supabase'
 import { randomUUID } from 'crypto'
+import { countLoggedLessonsFromNotesContent } from '@/lib/course-notes-lessons'
+import { formatCourseName } from '@/lib/date-utils'
+import { sendCourseMidpointNotificationEmail } from '@/lib/email'
+
+function studentSafeNote(note: Record<string, unknown> | null) {
+  if (!note) return null
+  return {
+    id: note.id,
+    enrollmentId: note.enrollmentId,
+    content: note.content,
+    createdAt: note.createdAt,
+    updatedAt: note.updatedAt,
+  }
+}
+
+async function maybeNotifyCourseMidpoint(params: {
+  enrollmentId: string
+  courseNoteId: string
+  savedStudentContent: string
+  midpointAlreadySent: boolean
+}) {
+  if (params.midpointAlreadySent) return
+
+  const lessonsLogged = countLoggedLessonsFromNotesContent(params.savedStudentContent)
+
+  const { data: en, error: enError } = await supabaseServer
+    .from('Enrollment')
+    .select('studentId, courseId')
+    .eq('id', params.enrollmentId)
+    .single()
+
+  if (enError || !en) return
+
+  const { data: course, error: courseError } = await supabaseServer
+    .from('Course')
+    .select('name, duration')
+    .eq('id', en.courseId)
+    .single()
+
+  if (courseError || !course) return
+
+  const duration = typeof course.duration === 'number' ? course.duration : 0
+  if (duration <= 0) return
+
+  const threshold = Math.ceil(duration / 2)
+  if (lessonsLogged < threshold) return
+
+  const { data: student } = await supabaseServer
+    .from('User')
+    .select('name')
+    .eq('id', en.studentId)
+    .single()
+
+  const studentName = student?.name ?? 'Student'
+  const courseName = formatCourseName(course.name ?? 'Course', duration)
+
+  const result = await sendCourseMidpointNotificationEmail({
+    studentName,
+    courseName,
+    courseDurationHours: duration,
+    lessonsLogged,
+  })
+
+  if ('error' in result && result.error) {
+    console.warn('Course midpoint email not sent:', result.error)
+    return
+  }
+
+  const nowIso = new Date().toISOString()
+  const { error: flagError } = await supabaseServer
+    .from('CourseNote')
+    .update({ midpointNotificationSentAt: nowIso })
+    .eq('id', params.courseNoteId)
+    .is('midpointNotificationSentAt', null)
+
+  if (flagError) {
+    console.error('Failed to set midpointNotificationSentAt:', flagError)
+  }
+}
 
 // GET - Fetch note for an enrollment
 export async function GET(
@@ -11,12 +90,11 @@ export async function GET(
 ) {
   try {
     const session = await getServerSession(authOptions)
-    
+
     if (!session) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
-    // Verify enrollment exists and user has access
     const { data: enrollmentData, error: enrollmentError } = await supabaseServer
       .from('Enrollment')
       .select('studentId, courseId')
@@ -27,27 +105,32 @@ export async function GET(
       return NextResponse.json({ error: 'Enrollment not found' }, { status: 404 })
     }
 
-    // Check if user is teacher or the student
     const isTeacher = session.user.role === 'TEACHER'
-    const isStudent = session.user.role === 'STUDENT' && session.user.id === enrollmentData.studentId
+    const isStudent =
+      session.user.role === 'STUDENT' && session.user.id === enrollmentData.studentId
 
     if (!isTeacher && !isStudent) {
       return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
     }
 
-    // Fetch the note
     const { data: noteData, error: noteError } = await supabaseServer
       .from('CourseNote')
       .select('*')
       .eq('enrollmentId', params.enrollmentId)
       .single()
 
-    if (noteError && noteError.code !== 'PGRST116') { // PGRST116 = not found
+    if (noteError && noteError.code !== 'PGRST116') {
       console.error('Error fetching note:', noteError)
       return NextResponse.json({ error: 'Error fetching note' }, { status: 500 })
     }
 
-    return NextResponse.json({ note: noteData || null })
+    const note = noteData as Record<string, unknown> | null
+
+    if (isStudent) {
+      return NextResponse.json({ note: studentSafeNote(note) })
+    }
+
+    return NextResponse.json({ note: note || null })
   } catch (error) {
     console.error('Error in GET /api/course-notes:', error)
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
@@ -61,16 +144,20 @@ export async function PUT(
 ) {
   try {
     const session = await getServerSession(authOptions)
-    
+
     if (!session || session.user.role !== 'TEACHER') {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
-    const { content, expectedUpdatedAt } = await request.json()
+    const body = await request.json()
+    const { content, expectedUpdatedAt, teacherPrivateContent } = body
 
     if (typeof content !== 'string') {
       return NextResponse.json({ error: 'Invalid content' }, { status: 400 })
     }
+
+    const teacherPrivate =
+      typeof teacherPrivateContent === 'string' ? teacherPrivateContent : ''
 
     if (expectedUpdatedAt === undefined) {
       return NextResponse.json(
@@ -84,7 +171,6 @@ export async function PUT(
       return NextResponse.json({ error: 'Invalid expectedUpdatedAt' }, { status: 400 })
     }
 
-    // Verify enrollment exists
     const { data: enrollmentData, error: enrollmentError } = await supabaseServer
       .from('Enrollment')
       .select('id')
@@ -97,14 +183,14 @@ export async function PUT(
 
     const nowIso = new Date().toISOString()
 
-    // CREATE path: expectedUpdatedAt must be null when the caller believes no note exists yet.
     if (expectedUpdatedAtIso === null) {
       const newNote = {
         id: randomUUID(),
         enrollmentId: params.enrollmentId,
         content,
+        teacherPrivateContent: teacherPrivate,
         createdAt: nowIso,
-        updatedAt: nowIso
+        updatedAt: nowIso,
       }
 
       const { data: createdNote, error: createError } = await supabaseServer
@@ -114,7 +200,6 @@ export async function PUT(
         .single()
 
       if (createError) {
-        // Unique violation: someone created the note after this editor loaded.
         if (createError.code === '23505') {
           const { data: currentNote } = await supabaseServer
             .from('CourseNote')
@@ -132,31 +217,33 @@ export async function PUT(
         return NextResponse.json({ error: 'Error creating note' }, { status: 500 })
       }
 
-      // Best-effort revision logging.
-      // The core write (CourseNote) must not fail if revision history is misconfigured.
-      const { error: revisionError } = await supabaseServer
-        .from('CourseNoteRevision')
-        .insert({
-          id: randomUUID(),
-          courseNoteId: createdNote.id,
-          enrollmentId: params.enrollmentId,
-          content,
-          createdAt: nowIso,
-          createdBy: session.user.id,
-          expectedUpdatedAt: null,
-        })
+      const { error: revisionError } = await supabaseServer.from('CourseNoteRevision').insert({
+        id: randomUUID(),
+        courseNoteId: createdNote.id,
+        enrollmentId: params.enrollmentId,
+        content,
+        createdAt: nowIso,
+        createdBy: session.user.id,
+        expectedUpdatedAt: null,
+      })
 
       if (revisionError) {
         console.error('Error inserting note revision (create):', revisionError)
       }
 
+      void maybeNotifyCourseMidpoint({
+        enrollmentId: params.enrollmentId,
+        courseNoteId: createdNote.id,
+        savedStudentContent: content,
+        midpointAlreadySent: !!createdNote.midpointNotificationSentAt,
+      })
+
       return NextResponse.json({ note: createdNote })
     }
 
-    // UPDATE path: only update if the CourseNote hasn't changed since the caller loaded it.
     const { data: updatedNotes, error: updateError } = await supabaseServer
       .from('CourseNote')
-      .update({ content, updatedAt: nowIso })
+      .update({ content, teacherPrivateContent: teacherPrivate, updatedAt: nowIso })
       .eq('enrollmentId', params.enrollmentId)
       .eq('updatedAt', expectedUpdatedAtIso)
       .select()
@@ -167,7 +254,6 @@ export async function PUT(
     }
 
     if (!updatedNotes || updatedNotes.length === 0) {
-      // Conflict: another tab saved first.
       const { data: currentNote } = await supabaseServer
         .from('CourseNote')
         .select('id, updatedAt')
@@ -182,21 +268,26 @@ export async function PUT(
 
     const updatedNote = updatedNotes[0]
 
-    const { error: revisionError } = await supabaseServer
-      .from('CourseNoteRevision')
-      .insert({
-        id: randomUUID(),
-        courseNoteId: updatedNote.id,
-        enrollmentId: params.enrollmentId,
-        content,
-        createdAt: nowIso,
-        createdBy: session.user.id,
-        expectedUpdatedAt: expectedUpdatedAtIso,
-      })
+    const { error: revisionError } = await supabaseServer.from('CourseNoteRevision').insert({
+      id: randomUUID(),
+      courseNoteId: updatedNote.id,
+      enrollmentId: params.enrollmentId,
+      content,
+      createdAt: nowIso,
+      createdBy: session.user.id,
+      expectedUpdatedAt: expectedUpdatedAtIso,
+    })
 
     if (revisionError) {
       console.error('Error inserting note revision (update):', revisionError)
     }
+
+    void maybeNotifyCourseMidpoint({
+      enrollmentId: params.enrollmentId,
+      courseNoteId: updatedNote.id,
+      savedStudentContent: content,
+      midpointAlreadySent: !!updatedNote.midpointNotificationSentAt,
+    })
 
     return NextResponse.json({ note: updatedNote })
   } catch (error) {

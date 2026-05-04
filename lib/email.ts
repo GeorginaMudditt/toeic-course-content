@@ -115,3 +115,52 @@ export async function sendPasswordResetEmail(data: PasswordResetEmail) {
     return { error: error?.message || 'Failed to send email', details: error }
   }
 }
+
+const ADMIN_NOTIFY_EMAIL = 'hello@brizzle-english.com'
+
+export async function sendCourseMidpointNotificationEmail(data: {
+  studentName: string
+  courseName: string
+  courseDurationHours: number
+  lessonsLogged: number
+}) {
+  const resend = getResendClient()
+
+  if (!resend) {
+    console.warn('⚠️  RESEND_API_KEY not found. Course midpoint email not sent.')
+    return { error: 'Email service not configured' }
+  }
+
+  const fromEmail = 'Brizzle TOEIC® <noreply@brizzle-english.com>'
+  const threshold = Math.ceil(data.courseDurationHours / 2)
+
+  try {
+    await resend.emails.send({
+      from: fromEmail,
+      to: ADMIN_NOTIFY_EMAIL,
+      subject: `Course midpoint reached — ${data.studentName}`,
+      html: `
+        <!DOCTYPE html>
+        <html>
+          <head><meta charset="utf-8" /></head>
+          <body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333;">
+            <p>Hello,</p>
+            <p><strong>${data.studentName}</strong> has reached the midpoint of their training package.</p>
+            <ul>
+              <li><strong>Course:</strong> ${data.courseName}</li>
+              <li><strong>Lessons logged:</strong> ${data.lessonsLogged} (midpoint at lesson ${threshold})</li>
+            </ul>
+            <p>You may want to follow up on a second invoice, the midpoint questionnaire, or other admin steps.</p>
+            <p style="color:#666;font-size:12px;">This message was sent automatically from the Brizzle teacher portal when lesson notes were saved.</p>
+          </body>
+        </html>
+      `,
+    })
+    console.log('Course midpoint notification sent to', ADMIN_NOTIFY_EMAIL)
+    return { success: true }
+  } catch (error: unknown) {
+    const message = error instanceof Error ? error.message : 'Failed to send email'
+    console.error('Error sending course midpoint email:', error)
+    return { error: message }
+  }
+}
