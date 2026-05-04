@@ -92,7 +92,28 @@ const isAnswerKeyHeading = (rawText: string): boolean => {
   return false
 }
 
-const extractAnswerTokens = (scope: ParentNode): string[] => {
+const extractAnswerTokenGroups = (scope: ParentNode): string[][] => {
+  const list = scope.querySelector('ol, ul')
+
+  if (list) {
+    return Array.from(list.querySelectorAll('li'))
+      .map((item) => {
+        const strongTokens = Array.from(item.querySelectorAll('strong'))
+          .map((el) => (el.textContent || '').trim())
+          .filter(Boolean)
+          .flatMap((token) => expandAnswerVariants(token))
+          .map((token) => normalizeAnswerValue(token))
+          .filter(Boolean)
+
+        if (strongTokens.length) return strongTokens
+
+        return expandAnswerVariants((item.textContent || '').trim())
+          .map((token) => normalizeAnswerValue(token))
+          .filter(Boolean)
+      })
+      .filter((group) => group.length > 0)
+  }
+
   const strongTokens = Array.from(scope.querySelectorAll('strong'))
     .map((el) => (el.textContent || '').trim())
     .filter(Boolean)
@@ -100,18 +121,11 @@ const extractAnswerTokens = (scope: ParentNode): string[] => {
     .map((token) => normalizeAnswerValue(token))
     .filter(Boolean)
 
-  if (strongTokens.length) return strongTokens
+  if (strongTokens.length) {
+    return strongTokens.map((token) => [token])
+  }
 
-  const list = scope.querySelector('ol, ul')
-
-  if (!list) return []
-
-  return Array.from(list.querySelectorAll('li'))
-    .map((item) => (item.textContent || '').trim())
-    .filter(Boolean)
-    .flatMap((token) => expandAnswerVariants(token))
-    .map((token) => normalizeAnswerValue(token))
-    .filter(Boolean)
+  return []
 }
 
 const CHECK_ICON_TICK = `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 20 20' fill='none'%3E%3Ccircle cx='10' cy='10' r='9' fill='%2316a34a'/%3E%3Cpath d='M6 10.5L8.6 13L14 7.5' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E")`
@@ -770,23 +784,21 @@ export default function WorksheetViewer({ assignmentId, resource, initialProgres
       }
 
       const matchedSection = matchedHeading.parentElement || matchedHeading
-      const tokens = extractAnswerTokens(matchedSection)
+      const tokenGroups = extractAnswerTokenGroups(matchedSection)
 
       inputIds.forEach((id, index) => {
-        const token = tokens[index]
-        if (!token) return
-        answerMap.set(id, [token])
+        const group = tokenGroups[index]
+        if (!group?.length) return
+        answerMap.set(id, group)
       })
     })
 
     // Fallback: if section matching failed (or was partial), map remaining inputs
-    // in DOM order to remaining <strong> tokens in the answers area.
+    // in DOM order to remaining answer token groups in the answers area.
     if (answerMap.size < allInputs.length) {
-      const usedValues = new Set(Array.from(answerMap.values()).flat())
-      const allAnswerTokens = answerSectionHeadings
+      const allAnswerTokenGroups = answerSectionHeadings
         .map((heading) => heading.parentElement || heading)
-        .flatMap((section) => extractAnswerTokens(section))
-        .filter((token) => !usedValues.has(token))
+        .flatMap((section) => extractAnswerTokenGroups(section))
 
       const unresolvedIds = allInputs
         .map((el) => el.getAttribute('data-grammar-input') || '')
@@ -794,9 +806,9 @@ export default function WorksheetViewer({ assignmentId, resource, initialProgres
         .filter((id) => !answerMap.has(id))
 
       unresolvedIds.forEach((id, index) => {
-        const token = allAnswerTokens[index]
-        if (!token) return
-        answerMap.set(id, [token])
+        const group = allAnswerTokenGroups[index]
+        if (!group?.length) return
+        answerMap.set(id, group)
       })
     }
 

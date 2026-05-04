@@ -58,9 +58,13 @@ export default function ChallengePage() {
   const [shuffledWords, setShuffledWords] = useState<string[]>([])
   const [listenedWords, setListenedWords] = useState<Set<string>>(new Set())
   const [goldInputs, setGoldInputs] = useState<Record<number, string>>({})
+  const [silverErrorCount, setSilverErrorCount] = useState(0)
   const [goldErrorCount, setGoldErrorCount] = useState(0)
   const [showHelpPrompt, setShowHelpPrompt] = useState(false)
+  const [helpPromptChallenge, setHelpPromptChallenge] = useState<'silver' | 'gold' | null>(null)
+  const [silverHelpModeEnabled, setSilverHelpModeEnabled] = useState(false)
   const [helpModeEnabled, setHelpModeEnabled] = useState(false)
+  const [isSubmittingChallenge, setIsSubmittingChallenge] = useState(false)
   const [modalState, setModalState] = useState<{
     isOpen: boolean
     type: 'success' | 'error'
@@ -211,6 +215,11 @@ export default function ChallengePage() {
     const slots = words.map((w, i) => ({ word: w, slotIndex: i }))
     return [...slots].sort(() => Math.random() - 0.5)
   }, [challengeType, words])
+
+  const silverSlotCorrectness = useMemo(() => {
+    if (challengeType !== 'silver' || !silverHelpModeEnabled) return {} as Record<number, boolean>
+    return getSilverSlotCorrectness(words, wordPositions)
+  }, [challengeType, silverHelpModeEnabled, words, wordPositions])
 
   const handleGoldInput = (slotIndex: number, value: string) => {
     setGoldInputs(prev => ({ ...prev, [slotIndex]: value }))
@@ -427,6 +436,38 @@ export default function ChallengePage() {
     })
   }
 
+  function getSilverSlotCorrectness(words: Word[], positions: Record<number, string>): Record<number, boolean> {
+    const correctness: Record<number, boolean> = {}
+    const byFrench = new Map<string, number[]>()
+    words.forEach((w, i) => {
+      const f = w.translation_french
+      if (!byFrench.has(f)) byFrench.set(f, [])
+      byFrench.get(f)!.push(i)
+    })
+
+    for (const indices of byFrench.values()) {
+      const expected = indices.map((i) => words[i].word_english)
+      const unmatched = [...expected]
+
+      for (const idx of indices) {
+        const assigned = positions[idx]
+        if (!assigned) {
+          correctness[idx] = false
+          continue
+        }
+        const matchAt = unmatched.findIndex((w) => w === assigned)
+        if (matchAt >= 0) {
+          correctness[idx] = true
+          unmatched.splice(matchAt, 1)
+        } else {
+          correctness[idx] = false
+        }
+      }
+    }
+
+    return correctness
+  }
+
   const completeChallenge = async () => {
     // For bronze challenge, ensure all audio have been listened to at least once
     if (challengeType === 'bronze') {
@@ -445,12 +486,17 @@ export default function ChallengePage() {
     if (challengeType === 'silver') {
       const allCorrect = isSilverChallengeCorrect(words, wordPositions)
       if (!allCorrect) {
+        const newErrorCount = silverErrorCount + 1
+        setSilverErrorCount(newErrorCount)
         setModalState({
           isOpen: true,
           type: 'error',
           title: 'Oops!',
           message: "You made some mistakes. Please try again. Each English word must be correctly matched to its French translation to complete this challenge. Good luck!"
         })
+        if (newErrorCount >= 2 && !silverHelpModeEnabled) {
+          // The help prompt will be shown in handleModalClose
+        }
         return
       }
     }
@@ -460,7 +506,8 @@ export default function ChallengePage() {
       const allCorrect = words.every((word, i) => {
         const userRaw = goldInputs[i] || ''
         const user = userRaw.replace(/\s+/g, ' ').trim() // tolerate extra spaces only
-        return user === word.word_english
+        const expected = word.word_english.replace(/\s+/g, ' ').trim()
+        return user.toLocaleLowerCase() === expected.toLocaleLowerCase()
       })
       if (!allCorrect) {
         const newErrorCount = goldErrorCount + 1
@@ -480,9 +527,11 @@ export default function ChallengePage() {
       }
     }
     
-    // Fetch latest progress from API before updating to ensure we don't overwrite existing progress
-    let latestProgress = { ...progress }
+    setIsSubmittingChallenge(true)
+
     try {
+      // Fetch latest progress from API before updating to ensure we don't overwrite existing progress
+      let latestProgress = { ...progress }
       const normalizedTopic = topic.trim().replace(/\s+/g, ' ')
       const response = await fetch(`/api/vocabulary-progress?level=${level}&topic=${encodeURIComponent(normalizedTopic)}`)
       const result = await response.json()
@@ -498,54 +547,60 @@ export default function ChallengePage() {
       } else {
         console.log('No existing progress found, using current state:', latestProgress)
       }
+      // Update progress: preserve existing values and set current challenge to true
+      const newProgress = { ...latestProgress, [challengeType]: true }
+      console.log(`Completing ${challengeType} challenge. Current progress state:`, progress, 'Latest from API:', latestProgress, 'New progress to save:', newProgress)
+      
+      // Save progress and wait for it to complete
+      const saveResult = await saveProgress(newProgress)
+      console.log('Save result:', saveResult)
+      
+      // Verify the save was successful before showing success modal
+      if (!saveResult.success) {
+        console.error('Failed to save progress:', saveResult.error)
+        setModalState({
+          isOpen: true,
+          type: 'error',
+          title: 'Error Saving Progress',
+          message: `There was an error saving your progress. Please try again. Error: ${saveResult.error || 'Unknown error'}`
+        })
+        return
+      }
+
+      // Verify the saved data matches what we expected
+      if (saveResult.data) {
+        const saved = saveResult.data
+        console.log('Verifying saved data:', {
+          expected: newProgress,
+          saved: {
+            bronze: saved.bronze,
+            silver: saved.silver,
+            gold: saved.gold
+          },
+          match: saved.bronze === newProgress.bronze && 
+                saved.silver === newProgress.silver && 
+                saved.gold === newProgress.gold
+        })
+      }
+
+      // Show success modal
+      setModalState({
+        isOpen: true,
+        type: 'success',
+        title: 'Congratulations!',
+        message: `You have successfully completed ${getChallengeTitle(challengeType).toLowerCase()} on the theme "${topic}".`
+      })
     } catch (err) {
-      console.error('Error fetching latest progress before save:', err)
-      // Continue with current progress state
-    }
-    
-    // Update progress: preserve existing values and set current challenge to true
-    const newProgress = { ...latestProgress, [challengeType]: true }
-    console.log(`Completing ${challengeType} challenge. Current progress state:`, progress, 'Latest from API:', latestProgress, 'New progress to save:', newProgress)
-    
-    // Save progress and wait for it to complete
-    const saveResult = await saveProgress(newProgress)
-    console.log('Save result:', saveResult)
-    
-    // Verify the save was successful before showing success modal
-    if (!saveResult.success) {
-      console.error('Failed to save progress:', saveResult.error)
+      console.error('Error completing challenge:', err)
       setModalState({
         isOpen: true,
         type: 'error',
-        title: 'Error Saving Progress',
-        message: `There was an error saving your progress. Please try again. Error: ${saveResult.error || 'Unknown error'}`
+        title: 'Unexpected Error',
+        message: 'Something went wrong while completing the challenge. Please try again.'
       })
-      return
+    } finally {
+      setIsSubmittingChallenge(false)
     }
-
-    // Verify the saved data matches what we expected
-    if (saveResult.data) {
-      const saved = saveResult.data
-      console.log('Verifying saved data:', {
-        expected: newProgress,
-        saved: {
-          bronze: saved.bronze,
-          silver: saved.silver,
-          gold: saved.gold
-        },
-        match: saved.bronze === newProgress.bronze && 
-               saved.silver === newProgress.silver && 
-               saved.gold === newProgress.gold
-      })
-    }
-
-    // Show success modal
-    setModalState({
-      isOpen: true,
-      type: 'success',
-      title: 'Congratulations!',
-      message: `You have successfully completed ${getChallengeTitle(challengeType).toLowerCase()} on the theme "${topic}".`
-    })
   }
 
   const handleModalClose = () => {
@@ -568,11 +623,20 @@ export default function ChallengePage() {
       }, 500) // Increased delay to ensure save completes
     }
     
-    // For gold challenge, after closing error modal, check if we should show help prompt
+    // For silver/gold challenge, after closing error modal, check if we should show help prompt
     // Only show once after 2 errors, if help mode is not already enabled
+    if (challengeType === 'silver' && wasError && !silverHelpModeEnabled) {
+      setTimeout(() => {
+        if (silverErrorCount >= 2) {
+          setHelpPromptChallenge('silver')
+          setShowHelpPrompt(true)
+        }
+      }, 300) // Small delay to let error modal close smoothly
+    }
     if (challengeType === 'gold' && wasError && !helpModeEnabled) {
       setTimeout(() => {
         if (goldErrorCount >= 2) {
+          setHelpPromptChallenge('gold')
           setShowHelpPrompt(true)
         }
       }, 300) // Small delay to let error modal close smoothly
@@ -582,17 +646,24 @@ export default function ChallengePage() {
   const handleHelpPromptResponse = (accept: boolean) => {
     setShowHelpPrompt(false)
     if (accept) {
-      setHelpModeEnabled(true)
+      if (helpPromptChallenge === 'silver') {
+        setSilverHelpModeEnabled(true)
+      } else if (helpPromptChallenge === 'gold') {
+        setHelpModeEnabled(true)
+      }
     }
+    setHelpPromptChallenge(null)
   }
   
-  // Check if a gold challenge answer is correct
+  // Check if a gold challenge answer is correct.
+  // Capitalization is flexible, but spelling/punctuation must still match.
   const isGoldAnswerCorrect = (slotIndex: number): boolean => {
     const word = words[slotIndex]
     if (!word) return false
     const userRaw = goldInputs[slotIndex] || ''
     const user = userRaw.replace(/\s+/g, ' ').trim()
-    return user === word.word_english
+    const expected = word.word_english.replace(/\s+/g, ' ').trim()
+    return user.toLocaleLowerCase() === expected.toLocaleLowerCase()
   }
 
   if (loading) {
@@ -672,6 +743,17 @@ export default function ChallengePage() {
                 </div>
               </div>
             </div>
+          </div>
+        </div>
+      )}
+      {isSubmittingChallenge && (
+        <div className="fixed inset-0 z-40 bg-white/55 backdrop-blur-[1px] flex items-center justify-center">
+          <div className="bg-white rounded-xl shadow-lg border border-gray-200 px-5 py-4 flex items-center gap-3">
+            <div
+              className="animate-spin rounded-full h-5 w-5 border-2 border-gray-200 border-t-transparent"
+              style={{ borderTopColor: levelColor }}
+            />
+            <p className="text-sm text-gray-700">Saving challenge...</p>
           </div>
         </div>
       )}
@@ -821,11 +903,11 @@ export default function ChallengePage() {
                       <>
                         <button
                           onClick={completeChallenge}
-                          disabled={words.length === 0 || listenedWords.size < words.length}
+                          disabled={isSubmittingChallenge || words.length === 0 || listenedWords.size < words.length}
                           className="px-6 py-3 text-white rounded-md transition-opacity hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed"
                           style={{ backgroundColor: levelColor }}
                         >
-                          Complete Challenge 1
+                          {isSubmittingChallenge ? 'Saving...' : 'Complete Challenge 1'}
                         </button>
                         {words.length > 0 && listenedWords.size < words.length && (
                           <p className="text-sm text-gray-500 mt-2">
@@ -881,8 +963,19 @@ export default function ChallengePage() {
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
                           {words.map((word, index) => (
                             <div key={index} className="border rounded-lg p-4 bg-white">
-                              <div className="font-semibold text-gray-900 mb-2 text-sm">
-                                {word.translation_french}
+                              <div className="flex items-center justify-between mb-2">
+                                <div className="font-semibold text-gray-900 text-sm">
+                                  {word.translation_french}
+                                </div>
+                                {silverHelpModeEnabled && (
+                                  <span className="text-xl">
+                                    {(silverSlotCorrectness[index] ?? false) ? (
+                                      <span className="text-green-600" title="Correct">✓</span>
+                                    ) : (
+                                      <span className="text-red-600" title="Incorrect">✗</span>
+                                    )}
+                                  </span>
+                                )}
                               </div>
                               <div
                                 className="min-h-[60px] border-2 border-dashed rounded p-2 bg-gray-50 transition-colors hover:bg-gray-100"
@@ -913,10 +1006,11 @@ export default function ChallengePage() {
                     {!isViewMode ? (
                       <button
                         onClick={completeChallenge}
-                        className="px-6 py-3 text-white rounded-md transition-opacity hover:opacity-90"
+                        disabled={isSubmittingChallenge}
+                        className="px-6 py-3 text-white rounded-md transition-opacity hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed"
                         style={{ backgroundColor: levelColor }}
                       >
-                        Complete Challenge 2
+                        {isSubmittingChallenge ? 'Saving...' : 'Complete Challenge 2'}
                       </button>
                     ) : (
                       <div className="bg-gray-50 border border-gray-300 rounded-md p-4">
@@ -997,10 +1091,11 @@ export default function ChallengePage() {
                     {!isViewMode ? (
                       <button
                         onClick={completeChallenge}
-                        className="px-6 py-3 text-white rounded-md transition-opacity hover:opacity-90"
+                      disabled={isSubmittingChallenge}
+                      className="px-6 py-3 text-white rounded-md transition-opacity hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed"
                         style={{ backgroundColor: levelColor }}
                       >
-                        Complete Challenge 3
+                      {isSubmittingChallenge ? 'Saving...' : 'Complete Challenge 3'}
                       </button>
                     ) : (
                       <div className="bg-gray-50 border border-gray-300 rounded-md p-4">
