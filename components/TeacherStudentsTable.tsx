@@ -3,6 +3,7 @@
 import { useMemo, useState } from 'react'
 import Link from 'next/link'
 import {
+  STUDENT_LIFECYCLE_FILTER_LABELS,
   STUDENT_LIFECYCLE_LABELS,
   STUDENT_LIFECYCLE_STATUS_VALUES,
   STUDENT_LIFECYCLE_VISUAL,
@@ -102,7 +103,7 @@ export default function TeacherStudentsTable({ students: initialStudents }: Prop
           <option value="ALL">All students</option>
           {STUDENT_LIFECYCLE_STATUS_VALUES.map((value) => (
             <option key={value} value={value}>
-              {STUDENT_LIFECYCLE_LABELS[value]} only
+              {STUDENT_LIFECYCLE_FILTER_LABELS[value]}
             </option>
           ))}
         </select>

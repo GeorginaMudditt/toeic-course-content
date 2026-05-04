@@ -14,6 +14,14 @@ export const STUDENT_LIFECYCLE_LABELS: Record<StudentLifecycleStatus, string> = 
   EDITING: 'Editing',
 }
 
+/** Wording for the teacher "Show students" filter dropdown */
+export const STUDENT_LIFECYCLE_FILTER_LABELS: Record<StudentLifecycleStatus, string> = {
+  ACTIVE_STUDENT: 'Active students only',
+  PAST_STUDENT: 'Past students only',
+  TESTING: 'Testing only',
+  EDITING: 'Editing only',
+}
+
 /** Tailwind classes: row wash, left stripe (first cell), and select styling */
 export const STUDENT_LIFECYCLE_VISUAL: Record<
   StudentLifecycleStatus,
