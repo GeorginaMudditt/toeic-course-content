@@ -137,7 +137,21 @@ export default function StudentNotesView({ content, courseDurationHours = null }
             )}
           </div>
         )}
-        <table style={{ width: '100%', borderCollapse: 'collapse', border: '1px solid #d1d5db' }}>
+        <table
+          style={{
+            width: '100%',
+            tableLayout: 'fixed',
+            borderCollapse: 'collapse',
+            border: '1px solid #d1d5db',
+          }}
+        >
+          <colgroup>
+            <col style={{ width: '13%' }} />
+            <col style={{ width: '15%' }} />
+            <col style={{ width: '19%' }} />
+            <col style={{ width: '26.5%' }} />
+            <col style={{ width: '26.5%' }} />
+          </colgroup>
           <thead>
             <tr style={{ backgroundColor: '#f3f4f6' }}>
               <th style={{ padding: '8px', border: '1px solid #d1d5db', textAlign: 'left' }}>Date</th>
@@ -168,13 +182,13 @@ export default function StudentNotesView({ content, courseDurationHours = null }
                 </td>
                 <td style={{ padding: '8px', border: '1px solid #d1d5db', verticalAlign: 'top' }}>
                   <div
-                    style={{ whiteSpace: 'pre-wrap' }}
+                    style={{ whiteSpace: 'pre-wrap', overflowWrap: 'anywhere', wordBreak: 'break-word' }}
                     dangerouslySetInnerHTML={{ __html: row.corrections }}
                   />
                 </td>
                 <td style={{ padding: '8px', border: '1px solid #d1d5db', verticalAlign: 'top' }}>
                   <div
-                    style={{ whiteSpace: 'pre-wrap' }}
+                    style={{ whiteSpace: 'pre-wrap', overflowWrap: 'anywhere', wordBreak: 'break-word' }}
                     dangerouslySetInnerHTML={{ __html: row.notes }}
                   />
                 </td>
