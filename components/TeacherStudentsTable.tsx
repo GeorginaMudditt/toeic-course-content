@@ -31,7 +31,7 @@ export default function TeacherStudentsTable({ students: initialStudents }: Prop
       studentLifecycleStatus: normalizeStudentLifecycleStatus(s.studentLifecycleStatus),
     }))
   )
-  const [statusFilter, setStatusFilter] = useState<FilterValue>('ALL')
+  const [statusFilter, setStatusFilter] = useState<FilterValue>('ACTIVE_STUDENT')
   const [savingId, setSavingId] = useState<string | null>(null)
   const [saveError, setSaveError] = useState<string | null>(null)
 
