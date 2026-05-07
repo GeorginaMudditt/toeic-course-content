@@ -1529,9 +1529,17 @@ export default function WorksheetViewer({ assignmentId, resource, initialProgres
     })
   }, [notes, hasGrammarInputs, updateGrammarAnswer]) // Use notes to trigger updates when answers change
 
-  // Add per-section "Check answers" controls for grammar worksheets
+  // Disable per-section "Check answers" controls for grammar worksheets.
+  // Students should use the answer key section instead.
   useEffect(() => {
     if (!hasGrammarInputs || !contentRef.current || !grammarInputsReady) return
+    const enableGrammarCheckControls = false
+
+    if (!enableGrammarCheckControls) {
+      const existingControls = contentRef.current.querySelectorAll('.grammar-check-controls')
+      existingControls.forEach((control) => control.remove())
+      return
+    }
 
     const styleId = 'grammar-check-screen-only-style'
     if (!document.getElementById(styleId)) {
