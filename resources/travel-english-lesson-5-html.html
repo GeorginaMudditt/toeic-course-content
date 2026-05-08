@@ -1,0 +1,369 @@
+<!-- Travel English Lesson 5 -->
+<style>
+  :root {
+    --exam-ink: #1f2937;
+    --exam-subtle-ink: #4b5563;
+    --exam-border: #cfd6df;
+    --exam-soft-border: #e5e7eb;
+    --exam-header-bg: #f6f8fb;
+    --exam-panel-bg: #fbfcfe;
+    --exam-accent: #1e3a8a;
+  }
+
+  body {
+    color: var(--exam-ink);
+  }
+
+  .exam-header {
+    border: 1px solid var(--exam-border);
+    background: linear-gradient(to bottom, #ffffff, var(--exam-header-bg));
+    border-radius: 8px;
+    padding: 12px 14px;
+  }
+
+  .keep-together {
+    border: 1px solid var(--exam-soft-border);
+    border-radius: 8px;
+    background: var(--exam-panel-bg);
+    padding: 12px 14px;
+    margin-bottom: 18px;
+  }
+
+  h2 {
+    color: var(--exam-accent) !important;
+    margin-top: 0;
+  }
+
+  h3 {
+    margin-top: 0;
+    color: #0f172a;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    background: #fff;
+  }
+
+  th,
+  td {
+    border: 1px solid #111827;
+    padding: 8px;
+    font-size: 16px;
+    vertical-align: top;
+  }
+
+  th {
+    font-weight: 700;
+    text-align: left;
+    background: #f8fafc;
+  }
+
+  .answer-block {
+    margin-top: 24px;
+    padding-top: 16px;
+    border-top: 2px solid #e5e7eb;
+  }
+
+  .word-bank-box {
+    border: 1px solid #cfd6df;
+    border-radius: 10px;
+    background: #f8fafc;
+    padding: 10px 12px;
+    margin-top: 6px;
+  }
+
+  .word-bank-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(120px, 1fr));
+    gap: 8px 20px;
+    font-size: 16px;
+  }
+
+  .category-input-stack {
+    display: grid;
+    gap: 6px;
+    text-align: left;
+  }
+
+  .category-input-line {
+    display: block;
+    min-height: 22px;
+    border-bottom: 1px solid #94a3b8;
+    width: 100%;
+  }
+
+  /* Force visible markers (global app styles can hide them). */
+  ol {
+    list-style-type: decimal !important;
+    list-style-position: outside !important;
+    padding-left: 24px !important;
+  }
+
+  ul {
+    list-style-type: disc !important;
+    list-style-position: outside !important;
+    padding-left: 22px !important;
+  }
+
+  li {
+    display: list-item !important;
+  }
+
+  @media print {
+    @page {
+      margin: 1.2cm;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+    }
+
+    div[style*="max-width: 900px"] {
+      max-width: 100% !important;
+      padding: 0 !important;
+      line-height: 1.25 !important;
+      font-size: 14px !important;
+    }
+
+    h1 {
+      font-size: 24px !important;
+      margin-bottom: 2px !important;
+    }
+
+    h2 {
+      font-size: 18px !important;
+      margin-bottom: 6px !important;
+    }
+
+    h3 {
+      font-size: 16px !important;
+      margin-bottom: 6px !important;
+    }
+
+    p,
+    li,
+    th,
+    td,
+    .word-bank-grid {
+      font-size: 14px !important;
+    }
+
+    .keep-together {
+      break-inside: auto;
+      page-break-inside: auto;
+      background: #fff;
+      border-color: #d1d5db;
+      padding: 8px 10px;
+      margin-bottom: 10px;
+    }
+
+    h2,
+    h3 {
+      break-after: avoid;
+      page-break-after: avoid;
+    }
+
+    th,
+    td {
+      padding: 5px;
+    }
+
+    .category-input-stack {
+      gap: 3px;
+    }
+
+    .category-input-line {
+      min-height: 16px;
+    }
+
+    .word-bank-box {
+      padding: 7px 8px;
+    }
+
+    .answer-block {
+      margin-top: 10px;
+      padding-top: 10px;
+    }
+  }
+</style>
+
+<div style="max-width: 900px; margin: 0 auto; padding: 20px; font-family: Arial, sans-serif; line-height: 1.45; color: #333;">
+  <div class="exam-header" style="text-align: center; margin-bottom: 18px;">
+    <div style="display: inline-block; margin-bottom: 6px;">
+      <img src="/brizzle-logo.png" alt="Brizzle Logo" style="width: 45px; height: 45px; object-fit: contain;" />
+    </div>
+    <h1 style="font-size: 30px; line-height: 1.2; margin: 0 0 4px; color: #0f172a;">Travel English Lesson 5</h1>
+    <h2 style="font-size: 22px; margin: 0; font-weight: 700;">Theme 3: Travel &amp; Transport (Week 1)</h2>
+  </div>
+
+  <div class="keep-together">
+    <h2 style="font-size: 22px; font-weight: 700; margin-bottom: 10px;">Vocabulary Focus 1: Travel</h2>
+    <p style="font-size: 16px; margin: 0 0 10px;">Put the words from the box into the correct column. Some words can go in more than one column.</p>
+
+    <div class="word-bank-box">
+      <div class="word-bank-grid">
+        <span>airport</span>
+        <span>drive</span>
+        <span>garage</span>
+        <span>traffic</span>
+        <span>car</span>
+        <span>journey</span>
+        <span>park</span>
+        <span>commute</span>
+        <span>flight</span>
+        <span>train</span>
+        <span>passenger</span>
+        <span>bus</span>
+        <span>platform</span>
+        <span>plane</span>
+        <span>station</span>
+        <span>ticket</span>
+      </div>
+    </div>
+
+    <div style="margin-top: 12px;">
+      <table>
+        <thead>
+          <tr>
+            <th style="width: 33.33%;">AIR</th>
+            <th style="width: 33.33%;">RAIL</th>
+            <th style="width: 33.33%;">ROAD</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td style="height: 210px;">
+              <div class="category-input-stack">
+                <span data-grammar-input="te5-v1-air-1" class="category-input-line"></span>
+                <span data-grammar-input="te5-v1-air-2" class="category-input-line"></span>
+                <span data-grammar-input="te5-v1-air-3" class="category-input-line"></span>
+                <span data-grammar-input="te5-v1-air-4" class="category-input-line"></span>
+                <span data-grammar-input="te5-v1-air-5" class="category-input-line"></span>
+              </div>
+            </td>
+            <td style="height: 210px;">
+              <div class="category-input-stack">
+                <span data-grammar-input="te5-v1-rail-1" class="category-input-line"></span>
+                <span data-grammar-input="te5-v1-rail-2" class="category-input-line"></span>
+                <span data-grammar-input="te5-v1-rail-3" class="category-input-line"></span>
+                <span data-grammar-input="te5-v1-rail-4" class="category-input-line"></span>
+                <span data-grammar-input="te5-v1-rail-5" class="category-input-line"></span>
+                <span data-grammar-input="te5-v1-rail-6" class="category-input-line"></span>
+              </div>
+            </td>
+            <td style="height: 210px;">
+              <div class="category-input-stack">
+                <span data-grammar-input="te5-v1-road-1" class="category-input-line"></span>
+                <span data-grammar-input="te5-v1-road-2" class="category-input-line"></span>
+                <span data-grammar-input="te5-v1-road-3" class="category-input-line"></span>
+                <span data-grammar-input="te5-v1-road-4" class="category-input-line"></span>
+                <span data-grammar-input="te5-v1-road-5" class="category-input-line"></span>
+                <span data-grammar-input="te5-v1-road-6" class="category-input-line"></span>
+                <span data-grammar-input="te5-v1-road-7" class="category-input-line"></span>
+                <span data-grammar-input="te5-v1-road-8" class="category-input-line"></span>
+                <span data-grammar-input="te5-v1-road-9" class="category-input-line"></span>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div style="margin-top: 14px;">
+      <p style="font-size: 16px; margin: 0 0 8px;"><strong>Complete the sentences</strong> with words from the table. You may need to change the form of the word.</p>
+      <ol style="font-size: 16px; margin: 0;">
+        <li style="margin-bottom: 10px;">
+          <div style="margin-bottom: 6px;">
+            It’s so nice to see you! How was your <strong><span data-grammar-input="te5-v1-s1-1" style="display: inline-block; min-width: 140px;"></span></strong>?
+          </div>
+          <div>
+            It was fine. There wasn’t too much <strong><span data-grammar-input="te5-v1-s1-2" style="display: inline-block; min-width: 140px;"></span></strong>, and we both
+            <strong><span data-grammar-input="te5-v1-s1-3" style="display: inline-block; min-width: 140px;"></span></strong> so we are not too tired.
+          </div>
+        </li>
+        <li style="margin-bottom: 10px;">
+          <div style="margin-bottom: 6px;">
+            Which <strong><span data-grammar-input="te5-v1-s2-1" style="display: inline-block; min-width: 140px;"></span></strong> is the
+            <strong><span data-grammar-input="te5-v1-s2-2" style="display: inline-block; min-width: 140px;"></span></strong> leaving from?
+          </div>
+          <div>
+            Number 3 in 15 minutes, so I have time to collect my <strong><span data-grammar-input="te5-v1-s2-3" style="display: inline-block; min-width: 140px;"></span></strong> and buy a coffee first.
+          </div>
+        </li>
+        <li>
+          <div style="margin-bottom: 6px;">
+            The <strong><span data-grammar-input="te5-v1-s3-1" style="display: inline-block; min-width: 140px;"></span></strong> was delayed by two hours, but the airline didn’t tell the
+            <strong><span data-grammar-input="te5-v1-s3-2" style="display: inline-block; min-width: 140px;"></span></strong> until we got to the
+            <strong><span data-grammar-input="te5-v1-s3-3" style="display: inline-block; min-width: 140px;"></span></strong>.
+          </div>
+        </li>
+      </ol>
+    </div>
+  </div>
+</div>
+
+<div style="max-width: 900px; margin: 0 auto; padding: 20px; font-family: Arial, sans-serif; line-height: 1.45; color: #333;" class="page-break">
+  <div class="keep-together">
+    <h2 style="font-size: 22px; font-weight: 700; margin-bottom: 10px;">Speaking Focus 1: Trains &amp; Planes</h2>
+    <ol style="font-size: 16px; margin: 0;">
+      <li style="margin-bottom: 10px;">When was the last time you travelled by train? Where were you going? Who were you with?</li>
+      <li style="margin-bottom: 10px;">When was the last time you travelled by plane? Where were you going? Who were you with?</li>
+      <li style="margin-bottom: 10px;">Do you prefer travelling by train or by plane? Why?</li>
+      <li style="margin-bottom: 10px;">Do you usually arrive at the airport or train station early or late?</li>
+      <li>What do you like doing while you are travelling (reading, listening to music, watching films, sleeping, etc.)?</li>
+    </ol>
+  </div>
+
+  <div class="keep-together">
+    <h2 style="font-size: 22px; font-weight: 700; margin-bottom: 10px;">Vocabulary Focus 2: Telling the Time</h2>
+    <div style="border: 1px solid var(--exam-soft-border); border-radius: 10px; background: #fff; padding: 10px;">
+      <img
+        src="https://ulrwcortyhassmytkcij.supabase.co/storage/v1/object/public/travel-english/telling-time.png"
+        alt="Telling Time"
+        style="width: 100%; height: auto; display: block;"
+      />
+    </div>
+  </div>
+
+  <div class="keep-together">
+    <h2 style="font-size: 22px; font-weight: 700; margin-bottom: 10px;">Listening Focus 1: Announcements</h2>
+    <p style="font-size: 16px; margin: 0 0 10px;">Listen to the announcements. Write down the time you hear in each announcement.</p>
+    <table>
+      <tbody>
+        <tr>
+          <td style="width: 10%; font-weight: 700; text-align: center;">1</td>
+          <td style="width: 40%;"><span data-grammar-input="te5-l1-1" style="display: block; min-height: 30px;"></span></td>
+          <td style="width: 10%; font-weight: 700; text-align: center;">2</td>
+          <td style="width: 40%;"><span data-grammar-input="te5-l1-2" style="display: block; min-height: 30px;"></span></td>
+        </tr>
+        <tr>
+          <td style="font-weight: 700; text-align: center;">3</td>
+          <td><span data-grammar-input="te5-l1-3" style="display: block; min-height: 30px;"></span></td>
+          <td style="font-weight: 700; text-align: center;">4</td>
+          <td><span data-grammar-input="te5-l1-4" style="display: block; min-height: 30px;"></span></td>
+        </tr>
+        <tr>
+          <td style="font-weight: 700; text-align: center;">5</td>
+          <td><span data-grammar-input="te5-l1-5" style="display: block; min-height: 30px;"></span></td>
+          <td style="font-weight: 700; text-align: center;">6</td>
+          <td><span data-grammar-input="te5-l1-6" style="display: block; min-height: 30px;"></span></td>
+        </tr>
+        <tr>
+          <td style="font-weight: 700; text-align: center;">7</td>
+          <td><span data-grammar-input="te5-l1-7" style="display: block; min-height: 30px;"></span></td>
+          <td style="font-weight: 700; text-align: center;">8</td>
+          <td><span data-grammar-input="te5-l1-8" style="display: block; min-height: 30px;"></span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div style="max-width: 900px; margin: 0 auto; padding: 20px; font-family: Arial, sans-serif; line-height: 1.45; color: #333;" class="section-answers-container">
+  <div class="answer-block">
+    <h2 style="font-size: 22px; font-weight: 700; margin: 0 0 12px;">Answers</h2>
+    <p style="font-size: 16px; margin: 0; color: #475569;">(To be completed.)</p>
+  </div>
+</div>
