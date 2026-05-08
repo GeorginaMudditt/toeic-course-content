@@ -149,6 +149,14 @@ export default function StudentDocumentManager({ studentId, documents: initialDo
     }
   }
 
+  const handleView = (fileUrl: string) => {
+    if (!fileUrl) {
+      alert('Document link is missing')
+      return
+    }
+    window.open(fileUrl, '_blank', 'noopener,noreferrer')
+  }
+
   return (
     <div className="space-y-6">
       {/* Upload Section */}
@@ -238,12 +246,20 @@ export default function StudentDocumentManager({ studentId, documents: initialDo
                     </p>
                   </div>
                 </div>
-                <button
-                  onClick={() => handleDelete(document.id)}
-                  className="ml-4 text-sm text-red-600 hover:text-red-700 transition-colors"
-                >
-                  Delete
-                </button>
+                <div className="ml-4 flex items-center gap-3">
+                  <button
+                    onClick={() => handleView(document.fileUrl)}
+                    className="text-sm text-blue-600 hover:text-blue-700 transition-colors"
+                  >
+                    View
+                  </button>
+                  <button
+                    onClick={() => handleDelete(document.id)}
+                    className="text-sm text-red-600 hover:text-red-700 transition-colors"
+                  >
+                    Delete
+                  </button>
+                </div>
               </div>
             ))}
           </div>
