@@ -129,6 +129,23 @@
     margin-bottom: 6px;
   }
 
+  /* Force visible list markers (global app styles can hide them). */
+  ol {
+    list-style-type: decimal !important;
+    list-style-position: outside !important;
+    padding-left: 24px !important;
+  }
+
+  ul {
+    list-style-type: disc !important;
+    list-style-position: outside !important;
+    padding-left: 22px !important;
+  }
+
+  li {
+    display: list-item !important;
+  }
+
   @media print {
     @page {
       margin: 1.5cm;
@@ -334,14 +351,14 @@
     <h2 style="font-size: 22px; font-weight: bold; margin-bottom: 12px; color: #000;">Practice #2: Look and complete</h2>
     <p style="font-size: 16px; margin: 0 0 10px;">Choose: <span class="prep-red">in</span> / <span class="prep-red">on</span> / <span class="prep-red">under</span> / <span class="prep-red">next to</span> / <span class="prep-red">between</span></p>
     <ol style="padding-left: 25px; font-size: 16px; list-style-type: decimal;">
-      <li class="practice-image-row"><span>The keys are <strong><span data-grammar-input="p2-q1" style="display: inline-block; min-width: 95px;"></span></strong> the bag.</span><span class="image-placeholder">Image placeholder<br />P2-1</span></li>
-      <li class="practice-image-row"><span>The phone is <strong><span data-grammar-input="p2-q2" style="display: inline-block; min-width: 95px;"></span></strong> the desk.</span><span class="image-placeholder">Image placeholder<br />P2-2</span></li>
-      <li class="practice-image-row"><span>The bag is <strong><span data-grammar-input="p2-q3" style="display: inline-block; min-width: 95px;"></span></strong> the table.</span><span class="image-placeholder">Image placeholder<br />P2-3</span></li>
-      <li class="practice-image-row"><span>The supermarket is <strong><span data-grammar-input="p2-q4" style="display: inline-block; min-width: 95px;"></span></strong> the bank and the pharmacy.</span><span class="image-placeholder">Image placeholder<br />P2-4</span></li>
-      <li class="practice-image-row"><span>The chair is <strong><span data-grammar-input="p2-q5" style="display: inline-block; min-width: 95px;"></span></strong> the window.</span><span class="image-placeholder">Image placeholder<br />P2-5</span></li>
-      <li class="practice-image-row"><span>The milk is <strong><span data-grammar-input="p2-q6" style="display: inline-block; min-width: 95px;"></span></strong> the fridge.</span><span class="image-placeholder">Image placeholder<br />P2-6</span></li>
-      <li class="practice-image-row"><span>There is a picture <strong><span data-grammar-input="p2-q7" style="display: inline-block; min-width: 95px;"></span></strong> the wall.</span><span class="image-placeholder">Image placeholder<br />P2-7</span></li>
-      <li class="practice-image-row"><span>My shoes are <strong><span data-grammar-input="p2-q8" style="display: inline-block; min-width: 95px;"></span></strong> the bed.</span><span class="image-placeholder">Image placeholder<br />P2-8</span></li>
+      <li style="margin-bottom: 10px;"><div class="practice-image-row"><span>The keys are <strong><span data-grammar-input="p2-q1" style="display: inline-block; min-width: 95px;"></span></strong> the bag.</span><span class="image-placeholder">Image placeholder<br />P2-1</span></div></li>
+      <li style="margin-bottom: 10px;"><div class="practice-image-row"><span>The phone is <strong><span data-grammar-input="p2-q2" style="display: inline-block; min-width: 95px;"></span></strong> the desk.</span><span class="image-placeholder">Image placeholder<br />P2-2</span></div></li>
+      <li style="margin-bottom: 10px;"><div class="practice-image-row"><span>The bag is <strong><span data-grammar-input="p2-q3" style="display: inline-block; min-width: 95px;"></span></strong> the table.</span><span class="image-placeholder">Image placeholder<br />P2-3</span></div></li>
+      <li style="margin-bottom: 10px;"><div class="practice-image-row"><span>The supermarket is <strong><span data-grammar-input="p2-q4" style="display: inline-block; min-width: 95px;"></span></strong> the bank and the pharmacy.</span><span class="image-placeholder">Image placeholder<br />P2-4</span></div></li>
+      <li style="margin-bottom: 10px;"><div class="practice-image-row"><span>The chair is <strong><span data-grammar-input="p2-q5" style="display: inline-block; min-width: 95px;"></span></strong> the window.</span><span class="image-placeholder">Image placeholder<br />P2-5</span></div></li>
+      <li style="margin-bottom: 10px;"><div class="practice-image-row"><span>The milk is <strong><span data-grammar-input="p2-q6" style="display: inline-block; min-width: 95px;"></span></strong> the fridge.</span><span class="image-placeholder">Image placeholder<br />P2-6</span></div></li>
+      <li style="margin-bottom: 10px;"><div class="practice-image-row"><span>There is a picture <strong><span data-grammar-input="p2-q7" style="display: inline-block; min-width: 95px;"></span></strong> the wall.</span><span class="image-placeholder">Image placeholder<br />P2-7</span></div></li>
+      <li style="margin-bottom: 0;"><div class="practice-image-row"><span>My shoes are <strong><span data-grammar-input="p2-q8" style="display: inline-block; min-width: 95px;"></span></strong> the bed.</span><span class="image-placeholder">Image placeholder<br />P2-8</span></div></li>
     </ol>
   </div>
 
