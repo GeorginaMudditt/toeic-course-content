@@ -32,6 +32,7 @@ npm run update:resource:supabase "Mixed Tense Review" "mixed-tense-review-html.h
 npm run update:resource:supabase "Mixed Tenses" "mixed-tenses-html.html"
 npm run update:resource:supabase "Passive Voice 1" "passive-voice-1-html.html"
 npm run update:resource:supabase "Passive Voice 2" "passive-voice-2-html.html"
+npm run update:resource:supabase "Prepositions of Time and Place" "prepositions-of-time-and-place-html.html"
 npm run update:resource:supabase "Past Continuous" "past-continuous-html.html"
 npm run update:resource:supabase "Past Perfect" "past-perfect-html.html"
 npm run update:resource:supabase "Past Perfect: Simple and Continuous" "past-perfect-simple-and-continuous-html.html"
