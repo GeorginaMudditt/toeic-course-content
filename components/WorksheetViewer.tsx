@@ -1602,6 +1602,7 @@ export default function WorksheetViewer({ assignmentId, resource, initialProgres
       const clickHandler = () => {
         const answerMap = buildGrammarAnswerMap()
         runGrammarCheckForContainer(section, answerMap)
+        section.setAttribute('data-grammar-live-check', 'true')
       }
       button.addEventListener('click', clickHandler)
       cleanupFns.push(() => button.removeEventListener('click', clickHandler))
@@ -1618,7 +1619,40 @@ export default function WorksheetViewer({ assignmentId, resource, initialProgres
       controls.forEach((control) => control.remove())
     }
   }, [hasGrammarInputs, grammarInputsReady, resource.content, resource.title, buildGrammarAnswerMap, runGrammarCheckForContainer])
-  
+
+  // After the first Check Answers for a section, update tick/cross when the student edits (vocabulary-style).
+  useEffect(() => {
+    if (!hasGrammarInputs || !grammarInputsReady || !contentRef.current) return
+    if (!/prepositions of time and place/i.test(resource.title || '')) return
+
+    const root = contentRef.current
+
+    const handleFieldValueChange = (e: Event) => {
+      const target = e.target
+      if (
+        !(target instanceof HTMLInputElement) &&
+        !(target instanceof HTMLTextAreaElement) &&
+        !(target instanceof HTMLSelectElement)
+      ) {
+        return
+      }
+      const section = target.closest('[data-grammar-live-check="true"]')
+      if (!section || !(section instanceof HTMLElement)) return
+      if (!root.contains(section)) return
+
+      const answerMap = buildGrammarAnswerMap()
+      runGrammarCheckForContainer(section, answerMap)
+    }
+
+    root.addEventListener('input', handleFieldValueChange)
+    root.addEventListener('change', handleFieldValueChange)
+
+    return () => {
+      root.removeEventListener('input', handleFieldValueChange)
+      root.removeEventListener('change', handleFieldValueChange)
+    }
+  }, [hasGrammarInputs, grammarInputsReady, resource.title, resource.content, buildGrammarAnswerMap, runGrammarCheckForContainer])
+
   // Cleanup: Defer root unmount to avoid "synchronously unmount while React was rendering" warning
   useEffect(() => {
     return () => {
