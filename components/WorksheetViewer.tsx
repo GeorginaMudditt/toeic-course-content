@@ -44,9 +44,11 @@ const normalizeAnswerValue = (value: string): string => {
 
 const textareaAnswerMatches = (value: string, expected: string[]): boolean => {
   if (!value || !expected.length) return false
+  const v = normalizeAnswerValue(value)
   return expected.some((token) => {
     if (!token) return false
-    return value === token || value.includes(token) || token.includes(value)
+    const t = normalizeAnswerValue(token)
+    return v === t || v.includes(t) || t.includes(v)
   })
 }
 
@@ -848,7 +850,7 @@ export default function WorksheetViewer({ assignmentId, resource, initialProgres
         }
       } else if (!expected.length) {
         result = { status: 'review' }
-      } else if (expected.includes(value)) {
+      } else if (expected.some((token) => normalizeAnswerValue(token) === value)) {
         result = { status: 'correct' }
       } else {
         result = { status: 'incorrect' }
@@ -1529,11 +1531,11 @@ export default function WorksheetViewer({ assignmentId, resource, initialProgres
     })
   }, [notes, hasGrammarInputs, updateGrammarAnswer]) // Use notes to trigger updates when answers change
 
-  // Disable per-section "Check answers" controls for grammar worksheets.
-  // Students should use the answer key section instead.
+  // Per-section "Check answers" for selected worksheets (e.g. Prepositions #1–#4). Practice blocks
+  // can opt out with data-grammar-check-disabled="true" on their .keep-together (e.g. free-text #5).
   useEffect(() => {
     if (!hasGrammarInputs || !contentRef.current || !grammarInputsReady) return
-    const enableGrammarCheckControls = false
+    const enableGrammarCheckControls = /prepositions of time and place/i.test(resource.title || '')
 
     if (!enableGrammarCheckControls) {
       const existingControls = contentRef.current.querySelectorAll('.grammar-check-controls')
@@ -1582,7 +1584,7 @@ export default function WorksheetViewer({ assignmentId, resource, initialProgres
 
       const button = document.createElement('button')
       button.type = 'button'
-      button.textContent = 'Check answers'
+      button.textContent = 'Check Answers'
       button.style.backgroundColor = '#38438f'
       button.style.color = '#fff'
       button.style.border = 'none'
@@ -1615,7 +1617,7 @@ export default function WorksheetViewer({ assignmentId, resource, initialProgres
       const controls = contentRef.current.querySelectorAll('.grammar-check-controls')
       controls.forEach((control) => control.remove())
     }
-  }, [hasGrammarInputs, grammarInputsReady, resource.content, buildGrammarAnswerMap, runGrammarCheckForContainer])
+  }, [hasGrammarInputs, grammarInputsReady, resource.content, resource.title, buildGrammarAnswerMap, runGrammarCheckForContainer])
   
   // Cleanup: Defer root unmount to avoid "synchronously unmount while React was rendering" warning
   useEffect(() => {

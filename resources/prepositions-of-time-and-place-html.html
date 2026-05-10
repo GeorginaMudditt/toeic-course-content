@@ -69,10 +69,20 @@
 
   .practice-image-row {
     display: grid;
-    grid-template-columns: 1fr 150px;
+    grid-template-columns: 1fr auto;
     gap: 10px;
     align-items: center;
     margin-bottom: 10px;
+  }
+
+  /* Same displayed height as P2-1 at max-width 150px (578×706 → ~183px tall); width varies by aspect ratio. */
+  .practice-p2-img {
+    display: block;
+    height: 183px;
+    width: auto;
+    object-fit: contain;
+    border-radius: 8px;
+    border: 1px solid #cbd5e1;
   }
 
   .places-table {
@@ -351,14 +361,14 @@
     <h2 style="font-size: 22px; font-weight: bold; margin-bottom: 12px; color: #000;">Practice #2: Look and complete</h2>
     <p style="font-size: 16px; margin: 0 0 10px;">Choose: <span class="prep-red">in</span> / <span class="prep-red">on</span> / <span class="prep-red">under</span> / <span class="prep-red">next to</span> / <span class="prep-red">between</span></p>
     <ol style="padding-left: 25px; font-size: 16px; list-style-type: decimal;">
-      <li style="margin-bottom: 10px;"><div class="practice-image-row"><span>The books are <strong><span data-grammar-input="p2-q1" style="display: inline-block; min-width: 95px;"></span></strong> the bag.</span><img src="/images/prepositions/P2-1.png" alt="Books and a bag" style="width: 100%; max-width: 150px; height: auto; border-radius: 8px; border: 1px solid #cbd5e1;" /></div></li>
-      <li style="margin-bottom: 10px;"><div class="practice-image-row"><span>The phone is <strong><span data-grammar-input="p2-q2" style="display: inline-block; min-width: 95px;"></span></strong> the desk.</span><img src="/images/prepositions/P2-2.png" alt="Phone on a desk" style="width: 100%; max-width: 150px; height: auto; border-radius: 8px; border: 1px solid #cbd5e1;" /></div></li>
-      <li style="margin-bottom: 10px;"><div class="practice-image-row"><span>The dog is <strong><span data-grammar-input="p2-q3" style="display: inline-block; min-width: 95px;"></span></strong> the table.</span><img src="/images/prepositions/P2-3.png" alt="Dog and a table" style="width: 100%; max-width: 150px; height: auto; border-radius: 8px; border: 1px solid #cbd5e1;" /></div></li>
-      <li style="margin-bottom: 10px;"><div class="practice-image-row"><span>The supermarket is <strong><span data-grammar-input="p2-q4" style="display: inline-block; min-width: 95px;"></span></strong> the bank and the pharmacy.</span><img src="/images/prepositions/P2-4.png" alt="Supermarket, bank, and pharmacy" style="width: 100%; max-width: 150px; height: auto; border-radius: 8px; border: 1px solid #cbd5e1;" /></div></li>
-      <li style="margin-bottom: 10px;"><div class="practice-image-row"><span>The chair is <strong><span data-grammar-input="p2-q5" style="display: inline-block; min-width: 95px;"></span></strong> the window.</span><img src="/images/prepositions/P2-5.png" alt="Chair and window" style="width: 100%; max-width: 150px; height: auto; border-radius: 8px; border: 1px solid #cbd5e1;" /></div></li>
-      <li style="margin-bottom: 10px;"><div class="practice-image-row"><span>The milk is <strong><span data-grammar-input="p2-q6" style="display: inline-block; min-width: 95px;"></span></strong> the fridge.</span><img src="/images/prepositions/P2-6.png" alt="Milk and a fridge" style="width: 100%; max-width: 150px; height: auto; border-radius: 8px; border: 1px solid #cbd5e1;" /></div></li>
-      <li style="margin-bottom: 10px;"><div class="practice-image-row"><span>There is a picture <strong><span data-grammar-input="p2-q7" style="display: inline-block; min-width: 95px;"></span></strong> the wall.</span><img src="/images/prepositions/P2-7.png" alt="Picture on a wall" style="width: 100%; max-width: 150px; height: auto; border-radius: 8px; border: 1px solid #cbd5e1;" /></div></li>
-      <li style="margin-bottom: 0;"><div class="practice-image-row"><span>My shoes are <strong><span data-grammar-input="p2-q8" style="display: inline-block; min-width: 95px;"></span></strong> the bed.</span><img src="/images/prepositions/P2-8.png" alt="Shoes and a bed" style="width: 100%; max-width: 150px; height: auto; border-radius: 8px; border: 1px solid #cbd5e1;" /></div></li>
+      <li style="margin-bottom: 10px;"><div class="practice-image-row"><span>The books are <strong><span data-grammar-input="p2-q1" style="display: inline-block; min-width: 95px;"></span></strong> the bag.</span><img src="/images/prepositions/P2-1.png" alt="Books and a bag" class="practice-p2-img" /></div></li>
+      <li style="margin-bottom: 10px;"><div class="practice-image-row"><span>The phone is <strong><span data-grammar-input="p2-q2" style="display: inline-block; min-width: 95px;"></span></strong> the desk.</span><img src="/images/prepositions/P2-2.png" alt="Phone on a desk" class="practice-p2-img" /></div></li>
+      <li style="margin-bottom: 10px;"><div class="practice-image-row"><span>The dog is <strong><span data-grammar-input="p2-q3" style="display: inline-block; min-width: 95px;"></span></strong> the table.</span><img src="/images/prepositions/P2-3.png" alt="Dog and a table" class="practice-p2-img" /></div></li>
+      <li style="margin-bottom: 10px;"><div class="practice-image-row"><span>The supermarket is <strong><span data-grammar-input="p2-q4" style="display: inline-block; min-width: 95px;"></span></strong> the bank and the pharmacy.</span><img src="/images/prepositions/P2-4.png" alt="Supermarket, bank, and pharmacy" class="practice-p2-img" /></div></li>
+      <li style="margin-bottom: 10px;"><div class="practice-image-row"><span>The chair is <strong><span data-grammar-input="p2-q5" style="display: inline-block; min-width: 95px;"></span></strong> the window.</span><img src="/images/prepositions/P2-5.png" alt="Chair and window" class="practice-p2-img" /></div></li>
+      <li style="margin-bottom: 10px;"><div class="practice-image-row"><span>The milk is <strong><span data-grammar-input="p2-q6" style="display: inline-block; min-width: 95px;"></span></strong> the fridge.</span><img src="/images/prepositions/P2-6.png" alt="Milk and a fridge" class="practice-p2-img" /></div></li>
+      <li style="margin-bottom: 10px;"><div class="practice-image-row"><span>There is a picture <strong><span data-grammar-input="p2-q7" style="display: inline-block; min-width: 95px;"></span></strong> the wall.</span><img src="/images/prepositions/P2-7.png" alt="Picture on a wall" class="practice-p2-img" /></div></li>
+      <li style="margin-bottom: 0;"><div class="practice-image-row"><span>My shoes are <strong><span data-grammar-input="p2-q8" style="display: inline-block; min-width: 95px;"></span></strong> the bed.</span><img src="/images/prepositions/P2-8.png" alt="Shoes and a bed" class="practice-p2-img" /></div></li>
     </ol>
   </div>
 
@@ -453,7 +463,7 @@
     </ol>
   </div>
 
-  <div class="keep-together">
+  <div class="keep-together" data-grammar-check-disabled="true">
     <h2 style="font-size: 22px; font-weight: bold; margin-bottom: 12px; color: #000;">Practice #5: Correct the mistake</h2>
     <p style="font-size: 16px; margin: 0 0 10px;">Each sentence has one mistake.</p>
     <ol style="padding-left: 25px; font-size: 16px; list-style-type: decimal;">
