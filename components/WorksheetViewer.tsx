@@ -134,18 +134,12 @@ const CHECK_ICON_TICK = `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org
 const CHECK_ICON_CROSS = `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 20 20' fill='none'%3E%3Ccircle cx='10' cy='10' r='9' fill='%23dc2626'/%3E%3Cpath d='M6.5 6.5L13.5 13.5M13.5 6.5L6.5 13.5' stroke='white' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E")`
 
 // Memoized content component to prevent re-renders when notes change
-const MemoizedContent = React.memo(function MemoizedContent({
-  html,
-  contentRef
-}: {
-  html: string
-  contentRef?: React.RefObject<HTMLDivElement>
-}) {
+// (Do not attach contentRef here — #worksheet-content is the single ref root so listeners and querySelector see one tree.)
+const MemoizedContent = React.memo(function MemoizedContent({ html }: { html: string }) {
   return (
     <div 
       className="prose max-w-none"
       dangerouslySetInnerHTML={{ __html: html }}
-      ref={contentRef}
     />
   )
 }, (prevProps, nextProps) => {
@@ -1482,54 +1476,59 @@ export default function WorksheetViewer({ assignmentId, resource, initialProgres
   // Update grammar inputs when answers change
   useEffect(() => {
     if (!hasGrammarInputs || !contentRef.current) return
-    
-    // Skip updates if any input or textarea is focused to prevent losing focus
+
+    // Skip portal re-render while typing so focus is preserved; live-check still reapplies styles below.
     const anyInputFocused = Array.from(contentRef.current.querySelectorAll('input[type="text"], textarea')).some(
-      el => document.activeElement === el
+      (el) => document.activeElement === el
     )
-    
-    if (anyInputFocused) {
-      return
+
+    if (!anyInputFocused) {
+      const currentGrammarAnswers = getGrammarAnswers()
+      const grammarInputs = contentRef.current.querySelectorAll('[data-grammar-input]')
+
+      grammarInputs.forEach((container) => {
+        const inputId = container.getAttribute('data-grammar-input')
+        if (!inputId) return
+
+        const inputTypeAttr = container.getAttribute('data-grammar-input-type')
+        const inputType =
+          inputTypeAttr === 'textarea'
+            ? 'textarea'
+            : inputTypeAttr === 'select'
+              ? 'select'
+              : 'text'
+        const options =
+          (container.getAttribute('data-grammar-input-options') || '')
+            .split('|')
+            .map((option) => option.trim())
+            .filter(Boolean)
+        const configuredWidth = (container as HTMLElement).style.minWidth || (container as HTMLElement).style.width || undefined
+        const root = (container as any)._reactRoot
+        if (root) {
+          const currentValue = currentGrammarAnswers[inputId] || ''
+          root.render(
+            <GrammarInput
+              inputId={inputId}
+              value={currentValue}
+              onChange={(value) => updateGrammarAnswer(inputId, value)}
+              inputType={inputType}
+              width={configuredWidth}
+              options={options}
+            />
+          )
+        }
+      })
     }
-    
-    // Get current grammar answers from notes
-    const currentGrammarAnswers = getGrammarAnswers()
-    
-    const grammarInputs = contentRef.current.querySelectorAll('[data-grammar-input]')
-    
-    grammarInputs.forEach((container) => {
-      const inputId = container.getAttribute('data-grammar-input')
-      if (!inputId) return
-      
-      const inputTypeAttr = container.getAttribute('data-grammar-input-type')
-      const inputType =
-        inputTypeAttr === 'textarea'
-          ? 'textarea'
-          : inputTypeAttr === 'select'
-            ? 'select'
-            : 'text'
-      const options =
-        (container.getAttribute('data-grammar-input-options') || '')
-          .split('|')
-          .map((option) => option.trim())
-          .filter(Boolean)
-      const configuredWidth = (container as HTMLElement).style.minWidth || (container as HTMLElement).style.width || undefined
-      const root = (container as any)._reactRoot
-      if (root) {
-        const currentValue = currentGrammarAnswers[inputId] || ''
-        root.render(
-          <GrammarInput
-            inputId={inputId}
-            value={currentValue}
-            onChange={(value) => updateGrammarAnswer(inputId, value)}
-            inputType={inputType}
-            width={configuredWidth}
-            options={options}
-          />
-        )
-      }
-    })
-  }, [notes, hasGrammarInputs, updateGrammarAnswer]) // Use notes to trigger updates when answers change
+
+    // Re-apply tick/cross after React re-renders inputs (inline styles from Check Answers are otherwise cleared).
+    const liveSections = Array.from(
+      contentRef.current.querySelectorAll('.keep-together[data-grammar-live-check="true"]')
+    ) as HTMLElement[]
+    if (liveSections.length > 0) {
+      const answerMap = buildGrammarAnswerMap()
+      liveSections.forEach((sec) => runGrammarCheckForContainer(sec, answerMap))
+    }
+  }, [notes, hasGrammarInputs, updateGrammarAnswer, buildGrammarAnswerMap, runGrammarCheckForContainer])
 
   // Per-section "Check answers" for selected worksheets (e.g. Prepositions #1–#4). Practice blocks
   // can opt out with data-grammar-check-disabled="true" on their .keep-together (e.g. free-text #5).
@@ -1644,12 +1643,12 @@ export default function WorksheetViewer({ assignmentId, resource, initialProgres
       runGrammarCheckForContainer(section, answerMap)
     }
 
-    root.addEventListener('input', handleFieldValueChange)
-    root.addEventListener('change', handleFieldValueChange)
+    root.addEventListener('input', handleFieldValueChange, true)
+    root.addEventListener('change', handleFieldValueChange, true)
 
     return () => {
-      root.removeEventListener('input', handleFieldValueChange)
-      root.removeEventListener('change', handleFieldValueChange)
+      root.removeEventListener('input', handleFieldValueChange, true)
+      root.removeEventListener('change', handleFieldValueChange, true)
     }
   }, [hasGrammarInputs, grammarInputsReady, resource.title, resource.content, buildGrammarAnswerMap, runGrammarCheckForContainer])
 
@@ -1917,7 +1916,6 @@ export default function WorksheetViewer({ assignmentId, resource, initialProgres
                     <MemoizedContent
                       key="content-before-writing"
                       html={placementHtmlSplit.before}
-                      contentRef={contentRef}
                     />
                     <div style={{ marginTop: '15px' }}>
                       <label
@@ -1958,7 +1956,6 @@ export default function WorksheetViewer({ assignmentId, resource, initialProgres
                 return (
                   <MemoizedContent
                     html={resource.content}
-                    contentRef={contentRef}
                   />
                 )
               } else {
