@@ -1,0 +1,666 @@
+<style>
+  @media print {
+    @page { margin: 1.2cm; }
+    body { margin: 0; padding: 0; }
+    .page-break { page-break-before: always; }
+    .no-break, .keep-together {
+      page-break-inside: avoid;
+      break-inside: avoid;
+    }
+    h2, h3 { page-break-after: avoid; break-after: avoid; }
+    table { page-break-inside: avoid; break-inside: avoid; }
+    .check-answers-btn { display: none !important; }
+  }
+
+  .adv-prep-wrap {
+    max-width: 1120px;
+    margin: 0 auto;
+    padding: 22px;
+    font-family: Arial, Helvetica, sans-serif;
+    line-height: 1.55;
+    color: #1e293b;
+  }
+
+  .adv-prep-wrap h2 {
+    font-size: 20px;
+    font-weight: 700;
+    margin: 0 0 10px 0;
+    color: #0f766e;
+  }
+
+  .adv-prep-wrap h3 {
+    font-size: 16px;
+    font-weight: 700;
+    margin: 0 0 8px 0;
+    color: #115e59;
+  }
+
+  .adv-prep-wrap p { margin: 0 0 8px 0; }
+
+  .prep-ex {
+    color: #dc2626;
+    font-weight: 700;
+    font-style: normal;
+  }
+
+  .adv-title {
+    text-align: center;
+    margin-bottom: 18px;
+    padding: 16px;
+    background: linear-gradient(135deg, #0d9488 0%, #0f766e 45%, #134e4a 100%);
+    border-radius: 10px;
+  }
+
+  .adv-title h1 {
+    font-size: 26px;
+    font-weight: bold;
+    margin: 0;
+    color: #fff;
+  }
+
+  .grid-2 {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px;
+    margin-bottom: 14px;
+  }
+
+  .grid-3 {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 12px;
+    margin-bottom: 14px;
+  }
+
+  @media (max-width: 900px) {
+    .grid-3 { grid-template-columns: 1fr; }
+  }
+
+  @media (max-width: 720px) {
+    .grid-2 { grid-template-columns: 1fr; }
+  }
+
+  .card {
+    background: #f8fafc;
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+    padding: 12px 14px;
+    break-inside: avoid;
+  }
+
+  .card-accent {
+    border-left: 4px solid #0d9488;
+    background: linear-gradient(to bottom, #ecfdf5, #f8fafc);
+  }
+
+  .tip {
+    background: #fffbeb;
+    border: 1px solid #fcd34d;
+    border-radius: 8px;
+    padding: 10px 12px;
+    margin: 10px 0;
+    font-size: 14px;
+  }
+
+  .adv-prep-wrap table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+    margin: 8px 0 12px 0;
+  }
+
+  .adv-prep-wrap th,
+  .adv-prep-wrap td {
+    border: 1px solid #cbd5e1;
+    padding: 8px 10px;
+    text-align: left;
+    vertical-align: top;
+  }
+
+  .adv-prep-wrap th {
+    background: #e2e8f0;
+    font-weight: 700;
+  }
+
+  .prep-head {
+    font-weight: 800;
+    color: #0f766e;
+    font-size: 13px;
+    letter-spacing: 0.04em;
+    margin-bottom: 6px;
+  }
+
+  .adv-prep-wrap ul.disc-list {
+    list-style-type: disc;
+    list-style-position: outside;
+    margin: 0;
+    padding-left: 1.35em;
+  }
+
+  .adv-prep-wrap ul.disc-list li {
+    margin-bottom: 6px;
+    display: list-item;
+    padding-left: 0.25em;
+  }
+
+  .adv-prep-wrap ul.disc-list li::marker {
+    color: #0f766e;
+  }
+
+  .adv-prep-wrap li { margin-bottom: 4px; }
+
+  .practice-list {
+    column-count: 2;
+    column-gap: 22px;
+    font-size: 14px;
+  }
+
+  @media (max-width: 720px) {
+    .practice-list { column-count: 1; }
+  }
+
+  .practice-list p {
+    break-inside: avoid;
+    margin: 0 0 8px 0;
+  }
+
+  .prep-input {
+    width: 5.5em;
+    max-width: 100%;
+    border: 1px solid #94a3b8;
+    border-radius: 4px;
+    padding: 3px 6px;
+    font: inherit;
+    font-size: 14px;
+    vertical-align: baseline;
+    box-sizing: border-box;
+  }
+
+  .prep-input:focus {
+    outline: 2px solid #0d9488;
+    outline-offset: 1px;
+  }
+
+  .check-answers-btn {
+    margin-top: 12px;
+    padding: 8px 18px;
+    font-size: 14px;
+    font-weight: 700;
+    color: #fff;
+    background: #0d9488;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+  }
+
+  .check-answers-btn:hover {
+    background: #0f766e;
+  }
+
+  .check-answers-btn:focus-visible {
+    outline: 2px solid #134e4a;
+    outline-offset: 2px;
+  }
+
+  .practice-with-check {
+    margin-top: 8px;
+  }
+
+  .section-block {
+    margin-bottom: 18px;
+    padding: 16px;
+    background: #fff;
+    border-radius: 8px;
+    border: 1px solid #e2e8f0;
+  }
+
+  .compare-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin: 10px 0;
+  }
+
+  @media (max-width: 640px) {
+    .compare-row { grid-template-columns: 1fr; }
+  }
+
+  .key-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px 18px;
+    font-size: 14px;
+  }
+
+  @media (max-width: 640px) {
+    .key-grid { grid-template-columns: 1fr; }
+  }
+
+  .key-item strong { color: #0f766e; }
+</style>
+
+<div class="adv-prep-wrap">
+
+  <div class="adv-title no-break">
+    <div style="display:inline-block;margin-bottom:6px;">
+      <img src="/brizzle-logo.png" alt="Brizzle Logo" style="width:48px;height:48px;object-fit:contain;background:#fff;padding:4px;border-radius:50%;" />
+    </div>
+    <h1>Advanced Prepositions</h1>
+  </div>
+
+  <!-- Intro: why + professional use -->
+  <div class="section-block keep-together">
+    <h2>Why are prepositions so difficult?</h2>
+    <div class="grid-2">
+      <div class="card card-accent">
+        <h3>Main reasons</h3>
+        <ul class="disc-list">
+          <li>One preposition can have several meanings</li>
+          <li>English uses many fixed expressions</li>
+          <li>The choice of preposition is not always logical</li>
+          <li>Some combinations depend on context and nuance</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>Professional English uses prepositions constantly in</h3>
+        <ul class="disc-list">
+          <li>Meetings</li>
+          <li>Presentations</li>
+          <li>Negotiations</li>
+          <li>Emails</li>
+          <li>Reports</li>
+          <li>Project management</li>
+        </ul>
+        <p style="margin-top:10px;font-size:14px;font-weight:700;">Examples:</p>
+        <ul class="disc-list" style="margin-top:6px;font-size:14px;">
+          <li>involved <span class="prep-ex">in</span> a project</li>
+          <li>responsible <span class="prep-ex">for</span> client communication</li>
+          <li>opposed <span class="prep-ex">to</span> the proposal</li>
+          <li>recover <span class="prep-ex">from</span> financial losses</li>
+          <li>contribute <span class="prep-ex">to</span> company growth</li>
+        </ul>
+      </div>
+    </div>
+    <div class="tip">💬 <strong>Good strategy:</strong> Instead of learning isolated prepositions, try to learn complete workplace expressions.</div>
+  </div>
+
+  <!-- Grammar Focus 1 -->
+  <div class="section-block keep-together">
+    <h2>Grammar Focus #1 — Time prepositions: at / on / in</h2>
+    <p>You already know the basic rules:</p>
+    <table>
+      <thead>
+        <tr><th>Preposition</th><th>Typical use</th><th>Example</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><span class="prep-ex">at</span></td><td>precise time</td><td><span class="prep-ex">at</span> 3pm</td></tr>
+        <tr><td><span class="prep-ex">on</span></td><td>days &amp; dates</td><td><span class="prep-ex">on</span> Thursday</td></tr>
+        <tr><td><span class="prep-ex">in</span></td><td>months, years, periods</td><td><span class="prep-ex">in</span> Q4</td></tr>
+      </tbody>
+    </table>
+    <p style="margin-bottom:10px;">Now let’s look at more professional and business-related expressions.</p>
+    <div class="grid-3">
+      <div class="card">
+        <div class="prep-head">AT</div>
+        <ul class="disc-list" style="font-size:14px;">
+          <li><span class="prep-ex">at</span> the moment</li>
+          <li><span class="prep-ex">at</span> short notice</li>
+          <li><span class="prep-ex">at</span> the end of the quarter</li>
+          <li><span class="prep-ex">at</span> the beginning of the meeting</li>
+        </ul>
+      </div>
+      <div class="card">
+        <div class="prep-head">ON</div>
+        <ul class="disc-list" style="font-size:14px;">
+          <li><span class="prep-ex">on</span> schedule</li>
+          <li><span class="prep-ex">on</span> arrival</li>
+          <li><span class="prep-ex">on</span> business</li>
+          <li><span class="prep-ex">on</span> behalf of</li>
+        </ul>
+      </div>
+      <div class="card">
+        <div class="prep-head">IN</div>
+        <ul class="disc-list" style="font-size:14px;">
+          <li><span class="prep-ex">in</span> advance</li>
+          <li><span class="prep-ex">in</span> the long term</li>
+          <li><span class="prep-ex">in</span> the meantime</li>
+          <li><span class="prep-ex">in</span> the early stages of the project</li>
+        </ul>
+      </div>
+    </div>
+    <div class="compare-row">
+      <div class="card"><p>The consultant arrived <span class="prep-ex">on</span> time for the client presentation.</p></div>
+      <div class="card"><p>We arrived <span class="prep-ex">in</span> time to review the contract before the meeting.</p></div>
+    </div>
+    <div class="tip">💬 <strong>Difference:</strong> <span class="prep-ex">on</span> time = punctual · <span class="prep-ex">in</span> time = early enough</div>
+    <h3 style="margin-top:12px;">Practice #1 — Choose the correct option</h3>
+    <div class="practice-with-check">
+      <div class="practice-list">
+        <p>1. The legal team submitted the revised contract just <input type="text" class="prep-input" data-correct="in" maxlength="20" aria-label="Practice 1, answer 1" /> time for the deadline.</p>
+        <p>2. Despite the transport strike, the conference started <input type="text" class="prep-input" data-correct="on" maxlength="20" aria-label="Practice 1, answer 2" /> schedule.</p>
+        <p>3. We had to organise the product launch <input type="text" class="prep-input" data-correct="at" maxlength="20" aria-label="Practice 1, answer 3" /> very short notice.</p>
+        <p>4. The company expects significant growth <input type="text" class="prep-input" data-correct="in" maxlength="20" aria-label="Practice 1, answer 4" /> the long term.</p>
+        <p>5. Several operational issues appeared <input type="text" class="prep-input" data-correct="in" maxlength="20" aria-label="Practice 1, answer 5" /> the early stages of the merger.</p>
+        <p>6. She signed the agreement <input type="text" class="prep-input" data-correct="on" maxlength="20" aria-label="Practice 1, answer 6" /> behalf of the regional director.</p>
+        <p>7. Delegates received their conference materials <input type="text" class="prep-input" data-correct="on" maxlength="20" aria-label="Practice 1, answer 7" /> arrival.</p>
+        <p>8. The finance department usually reviews budgets <input type="text" class="prep-input" data-correct="at" maxlength="20" aria-label="Practice 1, answer 8" /> the end of each quarter.</p>
+      </div>
+      <button type="button" class="check-answers-btn">Check answers</button>
+    </div>
+  </div>
+
+  <!-- Grammar Focus 2 -->
+  <div class="section-block keep-together page-break">
+    <h2>Grammar Focus #2 — Place prepositions: in / at / on</h2>
+    <div class="grid-3">
+      <div class="card card-accent">
+        <div class="prep-head">IN</div>
+        <p style="font-size:14px;"><strong>Use IN for:</strong> departments · offices · buildings · countries, cities and regions</p>
+        <p style="font-size:13px;margin-top:8px;"><strong>Examples:</strong></p>
+        <ul class="disc-list" style="font-size:13px;margin-top:4px;">
+          <li><span class="prep-ex">in</span> the HR department</li>
+          <li><span class="prep-ex">in</span> the conference room</li>
+          <li><span class="prep-ex">in</span> Singapore</li>
+        </ul>
+      </div>
+      <div class="card card-accent">
+        <div class="prep-head">AT</div>
+        <p style="font-size:14px;"><strong>Use AT for:</strong> specific points · events · work locations</p>
+        <p style="font-size:13px;margin-top:8px;"><strong>Examples:</strong></p>
+        <ul class="disc-list" style="font-size:13px;margin-top:4px;">
+          <li><span class="prep-ex">at</span> reception</li>
+          <li><span class="prep-ex">at</span> the annual conference</li>
+          <li><span class="prep-ex">at</span> head office</li>
+        </ul>
+      </div>
+      <div class="card card-accent">
+        <div class="prep-head">ON</div>
+        <p style="font-size:14px;"><strong>Use ON for:</strong> floors · surfaces · transport routes · business streets/avenues</p>
+        <p style="font-size:13px;margin-top:8px;"><strong>Examples:</strong></p>
+        <ul class="disc-list" style="font-size:13px;margin-top:4px;">
+          <li><span class="prep-ex">on</span> the fifth floor</li>
+          <li><span class="prep-ex">on</span> the main desk</li>
+          <li><span class="prep-ex">on</span> Park Avenue</li>
+        </ul>
+      </div>
+    </div>
+    <div class="tip">💬 <strong>Helpful idea:</strong> <span class="prep-ex">IN</span> = inside a space or organisation · <span class="prep-ex">AT</span> = a point/location/event · <span class="prep-ex">ON</span> = a surface or line</div>
+    <div class="compare-row">
+      <div class="card"><p>I met the client <span class="prep-ex">at</span> the conference.</p></div>
+      <div class="card"><p>Later, we continued the discussion <span class="prep-ex">in</span> the conference centre café.</p></div>
+    </div>
+    <h3>Practice #2 — Complete the sentences</h3>
+    <div class="practice-with-check">
+      <div class="practice-list">
+        <p>1. Several candidates were waiting <input type="text" class="prep-input" data-correct="at" maxlength="20" aria-label="Practice 2, answer 1" /> reception before the interviews.</p>
+        <p>2. The company recently opened a regional office <input type="text" class="prep-input" data-correct="in" maxlength="20" aria-label="Practice 2, answer 2" /> Dubai.</p>
+        <p>3. Most of the negotiations took place <input type="text" class="prep-input" data-correct="in" maxlength="20" aria-label="Practice 2, answer 3" /> the executive meeting room.</p>
+        <p>4. The CEO’s office is located <input type="text" class="prep-input" data-correct="on" maxlength="20" aria-label="Practice 2, answer 4" /> the top floor of the building.</p>
+        <p>5. There was an important notice <input type="text" class="prep-input" data-correct="on" maxlength="20" aria-label="Practice 2, answer 5" /> the staff information board.</p>
+        <p>6. I met one of our suppliers <input type="text" class="prep-input" data-correct="at" maxlength="20" aria-label="Practice 2, answer 6" /> a trade exhibition last month.</p>
+        <p>7. The archived contracts are stored <input type="text" class="prep-input" data-correct="in" maxlength="20" aria-label="Practice 2, answer 7" /> the secure records department.</p>
+        <p>8. Traffic was extremely heavy <input type="text" class="prep-input" data-correct="on" maxlength="20" aria-label="Practice 2, answer 8" /> the ring road near the business district.</p>
+      </div>
+      <button type="button" class="check-answers-btn">Check answers</button>
+    </div>
+  </div>
+
+  <!-- Grammar Focus 3 -->
+  <div class="section-block keep-together">
+    <h2>Grammar Focus #3 — Dependent prepositions</h2>
+    <p>Many adjectives, nouns and verbs are followed by particular prepositions. These combinations are extremely common in professional communication.</p>
+    <div class="grid-2">
+      <div class="card">
+        <h3>Adjective + preposition</h3>
+        <table>
+          <thead><tr><th>Adjective</th><th>Preposition</th><th>Example</th></tr></thead>
+          <tbody>
+            <tr><td>responsible</td><td><span class="prep-ex">for</span></td><td>She is responsible <span class="prep-ex">for</span> staff training.</td></tr>
+            <tr><td>involved</td><td><span class="prep-ex">in</span></td><td>He was involved <span class="prep-ex">in</span> the negotiations.</td></tr>
+            <tr><td>capable</td><td><span class="prep-ex">of</span></td><td>They are capable <span class="prep-ex">of</span> managing international accounts.</td></tr>
+            <tr><td>committed</td><td><span class="prep-ex">to</span></td><td>The company is committed <span class="prep-ex">to</span> sustainability.</td></tr>
+            <tr><td>familiar</td><td><span class="prep-ex">with</span></td><td>Are you familiar <span class="prep-ex">with</span> the new software?</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="card">
+        <h3>Verb + preposition</h3>
+        <table>
+          <thead><tr><th>Verb</th><th>Preposition</th><th>Example</th></tr></thead>
+          <tbody>
+            <tr><td>specialise</td><td><span class="prep-ex">in</span></td><td>The firm specialises <span class="prep-ex">in</span> data security.</td></tr>
+            <tr><td>contribute</td><td><span class="prep-ex">to</span></td><td>Good communication contributes <span class="prep-ex">to</span> productivity.</td></tr>
+            <tr><td>rely</td><td><span class="prep-ex">on</span></td><td>The department relies <span class="prep-ex">on</span> external consultants.</td></tr>
+            <tr><td>deal</td><td><span class="prep-ex">with</span></td><td>She deals <span class="prep-ex">with</span> customer complaints.</td></tr>
+            <tr><td>cope</td><td><span class="prep-ex">with</span></td><td>Many managers struggle to cope <span class="prep-ex">with</span> stress.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="tip">💬 There is often no perfect rule. Try to learn the whole business expression together.</div>
+    <h3>Practice #3 — Complete with the correct preposition</h3>
+    <div class="practice-with-check">
+      <div class="practice-list">
+        <p>1. The marketing department relies <input type="text" class="prep-input" data-correct="on" maxlength="20" aria-label="Practice 3, answer 1" /> customer feedback to improve its campaigns.</p>
+        <p>2. She was heavily involved <input type="text" class="prep-input" data-correct="in" maxlength="20" aria-label="Practice 3, answer 2" /> the negotiations with the overseas supplier.</p>
+        <p>3. Our company specialises <input type="text" class="prep-input" data-correct="in" maxlength="20" aria-label="Practice 3, answer 3" /> cloud-based financial software.</p>
+        <p>4. Are you familiar <input type="text" class="prep-input" data-correct="with" maxlength="20" aria-label="Practice 3, answer 4" /> the new reporting procedures?</p>
+        <p>5. Several board members are opposed <input type="text" class="prep-input" data-correct="to" maxlength="20" aria-label="Practice 3, answer 5" /> outsourcing customer support.</p>
+        <p>6. The organisation is committed <input type="text" class="prep-input" data-correct="to" maxlength="20" aria-label="Practice 3, answer 6" /> reducing workplace waste.</p>
+        <p>7. Effective leadership contributes <input type="text" class="prep-input" data-correct="to" maxlength="20" aria-label="Practice 3, answer 7" /> employee satisfaction.</p>
+        <p>8. Some employees found it difficult to cope <input type="text" class="prep-input" data-correct="with" maxlength="20" aria-label="Practice 3, answer 8" /> the pressure of tight deadlines.</p>
+        <p>9. The project manager is responsible <input type="text" class="prep-input" data-correct="for" maxlength="20" aria-label="Practice 3, answer 9" /> coordinating communication between teams.</p>
+        <p>10. The legal department deals <input type="text" class="prep-input" data-correct="with" maxlength="20" aria-label="Practice 3, answer 10" /> contractual disputes.</p>
+      </div>
+      <button type="button" class="check-answers-btn">Check answers</button>
+    </div>
+  </div>
+
+  <!-- Grammar Focus 4 -->
+  <div class="section-block keep-together page-break">
+    <h2>Grammar Focus #4 — Movement and direction</h2>
+    <div class="grid-2">
+      <div class="card">
+        <div class="prep-head">TO</div>
+        <p>Use <span class="prep-ex">TO</span> for movement toward a destination.</p>
+        <ul class="disc-list" style="font-size:14px;">
+          <li>travel <span class="prep-ex">to</span> a conference</li>
+          <li>go <span class="prep-ex">to</span> head office</li>
+        </ul>
+      </div>
+      <div class="card">
+        <div class="prep-head">INTO / OUT OF</div>
+        <p>Use <span class="prep-ex">INTO</span> and <span class="prep-ex">OUT OF</span> for movement in and out.</p>
+        <ul class="disc-list" style="font-size:14px;">
+          <li>walk <span class="prep-ex">into</span> the boardroom</li>
+          <li>leave <span class="prep-ex">through</span> the emergency exit</li>
+        </ul>
+      </div>
+    </div>
+    <div class="grid-2">
+      <div class="card card-accent">
+        <div class="prep-head">THROUGH</div>
+        <p style="font-size:14px;">Movement <strong>inside</strong> a space or process</p>
+        <ul class="disc-list" style="font-size:14px;">
+          <li>move <span class="prep-ex">through</span> the approval process</li>
+          <li>walk <span class="prep-ex">through</span> the production facility</li>
+        </ul>
+      </div>
+      <div class="card card-accent">
+        <div class="prep-head">ACROSS</div>
+        <p style="font-size:14px;">Movement from <strong>one side to the other</strong></p>
+        <ul class="disc-list" style="font-size:14px;">
+          <li>transfer staff <span class="prep-ex">across</span> departments</li>
+          <li>travel <span class="prep-ex">across</span> the city for meetings</li>
+        </ul>
+      </div>
+    </div>
+    <div class="card" style="margin-bottom:10px;">
+      <div class="prep-head">ALONG</div>
+      <p>Use <span class="prep-ex">ALONG</span> for movement beside a line.</p>
+      <p style="font-size:14px;margin:8px 0 0 0;">walk <span class="prep-ex">along</span> the corridor · drive <span class="prep-ex">along</span> the industrial zone</p>
+    </div>
+    <h3>Practice #4 — Choose the correct preposition</h3>
+    <div class="practice-with-check">
+      <div class="practice-list">
+        <p>1. The audit team spent the morning walking <input type="text" class="prep-input" data-correct="through" maxlength="24" aria-label="Practice 4, answer 1" /> (<span class="prep-ex">through</span> / <span class="prep-ex">across</span>) the manufacturing plant.</p>
+        <p>2. Several employees moved <input type="text" class="prep-input" data-correct="across" maxlength="24" aria-label="Practice 4, answer 2" /> (<span class="prep-ex">along</span> / <span class="prep-ex">across</span>) departments after the restructuring.</p>
+        <p>3. She rushed <input type="text" class="prep-input" data-correct="into" maxlength="24" aria-label="Practice 4, answer 3" /> (<span class="prep-ex">into</span> / <span class="prep-ex">across</span>) the meeting room just before the presentation began.</p>
+        <p>4. The consultants travelled <input type="text" class="prep-input" data-correct="across" maxlength="24" aria-label="Practice 4, answer 4" /> (<span class="prep-ex">through</span> / <span class="prep-ex">across</span>) the city to meet several clients.</p>
+        <p>5. We had to go <input type="text" class="prep-input" data-correct="through" maxlength="24" aria-label="Practice 4, answer 5" /> (<span class="prep-ex">through</span> / <span class="prep-ex">across</span>) multiple approval stages before launching the product.</p>
+        <p>6. The visitors were guided <input type="text" class="prep-input" data-correct="along" maxlength="24" aria-label="Practice 4, answer 6" /> (<span class="prep-ex">along</span> / <span class="prep-ex">into</span>) the corridor towards the conference suite.</p>
+        <p>7. He walked <input type="text" class="prep-input" data-correct="out of" maxlength="24" aria-label="Practice 4, answer 7" /> (<span class="prep-ex">out of</span> / <span class="prep-ex">across</span>) the office without saying goodbye.</p>
+        <p>8. Senior management travelled <input type="text" class="prep-input" data-correct="to" maxlength="24" aria-label="Practice 4, answer 8" /> (<span class="prep-ex">to</span> / <span class="prep-ex">into</span>) Brussels for the trade negotiations.</p>
+      </div>
+      <button type="button" class="check-answers-btn">Check answers</button>
+    </div>
+  </div>
+
+  <!-- Grammar Focus 5 -->
+  <div class="section-block keep-together">
+    <h2>Grammar Focus #5 — Common confusing pairs</h2>
+    <div class="grid-3">
+      <div class="card">
+        <div class="prep-head">BY vs UNTIL</div>
+        <p><span class="prep-ex">BY</span> = before or no later than a deadline</p>
+        <p style="font-size:14px;">Please submit the report <span class="prep-ex">by</span> Friday.</p>
+        <p><span class="prep-ex">UNTIL</span> = continuing up to a point in time</p>
+        <p style="font-size:14px;">The meeting continued <span class="prep-ex">until</span> 8pm.</p>
+      </div>
+      <div class="card">
+        <div class="prep-head">FOR vs SINCE</div>
+        <p><span class="prep-ex">FOR</span> = duration</p>
+        <p style="font-size:14px;"><span class="prep-ex">for</span> six months</p>
+        <p><span class="prep-ex">SINCE</span> = starting point</p>
+        <p style="font-size:14px;"><span class="prep-ex">since</span> January</p>
+      </div>
+      <div class="card">
+        <div class="prep-head">DURING vs FOR</div>
+        <p><span class="prep-ex">DURING</span> = when something happens</p>
+        <p style="font-size:14px;"><span class="prep-ex">during</span> the presentation</p>
+        <p><span class="prep-ex">FOR</span> = duration of time</p>
+        <p style="font-size:14px;"><span class="prep-ex">for</span> three hours</p>
+      </div>
+    </div>
+    <div class="tip" style="margin-bottom:10px;">💬 <strong>Compare:</strong></div>
+    <div class="compare-row">
+      <div class="card"><p><span class="prep-ex">During</span> the meeting, several issues were raised.</p></div>
+      <div class="card"><p>The meeting lasted <span class="prep-ex">for</span> three hours.</p></div>
+    </div>
+    <h3>Practice #5 — Complete the sentences</h3>
+    <div class="practice-with-check">
+      <div class="practice-list">
+        <p>1. The company has been expanding internationally <input type="text" class="prep-input" data-correct="since" maxlength="20" aria-label="Practice 5, answer 1" /> 2022.</p>
+        <p>2. We discussed the proposal <input type="text" class="prep-input" data-correct="for" maxlength="20" aria-label="Practice 5, answer 2" /> nearly two hours.</p>
+        <p>3. Please submit your expense claims <input type="text" class="prep-input" data-correct="by" maxlength="20" aria-label="Practice 5, answer 3" /> the end of the week.</p>
+        <p>4. Several technical issues appeared <input type="text" class="prep-input" data-correct="during" maxlength="20" aria-label="Practice 5, answer 4" /> the product demonstration.</p>
+        <p>5. The negotiations continued <input type="text" class="prep-input" data-correct="until" maxlength="20" aria-label="Practice 5, answer 5" /> late in the evening.</p>
+        <p>6. She has worked in project management <input type="text" class="prep-input" data-correct="for" maxlength="20" aria-label="Practice 5, answer 6" /> more than a decade.</p>
+        <p>7. Nobody used their phones <input type="text" class="prep-input" data-correct="during" maxlength="20" aria-label="Practice 5, answer 7" /> the client presentation.</p>
+        <p>8. Can you complete the financial analysis <input type="text" class="prep-input" data-correct="by" maxlength="20" aria-label="Practice 5, answer 8" /> Thursday afternoon?</p>
+      </div>
+      <button type="button" class="check-answers-btn">Check answers</button>
+    </div>
+  </div>
+
+  <!-- Practice 6 + Speaking -->
+  <div class="grid-2" style="margin-bottom:14px;">
+    <div class="section-block keep-together" style="margin:0;">
+      <h2>Practice #6 — Correct the mistakes</h2>
+      <p style="font-size:14px;margin-bottom:10px;">Each sentence contains one preposition mistake.</p>
+      <ol style="margin:0;padding-left:1.35em;list-style-type:decimal;font-size:14px;">
+        <li style="margin-bottom:8px;">The department is responsible of staff recruitment.</li>
+        <li style="margin-bottom:8px;">We arrived to the client meeting earlier than expected.</li>
+        <li style="margin-bottom:8px;">Several employees are familiar to the updated procedures.</li>
+        <li style="margin-bottom:8px;">The company has operated in Asia since fifteen years.</li>
+        <li style="margin-bottom:8px;">The proposal moved across the approval process very quickly.</li>
+        <li style="margin-bottom:8px;">Many managers rely in weekly performance reports.</li>
+        <li style="margin-bottom:8px;">She walked across the boardroom and greeted the clients.</li>
+        <li style="margin-bottom:8px;">The strategy meeting continued by 7pm because of the disagreement.</li>
+      </ol>
+    </div>
+    <div class="section-block keep-together" style="margin:0;">
+      <h2>Speaking #1 — Discussion questions</h2>
+      <ul class="disc-list" style="font-size:14px;">
+        <li>What skills are most important for managing international projects?</li>
+        <li>Are employees in your sector expected to cope with high levels of pressure?</li>
+        <li>Which departments contribute most to a company’s success?</li>
+        <li>Have you ever been involved in a difficult negotiation?</li>
+        <li>What industries does your region rely on economically?</li>
+        <li>Are companies becoming more committed to environmental responsibility?</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Answer key -->
+  <div class="section-block keep-together">
+    <h2>Answer Key</h2>
+    <div class="key-grid">
+      <div class="card">
+        <strong>Practice #1</strong>
+        <p>1. in · 2. on · 3. at · 4. in · 5. in · 6. on · 7. on · 8. at</p>
+      </div>
+      <div class="card">
+        <strong>Practice #2</strong>
+        <p>1. at · 2. in · 3. in · 4. on · 5. on · 6. at · 7. in · 8. on</p>
+      </div>
+      <div class="card">
+        <strong>Practice #3</strong>
+        <p>1. on · 2. in · 3. in · 4. with · 5. to · 6. to · 7. to · 8. with · 9. for · 10. with</p>
+      </div>
+      <div class="card">
+        <strong>Practice #4</strong>
+        <p>1. through · 2. across · 3. into · 4. across · 5. through · 6. along · 7. out of · 8. to</p>
+      </div>
+      <div class="card">
+        <strong>Practice #5</strong>
+        <p>1. since · 2. for · 3. by · 4. during · 5. until · 6. for · 7. during · 8. by</p>
+      </div>
+      <div class="card">
+        <strong>Practice #6</strong>
+        <p style="font-size:13px;">1. The department is responsible <span class="prep-ex">for</span> staff recruitment.<br />
+        2. We arrived <span class="prep-ex">at</span> the client meeting earlier than expected.<br />
+        3. Several employees are familiar <span class="prep-ex">with</span> the updated procedures.<br />
+        4. The company has operated in Asia <span class="prep-ex">for</span> fifteen years.<br />
+        5. The proposal moved <span class="prep-ex">through</span> the approval process very quickly.<br />
+        6. Many managers rely <span class="prep-ex">on</span> weekly performance reports.<br />
+        7. She walked <span class="prep-ex">into</span> the boardroom and greeted the clients.<br />
+        8. The strategy meeting continued <span class="prep-ex">until</span> 7pm because of the disagreement.</p>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+(function () {
+  function norm(s) {
+    return String(s || '')
+      .trim()
+      .toLowerCase()
+      .replace(/\s+/g, ' ');
+  }
+
+  function checkBlock(block) {
+    var inputs = block.querySelectorAll('.prep-input');
+    inputs.forEach(function (inp) {
+      var want = norm(inp.getAttribute('data-correct') || '');
+      var got = norm(inp.value);
+      var ok = got === want;
+      inp.style.borderWidth = '2px';
+      inp.style.borderStyle = 'solid';
+      inp.style.borderColor = ok ? '#16a34a' : '#dc2626';
+      inp.style.background = ok ? '#f0fdf4' : '#fef2f2';
+    });
+  }
+
+  document.querySelectorAll('.practice-with-check').forEach(function (block) {
+    var btn = block.querySelector('.check-answers-btn');
+    if (btn) {
+      btn.addEventListener('click', function () {
+        checkBlock(block);
+      });
+    }
+  });
+})();
+</script>
