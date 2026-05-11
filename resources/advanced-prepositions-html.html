@@ -681,9 +681,12 @@
   document.querySelectorAll('.practice-with-check').forEach(function (block) {
     block.querySelectorAll('.prep-input').forEach(function (inp) {
       inp.addEventListener('input', function () {
-        checkSingleInput(inp);
+        if (block.getAttribute('data-live-feedback') === 'true') {
+          checkSingleInput(inp);
+        }
       });
       inp.addEventListener('paste', function () {
+        if (block.getAttribute('data-live-feedback') !== 'true') return;
         requestAnimationFrame(function () {
           checkSingleInput(inp);
         });
@@ -692,6 +695,7 @@
     var btn = block.querySelector('.check-answers-btn');
     if (btn) {
       btn.addEventListener('click', function () {
+        block.setAttribute('data-live-feedback', 'true');
         checkBlock(block);
       });
     }
