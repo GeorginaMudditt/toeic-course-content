@@ -208,6 +208,56 @@
     margin-top: 8px;
   }
 
+  .practice6-list {
+    margin: 0;
+    padding-left: 1.5em;
+    font-size: 14px;
+    list-style-type: decimal;
+    list-style-position: outside;
+  }
+
+  .practice6-item {
+    margin-bottom: 20px;
+    break-inside: avoid;
+    padding-left: 0.25em;
+  }
+
+  .practice6-item > p {
+    margin: 0 0 8px 0;
+    line-height: 1.5;
+  }
+
+  .practice6-rewrite {
+    display: block;
+    width: 100%;
+    min-height: 96px;
+    box-sizing: border-box;
+    font-family: inherit;
+    font-size: 14px;
+    line-height: 1.45;
+    padding: 10px 12px;
+    border: 1px solid #94a3b8;
+    border-radius: 6px;
+    resize: vertical;
+    color: #1e293b;
+    background: #fff;
+  }
+
+  .practice6-rewrite:focus,
+  .practice6-rewrite:focus-visible {
+    outline: 2px solid #2563eb;
+    outline-offset: 1px;
+    border-color: #2563eb;
+  }
+
+  .practice6-label {
+    display: block;
+    font-size: 13px;
+    font-weight: 600;
+    color: #475569;
+    margin-bottom: 6px;
+  }
+
   .section-block {
     margin-bottom: 18px;
     padding: 16px;
@@ -608,33 +658,52 @@
     </div>
   </div>
 
-  <!-- Practice 6 + Speaking -->
-  <div class="grid-2" style="margin-bottom:14px;">
-    <div class="section-block keep-together" style="margin:0;">
-      <h2>Practice #6: Correct the mistakes</h2>
-      <p style="font-size:14px;margin-bottom:10px;">Each sentence contains one preposition mistake.</p>
-      <ol style="margin:0;padding-left:1.35em;list-style-type:decimal;font-size:14px;">
-        <li style="margin-bottom:8px;">The department is responsible of staff recruitment.</li>
-        <li style="margin-bottom:8px;">We arrived to the client meeting earlier than expected.</li>
-        <li style="margin-bottom:8px;">Several employees are familiar to the updated procedures.</li>
-        <li style="margin-bottom:8px;">The company has operated in Asia since fifteen years.</li>
-        <li style="margin-bottom:8px;">The proposal moved across the approval process very quickly.</li>
-        <li style="margin-bottom:8px;">Many managers rely in weekly performance reports.</li>
-        <li style="margin-bottom:8px;">She walked across the boardroom and greeted the clients.</li>
-        <li style="margin-bottom:8px;">The strategy meeting continued by 7pm because of the disagreement.</li>
-      </ol>
-    </div>
-    <div class="section-block keep-together" style="margin:0;">
-      <h2>Speaking #1: Discussion questions</h2>
-      <ul class="disc-list" style="font-size:14px;">
-        <li>What skills are most important for managing international projects?</li>
-        <li>Are employees in your sector expected to cope with high levels of pressure?</li>
-        <li>Which departments contribute most to a company’s success?</li>
-        <li>Have you ever been involved in a difficult negotiation?</li>
-        <li>What industries does your region rely on economically?</li>
-        <li>Are companies becoming more committed to environmental responsibility?</li>
-      </ul>
-    </div>
+  <!-- Practice 6 -->
+  <div class="section-block keep-together">
+    <h2>Practice #6: Correct the mistakes</h2>
+    <p style="font-size:14px;margin-bottom:14px;">Each sentence contains one preposition mistake. Rewrite the full sentence correctly in the box.</p>
+    <ol class="practice6-list">
+      <li class="practice6-item">
+        <p>The department is responsible of staff recruitment.</p>
+        <label class="practice6-label" for="p6-rewrite-1">Your corrected sentence</label>
+        <textarea id="p6-rewrite-1" class="practice6-rewrite" rows="5" spellcheck="true" aria-label="Practice 6, corrected sentence 1"></textarea>
+      </li>
+      <li class="practice6-item">
+        <p>We arrived to the client meeting earlier than expected.</p>
+        <label class="practice6-label" for="p6-rewrite-2">Your corrected sentence</label>
+        <textarea id="p6-rewrite-2" class="practice6-rewrite" rows="5" spellcheck="true" aria-label="Practice 6, corrected sentence 2"></textarea>
+      </li>
+      <li class="practice6-item">
+        <p>Several employees are familiar to the updated procedures.</p>
+        <label class="practice6-label" for="p6-rewrite-3">Your corrected sentence</label>
+        <textarea id="p6-rewrite-3" class="practice6-rewrite" rows="5" spellcheck="true" aria-label="Practice 6, corrected sentence 3"></textarea>
+      </li>
+      <li class="practice6-item">
+        <p>The company has operated in Asia since fifteen years.</p>
+        <label class="practice6-label" for="p6-rewrite-4">Your corrected sentence</label>
+        <textarea id="p6-rewrite-4" class="practice6-rewrite" rows="5" spellcheck="true" aria-label="Practice 6, corrected sentence 4"></textarea>
+      </li>
+      <li class="practice6-item">
+        <p>The proposal moved across the approval process very quickly.</p>
+        <label class="practice6-label" for="p6-rewrite-5">Your corrected sentence</label>
+        <textarea id="p6-rewrite-5" class="practice6-rewrite" rows="5" spellcheck="true" aria-label="Practice 6, corrected sentence 5"></textarea>
+      </li>
+      <li class="practice6-item">
+        <p>Many managers rely in weekly performance reports.</p>
+        <label class="practice6-label" for="p6-rewrite-6">Your corrected sentence</label>
+        <textarea id="p6-rewrite-6" class="practice6-rewrite" rows="5" spellcheck="true" aria-label="Practice 6, corrected sentence 6"></textarea>
+      </li>
+      <li class="practice6-item">
+        <p>She walked across the boardroom and greeted the clients.</p>
+        <label class="practice6-label" for="p6-rewrite-7">Your corrected sentence</label>
+        <textarea id="p6-rewrite-7" class="practice6-rewrite" rows="5" spellcheck="true" aria-label="Practice 6, corrected sentence 7"></textarea>
+      </li>
+      <li class="practice6-item">
+        <p>The strategy meeting continued by 7pm because of the disagreement.</p>
+        <label class="practice6-label" for="p6-rewrite-8">Your corrected sentence</label>
+        <textarea id="p6-rewrite-8" class="practice6-rewrite" rows="5" spellcheck="true" aria-label="Practice 6, corrected sentence 8"></textarea>
+      </li>
+    </ol>
   </div>
 
   <!-- Answer key -->
