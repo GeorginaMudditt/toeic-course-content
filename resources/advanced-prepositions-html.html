@@ -387,7 +387,7 @@
     <h3>Practice #2: Complete the sentences</h3>
     <div class="practice-with-check">
       <div class="practice-list">
-        <p>1. Several candidates were waiting <input type="text" class="prep-input" data-correct="at" maxlength="20" aria-label="Practice 2, answer 1" /> reception before the interviews.</p>
+        <p>1. Several candidates were waiting <input type="text" class="prep-input" data-correct="at|in" maxlength="20" aria-label="Practice 2, answer 1" /> reception before the interviews.</p>
         <p>2. The company recently opened a regional office <input type="text" class="prep-input" data-correct="in" maxlength="20" aria-label="Practice 2, answer 2" /> Dubai.</p>
         <p>3. Most of the negotiations took place <input type="text" class="prep-input" data-correct="in" maxlength="20" aria-label="Practice 2, answer 3" /> the executive meeting room.</p>
         <p>4. The CEO’s office is located <input type="text" class="prep-input" data-correct="on" maxlength="20" aria-label="Practice 2, answer 4" /> the top floor of the building.</p>
@@ -597,7 +597,7 @@
       </div>
       <div class="card">
         <strong>Practice #2</strong>
-        <p>1. at · 2. in · 3. in · 4. on · 5. on · 6. at · 7. in · 8. on</p>
+        <p>1. at / in · 2. in · 3. in · 4. on · 5. on · 6. at · 7. in · 8. on</p>
       </div>
       <div class="card">
         <strong>Practice #3</strong>
@@ -639,9 +639,13 @@
   function checkBlock(block) {
     var inputs = block.querySelectorAll('.prep-input');
     inputs.forEach(function (inp) {
-      var want = norm(inp.getAttribute('data-correct') || '');
+      var raw = inp.getAttribute('data-correct') || '';
+      var acceptable = raw.split('|').map(norm).filter(function (x) {
+        return x.length > 0;
+      });
+      if (acceptable.length === 0) acceptable = [norm(raw)];
       var got = norm(inp.value);
-      var ok = got === want;
+      var ok = acceptable.indexOf(got) !== -1;
       inp.style.borderWidth = '2px';
       inp.style.borderStyle = 'solid';
       inp.style.borderColor = ok ? '#16a34a' : '#dc2626';
