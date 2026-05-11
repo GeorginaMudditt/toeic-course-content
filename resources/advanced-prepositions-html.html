@@ -176,9 +176,11 @@
     box-sizing: border-box;
   }
 
-  .prep-input:focus {
-    outline: 2px solid #0d9488;
+  .prep-input:focus,
+  .prep-input:focus-visible {
+    outline: 2px solid #2563eb;
     outline-offset: 1px;
+    border-color: #2563eb;
   }
 
   .check-answers-btn {
@@ -384,7 +386,7 @@
         </ul>
       </div>
     </div>
-    <h3>Practice #2: Complete the sentences</h3>
+    <h3>Practice #2: Complete the sentences: <span class="prep-ex">in</span>, <span class="prep-ex">at</span>, <span class="prep-ex">on</span></h3>
     <div class="practice-with-check">
       <div class="practice-list">
         <p>1. Several candidates were waiting <input type="text" class="prep-input" data-correct="at|in" maxlength="20" aria-label="Practice 2, answer 1" /> reception before the interviews.</p>
@@ -434,7 +436,7 @@
       </div>
     </div>
     <div class="tip">💬 There are usually no rules or logic for prepositions! Just try to learn the whole expression together.</div>
-    <h3>Practice #3: Complete with the correct preposition</h3>
+    <h3>Practice #3: Complete with the correct preposition: <span class="prep-ex">for</span>, <span class="prep-ex">in</span>, <span class="prep-ex">on</span>, <span class="prep-ex">to</span>, <span class="prep-ex">with</span></h3>
     <div class="practice-with-check">
       <div class="practice-list">
         <p>1. The marketing department relies <input type="text" class="prep-input" data-correct="on" maxlength="20" aria-label="Practice 3, answer 1" /> customer feedback to improve its campaigns.</p>
@@ -637,24 +639,56 @@
       .replace(/\s+/g, ' ');
   }
 
-  function checkBlock(block) {
-    var inputs = block.querySelectorAll('.prep-input');
-    inputs.forEach(function (inp) {
-      var raw = inp.getAttribute('data-correct') || '';
-      var acceptable = raw.split('|').map(norm).filter(function (x) {
-        return x.length > 0;
-      });
-      if (acceptable.length === 0) acceptable = [norm(raw)];
-      var got = norm(inp.value);
-      var ok = acceptable.indexOf(got) !== -1;
-      inp.style.borderWidth = '2px';
-      inp.style.borderStyle = 'solid';
-      inp.style.borderColor = ok ? '#16a34a' : '#dc2626';
-      inp.style.background = ok ? '#f0fdf4' : '#fef2f2';
+  function parseAcceptable(raw) {
+    raw = raw || '';
+    var parts = raw.split('|').map(norm).filter(function (x) {
+      return x.length > 0;
     });
+    if (parts.length === 0 && norm(raw)) {
+      parts = [norm(raw)];
+    }
+    return parts;
+  }
+
+  function checkSingleInput(inp) {
+    var got = norm(inp.value);
+    if (got === '') {
+      inp.style.borderWidth = '1px';
+      inp.style.borderStyle = 'solid';
+      inp.style.borderColor = '#94a3b8';
+      inp.style.background = '';
+      return;
+    }
+    var acceptable = parseAcceptable(inp.getAttribute('data-correct'));
+    if (acceptable.length === 0) {
+      inp.style.borderWidth = '1px';
+      inp.style.borderStyle = 'solid';
+      inp.style.borderColor = '#94a3b8';
+      inp.style.background = '';
+      return;
+    }
+    var ok = acceptable.indexOf(got) !== -1;
+    inp.style.borderWidth = '2px';
+    inp.style.borderStyle = 'solid';
+    inp.style.borderColor = ok ? '#16a34a' : '#dc2626';
+    inp.style.background = ok ? '#f0fdf4' : '#fef2f2';
+  }
+
+  function checkBlock(block) {
+    block.querySelectorAll('.prep-input').forEach(checkSingleInput);
   }
 
   document.querySelectorAll('.practice-with-check').forEach(function (block) {
+    block.querySelectorAll('.prep-input').forEach(function (inp) {
+      inp.addEventListener('input', function () {
+        checkSingleInput(inp);
+      });
+      inp.addEventListener('paste', function () {
+        requestAnimationFrame(function () {
+          checkSingleInput(inp);
+        });
+      });
+    });
     var btn = block.querySelector('.check-answers-btn');
     if (btn) {
       btn.addEventListener('click', function () {
