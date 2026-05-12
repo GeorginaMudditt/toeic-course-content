@@ -670,6 +670,14 @@ export default function WorksheetViewer({ assignmentId, resource, initialProgres
   // Check if this resource has grammar worksheet inputs
   const hasGrammarInputs = resource.content.includes('data-grammar-input')
 
+  /** Per-section Check Answers + live tick/cross (see resources using data-grammar-per-section-check). */
+  const enablePerSectionGrammarCheck = useMemo(() => {
+    return (
+      /prepositions of time and place/i.test(resource.title || '') ||
+      (typeof resource.content === 'string' && resource.content.includes('data-grammar-per-section-check'))
+    )
+  }, [resource.title, resource.content])
+
   // Defer grammar input injection until after mount/hydration (avoids timing issues)
   useEffect(() => {
     if (hasGrammarInputs) {
@@ -1534,9 +1542,8 @@ export default function WorksheetViewer({ assignmentId, resource, initialProgres
   // can opt out with data-grammar-check-disabled="true" on their .keep-together (e.g. free-text #5).
   useEffect(() => {
     if (!hasGrammarInputs || !contentRef.current || !grammarInputsReady) return
-    const enableGrammarCheckControls = /prepositions of time and place/i.test(resource.title || '')
 
-    if (!enableGrammarCheckControls) {
+    if (!enablePerSectionGrammarCheck) {
       const existingControls = contentRef.current.querySelectorAll('.grammar-check-controls')
       existingControls.forEach((control) => control.remove())
       return
@@ -1617,12 +1624,12 @@ export default function WorksheetViewer({ assignmentId, resource, initialProgres
       const controls = contentRef.current.querySelectorAll('.grammar-check-controls')
       controls.forEach((control) => control.remove())
     }
-  }, [hasGrammarInputs, grammarInputsReady, resource.content, resource.title, buildGrammarAnswerMap, runGrammarCheckForContainer])
+  }, [hasGrammarInputs, grammarInputsReady, resource.content, resource.title, buildGrammarAnswerMap, runGrammarCheckForContainer, enablePerSectionGrammarCheck])
 
   // After the first Check Answers for a section, update tick/cross when the student edits (vocabulary-style).
   useEffect(() => {
     if (!hasGrammarInputs || !grammarInputsReady || !contentRef.current) return
-    if (!/prepositions of time and place/i.test(resource.title || '')) return
+    if (!enablePerSectionGrammarCheck) return
 
     const root = contentRef.current
 
@@ -1650,7 +1657,7 @@ export default function WorksheetViewer({ assignmentId, resource, initialProgres
       root.removeEventListener('input', handleFieldValueChange, true)
       root.removeEventListener('change', handleFieldValueChange, true)
     }
-  }, [hasGrammarInputs, grammarInputsReady, resource.title, resource.content, buildGrammarAnswerMap, runGrammarCheckForContainer])
+  }, [hasGrammarInputs, grammarInputsReady, resource.title, resource.content, buildGrammarAnswerMap, runGrammarCheckForContainer, enablePerSectionGrammarCheck])
 
   // Cleanup: Defer root unmount to avoid "synchronously unmount while React was rendering" warning
   useEffect(() => {
