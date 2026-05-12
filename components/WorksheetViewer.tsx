@@ -147,14 +147,16 @@ function parsePrepAcceptable(raw: string | null): string[] {
   return parts
 }
 
-function applyPrepInputCheck(inp: HTMLInputElement) {
+type PrepCheckOutcome = 'empty' | 'nocriteria' | 'correct' | 'incorrect'
+
+function applyPrepInputCheck(inp: HTMLInputElement): PrepCheckOutcome {
   const got = prepNorm(inp.value)
   if (got === '') {
     inp.style.borderWidth = '1px'
     inp.style.borderStyle = 'solid'
     inp.style.borderColor = '#94a3b8'
     inp.style.background = ''
-    return
+    return 'empty'
   }
   const acceptable = parsePrepAcceptable(inp.getAttribute('data-correct'))
   if (acceptable.length === 0) {
@@ -162,13 +164,14 @@ function applyPrepInputCheck(inp: HTMLInputElement) {
     inp.style.borderStyle = 'solid'
     inp.style.borderColor = '#94a3b8'
     inp.style.background = ''
-    return
+    return 'nocriteria'
   }
   const ok = acceptable.indexOf(got) !== -1
   inp.style.borderWidth = '2px'
   inp.style.borderStyle = 'solid'
   inp.style.borderColor = ok ? '#16a34a' : '#dc2626'
   inp.style.background = ok ? '#f0fdf4' : '#fef2f2'
+  return ok ? 'correct' : 'incorrect'
 }
 
 const CHECK_ICON_TICK = `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 20 20' fill='none'%3E%3Ccircle cx='10' cy='10' r='9' fill='%2316a34a'/%3E%3Cpath d='M6 10.5L8.6 13L14 7.5' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E")`
@@ -1719,9 +1722,15 @@ export default function WorksheetViewer({ assignmentId, resource, initialProgres
         if (!btn || !root.contains(btn)) return
         const block = btn.closest('.practice-with-check')
         if (!block) return
-        block.setAttribute('data-live-feedback', 'true')
+        block.setAttribute('data-prep-checked', 'true')
         block.querySelectorAll('.prep-input').forEach((el) => {
-          if (el instanceof HTMLInputElement) applyPrepInputCheck(el)
+          if (!(el instanceof HTMLInputElement)) return
+          const outcome = applyPrepInputCheck(el)
+          if (outcome === 'incorrect') {
+            el.setAttribute('data-prep-live-track', 'true')
+          } else {
+            el.removeAttribute('data-prep-live-track')
+          }
         })
       }
 
@@ -1730,8 +1739,12 @@ export default function WorksheetViewer({ assignmentId, resource, initialProgres
         if (!(t instanceof HTMLInputElement)) return
         if (!t.classList.contains('prep-input')) return
         const block = t.closest('.practice-with-check')
-        if (!block || block.getAttribute('data-live-feedback') !== 'true') return
-        applyPrepInputCheck(t)
+        if (!block || block.getAttribute('data-prep-checked') !== 'true') return
+        if (!t.hasAttribute('data-prep-live-track')) return
+        const outcome = applyPrepInputCheck(t)
+        if (outcome === 'correct') {
+          t.removeAttribute('data-prep-live-track')
+        }
       }
 
       const onPaste = (e: ClipboardEvent) => {
@@ -1739,8 +1752,14 @@ export default function WorksheetViewer({ assignmentId, resource, initialProgres
         if (!(t instanceof HTMLInputElement)) return
         if (!t.classList.contains('prep-input')) return
         const block = t.closest('.practice-with-check')
-        if (!block || block.getAttribute('data-live-feedback') !== 'true') return
-        requestAnimationFrame(() => applyPrepInputCheck(t))
+        if (!block || block.getAttribute('data-prep-checked') !== 'true') return
+        if (!t.hasAttribute('data-prep-live-track')) return
+        requestAnimationFrame(() => {
+          const outcome = applyPrepInputCheck(t)
+          if (outcome === 'correct') {
+            t.removeAttribute('data-prep-live-track')
+          }
+        })
       }
 
       root.addEventListener('click', onClick)

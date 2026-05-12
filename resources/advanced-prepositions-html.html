@@ -767,6 +767,7 @@
     return parts;
   }
 
+  /** @returns {'empty'|'nocriteria'|'correct'|'incorrect'} */
   function checkSingleInput(inp) {
     var got = norm(inp.value);
     if (got === '') {
@@ -774,7 +775,7 @@
       inp.style.borderStyle = 'solid';
       inp.style.borderColor = '#94a3b8';
       inp.style.background = '';
-      return;
+      return 'empty';
     }
     var acceptable = parseAcceptable(inp.getAttribute('data-correct'));
     if (acceptable.length === 0) {
@@ -782,38 +783,45 @@
       inp.style.borderStyle = 'solid';
       inp.style.borderColor = '#94a3b8';
       inp.style.background = '';
-      return;
+      return 'nocriteria';
     }
     var ok = acceptable.indexOf(got) !== -1;
     inp.style.borderWidth = '2px';
     inp.style.borderStyle = 'solid';
     inp.style.borderColor = ok ? '#16a34a' : '#dc2626';
     inp.style.background = ok ? '#f0fdf4' : '#fef2f2';
-  }
-
-  function checkBlock(block) {
-    block.querySelectorAll('.prep-input').forEach(checkSingleInput);
+    return ok ? 'correct' : 'incorrect';
   }
 
   document.querySelectorAll('.practice-with-check').forEach(function (block) {
     block.querySelectorAll('.prep-input').forEach(function (inp) {
       inp.addEventListener('input', function () {
-        if (block.getAttribute('data-live-feedback') === 'true') {
-          checkSingleInput(inp);
-        }
+        if (block.getAttribute('data-prep-checked') !== 'true') return;
+        if (!inp.hasAttribute('data-prep-live-track')) return;
+        var r = checkSingleInput(inp);
+        if (r === 'correct') inp.removeAttribute('data-prep-live-track');
       });
       inp.addEventListener('paste', function () {
-        if (block.getAttribute('data-live-feedback') !== 'true') return;
+        if (block.getAttribute('data-prep-checked') !== 'true') return;
+        if (!inp.hasAttribute('data-prep-live-track')) return;
         requestAnimationFrame(function () {
-          checkSingleInput(inp);
+          var r = checkSingleInput(inp);
+          if (r === 'correct') inp.removeAttribute('data-prep-live-track');
         });
       });
     });
     var btn = block.querySelector('.check-answers-btn');
     if (btn) {
       btn.addEventListener('click', function () {
-        block.setAttribute('data-live-feedback', 'true');
-        checkBlock(block);
+        block.setAttribute('data-prep-checked', 'true');
+        block.querySelectorAll('.prep-input').forEach(function (inp) {
+          var r = checkSingleInput(inp);
+          if (r === 'incorrect') {
+            inp.setAttribute('data-prep-live-track', 'true');
+          } else {
+            inp.removeAttribute('data-prep-live-track');
+          }
+        });
       });
     }
   });
