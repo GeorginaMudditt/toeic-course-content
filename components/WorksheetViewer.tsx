@@ -130,6 +130,47 @@ const extractAnswerTokenGroups = (scope: ParentNode): string[][] => {
   return []
 }
 
+/** Normalise student text for native `.prep-input` + `data-correct` worksheets (scripts in HTML are not run by React). */
+function prepNorm(s: string): string {
+  return String(s || '')
+    .trim()
+    .toLowerCase()
+    .replace(/\s+/g, ' ')
+}
+
+function parsePrepAcceptable(raw: string | null): string[] {
+  if (!raw) return []
+  const parts = raw.split('|').map(prepNorm).filter((x) => x.length > 0)
+  if (parts.length === 0 && prepNorm(raw)) {
+    return [prepNorm(raw)]
+  }
+  return parts
+}
+
+function applyPrepInputCheck(inp: HTMLInputElement) {
+  const got = prepNorm(inp.value)
+  if (got === '') {
+    inp.style.borderWidth = '1px'
+    inp.style.borderStyle = 'solid'
+    inp.style.borderColor = '#94a3b8'
+    inp.style.background = ''
+    return
+  }
+  const acceptable = parsePrepAcceptable(inp.getAttribute('data-correct'))
+  if (acceptable.length === 0) {
+    inp.style.borderWidth = '1px'
+    inp.style.borderStyle = 'solid'
+    inp.style.borderColor = '#94a3b8'
+    inp.style.background = ''
+    return
+  }
+  const ok = acceptable.indexOf(got) !== -1
+  inp.style.borderWidth = '2px'
+  inp.style.borderStyle = 'solid'
+  inp.style.borderColor = ok ? '#16a34a' : '#dc2626'
+  inp.style.background = ok ? '#f0fdf4' : '#fef2f2'
+}
+
 const CHECK_ICON_TICK = `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 20 20' fill='none'%3E%3Ccircle cx='10' cy='10' r='9' fill='%2316a34a'/%3E%3Cpath d='M6 10.5L8.6 13L14 7.5' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E")`
 const CHECK_ICON_CROSS = `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 20 20' fill='none'%3E%3Ccircle cx='10' cy='10' r='9' fill='%23dc2626'/%3E%3Cpath d='M6.5 6.5L13.5 13.5M13.5 6.5L6.5 13.5' stroke='white' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E")`
 
@@ -1658,6 +1699,65 @@ export default function WorksheetViewer({ assignmentId, resource, initialProgres
       root.removeEventListener('change', handleFieldValueChange, true)
     }
   }, [hasGrammarInputs, grammarInputsReady, resource.title, resource.content, buildGrammarAnswerMap, runGrammarCheckForContainer, enablePerSectionGrammarCheck])
+
+  // Worksheets with native <input class="prep-input" data-correct="..."> rely on a trailing <script> in the HTML file.
+  // React's dangerouslySetInnerHTML does not execute those scripts, so "Check answers" must be wired here.
+  useEffect(() => {
+    const html = resource.content
+    if (typeof html !== 'string') return
+    if (!html.includes('prep-input') || !html.includes('check-answers-btn')) return
+
+    let detach: (() => void) | undefined
+    const rafId = requestAnimationFrame(() => {
+      const root = contentRef.current
+      if (!root) return
+
+      const onClick = (e: MouseEvent) => {
+        const t = e.target
+        if (!(t instanceof Element)) return
+        const btn = t.closest('button.check-answers-btn')
+        if (!btn || !root.contains(btn)) return
+        const block = btn.closest('.practice-with-check')
+        if (!block) return
+        block.setAttribute('data-live-feedback', 'true')
+        block.querySelectorAll('.prep-input').forEach((el) => {
+          if (el instanceof HTMLInputElement) applyPrepInputCheck(el)
+        })
+      }
+
+      const onInput = (e: Event) => {
+        const t = e.target
+        if (!(t instanceof HTMLInputElement)) return
+        if (!t.classList.contains('prep-input')) return
+        const block = t.closest('.practice-with-check')
+        if (!block || block.getAttribute('data-live-feedback') !== 'true') return
+        applyPrepInputCheck(t)
+      }
+
+      const onPaste = (e: ClipboardEvent) => {
+        const t = e.target
+        if (!(t instanceof HTMLInputElement)) return
+        if (!t.classList.contains('prep-input')) return
+        const block = t.closest('.practice-with-check')
+        if (!block || block.getAttribute('data-live-feedback') !== 'true') return
+        requestAnimationFrame(() => applyPrepInputCheck(t))
+      }
+
+      root.addEventListener('click', onClick)
+      root.addEventListener('input', onInput)
+      root.addEventListener('paste', onPaste)
+      detach = () => {
+        root.removeEventListener('click', onClick)
+        root.removeEventListener('input', onInput)
+        root.removeEventListener('paste', onPaste)
+      }
+    })
+
+    return () => {
+      cancelAnimationFrame(rafId)
+      detach?.()
+    }
+  }, [resource.content])
 
   // Cleanup: Defer root unmount to avoid "synchronously unmount while React was rendering" warning
   useEffect(() => {
