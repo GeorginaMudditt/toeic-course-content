@@ -7,7 +7,7 @@ import StudentAssignmentManager from '@/components/StudentAssignmentManager'
 import DeleteStudentButton from '@/components/DeleteStudentButton'
 import EditStudentEmail from '@/components/EditStudentEmail'
 import Link from 'next/link'
-import { formatUKDate } from '@/lib/date-utils'
+import { ClientLocalLastSeenLine } from '@/components/ClientLocalDateTime'
 import StudentNotesManager from '@/components/StudentNotesManager'
 import StudentDocumentManager from '@/components/StudentDocumentManager'
 import Tabs from '@/components/Tabs'
@@ -200,11 +200,7 @@ export default async function StudentDetailPage({ params }: { params: { id: stri
               <div>
                 <h1 className="text-3xl font-bold text-gray-900">{student.name}</h1>
                 <p className="text-gray-600">{student.email}</p>
-                {student.lastSeenAt && (
-                  <p className="text-sm text-gray-500 mt-1">
-                    Last seen at {new Date(student.lastSeenAt).toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' })} on {formatUKDate(student.lastSeenAt)}
-                  </p>
-                )}
+                {student.lastSeenAt && <ClientLocalLastSeenLine iso={student.lastSeenAt} />}
                 {!student.lastSeenAt && (
                   <p className="text-sm text-gray-500 mt-1">Never logged in</p>
                 )}

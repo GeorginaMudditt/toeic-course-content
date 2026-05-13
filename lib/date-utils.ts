@@ -1,4 +1,20 @@
 /**
+ * Normalise a DB / JSON timestamp to a UTC ISO string so `new Date()` in the browser
+ * always represents the same instant (avoids ambiguous space-separated Postgres strings).
+ */
+export function toCanonicalIsoTimestamp(value: unknown): string | null {
+  if (value == null) return null
+  let s = String(value).trim()
+  if (!s) return null
+  if (/^\d{4}-\d{2}-\d{2} /.test(s)) {
+    s = s.replace(' ', 'T')
+  }
+  const d = new Date(s)
+  if (Number.isNaN(d.getTime())) return null
+  return d.toISOString()
+}
+
+/**
  * Format date to UK format (DD/MM/YYYY)
  */
 export function formatUKDate(date: Date | string): string {

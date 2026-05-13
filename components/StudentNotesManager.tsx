@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef, useMemo, Fragment } from 'react'
 import { useRouter } from 'next/navigation'
 import { formatCourseName } from '@/lib/date-utils'
+import { ClientLocalDateTime } from '@/components/ClientLocalDateTime'
 import {
   computePackageProgress,
   normalizeLessonDurationHours,
@@ -638,15 +639,17 @@ export default function StudentNotesManager({ student, enrollments }: Props) {
                       {courseMidpointHint.midpointEmailSent ? (
                         <>
                           <strong>Recorded as sent</strong>
-                          {courseMidpointHint.midpointNotificationSentAt
-                            ? ` (${new Date(courseMidpointHint.midpointNotificationSentAt).toLocaleString('en-GB', {
-                                day: 'numeric',
-                                month: 'short',
-                                year: 'numeric',
-                                hour: '2-digit',
-                                minute: '2-digit',
-                              })})`
-                            : ''}
+                          {courseMidpointHint.midpointNotificationSentAt ? (
+                            <>
+                              {' ('}
+                              <ClientLocalDateTime
+                                iso={courseMidpointHint.midpointNotificationSentAt}
+                                preset="datetimeShort"
+                                className="inline"
+                              />
+                              {')'}
+                            </>
+                          ) : null}
                           . No further automatic emails for this enrollment. To test again, clear{' '}
                           <code className="text-xs bg-white px-1 rounded">midpointNotificationSentAt</code> on
                           this course note in Supabase.

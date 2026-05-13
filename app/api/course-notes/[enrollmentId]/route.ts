@@ -4,7 +4,7 @@ import { authOptions } from '@/lib/auth'
 import { supabaseServer } from '@/lib/supabase'
 import { randomUUID } from 'crypto'
 import { countLoggedHoursFromNotesContent, parseCourseDurationHours } from '@/lib/course-notes-lessons'
-import { formatCourseName } from '@/lib/date-utils'
+import { formatCourseName, toCanonicalIsoTimestamp } from '@/lib/date-utils'
 import { sendCourseMidpointNotificationEmail } from '@/lib/email'
 
 function studentSafeNote(note: Record<string, unknown> | null) {
@@ -208,8 +208,7 @@ export async function GET(
           threshold,
           meetsThreshold: hoursLogged >= threshold,
           midpointEmailSent: sentAt != null && String(sentAt).length > 0,
-          midpointNotificationSentAt:
-            typeof sentAt === 'string' ? sentAt : sentAt != null ? String(sentAt) : null,
+          midpointNotificationSentAt: toCanonicalIsoTimestamp(sentAt),
         }
       }
     }
