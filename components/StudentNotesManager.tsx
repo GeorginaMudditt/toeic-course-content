@@ -837,6 +837,44 @@ export default function StudentNotesManager({ student, enrollments }: Props) {
                 className="w-6 h-6 bg-pink-400 border border-gray-300 rounded hover:opacity-80"
                 title="Pink highlight"
               />
+              <span className="text-xs text-gray-600 px-2 ml-1 border-l border-gray-300 pl-3">Reset:</span>
+              <button
+                type="button"
+                onMouseDown={(e) => {
+                  e.preventDefault()
+                  // Match contentEditable surface (#fff) so highlight disappears
+                  document.execCommand('backColor', false, '#ffffff')
+                  syncActiveEditor()
+                }}
+                className="px-2 py-1 bg-white border border-gray-300 rounded hover:bg-gray-100 text-xs"
+                title="Remove background highlight from selection"
+              >
+                No highlight
+              </button>
+              <button
+                type="button"
+                onMouseDown={(e) => {
+                  e.preventDefault()
+                  document.execCommand('foreColor', false, '#000000')
+                  syncActiveEditor()
+                }}
+                className="px-2 py-1 bg-white border border-gray-300 rounded hover:bg-gray-100 text-xs"
+                title="Reset text colour to black"
+              >
+                Text black
+              </button>
+              <button
+                type="button"
+                onMouseDown={(e) => {
+                  e.preventDefault()
+                  document.execCommand('removeFormat')
+                  syncActiveEditor()
+                }}
+                className="px-2 py-1 bg-white border border-gray-300 rounded hover:bg-gray-100 text-xs"
+                title="Remove bold, italic, underline, colours and highlights from selection"
+              >
+                Clear format
+              </button>
             </div>
             <div className="ml-auto flex items-center gap-2">
               {lastSaved && (
