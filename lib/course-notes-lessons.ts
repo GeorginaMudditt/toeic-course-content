@@ -45,8 +45,37 @@ export function parseLessonDateDisplay(raw: string): number | null {
     return Number.isNaN(t) ? null : t
   }
 
+  // DD/MM/YYYY or DD.MM.YYYY (UK-style; day first)
+  let m = s.match(/^(\d{1,2})[/.](\d{1,2})[/.](\d{4})\s*$/)
+  if (m) {
+    const day = parseInt(m[1], 10)
+    const month = parseInt(m[2], 10) - 1
+    const year = parseInt(m[3], 10)
+    if (month >= 0 && month <= 11 && day >= 1 && day <= 31) {
+      const d = new Date(year, month, day)
+      if (d.getFullYear() === year && d.getMonth() === month && d.getDate() === day) {
+        return d.getTime()
+      }
+    }
+  }
+
+  // "6 February 2026" (no weekday)
+  m = s.match(/^(\d{1,2})\s+(\w+)\s+(\d{4})\s*$/i)
+  if (m) {
+    const day = parseInt(m[1], 10)
+    const monthName = m[2].toLowerCase()
+    const year = parseInt(m[3], 10)
+    const month = MONTHS[monthName]
+    if (month !== undefined) {
+      const d = new Date(year, month, day)
+      if (d.getFullYear() === year && d.getMonth() === month && d.getDate() === day) {
+        return d.getTime()
+      }
+    }
+  }
+
   // "Friday 6 February 2026"
-  let m = s.match(/^(\w+)\s+(\d{1,2})\s+(\w+)\s+(\d{4})\s*$/i)
+  m = s.match(/^(\w+)\s+(\d{1,2})\s+(\w+)\s+(\d{4})\s*$/i)
   if (m) {
     const day = parseInt(m[2], 10)
     const monthName = m[3].toLowerCase()

@@ -7,6 +7,7 @@ import {
   computePackageProgress,
   normalizeLessonDurationHours,
   parseCourseDurationHours,
+  parseLessonDateDisplay,
   type LessonDurationHours,
 } from '@/lib/course-notes-lessons'
 
@@ -66,6 +67,12 @@ const createEmptyRow = (): LessonRow => ({
 const hasContent = (row: LessonRow) =>
   !!(row.date || row.attendance || row.lessonTopic || row.corrections || row.notes)
 
+/** True when the date field is complete enough to sort/count as a lesson (not mid-typing). */
+const rowHasParseableLessonDate = (row: LessonRow): boolean => {
+  const d = row.date.trim()
+  return d.length > 0 && parseLessonDateDisplay(d) !== null
+}
+
 /** Normalize a row loaded from JSON (supports notes saved before durationHours existed). */
 function lessonRowFromStored(raw: unknown): LessonRow {
   const o = raw && typeof raw === 'object' ? (raw as Record<string, unknown>) : {}
@@ -98,8 +105,13 @@ const ensureLeadingEmptyRow = (rows: LessonRow[]): LessonRow[] => {
   let normalizedRest = rest.filter((row) => hasContent(row))
 
   if (firstHasContent) {
-    // First row has content - add a new empty row at the top
-    return [createEmptyRow(), first, ...normalizedRest]
+    // Only insert a new scratch row once the date is fully parseable. If we did this on any
+    // keystroke in the top row, the row would shift after the first character and manual dates
+    // (including backdating) would be impossible.
+    if (rowHasParseableLessonDate(first)) {
+      return [createEmptyRow(), first, ...normalizedRest]
+    }
+    return [first, ...normalizedRest]
   }
 
   // First row is already empty - keep it, remove other empty rows
@@ -825,7 +837,7 @@ export default function StudentNotesManager({ student, enrollments }: Props) {
                           })
                         }}
                         className="w-full border border-gray-300 rounded px-2 py-1 text-sm focus:outline-none focus:ring-1 focus:ring-[#38438f]"
-                        placeholder="e.g. Friday 6 February 2026"
+                        placeholder="e.g. Friday 6 February 2026, 06/02/2026, or 2026-02-06"
                       />
                       <label className="block mt-2 text-xs font-medium text-gray-600">Lesson length</label>
                       <select
