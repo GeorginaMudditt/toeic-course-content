@@ -1,5 +1,13 @@
-/** Minimal row shape for lesson numbering (structured course notes). */
-export type NotesRowWithDate = { date: string }
+/** Row shape for lesson numbering and hour totals (structured course notes). */
+export type NotesRowWithDate = { date: string; durationHours?: number }
+
+export type LessonDurationHours = 1 | 2
+
+/** Coerce stored JSON to 1 or 2 hours per dated lesson (default 1). */
+export function normalizeLessonDurationHours(raw: unknown): LessonDurationHours {
+  const n = typeof raw === 'number' ? raw : Number(raw)
+  return n === 2 ? 2 : 1
+}
 
 const MONTHS: Record<string, number> = {
   january: 0,
@@ -96,33 +104,45 @@ export const LESSONS_REMAINING_WARNING_THRESHOLD = 2
 
 export function computePackageProgress(rows: NotesRowWithDate[], courseDurationHours: number) {
   const lessonNums = assignLessonNumbers(rows)
-  const lessonsLogged = lessonNums.filter((n) => n !== null).length
-  const lessonsRemaining =
-    courseDurationHours > 0 ? Math.max(0, courseDurationHours - lessonsLogged) : null
+
+  let hoursLogged = 0
+  for (let i = 0; i < rows.length; i++) {
+    if (lessonNums[i] != null) {
+      hoursLogged += normalizeLessonDurationHours(rows[i]?.durationHours)
+    }
+  }
+
+  const datedLessonsCount = lessonNums.filter((n) => n !== null).length
+
+  const hoursRemaining =
+    courseDurationHours > 0 ? Math.max(0, courseDurationHours - hoursLogged) : null
   const showLowLessonsWarning =
     courseDurationHours > 0 &&
-    lessonsRemaining !== null &&
-    lessonsRemaining <= LESSONS_REMAINING_WARNING_THRESHOLD &&
-    lessonsRemaining > 0
+    hoursRemaining !== null &&
+    hoursRemaining <= LESSONS_REMAINING_WARNING_THRESHOLD &&
+    hoursRemaining > 0
   const loggedOverPackage =
-    courseDurationHours > 0 && lessonsLogged > courseDurationHours
+    courseDurationHours > 0 && hoursLogged > courseDurationHours
 
   return {
     lessonNums,
-    lessonsLogged,
-    lessonsRemaining,
+    /** Sum of lesson lengths (hours) for rows with a logged date. */
+    hoursLogged,
+    hoursRemaining,
+    /** Number of dated lesson rows (sessions), ignoring length. */
+    datedLessonsCount,
     showLowLessonsWarning,
     loggedOverPackage,
   }
 }
 
-/** Count lesson rows that have a logged date (independent of package size). */
-export function countLoggedLessonsFromNotesContent(content: string): number {
+/** Sum logged lesson hours from structured student notes (dated rows × length). */
+export function countLoggedHoursFromNotesContent(content: string): number {
   try {
     const parsed = JSON.parse(content) as { version?: number; rows?: NotesRowWithDate[] }
     if (parsed?.version === 1 && Array.isArray(parsed.rows)) {
-      const { lessonsLogged } = computePackageProgress(parsed.rows, 1)
-      return lessonsLogged
+      const { hoursLogged } = computePackageProgress(parsed.rows, 0)
+      return hoursLogged
     }
   } catch {
     // legacy HTML or empty

@@ -122,7 +122,7 @@ export async function sendCourseMidpointNotificationEmail(data: {
   studentName: string
   courseName: string
   courseDurationHours: number
-  lessonsLogged: number
+  hoursLogged: number
 }) {
   const resend = getResendClient()
 
@@ -148,7 +148,7 @@ export async function sendCourseMidpointNotificationEmail(data: {
             <p><strong>${data.studentName}</strong> has reached the midpoint of their training package.</p>
             <ul>
               <li><strong>Course:</strong> ${data.courseName}</li>
-              <li><strong>Lessons logged:</strong> ${data.lessonsLogged} (midpoint at lesson ${threshold})</li>
+              <li><strong>Hours completed:</strong> ${data.hoursLogged} (midpoint at ${threshold} hours)</li>
             </ul>
             <p>You may want to follow up on a second invoice, the midpoint questionnaire, or other admin steps.</p>
             <p style="color:#666;font-size:12px;">This message was sent automatically from the Brizzle teacher portal when lesson notes were saved.</p>

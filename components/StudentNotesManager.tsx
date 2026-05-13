@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef, useMemo, Fragment } from 'react'
 import { formatCourseName } from '@/lib/date-utils'
-import { computePackageProgress } from '@/lib/course-notes-lessons'
+import { computePackageProgress, normalizeLessonDurationHours, type LessonDurationHours } from '@/lib/course-notes-lessons'
 
 interface Enrollment {
   id: string
@@ -25,6 +25,8 @@ type AttendanceOption = '' | 'YES_ONLINE' | 'YES_IN_PERSON' | 'NO_NOT_INFORMED'
 
 interface LessonRow {
   date: string
+  /** Billable length for this dated session (default 1). Used for package hours and midpoint email. */
+  durationHours: LessonDurationHours
   attendance: AttendanceOption
   lessonTopic: string
   corrections: string
@@ -38,6 +40,7 @@ interface NotesDataV1 {
 
 const createEmptyRow = (): LessonRow => ({
   date: '',
+  durationHours: 1,
   attendance: '',
   lessonTopic: '',
   corrections: '',
@@ -46,6 +49,22 @@ const createEmptyRow = (): LessonRow => ({
 
 const hasContent = (row: LessonRow) =>
   !!(row.date || row.attendance || row.lessonTopic || row.corrections || row.notes)
+
+/** Normalize a row loaded from JSON (supports notes saved before durationHours existed). */
+function lessonRowFromStored(raw: unknown): LessonRow {
+  const o = raw && typeof raw === 'object' ? (raw as Record<string, unknown>) : {}
+  const att = o.attendance
+  const attendance: AttendanceOption =
+    att === 'YES_ONLINE' || att === 'YES_IN_PERSON' || att === 'NO_NOT_INFORMED' ? att : ''
+  return {
+    date: typeof o.date === 'string' ? o.date : '',
+    durationHours: normalizeLessonDurationHours(o.durationHours),
+    attendance,
+    lessonTopic: typeof o.lessonTopic === 'string' ? o.lessonTopic : '',
+    corrections: typeof o.corrections === 'string' ? o.corrections : '',
+    notes: typeof o.notes === 'string' ? o.notes : '',
+  }
+}
 
 const ensureLeadingEmptyRow = (rows: LessonRow[]): LessonRow[] => {
   if (!rows || rows.length === 0) {
@@ -154,7 +173,7 @@ export default function StudentNotesManager({ student, enrollments }: Props) {
         try {
           const parsed = JSON.parse(raw) as NotesDataV1
           if (parsed && parsed.version === 1 && Array.isArray(parsed.rows)) {
-            const normalized = ensureLeadingEmptyRow(parsed.rows)
+            const normalized = ensureLeadingEmptyRow(parsed.rows.map(lessonRowFromStored))
             setRows(normalized)
             setLegacyContent(null)
             return
@@ -298,7 +317,7 @@ export default function StudentNotesManager({ student, enrollments }: Props) {
   const activeEnrollment = enrollments.find((e) => e.id === selectedEnrollment)
   const courseDurationHours = activeEnrollment?.course?.duration ?? 0
 
-  const { lessonNums, lessonsLogged, lessonsRemaining, showLowLessonsWarning, loggedOverPackage } =
+  const { lessonNums, hoursLogged, hoursRemaining, showLowLessonsWarning, loggedOverPackage } =
     useMemo(
       () => computePackageProgress(rows, courseDurationHours),
       [rows, courseDurationHours]
@@ -406,27 +425,26 @@ export default function StudentNotesManager({ student, enrollments }: Props) {
             <div className="mb-4 space-y-2">
               <p className="text-sm text-gray-700">
                 <span className="font-medium">Hours tracking:</span>{' '}
-                {lessonsLogged} of {courseDurationHours} lesson
-                {courseDurationHours === 1 ? '' : 's'} logged
-                {lessonsRemaining !== null && lessonsRemaining > 0 && (
+                {hoursLogged} of {courseDurationHours} hours used in this package
+                {hoursRemaining !== null && hoursRemaining > 0 && (
                   <>
                     {' '}
-                    · {lessonsRemaining} remaining in this {courseDurationHours}-hour package
+                    · {hoursRemaining} hour{hoursRemaining === 1 ? '' : 's'} remaining
                   </>
                 )}
-                {lessonsRemaining === 0 && lessonsLogged >= courseDurationHours && (
-                  <> · all lessons in this package are logged</>
+                {hoursRemaining === 0 && hoursLogged >= courseDurationHours && (
+                  <> · all hours in this package are logged</>
                 )}
               </p>
-              {showLowLessonsWarning && lessonsRemaining !== null && (
+              {showLowLessonsWarning && hoursRemaining !== null && (
                 <div
                   className="rounded-md border border-amber-300 bg-amber-50 px-3 py-2 text-sm text-amber-950"
                   role="status"
                 >
                   <strong>{student.name}</strong> only has{' '}
-                  {lessonsRemaining === 1
-                    ? 'one lesson'
-                    : `${lessonsRemaining} lessons`}{' '}
+                  {hoursRemaining === 1
+                    ? 'one hour'
+                    : `${hoursRemaining} hours`}{' '}
                   left in this course. Consider contacting them about extending or booking another
                   package.
                 </div>
@@ -436,13 +454,14 @@ export default function StudentNotesManager({ student, enrollments }: Props) {
                   className="rounded-md border border-sky-300 bg-sky-50 px-3 py-2 text-sm text-sky-950"
                   role="status"
                 >
-                  More lessons are logged than hours in this course package. Consider adding hours if{' '}
+                  More hours are logged than in this course package. Consider adding hours if{' '}
                   {student.name} is continuing.
                 </div>
               )}
               <p className="text-xs text-gray-500">
-                When dated lessons reach half the package ({Math.ceil(courseDurationHours / 2)} of{' '}
-                {courseDurationHours} for this course), saving notes sends a one-time email to{' '}
+                Set <span className="font-medium">Lesson length</span> to 1 or 2 hours per row (dated
+                lessons). When logged hours reach half the package ({Math.ceil(courseDurationHours / 2)}{' '}
+                of {courseDurationHours} hours for this course), saving notes sends a one-time email to{' '}
                 <span className="font-medium">hello@brizzle-english.com</span> for admin follow-up
                 (invoice, midpoint questionnaire, etc.).
               </p>
@@ -581,7 +600,7 @@ export default function StudentNotesManager({ student, enrollments }: Props) {
             <table className="min-w-full text-sm">
               <thead className="bg-gray-100">
                 <tr>
-                  <th className="px-3 py-2 border-b text-left font-semibold text-gray-700 w-40">Date</th>
+                  <th className="px-3 py-2 border-b text-left font-semibold text-gray-700 w-44">Date / length</th>
                   <th className="px-3 py-2 border-b text-left font-semibold text-gray-700 w-48">Attendance</th>
                   <th className="px-3 py-2 border-b text-left font-semibold text-gray-700 w-64">Lesson topic</th>
                   <th className="px-3 py-2 border-b text-left font-semibold text-gray-700 w-72">Corrections</th>
@@ -616,6 +635,26 @@ export default function StudentNotesManager({ student, enrollments }: Props) {
                         className="w-full border border-gray-300 rounded px-2 py-1 text-sm focus:outline-none focus:ring-1 focus:ring-[#38438f]"
                         placeholder="e.g. Friday 6 February 2026"
                       />
+                      <label className="block mt-2 text-xs font-medium text-gray-600">Lesson length</label>
+                      <select
+                        value={row.durationHours}
+                        onChange={(e) => {
+                          const durationHours = (e.target.value === '2' ? 2 : 1) as LessonDurationHours
+                          setRows((prev) => {
+                            const updated = [...prev]
+                            updated[index] = { ...updated[index], durationHours }
+                            const normalized = ensureLeadingEmptyRow(updated)
+                            const payload: NotesDataV1 = { version: 1, rows: normalized }
+                            setContent(JSON.stringify(payload))
+                            return normalized
+                          })
+                        }}
+                        className="mt-0.5 w-full border border-gray-300 rounded px-2 py-1 text-sm focus:outline-none focus:ring-1 focus:ring-[#38438f]"
+                        aria-label={`Lesson length, row ${index + 1}`}
+                      >
+                        <option value={1}>1 hour</option>
+                        <option value={2}>2 hours</option>
+                      </select>
                       {lessonNum != null && (
                         <p className="mt-1 text-xs font-medium text-[#38438f]">(Lesson {lessonNum})</p>
                       )}

@@ -3,7 +3,7 @@ import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
 import { supabaseServer } from '@/lib/supabase'
 import { randomUUID } from 'crypto'
-import { countLoggedLessonsFromNotesContent } from '@/lib/course-notes-lessons'
+import { countLoggedHoursFromNotesContent } from '@/lib/course-notes-lessons'
 import { formatCourseName } from '@/lib/date-utils'
 import { sendCourseMidpointNotificationEmail } from '@/lib/email'
 
@@ -26,7 +26,7 @@ async function maybeNotifyCourseMidpoint(params: {
 }) {
   if (params.midpointAlreadySent) return
 
-  const lessonsLogged = countLoggedLessonsFromNotesContent(params.savedStudentContent)
+  const hoursLogged = countLoggedHoursFromNotesContent(params.savedStudentContent)
 
   const { data: en, error: enError } = await supabaseServer
     .from('Enrollment')
@@ -48,7 +48,7 @@ async function maybeNotifyCourseMidpoint(params: {
   if (duration <= 0) return
 
   const threshold = Math.ceil(duration / 2)
-  if (lessonsLogged < threshold) return
+  if (hoursLogged < threshold) return
 
   const { data: student } = await supabaseServer
     .from('User')
@@ -63,7 +63,7 @@ async function maybeNotifyCourseMidpoint(params: {
     studentName,
     courseName,
     courseDurationHours: duration,
-    lessonsLogged,
+    hoursLogged,
   })
 
   if ('error' in result && result.error) {
