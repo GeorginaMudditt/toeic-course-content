@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, useRef, useMemo, Fragment } from 'react'
+import { useState, useEffect, useLayoutEffect, useRef, useMemo, Fragment } from 'react'
 import { useRouter } from 'next/navigation'
 import { formatCourseName } from '@/lib/date-utils'
 import { ClientLocalDateTime } from '@/components/ClientLocalDateTime'
@@ -80,17 +80,6 @@ function htmlHasVisibleText(html: string): boolean {
   return text.length > 0
 }
 
-/** Rows that already have corrections/notes should start with that section expanded. */
-function buildCorrectionsNotesExpandedMap(rows: LessonRow[]): Record<number, boolean> {
-  const m: Record<number, boolean> = {}
-  rows.forEach((r, i) => {
-    if (htmlHasVisibleText(r.corrections) || htmlHasVisibleText(r.notes)) {
-      m[i] = true
-    }
-  })
-  return m
-}
-
 /** True when the date field is complete enough to sort/count as a lesson (not mid-typing). */
 const rowHasParseableLessonDate = (row: LessonRow): boolean => {
   const d = row.date.trim()
@@ -158,8 +147,33 @@ export default function StudentNotesManager({ student, enrollments }: Props) {
   const [coursePackageHoursInput, setCoursePackageHoursInput] = useState('10')
   const [savingCoursePackage, setSavingCoursePackage] = useState(false)
   const [coursePackageSaveError, setCoursePackageSaveError] = useState<string | null>(null)
-  /** Per lesson row: whether Corrections & notes <details> is open (controlled for React + TS). */
-  const [correctionsNotesExpanded, setCorrectionsNotesExpanded] = useState<Record<number, boolean>>({})
+  /**
+   * Incremented after each successful load from the API so we can imperatively open <details>
+   * for rows that already have corrections/notes. Native <details> is left uncontrolled to avoid
+   * React toggle events where currentTarget is null (client crash).
+   */
+  const [detailsHydrateKey, setDetailsHydrateKey] = useState(0)
+  const rowsRef = useRef(rows)
+  rowsRef.current = rows
+  const notesDetailsElementsRef = useRef<Map<number, HTMLDetailsElement>>(new Map())
+
+  const registerNotesDetailsEl = (rowIndex: number, el: HTMLDetailsElement | null) => {
+    if (el) notesDetailsElementsRef.current.set(rowIndex, el)
+    else notesDetailsElementsRef.current.delete(rowIndex)
+  }
+
+  useLayoutEffect(() => {
+    if (detailsHydrateKey === 0) return
+    const snap = rowsRef.current
+    notesDetailsElementsRef.current.forEach((el, i) => {
+      const row = snap[i]
+      if (!row) return
+      if (htmlHasVisibleText(row.corrections) || htmlHasVisibleText(row.notes)) {
+        el.open = true
+      }
+    })
+  }, [detailsHydrateKey])
+
   // Track which editor has focus — we never overwrite that div's DOM so cursor and content stay correct
   const [focusedEditor, setFocusedEditor] = useState<{ rowIndex: number; field: 'corrections' | 'notes' } | null>(null)
   // Refs for each contentEditable; we set innerHTML only when that editor does NOT have focus
@@ -194,7 +208,7 @@ export default function StudentNotesManager({ student, enrollments }: Props) {
       setRows([createEmptyRow()])
       setLegacyContent(null)
       setCourseMidpointHint(null)
-      setCorrectionsNotesExpanded({})
+      setDetailsHydrateKey(0)
     }
   }, [selectedEnrollment])
 
@@ -213,7 +227,6 @@ export default function StudentNotesManager({ student, enrollments }: Props) {
 
   const loadNote = async (enrollmentId: string) => {
     setLoading(true)
-    setCorrectionsNotesExpanded({})
     try {
       const response = await fetch(`/api/course-notes/${enrollmentId}`)
       const data = await response.json()
@@ -248,7 +261,7 @@ export default function StudentNotesManager({ student, enrollments }: Props) {
           if (parsed && parsed.version === 1 && Array.isArray(parsed.rows)) {
             const normalized = ensureLeadingEmptyRow(parsed.rows.map(lessonRowFromStored))
             setRows(normalized)
-            setCorrectionsNotesExpanded(buildCorrectionsNotesExpandedMap(normalized))
+            setDetailsHydrateKey((k) => k + 1)
             setLegacyContent(null)
             return
           }
@@ -259,7 +272,7 @@ export default function StudentNotesManager({ student, enrollments }: Props) {
         // Legacy content: keep it for reference, start with a fresh table
         setLegacyContent(raw)
         setRows([createEmptyRow()])
-        setCorrectionsNotesExpanded({})
+        setDetailsHydrateKey((k) => k + 1)
       } else {
         // No existing note – start with a single empty row
         setContent('')
@@ -274,7 +287,7 @@ export default function StudentNotesManager({ student, enrollments }: Props) {
         noteLoadedRef.current = true
         setLegacyContent(null)
         setRows([createEmptyRow()])
-        setCorrectionsNotesExpanded({})
+        setDetailsHydrateKey((k) => k + 1)
       }
     } catch (error) {
       console.error('Error loading note:', error)
@@ -944,13 +957,7 @@ export default function StudentNotesManager({ student, enrollments }: Props) {
                       <td className="px-3 py-2 border-b align-top" colSpan={3}>
                         <details
                           className="rounded-md border border-gray-200 bg-gray-50/80"
-                          open={correctionsNotesExpanded[index] === true}
-                          onToggle={(e) => {
-                            setCorrectionsNotesExpanded((prev) => ({
-                              ...prev,
-                              [index]: e.currentTarget.open,
-                            }))
-                          }}
+                          ref={(el) => registerNotesDetailsEl(index, el)}
                         >
                           <summary className="cursor-pointer select-none px-3 py-2 text-sm font-medium text-gray-900 hover:bg-gray-100/80 rounded-md">
                             Corrections & notes{' '}
