@@ -2,7 +2,12 @@
 
 import { useState, useEffect, useRef, useMemo, Fragment } from 'react'
 import { formatCourseName } from '@/lib/date-utils'
-import { computePackageProgress, normalizeLessonDurationHours, type LessonDurationHours } from '@/lib/course-notes-lessons'
+import {
+  computePackageProgress,
+  normalizeLessonDurationHours,
+  parseCourseDurationHours,
+  type LessonDurationHours,
+} from '@/lib/course-notes-lessons'
 
 interface Enrollment {
   id: string
@@ -346,7 +351,7 @@ export default function StudentNotesManager({ student, enrollments }: Props) {
   }
 
   const activeEnrollment = enrollments.find((e) => e.id === selectedEnrollment)
-  const courseDurationHours = activeEnrollment?.course?.duration ?? 0
+  const courseDurationHours = parseCourseDurationHours(activeEnrollment?.course?.duration)
 
   const { lessonNums, hoursLogged, hoursRemaining, showLowLessonsWarning, loggedOverPackage } =
     useMemo(
@@ -452,6 +457,27 @@ export default function StudentNotesManager({ student, enrollments }: Props) {
             </p>
           </div>
 
+          {courseDurationHours === 0 && (
+            <div className="mb-4 rounded-md border border-slate-200 bg-slate-50 px-3 py-2 text-sm text-slate-800">
+              <p className="font-semibold text-slate-800">Hours package & midpoint email</p>
+              <p className="mt-1 text-slate-700">
+                {activeEnrollment?.course ? (
+                  <>
+                    This course’s package is <strong>0 hours</strong> (or missing) in the database, so hour
+                    tracking and the grey <strong>Midpoint email (server check)</strong> panel do not appear.
+                    Set the course’s duration to a positive number of hours in your course settings, then
+                    refresh this page.
+                  </>
+                ) : (
+                  <>
+                    This enrollment is not linked to a course (or the course record is missing). Assign a
+                    course with a positive hour package so hour tracking and midpoint emails can run.
+                  </>
+                )}
+              </p>
+            </div>
+          )}
+
           {courseDurationHours > 0 && (
             <div className="mb-4 space-y-2">
               <p className="text-sm text-gray-700">
@@ -480,7 +506,7 @@ export default function StudentNotesManager({ student, enrollments }: Props) {
                   package.
                 </div>
               )}
-                {loggedOverPackage && (
+              {loggedOverPackage && (
                 <div
                   className="rounded-md border border-sky-300 bg-sky-50 px-3 py-2 text-sm text-sky-950"
                   role="status"
@@ -496,51 +522,66 @@ export default function StudentNotesManager({ student, enrollments }: Props) {
                 <span className="font-medium">hello@brizzle-english.com</span> for admin follow-up
                 (invoice, midpoint questionnaire, etc.).
               </p>
-            </div>
-          )}
 
-          {courseMidpointHint && (
-            <div className="mb-4 rounded-md border border-slate-300 bg-slate-50 px-3 py-2 text-sm text-slate-900">
-              <p className="font-semibold text-slate-800">Midpoint email (server check)</p>
-              <p className="mt-1">
-                Saved notes total <strong>{courseMidpointHint.hoursLogged}</strong> billable hour
-                {courseMidpointHint.hoursLogged === 1 ? '' : 's'} · package <strong>{courseMidpointHint.courseDurationHours}</strong> h ·
-                midpoint at <strong>{courseMidpointHint.threshold}</strong> h
-              </p>
-              <p className="mt-1">
-                {courseMidpointHint.meetsThreshold ? (
-                  <span className="text-green-800">Threshold reached — saving should trigger the email (once) if Resend is configured.</span>
-                ) : (
-                  <span className="text-amber-900">
-                    Below midpoint — the server sees fewer hours than needed. Set each dated row to 1h or 2h and save again.
-                  </span>
-                )}
-              </p>
-              <p className="mt-1 text-slate-700">
-                {courseMidpointHint.midpointEmailSent ? (
+              <div className="rounded-md border border-slate-300 bg-slate-50 px-3 py-2 text-sm text-slate-900">
+                <p className="font-semibold text-slate-800">Midpoint email (server check)</p>
+                {loading && !courseMidpointHint ? (
+                  <p className="mt-1 text-slate-600">Loading server status…</p>
+                ) : courseMidpointHint ? (
                   <>
-                    <strong>Recorded as sent</strong>
-                    {courseMidpointHint.midpointNotificationSentAt
-                      ? ` (${new Date(courseMidpointHint.midpointNotificationSentAt).toLocaleString('en-GB', {
-                          day: 'numeric',
-                          month: 'short',
-                          year: 'numeric',
-                          hour: '2-digit',
-                          minute: '2-digit',
-                        })})`
-                      : ''}
-                    . No further automatic emails for this enrollment. To test again, clear{' '}
-                    <code className="text-xs bg-white px-1 rounded">midpointNotificationSentAt</code> on this
-                    course note in Supabase.
+                    <p className="mt-1">
+                      Saved notes total <strong>{courseMidpointHint.hoursLogged}</strong> billable hour
+                      {courseMidpointHint.hoursLogged === 1 ? '' : 's'} · package{' '}
+                      <strong>{courseMidpointHint.courseDurationHours}</strong> h · midpoint at{' '}
+                      <strong>{courseMidpointHint.threshold}</strong> h
+                    </p>
+                    <p className="mt-1">
+                      {courseMidpointHint.meetsThreshold ? (
+                        <span className="text-green-800">
+                          Threshold reached — saving should trigger the email (once) if Resend is configured.
+                        </span>
+                      ) : (
+                        <span className="text-amber-900">
+                          Below midpoint — the server sees fewer hours than needed. Set each dated row to 1h or
+                          2h and save again.
+                        </span>
+                      )}
+                    </p>
+                    <p className="mt-1 text-slate-700">
+                      {courseMidpointHint.midpointEmailSent ? (
+                        <>
+                          <strong>Recorded as sent</strong>
+                          {courseMidpointHint.midpointNotificationSentAt
+                            ? ` (${new Date(courseMidpointHint.midpointNotificationSentAt).toLocaleString('en-GB', {
+                                day: 'numeric',
+                                month: 'short',
+                                year: 'numeric',
+                                hour: '2-digit',
+                                minute: '2-digit',
+                              })})`
+                            : ''}
+                          . No further automatic emails for this enrollment. To test again, clear{' '}
+                          <code className="text-xs bg-white px-1 rounded">midpointNotificationSentAt</code> on
+                          this course note in Supabase.
+                        </>
+                      ) : (
+                        <>
+                          <strong>Not recorded as sent yet.</strong> If you are at or above{' '}
+                          {courseMidpointHint.threshold} h and still get no message, check production env{' '}
+                          <code className="text-xs bg-white px-1 rounded">RESEND_API_KEY</code> and host logs for{' '}
+                          <code className="text-xs bg-white px-1 rounded">[course-midpoint]</code>.
+                        </>
+                      )}
+                    </p>
                   </>
                 ) : (
-                  <>
-                    <strong>Not recorded as sent yet.</strong> If you are at or above {courseMidpointHint.threshold}{' '}
-                    h and still get no message, check production env <code className="text-xs bg-white px-1 rounded">RESEND_API_KEY</code> and host logs for{' '}
-                    <code className="text-xs bg-white px-1 rounded">[course-midpoint]</code>.
-                  </>
+                  <p className="mt-1 text-slate-700">
+                    <strong>Server status not loaded.</strong> Deploy the latest app and hard-refresh this page.
+                    If it still appears here, the course may have no duration in the database. This panel only
+                    appears when this course has a positive hour package above.
+                  </p>
                 )}
-              </p>
+              </div>
             </div>
           )}
 
