@@ -139,8 +139,8 @@ export function computePackageProgress(rows: NotesRowWithDate[], courseDurationH
 /** Sum logged lesson hours from structured student notes (dated rows × length). */
 export function countLoggedHoursFromNotesContent(content: string): number {
   try {
-    const parsed = JSON.parse(content) as { version?: number; rows?: NotesRowWithDate[] }
-    if (parsed?.version === 1 && Array.isArray(parsed.rows)) {
+    const parsed = JSON.parse(content) as { version?: unknown; rows?: NotesRowWithDate[] }
+    if (Number(parsed?.version) === 1 && Array.isArray(parsed.rows)) {
       const { hoursLogged } = computePackageProgress(parsed.rows, 0)
       return hoursLogged
     }

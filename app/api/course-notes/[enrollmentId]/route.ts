@@ -7,6 +7,13 @@ import { countLoggedHoursFromNotesContent } from '@/lib/course-notes-lessons'
 import { formatCourseName } from '@/lib/date-utils'
 import { sendCourseMidpointNotificationEmail } from '@/lib/email'
 
+/** Supabase / PostgREST may return numeric columns as string; midpoint must use real hours. */
+function parseCourseDurationHours(raw: unknown): number {
+  const n = typeof raw === 'number' ? raw : Number(String(raw).trim())
+  if (!Number.isFinite(n) || n <= 0) return 0
+  return Math.trunc(n)
+}
+
 function studentSafeNote(note: Record<string, unknown> | null) {
   if (!note) return null
   return {
@@ -22,10 +29,7 @@ async function maybeNotifyCourseMidpoint(params: {
   enrollmentId: string
   courseNoteId: string
   savedStudentContent: string
-  midpointAlreadySent: boolean
 }) {
-  if (params.midpointAlreadySent) return
-
   const hoursLogged = countLoggedHoursFromNotesContent(params.savedStudentContent)
 
   const { data: en, error: enError } = await supabaseServer
@@ -34,7 +38,13 @@ async function maybeNotifyCourseMidpoint(params: {
     .eq('id', params.enrollmentId)
     .single()
 
-  if (enError || !en) return
+  if (enError || !en) {
+    console.warn('[course-midpoint] skip: enrollment not found', {
+      enrollmentId: params.enrollmentId,
+      error: enError?.message,
+    })
+    return
+  }
 
   const { data: course, error: courseError } = await supabaseServer
     .from('Course')
@@ -42,13 +52,49 @@ async function maybeNotifyCourseMidpoint(params: {
     .eq('id', en.courseId)
     .single()
 
-  if (courseError || !course) return
+  if (courseError || !course) {
+    console.warn('[course-midpoint] skip: course not found', {
+      enrollmentId: params.enrollmentId,
+      courseId: en.courseId,
+      error: courseError?.message,
+    })
+    return
+  }
 
-  const duration = typeof course.duration === 'number' ? course.duration : 0
-  if (duration <= 0) return
+  const duration = parseCourseDurationHours(course.duration)
+  if (duration <= 0) {
+    console.warn('[course-midpoint] skip: invalid course duration', {
+      enrollmentId: params.enrollmentId,
+      rawDuration: course.duration,
+    })
+    return
+  }
 
   const threshold = Math.ceil(duration / 2)
-  if (hoursLogged < threshold) return
+
+  if (hoursLogged < threshold) {
+    console.warn('[course-midpoint] skip: below midpoint hours', {
+      enrollmentId: params.enrollmentId,
+      hoursLogged,
+      threshold,
+      courseDurationHours: duration,
+    })
+    return
+  }
+
+  const { data: noteRow } = await supabaseServer
+    .from('CourseNote')
+    .select('midpointNotificationSentAt')
+    .eq('id', params.courseNoteId)
+    .maybeSingle()
+
+  if (noteRow?.midpointNotificationSentAt != null) {
+    console.warn('[course-midpoint] skip: already notified (midpointNotificationSentAt set)', {
+      enrollmentId: params.enrollmentId,
+      courseNoteId: params.courseNoteId,
+    })
+    return
+  }
 
   const { data: student } = await supabaseServer
     .from('User')
@@ -67,9 +113,19 @@ async function maybeNotifyCourseMidpoint(params: {
   })
 
   if ('error' in result && result.error) {
-    console.warn('Course midpoint email not sent:', result.error)
+    console.warn('[course-midpoint] email not sent (provider error)', {
+      enrollmentId: params.enrollmentId,
+      error: result.error,
+    })
     return
   }
+
+  console.log('[course-midpoint] email sent', {
+    enrollmentId: params.enrollmentId,
+    hoursLogged,
+    threshold,
+    courseDurationHours: duration,
+  })
 
   const nowIso = new Date().toISOString()
   const { error: flagError } = await supabaseServer
@@ -236,7 +292,6 @@ export async function PUT(
         enrollmentId: params.enrollmentId,
         courseNoteId: createdNote.id,
         savedStudentContent: content,
-        midpointAlreadySent: !!createdNote.midpointNotificationSentAt,
       })
 
       return NextResponse.json({ note: createdNote })
@@ -287,7 +342,6 @@ export async function PUT(
       enrollmentId: params.enrollmentId,
       courseNoteId: updatedNote.id,
       savedStudentContent: content,
-      midpointAlreadySent: !!updatedNote.midpointNotificationSentAt,
     })
 
     return NextResponse.json({ note: updatedNote })
