@@ -91,6 +91,56 @@ function lessonStripRowClass(lessonNum: number | null): string {
   return 'bg-sky-50/95'
 }
 
+/** Inputs / selects: tint matches the lesson strip so fields don’t read as “cold” white on amber rows. */
+function lessonStripFieldClass(lessonNum: number | null): string {
+  const base = 'rounded border text-sm text-gray-900 focus:outline-none focus:ring-1'
+  if (lessonNum == null) {
+    return `${base} border-gray-300 bg-white focus:ring-[#38438f]`
+  }
+  if (lessonNum % 2 === 1) {
+    return `${base} border-amber-200/90 bg-amber-50/95 focus:ring-amber-400/70`
+  }
+  return `${base} border-sky-200/90 bg-sky-50/95 focus:ring-sky-400/70`
+}
+
+/** Rich-text editors: slightly stronger fill than the row so typing area matches the strip. */
+function lessonStripEditorClass(lessonNum: number | null): string {
+  const base =
+    'w-full rounded border px-3 py-2 text-sm min-h-[140px] whitespace-pre-wrap text-gray-900 focus:outline-none focus:ring-1'
+  if (lessonNum == null) {
+    return `${base} border-gray-300 bg-white focus:ring-[#38438f]`
+  }
+  if (lessonNum % 2 === 1) {
+    return `${base} border-amber-200/90 bg-amber-100/90 focus:ring-amber-400/70`
+  }
+  return `${base} border-sky-200/90 bg-sky-100/90 focus:ring-sky-400/70`
+}
+
+function lessonStripDetailsShellClass(lessonNum: number | null): string {
+  if (lessonNum == null) return 'border-gray-200/90 bg-white/50'
+  if (lessonNum % 2 === 1) return 'border-amber-200/90 bg-amber-50/50'
+  return 'border-sky-200/90 bg-sky-50/50'
+}
+
+function lessonStripDetailsInnerClass(lessonNum: number | null): string {
+  const base = 'space-y-4 border-t px-3 py-3'
+  if (lessonNum == null) return `${base} border-gray-200 bg-white`
+  if (lessonNum % 2 === 1) return `${base} border-amber-200/80 bg-amber-50/70`
+  return `${base} border-sky-200/80 bg-sky-50/70`
+}
+
+function lessonStripSummaryHoverClass(lessonNum: number | null): string {
+  if (lessonNum == null) return 'hover:bg-black/[0.04]'
+  if (lessonNum % 2 === 1) return 'hover:bg-amber-100/55'
+  return 'hover:bg-sky-100/55'
+}
+
+/** Matches globals.css `[data-lesson-strip]` overrides so inputs are not forced to app-wide light blue */
+function lessonDataStripAttr(lessonNum: number | null): 'amber' | 'sky' | 'neutral' {
+  if (lessonNum == null) return 'neutral'
+  return lessonNum % 2 === 1 ? 'amber' : 'sky'
+}
+
 /** True when the date field is complete enough to sort/count as a lesson (not mid-typing). */
 const rowHasParseableLessonDate = (row: LessonRow): boolean => {
   const d = row.date.trim()
@@ -517,17 +567,20 @@ export default function StudentNotesManager({ student, enrollments }: Props) {
 
   return (
     <div className="bg-white shadow rounded-lg p-6">
-      <div className="mb-4">
+      <header className="mb-8 border-b border-gray-200 pb-8 text-center">
         {enrollments.length > 1 ? (
-          <>
-            <label htmlFor="course-select" className="block text-sm font-medium text-gray-700 mb-2">
-              Select Course:
+          <div className="mx-auto max-w-3xl">
+            <h2 className="text-xs font-semibold uppercase tracking-[0.2em] text-[#38438f] sm:text-sm">
+              Course
+            </h2>
+            <label htmlFor="course-select" className="mt-3 block text-base font-medium text-gray-700 sm:text-lg">
+              Select enrollment
             </label>
             <select
               id="course-select"
               value={selectedEnrollment}
               onChange={(e) => setSelectedEnrollment(e.target.value)}
-              className="block w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#38438f]"
+              className="mt-3 block w-full rounded-lg border-2 border-gray-200 bg-white px-4 py-3 text-center text-lg font-bold text-gray-900 shadow-sm focus:border-[#38438f] focus:outline-none focus:ring-2 focus:ring-[#38438f]/30 sm:text-xl"
             >
               {enrollments.map((enrollment) => (
                 <option key={enrollment.id} value={enrollment.id}>
@@ -537,18 +590,20 @@ export default function StudentNotesManager({ student, enrollments }: Props) {
                 </option>
               ))}
             </select>
-          </>
+          </div>
         ) : (
-          <div>
-            <p className="text-sm text-gray-700 font-medium">Course:</p>
-            <p className="text-sm text-gray-900">
+          <div className="mx-auto max-w-4xl px-2">
+            <h2 className="text-xs font-semibold uppercase tracking-[0.2em] text-[#38438f] sm:text-sm">
+              Course
+            </h2>
+            <h2 className="mt-2 text-3xl font-bold leading-tight tracking-tight text-gray-900 sm:text-4xl">
               {enrollments[0].course
                 ? formatCourseName(enrollments[0].course.name, enrollments[0].course.duration)
                 : 'Unknown Course'}
-            </p>
+            </h2>
           </div>
         )}
-      </div>
+      </header>
 
       {selectedEnrollment && (
         <>
@@ -984,6 +1039,7 @@ export default function StudentNotesManager({ student, enrollments }: Props) {
                   const rowHasContent = hasContent(row)
                   const lessonNum = lessonNums[index]
                   const stripClass = lessonStripRowClass(lessonNum)
+                  const dataStrip = lessonDataStripAttr(lessonNum)
 
                   return (
                   <Fragment key={`notes-row-${index}`}>
@@ -992,6 +1048,7 @@ export default function StudentNotesManager({ student, enrollments }: Props) {
                       <td className="px-3 py-2 border-b align-top">
                       <input
                         type="text"
+                        data-lesson-strip={dataStrip}
                         value={row.date}
                         onChange={(e) => {
                           const value = e.target.value
@@ -1004,11 +1061,12 @@ export default function StudentNotesManager({ student, enrollments }: Props) {
                             return normalized
                           })
                         }}
-                        className="w-full border border-gray-300 rounded px-2 py-1 text-sm focus:outline-none focus:ring-1 focus:ring-[#38438f]"
+                        className={`w-full ${lessonStripFieldClass(lessonNum)}`}
                         placeholder="e.g. Friday 6 February 2026, 06/02/2026, or 2026-02-06"
                       />
                       <label className="block mt-2 text-xs font-medium text-gray-600">Lesson length</label>
                       <select
+                        data-lesson-strip={dataStrip}
                         value={row.durationHours}
                         onChange={(e) => {
                           const durationHours = (e.target.value === '2' ? 2 : 1) as LessonDurationHours
@@ -1021,7 +1079,7 @@ export default function StudentNotesManager({ student, enrollments }: Props) {
                             return normalized
                           })
                         }}
-                        className="mt-0.5 w-full border border-gray-300 rounded px-2 py-1 text-sm focus:outline-none focus:ring-1 focus:ring-[#38438f]"
+                        className={`mt-0.5 w-full ${lessonStripFieldClass(lessonNum)}`}
                         aria-label={`Lesson length, row ${index + 1}`}
                       >
                         <option value={1}>1 hour</option>
@@ -1035,6 +1093,7 @@ export default function StudentNotesManager({ student, enrollments }: Props) {
                       {/* Attendance */}
                       <td className="px-3 py-2 border-b align-top">
                       <select
+                        data-lesson-strip={dataStrip}
                         value={row.attendance}
                         onChange={(e) => {
                           const value = e.target.value as AttendanceOption
@@ -1047,7 +1106,7 @@ export default function StudentNotesManager({ student, enrollments }: Props) {
                             return normalized
                           })
                         }}
-                        className="w-full border border-gray-300 rounded px-2 py-1 text-sm focus:outline-none focus:ring-1 focus:ring-[#38438f]"
+                        className={`w-full ${lessonStripFieldClass(lessonNum)}`}
                       >
                         <option value="">-- Select --</option>
                         <option value="YES_ONLINE">Yes – online</option>
@@ -1060,6 +1119,7 @@ export default function StudentNotesManager({ student, enrollments }: Props) {
                       <td className="px-3 py-2 border-b align-top">
                       <input
                         type="text"
+                        data-lesson-strip={dataStrip}
                         value={row.lessonTopic}
                         onChange={(e) => {
                           const value = e.target.value
@@ -1072,7 +1132,7 @@ export default function StudentNotesManager({ student, enrollments }: Props) {
                             return normalized
                           })
                         }}
-                        className="w-full border border-gray-300 rounded px-2 py-1 text-sm focus:outline-none focus:ring-1 focus:ring-[#38438f]"
+                        className={`w-full ${lessonStripFieldClass(lessonNum)}`}
                         placeholder="e.g. Part 3 – Conversations in the workplace"
                       />
                       </td>
@@ -1081,10 +1141,12 @@ export default function StudentNotesManager({ student, enrollments }: Props) {
                     <tr className={stripClass}>
                       <td className="px-3 py-2 border-b align-top" colSpan={3}>
                         <details
-                          className="rounded-md border border-gray-200/90 bg-white/50 shadow-sm"
+                          className={`rounded-md border shadow-sm ${lessonStripDetailsShellClass(lessonNum)}`}
                           ref={(el) => registerNotesDetailsEl(index, el)}
                         >
-                          <summary className="cursor-pointer select-none px-3 py-2 text-sm font-medium text-gray-900 hover:bg-black/[0.04] rounded-md">
+                          <summary
+                            className={`cursor-pointer select-none px-3 py-2 text-sm font-medium text-gray-900 rounded-md ${lessonStripSummaryHoverClass(lessonNum)}`}
+                          >
                             Corrections & notes{' '}
                             <span className="font-normal text-gray-500">(optional)</span>
                             {(htmlHasVisibleText(row.corrections) || htmlHasVisibleText(row.notes)) && (
@@ -1093,7 +1155,7 @@ export default function StudentNotesManager({ student, enrollments }: Props) {
                               </span>
                             )}
                           </summary>
-                          <div className="space-y-4 border-t border-gray-200 bg-white px-3 py-3">
+                          <div className={lessonStripDetailsInnerClass(lessonNum)}>
                             <div>
                               <div className="text-xs font-medium text-gray-600 mb-1">Corrections</div>
                               <div
@@ -1135,8 +1197,7 @@ export default function StudentNotesManager({ student, enrollments }: Props) {
                                 data-notes-editor="true"
                                 data-row-index={index}
                                 data-field="corrections"
-                                className="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-[#38438f] min-h-[140px]"
-                                style={{ whiteSpace: 'pre-wrap', color: '#000', backgroundColor: '#fff' }}
+                                className={lessonStripEditorClass(lessonNum)}
                               />
                             </div>
                             <div>
@@ -1180,8 +1241,7 @@ export default function StudentNotesManager({ student, enrollments }: Props) {
                                 data-notes-editor="true"
                                 data-row-index={index}
                                 data-field="notes"
-                                className="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-[#38438f] min-h-[140px]"
-                                style={{ whiteSpace: 'pre-wrap', color: '#000', backgroundColor: '#fff' }}
+                                className={lessonStripEditorClass(lessonNum)}
                               />
                             </div>
                           </div>

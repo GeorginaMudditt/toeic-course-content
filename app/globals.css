@@ -47,6 +47,46 @@ select:focus {
   color: #000 !important;
 }
 
+/* Teacher structured lesson notes: row tint must win over the global input blue above */
+input[data-lesson-strip='amber'],
+select[data-lesson-strip='amber'],
+textarea[data-lesson-strip='amber'] {
+  background-color: #fffbeb !important; /* amber-50, matches pale yellow strip */
+  color: #000 !important;
+}
+input[data-lesson-strip='amber']:focus,
+select[data-lesson-strip='amber']:focus,
+textarea[data-lesson-strip='amber']:focus {
+  background-color: #fef3c7 !important; /* amber-100 */
+  color: #000 !important;
+}
+
+input[data-lesson-strip='sky'],
+select[data-lesson-strip='sky'],
+textarea[data-lesson-strip='sky'] {
+  background-color: #f0f9ff !important; /* sky-50 */
+  color: #000 !important;
+}
+input[data-lesson-strip='sky']:focus,
+select[data-lesson-strip='sky']:focus,
+textarea[data-lesson-strip='sky']:focus {
+  background-color: #e0f2fe !important; /* sky-100 */
+  color: #000 !important;
+}
+
+input[data-lesson-strip='neutral'],
+select[data-lesson-strip='neutral'],
+textarea[data-lesson-strip='neutral'] {
+  background-color: #f8fafc !important; /* slate-50 strip */
+  color: #000 !important;
+}
+input[data-lesson-strip='neutral']:focus,
+select[data-lesson-strip='neutral']:focus,
+textarea[data-lesson-strip='neutral']:focus {
+  background-color: #f1f5f9 !important; /* slate-100 */
+  color: #000 !important;
+}
+
 /* Checkbox styling - white with black border when unchecked */
 input[type="checkbox"] {
   appearance: none;
