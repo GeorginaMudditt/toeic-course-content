@@ -80,6 +80,17 @@ function htmlHasVisibleText(html: string): boolean {
   return text.length > 0
 }
 
+/** Alternating pale bands so each dated lesson’s header + details rows read as one block. */
+function lessonStripRowClass(lessonNum: number | null): string {
+  if (lessonNum == null) {
+    return 'bg-slate-50'
+  }
+  if (lessonNum % 2 === 1) {
+    return 'bg-amber-50/95'
+  }
+  return 'bg-sky-50/95'
+}
+
 /** True when the date field is complete enough to sort/count as a lesson (not mid-typing). */
 const rowHasParseableLessonDate = (row: LessonRow): boolean => {
   const d = row.date.trim()
@@ -856,13 +867,13 @@ export default function StudentNotesManager({ student, enrollments }: Props) {
               </thead>
               <tbody>
                 {rows.map((row, index) => {
-                  const isFirstRow = index === 0
                   const rowHasContent = hasContent(row)
                   const lessonNum = lessonNums[index]
+                  const stripClass = lessonStripRowClass(lessonNum)
 
                   return (
                   <Fragment key={`notes-row-${index}`}>
-                    <tr className={isFirstRow ? 'bg-white' : 'bg-gray-50'}>
+                    <tr className={stripClass}>
                       {/* Date */}
                       <td className="px-3 py-2 border-b align-top">
                       <input
@@ -953,13 +964,13 @@ export default function StudentNotesManager({ student, enrollments }: Props) {
                       </td>
                     </tr>
 
-                    <tr className={isFirstRow ? 'bg-white' : 'bg-gray-50'}>
+                    <tr className={stripClass}>
                       <td className="px-3 py-2 border-b align-top" colSpan={3}>
                         <details
-                          className="rounded-md border border-gray-200 bg-gray-50/80"
+                          className="rounded-md border border-gray-200/90 bg-white/50 shadow-sm"
                           ref={(el) => registerNotesDetailsEl(index, el)}
                         >
-                          <summary className="cursor-pointer select-none px-3 py-2 text-sm font-medium text-gray-900 hover:bg-gray-100/80 rounded-md">
+                          <summary className="cursor-pointer select-none px-3 py-2 text-sm font-medium text-gray-900 hover:bg-black/[0.04] rounded-md">
                             Corrections & notes{' '}
                             <span className="font-normal text-gray-500">(optional)</span>
                             {(htmlHasVisibleText(row.corrections) || htmlHasVisibleText(row.notes)) && (
