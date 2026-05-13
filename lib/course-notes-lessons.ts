@@ -9,6 +9,13 @@ export function normalizeLessonDurationHours(raw: unknown): LessonDurationHours 
   return n === 2 ? 2 : 1
 }
 
+/** Coerce Course.duration from DB (PostgREST may return string). */
+export function parseCourseDurationHours(raw: unknown): number {
+  const n = typeof raw === 'number' ? raw : Number(String(raw).trim())
+  if (!Number.isFinite(n) || n <= 0) return 0
+  return Math.trunc(n)
+}
+
 const MONTHS: Record<string, number> = {
   january: 0,
   february: 1,

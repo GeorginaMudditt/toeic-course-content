@@ -3,16 +3,9 @@ import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
 import { supabaseServer } from '@/lib/supabase'
 import { randomUUID } from 'crypto'
-import { countLoggedHoursFromNotesContent } from '@/lib/course-notes-lessons'
+import { countLoggedHoursFromNotesContent, parseCourseDurationHours } from '@/lib/course-notes-lessons'
 import { formatCourseName } from '@/lib/date-utils'
 import { sendCourseMidpointNotificationEmail } from '@/lib/email'
-
-/** Supabase / PostgREST may return numeric columns as string; midpoint must use real hours. */
-function parseCourseDurationHours(raw: unknown): number {
-  const n = typeof raw === 'number' ? raw : Number(String(raw).trim())
-  if (!Number.isFinite(n) || n <= 0) return 0
-  return Math.trunc(n)
-}
 
 function studentSafeNote(note: Record<string, unknown> | null) {
   if (!note) return null
@@ -186,7 +179,42 @@ export async function GET(
       return NextResponse.json({ note: studentSafeNote(note) })
     }
 
-    return NextResponse.json({ note: note || null })
+    // Teacher-only: same figures as the midpoint email (for verification without reading server logs)
+    let courseMidpointHint: {
+      hoursLogged: number
+      courseDurationHours: number
+      threshold: number
+      meetsThreshold: boolean
+      midpointEmailSent: boolean
+      midpointNotificationSentAt: string | null
+    } | null = null
+
+    if (enrollmentData.courseId) {
+      const { data: courseRow } = await supabaseServer
+        .from('Course')
+        .select('duration')
+        .eq('id', enrollmentData.courseId)
+        .maybeSingle()
+
+      const courseDurationHours = parseCourseDurationHours(courseRow?.duration)
+      if (courseDurationHours > 0) {
+        const contentStr = note && typeof note.content === 'string' ? (note.content as string) : ''
+        const hoursLogged = countLoggedHoursFromNotesContent(contentStr)
+        const threshold = Math.ceil(courseDurationHours / 2)
+        const sentAt = note?.midpointNotificationSentAt
+        courseMidpointHint = {
+          hoursLogged,
+          courseDurationHours,
+          threshold,
+          meetsThreshold: hoursLogged >= threshold,
+          midpointEmailSent: sentAt != null && String(sentAt).length > 0,
+          midpointNotificationSentAt:
+            typeof sentAt === 'string' ? sentAt : sentAt != null ? String(sentAt) : null,
+        }
+      }
+    }
+
+    return NextResponse.json({ note: note || null, courseMidpointHint })
   } catch (error) {
     console.error('Error in GET /api/course-notes:', error)
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 })

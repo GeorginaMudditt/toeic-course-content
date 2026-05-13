@@ -38,6 +38,16 @@ interface NotesDataV1 {
   rows: LessonRow[]
 }
 
+/** Server-computed; teacher GET only — matches midpoint email logic */
+interface CourseMidpointHint {
+  hoursLogged: number
+  courseDurationHours: number
+  threshold: number
+  meetsThreshold: boolean
+  midpointEmailSent: boolean
+  midpointNotificationSentAt: string | null
+}
+
 const createEmptyRow = (): LessonRow => ({
   date: '',
   durationHours: 1,
@@ -101,6 +111,7 @@ export default function StudentNotesManager({ student, enrollments }: Props) {
   const [rows, setRows] = useState<LessonRow[]>([createEmptyRow()])
   const [teacherPrivateContent, setTeacherPrivateContent] = useState('')
   const [legacyContent, setLegacyContent] = useState<string | null>(null) // For any old free-form notes
+  const [courseMidpointHint, setCourseMidpointHint] = useState<CourseMidpointHint | null>(null)
   const [showNextLessonEditors, setShowNextLessonEditors] = useState(false)
   // Track which editor has focus — we never overwrite that div's DOM so cursor and content stay correct
   const [focusedEditor, setFocusedEditor] = useState<{ rowIndex: number; field: 'corrections' | 'notes' } | null>(null)
@@ -121,6 +132,7 @@ export default function StudentNotesManager({ student, enrollments }: Props) {
     if (selectedEnrollment) {
       setNoteLoaded(false)
       noteLoadedRef.current = false
+      setCourseMidpointHint(null)
       loadNote(selectedEnrollment)
     } else {
       setContent('')
@@ -134,6 +146,7 @@ export default function StudentNotesManager({ student, enrollments }: Props) {
       setTeacherPrivateContent('')
       setRows([createEmptyRow()])
       setLegacyContent(null)
+      setCourseMidpointHint(null)
     }
   }, [selectedEnrollment])
 
@@ -150,6 +163,12 @@ export default function StudentNotesManager({ student, enrollments }: Props) {
     try {
       const response = await fetch(`/api/course-notes/${enrollmentId}`)
       const data = await response.json()
+
+      if (data.courseMidpointHint && typeof data.courseMidpointHint === 'object') {
+        setCourseMidpointHint(data.courseMidpointHint as CourseMidpointHint)
+      } else {
+        setCourseMidpointHint(null)
+      }
 
       if (data.note && typeof data.note.content === 'string') {
         const raw = data.note.content as string
@@ -259,6 +278,18 @@ export default function StudentNotesManager({ student, enrollments }: Props) {
       lastSavedStudentContentRef.current = contentToSave
       lastSavedTeacherContentRef.current = teacherToSave
       setLastSaved(new Date())
+
+      try {
+        const hintRes = await fetch(`/api/course-notes/${selectedEnrollment}`)
+        if (hintRes.ok) {
+          const hintJson = await hintRes.json()
+          if (hintJson.courseMidpointHint && typeof hintJson.courseMidpointHint === 'object') {
+            setCourseMidpointHint(hintJson.courseMidpointHint as CourseMidpointHint)
+          }
+        }
+      } catch {
+        /* non-fatal */
+      }
     } catch (error) {
       console.error('Error saving note:', error)
       alert('Error saving note')
@@ -464,6 +495,51 @@ export default function StudentNotesManager({ student, enrollments }: Props) {
                 of {courseDurationHours} hours for this course), saving notes sends a one-time email to{' '}
                 <span className="font-medium">hello@brizzle-english.com</span> for admin follow-up
                 (invoice, midpoint questionnaire, etc.).
+              </p>
+            </div>
+          )}
+
+          {courseMidpointHint && (
+            <div className="mb-4 rounded-md border border-slate-300 bg-slate-50 px-3 py-2 text-sm text-slate-900">
+              <p className="font-semibold text-slate-800">Midpoint email (server check)</p>
+              <p className="mt-1">
+                Saved notes total <strong>{courseMidpointHint.hoursLogged}</strong> billable hour
+                {courseMidpointHint.hoursLogged === 1 ? '' : 's'} · package <strong>{courseMidpointHint.courseDurationHours}</strong> h ·
+                midpoint at <strong>{courseMidpointHint.threshold}</strong> h
+              </p>
+              <p className="mt-1">
+                {courseMidpointHint.meetsThreshold ? (
+                  <span className="text-green-800">Threshold reached — saving should trigger the email (once) if Resend is configured.</span>
+                ) : (
+                  <span className="text-amber-900">
+                    Below midpoint — the server sees fewer hours than needed. Set each dated row to 1h or 2h and save again.
+                  </span>
+                )}
+              </p>
+              <p className="mt-1 text-slate-700">
+                {courseMidpointHint.midpointEmailSent ? (
+                  <>
+                    <strong>Recorded as sent</strong>
+                    {courseMidpointHint.midpointNotificationSentAt
+                      ? ` (${new Date(courseMidpointHint.midpointNotificationSentAt).toLocaleString('en-GB', {
+                          day: 'numeric',
+                          month: 'short',
+                          year: 'numeric',
+                          hour: '2-digit',
+                          minute: '2-digit',
+                        })})`
+                      : ''}
+                    . No further automatic emails for this enrollment. To test again, clear{' '}
+                    <code className="text-xs bg-white px-1 rounded">midpointNotificationSentAt</code> on this
+                    course note in Supabase.
+                  </>
+                ) : (
+                  <>
+                    <strong>Not recorded as sent yet.</strong> If you are at or above {courseMidpointHint.threshold}{' '}
+                    h and still get no message, check production env <code className="text-xs bg-white px-1 rounded">RESEND_API_KEY</code> and host logs for{' '}
+                    <code className="text-xs bg-white px-1 rounded">[course-midpoint]</code>.
+                  </>
+                )}
               </p>
             </div>
           )}
