@@ -68,6 +68,29 @@ const createEmptyRow = (): LessonRow => ({
 const hasContent = (row: LessonRow) =>
   !!(row.date || row.attendance || row.lessonTopic || row.corrections || row.notes)
 
+/** True if rich-text HTML has visible text (not empty tags / br only). */
+function htmlHasVisibleText(html: string): boolean {
+  if (!html || typeof html !== 'string') return false
+  const text = html
+    .replace(/<[^>]*>/g, ' ')
+    .replace(/&nbsp;/gi, ' ')
+    .replace(/\u200b/g, '')
+    .replace(/\s+/g, ' ')
+    .trim()
+  return text.length > 0
+}
+
+/** Rows that already have corrections/notes should start with that section expanded. */
+function buildCorrectionsNotesExpandedMap(rows: LessonRow[]): Record<number, boolean> {
+  const m: Record<number, boolean> = {}
+  rows.forEach((r, i) => {
+    if (htmlHasVisibleText(r.corrections) || htmlHasVisibleText(r.notes)) {
+      m[i] = true
+    }
+  })
+  return m
+}
+
 /** True when the date field is complete enough to sort/count as a lesson (not mid-typing). */
 const rowHasParseableLessonDate = (row: LessonRow): boolean => {
   const d = row.date.trim()
@@ -135,7 +158,8 @@ export default function StudentNotesManager({ student, enrollments }: Props) {
   const [coursePackageHoursInput, setCoursePackageHoursInput] = useState('10')
   const [savingCoursePackage, setSavingCoursePackage] = useState(false)
   const [coursePackageSaveError, setCoursePackageSaveError] = useState<string | null>(null)
-  const [showNextLessonEditors, setShowNextLessonEditors] = useState(false)
+  /** Per lesson row: whether Corrections & notes <details> is open (controlled for React + TS). */
+  const [correctionsNotesExpanded, setCorrectionsNotesExpanded] = useState<Record<number, boolean>>({})
   // Track which editor has focus — we never overwrite that div's DOM so cursor and content stay correct
   const [focusedEditor, setFocusedEditor] = useState<{ rowIndex: number; field: 'corrections' | 'notes' } | null>(null)
   // Refs for each contentEditable; we set innerHTML only when that editor does NOT have focus
@@ -170,6 +194,7 @@ export default function StudentNotesManager({ student, enrollments }: Props) {
       setRows([createEmptyRow()])
       setLegacyContent(null)
       setCourseMidpointHint(null)
+      setCorrectionsNotesExpanded({})
     }
   }, [selectedEnrollment])
 
@@ -188,6 +213,7 @@ export default function StudentNotesManager({ student, enrollments }: Props) {
 
   const loadNote = async (enrollmentId: string) => {
     setLoading(true)
+    setCorrectionsNotesExpanded({})
     try {
       const response = await fetch(`/api/course-notes/${enrollmentId}`)
       const data = await response.json()
@@ -222,6 +248,7 @@ export default function StudentNotesManager({ student, enrollments }: Props) {
           if (parsed && parsed.version === 1 && Array.isArray(parsed.rows)) {
             const normalized = ensureLeadingEmptyRow(parsed.rows.map(lessonRowFromStored))
             setRows(normalized)
+            setCorrectionsNotesExpanded(buildCorrectionsNotesExpandedMap(normalized))
             setLegacyContent(null)
             return
           }
@@ -232,6 +259,7 @@ export default function StudentNotesManager({ student, enrollments }: Props) {
         // Legacy content: keep it for reference, start with a fresh table
         setLegacyContent(raw)
         setRows([createEmptyRow()])
+        setCorrectionsNotesExpanded({})
       } else {
         // No existing note – start with a single empty row
         setContent('')
@@ -246,6 +274,7 @@ export default function StudentNotesManager({ student, enrollments }: Props) {
         noteLoadedRef.current = true
         setLegacyContent(null)
         setRows([createEmptyRow()])
+        setCorrectionsNotesExpanded({})
       }
     } catch (error) {
       console.error('Error loading note:', error)
@@ -809,9 +838,7 @@ export default function StudentNotesManager({ student, enrollments }: Props) {
                 <tr>
                   <th className="px-3 py-2 border-b text-left font-semibold text-gray-700 w-44">Date / length</th>
                   <th className="px-3 py-2 border-b text-left font-semibold text-gray-700 w-48">Attendance</th>
-                  <th className="px-3 py-2 border-b text-left font-semibold text-gray-700 w-64">Lesson topic</th>
-                  <th className="px-3 py-2 border-b text-left font-semibold text-gray-700 w-72">Corrections</th>
-                  <th className="px-3 py-2 border-b text-left font-semibold text-gray-700 w-72">Notes</th>
+                  <th className="px-3 py-2 border-b text-left font-semibold text-gray-700 min-w-[14rem]">Lesson topic</th>
                 </tr>
               </thead>
               <tbody>
@@ -911,134 +938,124 @@ export default function StudentNotesManager({ student, enrollments }: Props) {
                         placeholder="e.g. Part 3 – Conversations in the workplace"
                       />
                       </td>
-
-                      {/* Corrections column header (for alignment only) */}
-                      <td className="px-3 py-2 border-b align-top text-sm font-semibold text-gray-700">
-                        Corrections
-                      </td>
-
-                      {/* Notes column header (for alignment only) */}
-                      <td className="px-3 py-2 border-b align-top text-sm font-semibold text-gray-700">
-                        Notes
-                      </td>
                     </tr>
 
-                    {/* Corrections / Notes editors */}
-                    {isFirstRow && !rowHasContent && !showNextLessonEditors ? (
-                      <tr className="bg-white">
-                        <td className="px-3 py-3 border-b align-top" colSpan={5}>
-                          <button
-                            type="button"
-                            onClick={() => setShowNextLessonEditors(true)}
-                            className="inline-flex items-center px-3 py-2 border border-gray-300 rounded-md text-sm text-gray-700 bg-white hover:bg-gray-50"
-                          >
-                            <svg
-                              className="w-4 h-4 mr-2"
-                              fill="none"
-                              stroke="currentColor"
-                              viewBox="0 0 24 24"
-                            >
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                            </svg>
-                            Show Corrections &amp; Notes for next lesson
-                          </button>
-                        </td>
-                      </tr>
-                    ) : (
-                      <>
-                        {/* Corrections editor row */}
-                        <tr className={isFirstRow ? 'bg-white' : 'bg-gray-50'}>
-                          <td className="px-3 py-2 border-b align-top" colSpan={5}>
-                            <div className="text-xs font-semibold text-gray-700 mb-1">Corrections</div>
-                            <div
-                              ref={(el) => {
-                                if (el) editorRefs.current[`${index}-corrections`] = el
-                                if (el && !(focusedEditor?.rowIndex === index && focusedEditor?.field === 'corrections')) {
-                                  if (el.innerHTML !== row.corrections) el.innerHTML = row.corrections
-                                }
-                              }}
-                              contentEditable
-                              suppressContentEditableWarning
-                              onFocus={() => setFocusedEditor({ rowIndex: index, field: 'corrections' })}
-                              onInput={(e) => {
-                                const html = (e.currentTarget as HTMLElement).innerHTML
-                                setRows((prev) => {
-                                  const updated = [...prev]
-                                  updated[index] = { ...updated[index], corrections: html }
-                                  const normalized = ensureLeadingEmptyRow(updated)
-                                  const payload: NotesDataV1 = { version: 1, rows: normalized }
-                                  setContent(JSON.stringify(payload))
-                                  return normalized
-                                })
-                              }}
-                              onBlur={(e) => {
-                                setFocusedEditor(null)
-                                const html = (e.currentTarget as HTMLElement).innerHTML
-                                setRows((prev) => {
-                                  const updated = [...prev]
-                                  updated[index] = { ...updated[index], corrections: html }
-                                  const normalized = ensureLeadingEmptyRow(updated)
-                                  const payload: NotesDataV1 = { version: 1, rows: normalized }
-                                  setContent(JSON.stringify(payload))
-                                  return normalized
-                                })
-                              }}
-                              data-notes-editor="true"
-                              data-row-index={index}
-                              data-field="corrections"
-                              className="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-[#38438f] min-h-[140px]"
-                              style={{ whiteSpace: 'pre-wrap', color: '#000', backgroundColor: '#fff' }}
-                            />
-                          </td>
-                        </tr>
-
-                        {/* Notes editor row */}
-                        <tr className={isFirstRow ? 'bg-white' : 'bg-gray-50'}>
-                          <td className="px-3 py-2 border-b align-top" colSpan={5}>
-                            <div className="text-xs font-semibold text-gray-700 mb-1">Notes</div>
-                            <div
-                              ref={(el) => {
-                                if (el) editorRefs.current[`${index}-notes`] = el
-                                if (el && !(focusedEditor?.rowIndex === index && focusedEditor?.field === 'notes')) {
-                                  if (el.innerHTML !== row.notes) el.innerHTML = row.notes
-                                }
-                              }}
-                              contentEditable
-                              suppressContentEditableWarning
-                              onFocus={() => setFocusedEditor({ rowIndex: index, field: 'notes' })}
-                              onInput={(e) => {
-                                const html = (e.currentTarget as HTMLElement).innerHTML
-                                setRows((prev) => {
-                                  const updated = [...prev]
-                                  updated[index] = { ...updated[index], notes: html }
-                                  const normalized = ensureLeadingEmptyRow(updated)
-                                  const payload: NotesDataV1 = { version: 1, rows: normalized }
-                                  setContent(JSON.stringify(payload))
-                                  return normalized
-                                })
-                              }}
-                              onBlur={(e) => {
-                                setFocusedEditor(null)
-                                const html = (e.currentTarget as HTMLElement).innerHTML
-                                setRows((prev) => {
-                                  const updated = [...prev]
-                                  updated[index] = { ...updated[index], notes: html }
-                                  const normalized = ensureLeadingEmptyRow(updated)
-                                  const payload: NotesDataV1 = { version: 1, rows: normalized }
-                                  setContent(JSON.stringify(payload))
-                                  return normalized
-                                })
-                              }}
-                              data-notes-editor="true"
-                              data-row-index={index}
-                              data-field="notes"
-                              className="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-[#38438f] min-h-[140px]"
-                              style={{ whiteSpace: 'pre-wrap', color: '#000', backgroundColor: '#fff' }}
-                            />
-                          </td>
-                        </tr>
-                      </>
-                    )}
+                    <tr className={isFirstRow ? 'bg-white' : 'bg-gray-50'}>
+                      <td className="px-3 py-2 border-b align-top" colSpan={3}>
+                        <details
+                          className="rounded-md border border-gray-200 bg-gray-50/80"
+                          open={correctionsNotesExpanded[index] === true}
+                          onToggle={(e) => {
+                            setCorrectionsNotesExpanded((prev) => ({
+                              ...prev,
+                              [index]: e.currentTarget.open,
+                            }))
+                          }}
+                        >
+                          <summary className="cursor-pointer select-none px-3 py-2 text-sm font-medium text-gray-900 hover:bg-gray-100/80 rounded-md">
+                            Corrections & notes{' '}
+                            <span className="font-normal text-gray-500">(optional)</span>
+                            {(htmlHasVisibleText(row.corrections) || htmlHasVisibleText(row.notes)) && (
+                              <span className="ml-2 text-xs font-normal text-[#38438f]">
+                                · saved content
+                              </span>
+                            )}
+                          </summary>
+                          <div className="space-y-4 border-t border-gray-200 bg-white px-3 py-3">
+                            <div>
+                              <div className="text-xs font-medium text-gray-600 mb-1">Corrections</div>
+                              <div
+                                ref={(el) => {
+                                  if (el) editorRefs.current[`${index}-corrections`] = el
+                                  if (
+                                    el &&
+                                    !(focusedEditor?.rowIndex === index && focusedEditor?.field === 'corrections')
+                                  ) {
+                                    if (el.innerHTML !== row.corrections) el.innerHTML = row.corrections
+                                  }
+                                }}
+                                contentEditable
+                                suppressContentEditableWarning
+                                onFocus={() => setFocusedEditor({ rowIndex: index, field: 'corrections' })}
+                                onInput={(e) => {
+                                  const html = (e.currentTarget as HTMLElement).innerHTML
+                                  setRows((prev) => {
+                                    const updated = [...prev]
+                                    updated[index] = { ...updated[index], corrections: html }
+                                    const normalized = ensureLeadingEmptyRow(updated)
+                                    const payload: NotesDataV1 = { version: 1, rows: normalized }
+                                    setContent(JSON.stringify(payload))
+                                    return normalized
+                                  })
+                                }}
+                                onBlur={(e) => {
+                                  setFocusedEditor(null)
+                                  const html = (e.currentTarget as HTMLElement).innerHTML
+                                  setRows((prev) => {
+                                    const updated = [...prev]
+                                    updated[index] = { ...updated[index], corrections: html }
+                                    const normalized = ensureLeadingEmptyRow(updated)
+                                    const payload: NotesDataV1 = { version: 1, rows: normalized }
+                                    setContent(JSON.stringify(payload))
+                                    return normalized
+                                  })
+                                }}
+                                data-notes-editor="true"
+                                data-row-index={index}
+                                data-field="corrections"
+                                className="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-[#38438f] min-h-[140px]"
+                                style={{ whiteSpace: 'pre-wrap', color: '#000', backgroundColor: '#fff' }}
+                              />
+                            </div>
+                            <div>
+                              <div className="text-xs font-medium text-gray-600 mb-1">Notes</div>
+                              <div
+                                ref={(el) => {
+                                  if (el) editorRefs.current[`${index}-notes`] = el
+                                  if (
+                                    el &&
+                                    !(focusedEditor?.rowIndex === index && focusedEditor?.field === 'notes')
+                                  ) {
+                                    if (el.innerHTML !== row.notes) el.innerHTML = row.notes
+                                  }
+                                }}
+                                contentEditable
+                                suppressContentEditableWarning
+                                onFocus={() => setFocusedEditor({ rowIndex: index, field: 'notes' })}
+                                onInput={(e) => {
+                                  const html = (e.currentTarget as HTMLElement).innerHTML
+                                  setRows((prev) => {
+                                    const updated = [...prev]
+                                    updated[index] = { ...updated[index], notes: html }
+                                    const normalized = ensureLeadingEmptyRow(updated)
+                                    const payload: NotesDataV1 = { version: 1, rows: normalized }
+                                    setContent(JSON.stringify(payload))
+                                    return normalized
+                                  })
+                                }}
+                                onBlur={(e) => {
+                                  setFocusedEditor(null)
+                                  const html = (e.currentTarget as HTMLElement).innerHTML
+                                  setRows((prev) => {
+                                    const updated = [...prev]
+                                    updated[index] = { ...updated[index], notes: html }
+                                    const normalized = ensureLeadingEmptyRow(updated)
+                                    const payload: NotesDataV1 = { version: 1, rows: normalized }
+                                    setContent(JSON.stringify(payload))
+                                    return normalized
+                                  })
+                                }}
+                                data-notes-editor="true"
+                                data-row-index={index}
+                                data-field="notes"
+                                className="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-[#38438f] min-h-[140px]"
+                                style={{ whiteSpace: 'pre-wrap', color: '#000', backgroundColor: '#fff' }}
+                              />
+                            </div>
+                          </div>
+                        </details>
+                      </td>
+                    </tr>
                   </Fragment>
                 )})}
               </tbody>
