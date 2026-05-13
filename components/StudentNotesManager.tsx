@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect, useRef, useMemo, Fragment } from 'react'
+import { useRouter } from 'next/navigation'
 import { formatCourseName } from '@/lib/date-utils'
 import {
   computePackageProgress,
@@ -106,6 +107,7 @@ const ensureLeadingEmptyRow = (rows: LessonRow[]): LessonRow[] => {
 }
 
 export default function StudentNotesManager({ student, enrollments }: Props) {
+  const router = useRouter()
   const [selectedEnrollment, setSelectedEnrollment] = useState<string>(enrollments[0]?.id ?? '')
   const [content, setContent] = useState<string>('') // Raw content stored in DB (JSON string for new format)
   const [noteUpdatedAt, setNoteUpdatedAt] = useState<string | null>(null)
@@ -117,6 +119,9 @@ export default function StudentNotesManager({ student, enrollments }: Props) {
   const [teacherPrivateContent, setTeacherPrivateContent] = useState('')
   const [legacyContent, setLegacyContent] = useState<string | null>(null) // For any old free-form notes
   const [courseMidpointHint, setCourseMidpointHint] = useState<CourseMidpointHint | null>(null)
+  const [coursePackageHoursInput, setCoursePackageHoursInput] = useState('10')
+  const [savingCoursePackage, setSavingCoursePackage] = useState(false)
+  const [coursePackageSaveError, setCoursePackageSaveError] = useState<string | null>(null)
   const [showNextLessonEditors, setShowNextLessonEditors] = useState(false)
   // Track which editor has focus — we never overwrite that div's DOM so cursor and content stay correct
   const [focusedEditor, setFocusedEditor] = useState<{ rowIndex: number; field: 'corrections' | 'notes' } | null>(null)
@@ -153,6 +158,11 @@ export default function StudentNotesManager({ student, enrollments }: Props) {
       setLegacyContent(null)
       setCourseMidpointHint(null)
     }
+  }, [selectedEnrollment])
+
+  useEffect(() => {
+    setCoursePackageSaveError(null)
+    setCoursePackageHoursInput('10')
   }, [selectedEnrollment])
 
   useEffect(() => {
@@ -359,6 +369,39 @@ export default function StudentNotesManager({ student, enrollments }: Props) {
       [rows, courseDurationHours]
     )
 
+  const saveCoursePackageHours = async () => {
+    const courseId = activeEnrollment?.course?.id
+    if (!courseId) return
+
+    const hours = parseCourseDurationHours(coursePackageHoursInput)
+    if (hours <= 0) {
+      setCoursePackageSaveError('Enter a whole number of hours (1 or more).')
+      return
+    }
+
+    setSavingCoursePackage(true)
+    setCoursePackageSaveError(null)
+    try {
+      const res = await fetch(`/api/courses/${courseId}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ duration: hours }),
+      })
+      const data = await res.json().catch(() => ({}))
+      if (!res.ok) {
+        setCoursePackageSaveError(
+          typeof data.error === 'string' ? data.error : 'Could not update package hours.'
+        )
+        return
+      }
+      router.refresh()
+    } catch {
+      setCoursePackageSaveError('Network error — try again.')
+    } finally {
+      setSavingCoursePackage(false)
+    }
+  }
+
   const insertDate = () => {
     const date = new Date()
     // Format: "Friday 6 February 2026" (no comma)
@@ -463,10 +506,10 @@ export default function StudentNotesManager({ student, enrollments }: Props) {
               <p className="mt-1 text-slate-700">
                 {activeEnrollment?.course ? (
                   <>
-                    This course’s package is <strong>0 hours</strong> (or missing) in the database, so hour
-                    tracking and the grey <strong>Midpoint email (server check)</strong> panel do not appear.
-                    Set the course’s duration to a positive number of hours in your course settings, then
-                    refresh this page.
+                    This course’s total package is <strong>0 hours</strong> in the database (often because
+                    the student was enrolled under <strong>Other (custom course)</strong>, which did not ask
+                    for a length). Hour tracking and the midpoint email panel stay off until you set a
+                    positive package length.
                   </>
                 ) : (
                   <>
@@ -475,6 +518,38 @@ export default function StudentNotesManager({ student, enrollments }: Props) {
                   </>
                 )}
               </p>
+              {activeEnrollment?.course && (
+                <div className="mt-3 flex flex-wrap items-end gap-2 border-t border-slate-200 pt-3">
+                  <div>
+                    <label htmlFor="course-package-hours" className="block text-xs font-medium text-slate-700">
+                      Total package (hours)
+                    </label>
+                    <input
+                      id="course-package-hours"
+                      type="number"
+                      min={1}
+                      max={500}
+                      step={1}
+                      value={coursePackageHoursInput}
+                      onChange={(e) => setCoursePackageHoursInput(e.target.value)}
+                      className="mt-0.5 w-28 rounded border border-slate-300 px-2 py-1.5 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-[#38438f]"
+                    />
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => void saveCoursePackageHours()}
+                    disabled={savingCoursePackage}
+                    className="rounded-md bg-[#38438f] px-3 py-2 text-sm font-medium text-white hover:bg-[#2d3569] disabled:opacity-50"
+                  >
+                    {savingCoursePackage ? 'Saving…' : 'Save package length'}
+                  </button>
+                </div>
+              )}
+              {coursePackageSaveError && (
+                <p className="mt-2 text-sm text-red-700" role="alert">
+                  {coursePackageSaveError}
+                </p>
+              )}
             </div>
           )}
 

@@ -4,6 +4,7 @@ import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { formatUKDate, formatCourseName as formatCourseNameUtil } from '@/lib/date-utils'
 import { brizzleRed, brizzleRedHover } from '@/lib/brand-colors'
+import { parseCourseDurationHours } from '@/lib/course-notes-lessons'
 
 interface Resource {
   id: string
@@ -70,6 +71,7 @@ export default function StudentAssignmentManager({ student, resources, courses }
   const router = useRouter()
   const [selectedCourse, setSelectedCourse] = useState('')
   const [customCourseName, setCustomCourseName] = useState('')
+  const [customCourseDurationHours, setCustomCourseDurationHours] = useState('10')
   const [selectedResources, setSelectedResources] = useState<string[]>([])
   const [loading, setLoading] = useState(false)
   const [selectedLevels, setSelectedLevels] = useState<string[]>(['All'])
@@ -172,6 +174,14 @@ export default function StudentAssignmentManager({ student, resources, courses }
       return
     }
 
+    if (selectedCourse === OTHER_OPTION_VALUE) {
+      const customDur = parseCourseDurationHours(customCourseDurationHours)
+      if (customDur <= 0) {
+        alert('Please enter a positive whole number of hours for the custom course package (e.g. 10).')
+        return
+      }
+    }
+
     setLoading(true)
     try {
       const payload: any = { studentId: student.id }
@@ -179,7 +189,7 @@ export default function StudentAssignmentManager({ student, resources, courses }
       if (selectedCourse === OTHER_OPTION_VALUE) {
         payload.courseData = {
           name: customCourseName.trim(),
-          duration: 0,
+          duration: parseCourseDurationHours(customCourseDurationHours),
         }
       } else {
         const preset = PRESET_COURSE_OPTIONS.find((option) => option.id === selectedCourse)
@@ -206,6 +216,7 @@ export default function StudentAssignmentManager({ student, resources, courses }
         router.refresh()
         setSelectedCourse('')
         setCustomCourseName('')
+        setCustomCourseDurationHours('10')
       } else {
         const errorData = await response.json().catch(() => ({ error: 'Failed to enroll student' }))
         alert(errorData.error || 'Failed to enroll student')
@@ -312,15 +323,34 @@ export default function StudentAssignmentManager({ student, resources, courses }
               </select>
 
               {selectedCourse === OTHER_OPTION_VALUE && (
-                <input
-                  type="text"
-                  value={customCourseName}
-                  onChange={(e) => setCustomCourseName(e.target.value)}
-                  placeholder="Enter custom course name"
-                  className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none"
-                  onFocus={(e) => (e.currentTarget.style.borderColor = '#38438f')}
-                  onBlur={(e) => (e.currentTarget.style.borderColor = '#d1d5db')}
-                />
+                <div className="space-y-2">
+                  <input
+                    type="text"
+                    value={customCourseName}
+                    onChange={(e) => setCustomCourseName(e.target.value)}
+                    placeholder="Enter custom course name"
+                    className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none"
+                    onFocus={(e) => (e.currentTarget.style.borderColor = '#38438f')}
+                    onBlur={(e) => (e.currentTarget.style.borderColor = '#d1d5db')}
+                  />
+                  <div>
+                    <label htmlFor="custom-course-hours" className="block text-xs text-gray-600 mb-1">
+                      Total package length (hours)
+                    </label>
+                    <input
+                      id="custom-course-hours"
+                      type="number"
+                      min={1}
+                      max={500}
+                      step={1}
+                      value={customCourseDurationHours}
+                      onChange={(e) => setCustomCourseDurationHours(e.target.value)}
+                      className="w-full max-w-[10rem] border border-gray-300 rounded-md px-3 py-2 focus:outline-none"
+                      onFocus={(e) => (e.currentTarget.style.borderColor = '#38438f')}
+                      onBlur={(e) => (e.currentTarget.style.borderColor = '#d1d5db')}
+                    />
+                  </div>
+                </div>
               )}
             </div>
             <button
