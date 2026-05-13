@@ -231,7 +231,8 @@ export async function PUT(
         console.error('Error inserting note revision (create):', revisionError)
       }
 
-      void maybeNotifyCourseMidpoint({
+      // Await so serverless runtimes don't freeze the isolate before email + DB flag complete.
+      await maybeNotifyCourseMidpoint({
         enrollmentId: params.enrollmentId,
         courseNoteId: createdNote.id,
         savedStudentContent: content,
@@ -282,7 +283,7 @@ export async function PUT(
       console.error('Error inserting note revision (update):', revisionError)
     }
 
-    void maybeNotifyCourseMidpoint({
+    await maybeNotifyCourseMidpoint({
       enrollmentId: params.enrollmentId,
       courseNoteId: updatedNote.id,
       savedStudentContent: content,
