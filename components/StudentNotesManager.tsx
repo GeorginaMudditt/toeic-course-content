@@ -158,6 +158,7 @@ export default function StudentNotesManager({ student, enrollments }: Props) {
   const [coursePackageHoursInput, setCoursePackageHoursInput] = useState('10')
   const [savingCoursePackage, setSavingCoursePackage] = useState(false)
   const [coursePackageSaveError, setCoursePackageSaveError] = useState<string | null>(null)
+  const [trackHoursModalOpen, setTrackHoursModalOpen] = useState(false)
   /**
    * Incremented after each successful load from the API so we can imperatively open <details>
    * for rows that already have corrections/notes. Native <details> is left uncontrolled to avoid
@@ -205,6 +206,7 @@ export default function StudentNotesManager({ student, enrollments }: Props) {
       setNoteLoaded(false)
       noteLoadedRef.current = false
       setCourseMidpointHint(null)
+      setTrackHoursModalOpen(false)
       loadNote(selectedEnrollment)
     } else {
       setContent('')
@@ -220,6 +222,7 @@ export default function StudentNotesManager({ student, enrollments }: Props) {
       setLegacyContent(null)
       setCourseMidpointHint(null)
       setDetailsHydrateKey(0)
+      setTrackHoursModalOpen(false)
     }
   }, [selectedEnrollment])
 
@@ -235,6 +238,19 @@ export default function StudentNotesManager({ student, enrollments }: Props) {
   useEffect(() => {
     noteUpdatedAtRef.current = noteUpdatedAt
   }, [noteUpdatedAt])
+
+  useEffect(() => {
+    if (!trackHoursModalOpen) return
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setTrackHoursModalOpen(false)
+    }
+    document.body.style.overflow = 'hidden'
+    window.addEventListener('keydown', onKey)
+    return () => {
+      document.body.style.overflow = ''
+      window.removeEventListener('keydown', onKey)
+    }
+  }, [trackHoursModalOpen])
 
   const loadNote = async (enrollmentId: string) => {
     setLoading(true)
@@ -461,6 +477,7 @@ export default function StudentNotesManager({ student, enrollments }: Props) {
         return
       }
       router.refresh()
+      setTrackHoursModalOpen(false)
     } catch {
       setCoursePackageSaveError('Network error — try again.')
     } finally {
@@ -566,163 +583,222 @@ export default function StudentNotesManager({ student, enrollments }: Props) {
             </p>
           </div>
 
-          {courseDurationHours === 0 && (
-            <div className="mb-4 rounded-md border border-slate-200 bg-slate-50 px-3 py-2 text-sm text-slate-800">
-              <p className="font-semibold text-slate-800">Hours package & midpoint email</p>
-              <p className="mt-1 text-slate-700">
-                {activeEnrollment?.course ? (
-                  <>
-                    This course’s total package is <strong>0 hours</strong> in the database (often because
-                    the student was enrolled under <strong>Other (custom course)</strong>, which did not ask
-                    for a length). Hour tracking and the midpoint email panel stay off until you set a
-                    positive package length.
-                  </>
-                ) : (
-                  <>
-                    This enrollment is not linked to a course (or the course record is missing). Assign a
-                    course with a positive hour package so hour tracking and midpoint emails can run.
-                  </>
-                )}
-              </p>
-              {activeEnrollment?.course && (
-                <div className="mt-3 flex flex-wrap items-end gap-2 border-t border-slate-200 pt-3">
-                  <div>
-                    <label htmlFor="course-package-hours" className="block text-xs font-medium text-slate-700">
-                      Total package (hours)
-                    </label>
-                    <input
-                      id="course-package-hours"
-                      type="number"
-                      min={1}
-                      max={500}
-                      step={1}
-                      value={coursePackageHoursInput}
-                      onChange={(e) => setCoursePackageHoursInput(e.target.value)}
-                      className="mt-0.5 w-28 rounded border border-slate-300 px-2 py-1.5 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-[#38438f]"
-                    />
-                  </div>
-                  <button
-                    type="button"
-                    onClick={() => void saveCoursePackageHours()}
-                    disabled={savingCoursePackage}
-                    className="rounded-md bg-[#38438f] px-3 py-2 text-sm font-medium text-white hover:bg-[#2d3569] disabled:opacity-50"
-                  >
-                    {savingCoursePackage ? 'Saving…' : 'Save package length'}
-                  </button>
-                </div>
-              )}
-              {coursePackageSaveError && (
-                <p className="mt-2 text-sm text-red-700" role="alert">
-                  {coursePackageSaveError}
-                </p>
-              )}
-            </div>
-          )}
-
-          {courseDurationHours > 0 && (
-            <div className="mb-4 space-y-2">
-              <p className="text-sm text-gray-700">
-                <span className="font-medium">Hours tracking:</span>{' '}
-                {hoursLogged} of {courseDurationHours} hours used in this package
+          <div className="mb-4 flex flex-wrap items-center gap-3">
+            <button
+              type="button"
+              onClick={() => setTrackHoursModalOpen(true)}
+              className="rounded-md border border-gray-300 bg-white px-3 py-2 text-sm font-medium text-gray-800 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-[#38438f]"
+            >
+              Track hours
+            </button>
+            {courseDurationHours > 0 && (
+              <span className="text-sm text-gray-600">
+                {hoursLogged} / {courseDurationHours} hours in this package
                 {hoursRemaining !== null && hoursRemaining > 0 && (
                   <>
                     {' '}
-                    · {hoursRemaining} hour{hoursRemaining === 1 ? '' : 's'} remaining
+                    · {hoursRemaining} hour{hoursRemaining === 1 ? '' : 's'} left
                   </>
                 )}
-                {hoursRemaining === 0 && hoursLogged >= courseDurationHours && (
-                  <> · all hours in this package are logged</>
-                )}
-              </p>
-              {showLowLessonsWarning && hoursRemaining !== null && (
-                <div
-                  className="rounded-md border border-amber-300 bg-amber-50 px-3 py-2 text-sm text-amber-950"
-                  role="status"
-                >
-                  <strong>{student.name}</strong> only has{' '}
-                  {hoursRemaining === 1
-                    ? 'one hour'
-                    : `${hoursRemaining} hours`}{' '}
-                  left in this course. Consider contacting them about extending or booking another
-                  package.
-                </div>
-              )}
-              {loggedOverPackage && (
-                <div
-                  className="rounded-md border border-sky-300 bg-sky-50 px-3 py-2 text-sm text-sky-950"
-                  role="status"
-                >
-                  More hours are logged than in this course package. Consider adding hours if{' '}
-                  {student.name} is continuing.
-                </div>
-              )}
-              <p className="text-xs text-gray-500">
-                Set <span className="font-medium">Lesson length</span> to 1 or 2 hours per row (dated
-                lessons). When logged hours reach half the package ({Math.ceil(courseDurationHours / 2)}{' '}
-                of {courseDurationHours} hours for this course), saving notes sends a one-time email to{' '}
-                <span className="font-medium">hello@brizzle-english.com</span> for admin follow-up
-                (invoice, midpoint questionnaire, etc.).
-              </p>
+              </span>
+            )}
+            {courseDurationHours === 0 && activeEnrollment?.course && (
+              <span className="text-sm text-amber-900/90">
+                Package is 0 h — open <span className="font-medium">Track hours</span> to set length
+              </span>
+            )}
+          </div>
 
-              <div className="rounded-md border border-slate-300 bg-slate-50 px-3 py-2 text-sm text-slate-900">
-                <p className="font-semibold text-slate-800">Midpoint email (server check)</p>
-                {loading && !courseMidpointHint ? (
-                  <p className="mt-1 text-slate-600">Loading server status…</p>
-                ) : courseMidpointHint ? (
-                  <>
-                    <p className="mt-1">
-                      Saved notes total <strong>{courseMidpointHint.hoursLogged}</strong> billable hour
-                      {courseMidpointHint.hoursLogged === 1 ? '' : 's'} · package{' '}
-                      <strong>{courseMidpointHint.courseDurationHours}</strong> h · midpoint at{' '}
-                      <strong>{courseMidpointHint.threshold}</strong> h
-                    </p>
-                    <p className="mt-1">
-                      {courseMidpointHint.meetsThreshold ? (
-                        <span className="text-green-800">
-                          Threshold reached — saving should trigger the email (once) if Resend is configured.
-                        </span>
-                      ) : (
-                        <span className="text-amber-900">
-                          Below midpoint — the server sees fewer hours than needed. Set each dated row to 1h or
-                          2h and save again.
-                        </span>
-                      )}
-                    </p>
+          {trackHoursModalOpen && (
+            <div
+              className="fixed inset-0 z-[100] flex items-center justify-center p-4"
+              role="dialog"
+              aria-modal="true"
+              aria-labelledby="track-hours-modal-title"
+            >
+              <button
+                type="button"
+                className="absolute inset-0 bg-black/40"
+                aria-label="Close dialog"
+                onClick={() => setTrackHoursModalOpen(false)}
+              />
+              <div className="relative z-10 max-h-[min(90vh,720px)] w-full max-w-lg overflow-y-auto rounded-lg border border-gray-200 bg-white p-6 shadow-xl">
+                <div className="mb-4 flex items-start justify-between gap-3">
+                  <h2 id="track-hours-modal-title" className="text-lg font-semibold text-gray-900">
+                    Track hours & midpoint email
+                  </h2>
+                  <button
+                    type="button"
+                    onClick={() => setTrackHoursModalOpen(false)}
+                    className="shrink-0 rounded-md px-2 py-1 text-sm text-gray-600 hover:bg-gray-100 hover:text-gray-900"
+                    aria-label="Close"
+                  >
+                    ✕
+                  </button>
+                </div>
+
+                {courseDurationHours === 0 ? (
+                  <div className="rounded-md border border-slate-200 bg-slate-50 px-3 py-2 text-sm text-slate-800">
+                    <p className="font-semibold text-slate-800">Hours package & midpoint email</p>
                     <p className="mt-1 text-slate-700">
-                      {courseMidpointHint.midpointEmailSent ? (
+                      {activeEnrollment?.course ? (
                         <>
-                          <strong>Recorded as sent</strong>
-                          {courseMidpointHint.midpointNotificationSentAt ? (
-                            <>
-                              {' ('}
-                              <ClientLocalDateTime
-                                iso={courseMidpointHint.midpointNotificationSentAt}
-                                preset="datetimeShort"
-                                className="inline"
-                              />
-                              {')'}
-                            </>
-                          ) : null}
-                          . No further automatic emails for this enrollment. To test again, clear{' '}
-                          <code className="text-xs bg-white px-1 rounded">midpointNotificationSentAt</code> on
-                          this course note in Supabase.
+                          This course’s total package is <strong>0 hours</strong> in the database (often
+                          because the student was enrolled under <strong>Other (custom course)</strong>, which
+                          did not ask for a length). Hour tracking and the midpoint email stay off until you set
+                          a positive package length.
                         </>
                       ) : (
                         <>
-                          <strong>Not recorded as sent yet.</strong> If you are at or above{' '}
-                          {courseMidpointHint.threshold} h and still get no message, check production env{' '}
-                          <code className="text-xs bg-white px-1 rounded">RESEND_API_KEY</code> and host logs for{' '}
-                          <code className="text-xs bg-white px-1 rounded">[course-midpoint]</code>.
+                          This enrollment is not linked to a course (or the course record is missing). Assign
+                          a course with a positive hour package so hour tracking and midpoint emails can run.
                         </>
                       )}
                     </p>
-                  </>
+                    {activeEnrollment?.course && (
+                      <div className="mt-3 flex flex-wrap items-end gap-2 border-t border-slate-200 pt-3">
+                        <div>
+                          <label
+                            htmlFor="course-package-hours-modal"
+                            className="block text-xs font-medium text-slate-700"
+                          >
+                            Total package (hours)
+                          </label>
+                          <input
+                            id="course-package-hours-modal"
+                            type="number"
+                            min={1}
+                            max={500}
+                            step={1}
+                            value={coursePackageHoursInput}
+                            onChange={(e) => setCoursePackageHoursInput(e.target.value)}
+                            className="mt-0.5 w-28 rounded border border-slate-300 px-2 py-1.5 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-[#38438f]"
+                          />
+                        </div>
+                        <button
+                          type="button"
+                          onClick={() => void saveCoursePackageHours()}
+                          disabled={savingCoursePackage}
+                          className="rounded-md bg-[#38438f] px-3 py-2 text-sm font-medium text-white hover:bg-[#2d3569] disabled:opacity-50"
+                        >
+                          {savingCoursePackage ? 'Saving…' : 'Save package length'}
+                        </button>
+                      </div>
+                    )}
+                    {coursePackageSaveError && (
+                      <p className="mt-2 text-sm text-red-700" role="alert">
+                        {coursePackageSaveError}
+                      </p>
+                    )}
+                  </div>
                 ) : (
-                  <p className="mt-1 text-slate-700">
-                    <strong>Server status not loaded.</strong> Deploy the latest app and hard-refresh this page.
-                    If it still appears here, the course may have no duration in the database. This panel only
-                    appears when this course has a positive hour package above.
-                  </p>
+                  <div className="space-y-3 text-sm">
+                    <p className="text-gray-700">
+                      <span className="font-medium">Hours tracking:</span>{' '}
+                      {hoursLogged} of {courseDurationHours} hours used in this package
+                      {hoursRemaining !== null && hoursRemaining > 0 && (
+                        <>
+                          {' '}
+                          · {hoursRemaining} hour{hoursRemaining === 1 ? '' : 's'} remaining
+                        </>
+                      )}
+                      {hoursRemaining === 0 && hoursLogged >= courseDurationHours && (
+                        <> · all hours in this package are logged</>
+                      )}
+                    </p>
+                    {showLowLessonsWarning && hoursRemaining !== null && (
+                      <div
+                        className="rounded-md border border-amber-300 bg-amber-50 px-3 py-2 text-sm text-amber-950"
+                        role="status"
+                      >
+                        <strong>{student.name}</strong> only has{' '}
+                        {hoursRemaining === 1
+                          ? 'one hour'
+                          : `${hoursRemaining} hours`}{' '}
+                        left in this course. Consider contacting them about extending or booking another
+                        package.
+                      </div>
+                    )}
+                    {loggedOverPackage && (
+                      <div
+                        className="rounded-md border border-sky-300 bg-sky-50 px-3 py-2 text-sm text-sky-950"
+                        role="status"
+                      >
+                        More hours are logged than in this course package. Consider adding hours if{' '}
+                        {student.name} is continuing.
+                      </div>
+                    )}
+                    <p className="text-xs text-gray-500">
+                      Set <span className="font-medium">Lesson length</span> to 1 or 2 hours per row (dated
+                      lessons). When logged hours reach half the package ({Math.ceil(courseDurationHours / 2)}{' '}
+                      of {courseDurationHours} hours for this course), saving notes sends a one-time email to{' '}
+                      <span className="font-medium">hello@brizzle-english.com</span> for admin follow-up
+                      (invoice, midpoint questionnaire, etc.).
+                    </p>
+
+                    <div className="rounded-md border border-slate-300 bg-slate-50 px-3 py-2 text-sm text-slate-900">
+                      <p className="font-semibold text-slate-800">Midpoint email (server check)</p>
+                      {loading && !courseMidpointHint ? (
+                        <p className="mt-1 text-slate-600">Loading server status…</p>
+                      ) : courseMidpointHint ? (
+                        <>
+                          <p className="mt-1">
+                            Saved notes total <strong>{courseMidpointHint.hoursLogged}</strong> billable hour
+                            {courseMidpointHint.hoursLogged === 1 ? '' : 's'} · package{' '}
+                            <strong>{courseMidpointHint.courseDurationHours}</strong> h · midpoint at{' '}
+                            <strong>{courseMidpointHint.threshold}</strong> h
+                          </p>
+                          <p className="mt-1">
+                            {courseMidpointHint.meetsThreshold ? (
+                              <span className="text-green-800">
+                                Threshold reached — saving should trigger the email (once) if Resend is
+                                configured.
+                              </span>
+                            ) : (
+                              <span className="text-amber-900">
+                                Below midpoint — the server sees fewer hours than needed. Set each dated row to
+                                1h or 2h and save again.
+                              </span>
+                            )}
+                          </p>
+                          <p className="mt-1 text-slate-700">
+                            {courseMidpointHint.midpointEmailSent ? (
+                              <>
+                                <strong>Recorded as sent</strong>
+                                {courseMidpointHint.midpointNotificationSentAt ? (
+                                  <>
+                                    {' ('}
+                                    <ClientLocalDateTime
+                                      iso={courseMidpointHint.midpointNotificationSentAt}
+                                      preset="datetimeShort"
+                                      className="inline"
+                                    />
+                                    {')'}
+                                  </>
+                                ) : null}
+                                . No further automatic emails for this enrollment. To test again, clear{' '}
+                                <code className="text-xs bg-white px-1 rounded">midpointNotificationSentAt</code>{' '}
+                                on this course note in Supabase.
+                              </>
+                            ) : (
+                              <>
+                                <strong>Not recorded as sent yet.</strong> If you are at or above{' '}
+                                {courseMidpointHint.threshold} h and still get no message, check production env{' '}
+                                <code className="text-xs bg-white px-1 rounded">RESEND_API_KEY</code> and host
+                                logs for <code className="text-xs bg-white px-1 rounded">[course-midpoint]</code>.
+                              </>
+                            )}
+                          </p>
+                        </>
+                      ) : (
+                        <p className="mt-1 text-slate-700">
+                          <strong>Server status not loaded.</strong> Deploy the latest app and hard-refresh. If
+                          this message persists, the course may have no duration in the database (this check only
+                          runs when the package has a positive hour total).
+                        </p>
+                      )}
+                    </div>
+                  </div>
                 )}
               </div>
             </div>
