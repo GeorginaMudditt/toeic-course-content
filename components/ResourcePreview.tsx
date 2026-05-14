@@ -2,6 +2,8 @@
 
 import { useState, useEffect, useRef, useCallback } from 'react'
 import { createRoot } from 'react-dom/client'
+import { mountInstructionsDescriptionsArmyAdjectiveMatch } from '@/lib/worksheetInteractions/instructionsDescriptionsArmyAdjectivesMatch'
+import { mountInstructionsDescriptionsArmyVerbsMission } from '@/lib/worksheetInteractions/instructionsDescriptionsArmyVerbsMission'
 
 interface Resource {
   id: string
@@ -273,6 +275,37 @@ export default function ResourcePreview({ resource, showActions = true }: Resour
       })
     }
   }, [hasGrammarInputs, grammarInputsReady, resource.content])
+
+  // Army opposite-adjective match (resource HTML has no executable <script> in React).
+  useEffect(() => {
+    if (typeof resource.content !== 'string' || !resource.content.includes('data-ida-adjective-match')) return
+    let detach: (() => void) | undefined
+    const rafId = requestAnimationFrame(() => {
+      const host = contentRef.current
+      if (!host) return
+      const el = host.querySelector('[data-ida-adjective-match]') as HTMLElement | null
+      if (el) detach = mountInstructionsDescriptionsArmyAdjectiveMatch(el)
+    })
+    return () => {
+      cancelAnimationFrame(rafId)
+      detach?.()
+    }
+  }, [resource.content])
+
+  useEffect(() => {
+    if (typeof resource.content !== 'string' || !resource.content.includes('data-ida-verbs-mount')) return
+    let detach: (() => void) | undefined
+    const rafId = requestAnimationFrame(() => {
+      const host = contentRef.current
+      if (!host) return
+      const el = host.querySelector('[data-ida-verbs-mount]') as HTMLElement | null
+      if (el) detach = mountInstructionsDescriptionsArmyVerbsMission(el)
+    })
+    return () => {
+      cancelAnimationFrame(rafId)
+      detach?.()
+    }
+  }, [resource.content])
   
   // Inject inline answer inputs into HTML content (same logic as WorksheetViewer)
   useEffect(() => {

@@ -4,6 +4,8 @@ import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react'
 import { createRoot } from 'react-dom/client'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
+import { mountInstructionsDescriptionsArmyAdjectiveMatch } from '@/lib/worksheetInteractions/instructionsDescriptionsArmyAdjectivesMatch'
+import { mountInstructionsDescriptionsArmyVerbsMission } from '@/lib/worksheetInteractions/instructionsDescriptionsArmyVerbsMission'
 
 interface Resource {
   id: string
@@ -1778,6 +1780,40 @@ export default function WorksheetViewer({ assignmentId, resource, initialProgres
     }
   }, [resource.content])
 
+  // Army "Instructions and Descriptions" opposite-adjective match (inline <script> in resource HTML does not run in React).
+  useEffect(() => {
+    const html = resource.content
+    if (typeof html !== 'string' || !html.includes('data-ida-adjective-match')) return
+    let detach: (() => void) | undefined
+    const rafId = requestAnimationFrame(() => {
+      const host = contentRef.current
+      if (!host) return
+      const el = host.querySelector('[data-ida-adjective-match]') as HTMLElement | null
+      if (el) detach = mountInstructionsDescriptionsArmyAdjectiveMatch(el)
+    })
+    return () => {
+      cancelAnimationFrame(rafId)
+      detach?.()
+    }
+  }, [resource.content])
+
+  // Army vocabulary #2: verb → mission scenario gaps.
+  useEffect(() => {
+    const html = resource.content
+    if (typeof html !== 'string' || !html.includes('data-ida-verbs-mount')) return
+    let detach: (() => void) | undefined
+    const rafId = requestAnimationFrame(() => {
+      const host = contentRef.current
+      if (!host) return
+      const el = host.querySelector('[data-ida-verbs-mount]') as HTMLElement | null
+      if (el) detach = mountInstructionsDescriptionsArmyVerbsMission(el)
+    })
+    return () => {
+      cancelAnimationFrame(rafId)
+      detach?.()
+    }
+  }, [resource.content])
+
   // Cleanup: Defer root unmount to avoid "synchronously unmount while React was rendering" warning
   useEffect(() => {
     return () => {
@@ -2089,6 +2125,7 @@ export default function WorksheetViewer({ assignmentId, resource, initialProgres
                   <div 
                     className="prose max-w-none"
                     dangerouslySetInnerHTML={{ __html: resource.content }}
+                    ref={contentRef}
                   />
                 )
               }

@@ -1,4 +1,4 @@
-<!-- Instructions and Descriptions (Army) — Vocabulary; interactive opposite adjectives. Audio: public/vocab-audio/instructions-descriptions-army/{word}.mp3 → URL /vocab-audio/instructions-descriptions-army/{word}.mp3 -->
+<!-- Instructions and Descriptions (Army) — Vocabulary; interactive blocks mounted by the app (data-ida-adjective-match, data-ida-verbs-mount). See lib/worksheetInteractions/instructionsDescriptionsArmy*.ts. Audio files: add MP3s under public/vocab-audio/instructions-descriptions-army/ (e.g. strong.mp3, march.mp3); the app loads them from /vocab-audio/instructions-descriptions-army/{filename}. -->
 <style>
   @media print {
     @page { margin: 1.5cm; }
@@ -6,7 +6,7 @@
     .ida-page-break { page-break-before: always; }
     .ida-keep-together { page-break-inside: avoid; break-inside: avoid; }
     .ida-no-print { display: none !important; }
-    .ida-slot { border: 1px dashed #333 !important; background: #fff !important; }
+    .ida-slot, .ida-verb-slot { border: 1px dashed #333 !important; background: #fff !important; }
   }
   @keyframes ida-shake {
     0%, 100% { transform: translateX(0); }
@@ -14,10 +14,6 @@
     40%, 80% { transform: translateX(6px); }
   }
   .ida-shake { animation: ida-shake 0.45s ease; }
-  @keyframes ida-flash-ok {
-    0% { box-shadow: 0 0 0 0 rgba(74, 124, 58, 0.6); }
-    100% { box-shadow: 0 0 0 12px rgba(74, 124, 58, 0); }
-  }
   .ida-slot-correct { border-color: #4a7c3a !important; background: #e8f2e4 !important; }
   .ida-slot-wrong { border-color: #b91c1c !important; background: #fee2e2 !important; }
   .ida-match-grid {
@@ -39,6 +35,47 @@
   @media (max-width: 560px) {
     .ida-bank-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   }
+  .ida-verb-board {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 14px;
+  }
+  .ida-verb-bank-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 6px;
+    align-items: start;
+  }
+  @media (max-width: 720px) {
+    .ida-verb-bank-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  }
+  @media (max-width: 480px) {
+    .ida-verb-bank-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  }
+  @keyframes ida-spin {
+    to { transform: rotate(360deg); }
+  }
+  .ida-loader-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    min-height: 100px;
+    padding: 24px 16px;
+    background: rgba(255, 255, 255, 0.85);
+    border-radius: 10px;
+    border: 1px dashed #c5c9ba;
+  }
+  .ida-loader-ring {
+    width: 36px;
+    height: 36px;
+    border: 3px solid #d4d9c8;
+    border-top-color: #4a5f3a;
+    border-radius: 50%;
+    animation: ida-spin 0.7s linear infinite;
+    flex-shrink: 0;
+  }
 </style>
 <div style="max-width: 820px; margin: 0 auto; padding: 20px; font-family: Arial, sans-serif; line-height: 1.5; color: #2a2f24; background: linear-gradient(to bottom, #e6e9df, #f7f8f4);">
 
@@ -54,344 +91,27 @@
     <h2 style="font-size: 20px; font-weight: bold; margin: 0 0 10px 0; color: #2d3d28; border-bottom: 3px solid #5c6f4e; padding-bottom: 8px;">Vocabulary #1: Adjectives — opposite pairs</h2>
     <p style="font-size: 15px; margin: 0 0 14px 0; color: #4a5240;">Each word in the list has <strong>one opposite</strong> in the set. Place the matching word in the slot next to its partner. You can <strong>drag</strong> tiles into slots or <strong>tap</strong> a tile, then tap a slot.</p>
 
-    <div id="ida-adjective-match" class="ida-keep-together" style="margin-top: 8px;">
-      <!-- Filled by script -->
+    <div id="ida-adjective-match" class="ida-keep-together" data-ida-adjective-match="true" style="margin-top: 8px;">
+      <div class="ida-interactive-placeholder ida-no-print" role="status" aria-live="polite">
+        <div class="ida-loader-row">
+          <div class="ida-loader-ring" aria-hidden="true"></div>
+          <span style="font-size: 14px; color: #4a5240;">Loading activity…</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="ida-keep-together ida-page-break" style="margin-bottom: 24px; padding: 22px; background: #fffef9; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); border: 1px solid #d4d9c8;">
+    <h2 style="font-size: 20px; font-weight: bold; margin: 0 0 10px 0; color: #2d3d28; border-bottom: 3px solid #5c6f4e; padding-bottom: 8px;">Vocabulary #2: Actions / verbs — mission gaps</h2>
+    <p style="font-size: 15px; margin: 0 0 14px 0; color: #4a5240;">Read each short <strong>mission-style sentence</strong>. Only <strong>one verb</strong> from the bank fits the gap. Drag the verb into the dashed box, or <strong>tap</strong> a verb then tap the gap. Use <strong>Check answers</strong> when you are ready.</p>
+
+    <div id="ida-verbs-mission" data-ida-verbs-mount="true" style="margin-top: 8px;">
+      <div class="ida-interactive-placeholder ida-no-print" role="status" aria-live="polite">
+        <div class="ida-loader-row">
+          <div class="ida-loader-ring" aria-hidden="true"></div>
+          <span style="font-size: 14px; color: #4a5240;">Loading activity…</span>
+        </div>
+      </div>
     </div>
   </div>
 </div>
-
-<script>
-(function () {
-  var root = document.getElementById('ida-adjective-match');
-  if (!root) return;
-
-  var PAIRS = [
-    ['Strong', 'Weak'],
-    ['Fast', 'Slow'],
-    ['Brave', 'Scared'],
-    ['Calm', 'Nervous'],
-    ['Fit', 'Unhealthy'],
-    ['Careful', 'Careless'],
-    ['Heavy', 'Light'],
-    ['Wide', 'Narrow'],
-    ['Empty', 'Full'],
-    ['Dangerous', 'Safe'],
-    ['Wet', 'Dry'],
-    ['Clean', 'Dirty'],
-    ['Simple', 'Complicated'],
-    ['Loud', 'Quiet']
-  ];
-
-  function shuffle(arr) {
-    var a = arr.slice(), i = a.length, j, t;
-    while (i) {
-      j = Math.floor(Math.random() * i--);
-      t = a[i]; a[i] = a[j]; a[j] = t;
-    }
-    return a;
-  }
-
-  function norm(s) {
-    return String(s || '').trim().toLowerCase();
-  }
-
-  var selectedChip = null;
-  var rows = [];
-  var bankEl = null;
-  var feedbackEl = null;
-
-  function clearSelection() {
-    if (selectedChip) {
-      selectedChip.classList.remove('ida-chip-selected');
-      selectedChip.style.boxShadow = '0 2px 4px rgba(45,61,40,0.15)';
-      selectedChip.style.borderColor = '#5c6f4e';
-      selectedChip = null;
-    }
-  }
-
-  var AUDIO_DIR = '/vocab-audio/instructions-descriptions-army/';
-
-  function slug(w) {
-    return norm(w).replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
-  }
-
-  function makeListenBtn(word) {
-    var id = 'ida-audio-' + slug(word);
-    var holder = document.createElement('span');
-    holder.className = 'ida-no-print';
-    holder.style.cssText = 'display: inline-flex; align-items: center; flex-shrink: 0;';
-
-    var hit = document.createElement('button');
-    hit.type = 'button';
-    hit.className = 'ida-audio-hit';
-    hit.setAttribute('aria-label', 'Listen: ' + word);
-    hit.textContent = '🔊';
-    hit.title = 'Listen';
-    hit.style.cssText = 'width: 28px; height: 28px; padding: 0; border: none; border-radius: 50%; font-size: 13px; line-height: 1; cursor: pointer; background: #f7f5ec; box-shadow: 0 1px 3px rgba(0,0,0,0.2); flex-shrink: 0;';
-    hit.addEventListener('click', function (e) {
-      e.preventDefault();
-      e.stopPropagation();
-      var a = document.getElementById(id);
-      if (a) a.play();
-    });
-
-    var audio = document.createElement('audio');
-    audio.id = id;
-    audio.preload = 'auto';
-    var source = document.createElement('source');
-    source.src = AUDIO_DIR + slug(word) + '.mp3';
-    source.type = 'audio/mpeg';
-    audio.appendChild(source);
-
-    holder.appendChild(hit);
-    holder.appendChild(audio);
-    return holder;
-  }
-
-  function findChipByLabel(label) {
-    var all = root.querySelectorAll('.ida-chip-wrap');
-    for (var i = 0; i < all.length; i++) {
-      if (all[i].dataset.word === label) return all[i];
-    }
-    return null;
-  }
-
-  function wrapStyle(extra) {
-    return 'display: inline-flex; align-items: center; gap: 6px; font: 600 14px Arial, sans-serif; padding: 6px 10px; border-radius: 8px; border: 2px solid #5c6f4e; background: linear-gradient(180deg, #f4f6ef 0%, #e2e6d8 100%); color: #1e2418; cursor: grab; box-shadow: 0 2px 4px rgba(45,61,40,0.12); user-select: none; touch-action: manipulation; min-width: 0; width: 100%; box-sizing: border-box;' + (extra || '');
-  }
-
-  function slotStyle() {
-    return 'min-width: 0; min-height: 40px; flex: 1; border: 2px dashed #8a9578; border-radius: 8px; background: rgba(255,255,255,0.7); display: flex; flex-wrap: wrap; align-items: center; justify-content: center; transition: border-color 0.2s, background 0.2s; padding: 4px;';
-  }
-
-  function makeChip(label) {
-    var wrap = document.createElement('div');
-    wrap.className = 'ida-chip-wrap';
-    wrap.dataset.word = label;
-    wrap.setAttribute('aria-label', label);
-    wrap.style.cssText = wrapStyle();
-
-    wrap.appendChild(makeListenBtn(label));
-
-    var b = document.createElement('button');
-    b.type = 'button';
-    b.className = 'ida-chip';
-    b.textContent = label;
-    b.style.cssText = 'font: inherit; font-weight: 700; border: none; background: transparent; color: inherit; cursor: grab; padding: 2px 0; flex: 1; min-width: 0; text-align: left;';
-    wrap.appendChild(b);
-
-    wrap.setAttribute('draggable', 'true');
-    b.setAttribute('draggable', 'true');
-
-    function onDragStart(e) {
-      e.dataTransfer.setData('text/plain', label);
-      e.dataTransfer.effectAllowed = 'move';
-      wrap.style.opacity = '0.65';
-    }
-    function onDragEnd() {
-      wrap.style.opacity = '1';
-    }
-    wrap.addEventListener('dragstart', onDragStart);
-    wrap.addEventListener('dragend', onDragEnd);
-    b.addEventListener('dragstart', onDragStart);
-    b.addEventListener('dragend', onDragEnd);
-
-    wrap.addEventListener('click', function (e) {
-      if (e.target.closest('.ida-audio-hit')) return;
-      e.preventDefault();
-      if (wrap.parentElement === bankEl) {
-        clearSelection();
-        selectedChip = wrap;
-        wrap.classList.add('ida-chip-selected');
-        wrap.style.boxShadow = '0 0 0 3px #b8a265, 0 2px 6px rgba(0,0,0,0.2)';
-        wrap.style.borderColor = '#8a7340';
-        return;
-      }
-      if (wrap.parentElement && wrap.parentElement.classList.contains('ida-slot')) {
-        bankEl.appendChild(wrap);
-        wrap.style.boxShadow = '0 2px 4px rgba(45,61,40,0.15)';
-        wrap.style.borderColor = '#5c6f4e';
-        clearSelection();
-      }
-    });
-
-    return wrap;
-  }
-
-  function placeInSlot(slot, chipWrap) {
-    while (slot.firstChild) {
-      bankEl.appendChild(slot.firstChild);
-    }
-    slot.appendChild(chipWrap);
-    chipWrap.style.boxShadow = '0 2px 4px rgba(45,61,40,0.15)';
-    chipWrap.style.borderColor = '#5c6f4e';
-    clearSelection();
-  }
-
-  function slotClick(slot, expected) {
-    return function () {
-      if (selectedChip && selectedChip.parentElement === bankEl) {
-        placeInSlot(slot, selectedChip);
-        return;
-      }
-      if (slot.firstChild) {
-        bankEl.appendChild(slot.firstChild);
-        clearSelection();
-      }
-    };
-  }
-
-  function build() {
-    root.innerHTML = '';
-    selectedChip = null;
-    rows = [];
-
-    var toolbar = document.createElement('div');
-    toolbar.className = 'ida-no-print';
-    toolbar.style.cssText = 'display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin-bottom: 16px;';
-    root.appendChild(toolbar);
-
-    var btnCheck = document.createElement('button');
-    btnCheck.type = 'button';
-    btnCheck.textContent = 'Check answers';
-    btnCheck.style.cssText = 'font: 600 14px Arial; padding: 10px 18px; border-radius: 8px; border: none; background: linear-gradient(135deg, #4a5f3a 0%, #2d3d28 100%); color: #f7f5ec; cursor: pointer; box-shadow: 0 2px 6px rgba(45,61,40,0.35);';
-    btnCheck.addEventListener('click', checkAnswers);
-
-    var btnReset = document.createElement('button');
-    btnReset.type = 'button';
-    btnReset.textContent = 'Shuffle & reset';
-    btnReset.style.cssText = 'font: 600 14px Arial; padding: 10px 18px; border-radius: 8px; border: 2px solid #5c6f4e; background: #fff; color: #2d3d28; cursor: pointer;';
-    btnReset.addEventListener('click', build);
-
-    toolbar.appendChild(btnCheck);
-    toolbar.appendChild(btnReset);
-
-    feedbackEl = document.createElement('p');
-    feedbackEl.setAttribute('role', 'status');
-    feedbackEl.style.cssText = 'margin: 0; font-size: 15px; font-weight: 600; min-height: 22px; color: #2d3d28;';
-    toolbar.appendChild(feedbackEl);
-
-    var board = document.createElement('div');
-    board.className = 'ida-match-grid';
-    root.appendChild(board);
-
-    var pairOrder = shuffle(PAIRS.map(function (_, i) { return i; }));
-    var rowData = [];
-
-    pairOrder.forEach(function (pi) {
-      var pair = PAIRS[pi];
-      var swap = Math.random() < 0.5;
-      var cue = swap ? pair[1] : pair[0];
-      var answer = swap ? pair[0] : pair[1];
-
-      var row = document.createElement('div');
-      row.className = 'ida-row';
-      row.style.cssText = 'display: flex; align-items: center; gap: 8px; flex-wrap: nowrap; padding: 6px 10px; background: linear-gradient(90deg, rgba(92,111,78,0.12) 0%, rgba(255,255,255,0.5) 100%); border-radius: 8px; border: 1px solid #d4d9c8; min-width: 0;';
-      row.dataset.expected = answer;
-      row.dataset.cue = cue;
-
-      var cueEl = document.createElement('div');
-      cueEl.style.cssText = 'font-weight: 700; font-size: 15px; color: #1a2416; flex: 0 1 auto; min-width: 0; display: flex; align-items: center; gap: 6px;';
-      cueEl.appendChild(makeListenBtn(cue));
-      var wordSpan = document.createElement('span');
-      wordSpan.textContent = cue;
-      wordSpan.style.cssText = 'white-space: nowrap; overflow: hidden; text-overflow: ellipsis;';
-      cueEl.appendChild(wordSpan);
-
-      var slot = document.createElement('div');
-      slot.className = 'ida-slot';
-      slot.style.cssText = slotStyle();
-      slot.dataset.expected = answer;
-      slot.setAttribute('role', 'group');
-      slot.setAttribute('aria-label', 'Opposite of ' + cue);
-
-      slot.addEventListener('click', slotClick(slot, answer));
-
-      slot.addEventListener('dragover', function (e) {
-        e.preventDefault();
-        e.dataTransfer.dropEffect = 'move';
-        slot.style.borderColor = '#4a5f3a';
-        slot.style.background = 'rgba(74,95,58,0.08)';
-      });
-      slot.addEventListener('dragleave', function () {
-        slot.style.borderColor = '';
-        slot.style.background = 'rgba(255,255,255,0.7)';
-      });
-      slot.addEventListener('drop', function (e) {
-        e.preventDefault();
-        slot.style.borderColor = '';
-        slot.style.background = 'rgba(255,255,255,0.7)';
-        var txt = e.dataTransfer.getData('text/plain');
-        var chip = findChipByLabel(txt);
-        if (chip) placeInSlot(slot, chip);
-      });
-
-      row.appendChild(cueEl);
-      row.appendChild(slot);
-      board.appendChild(row);
-      rowData.push({ row: row, slot: slot, expected: answer });
-    });
-
-    rows = rowData;
-
-    var bankWrap = document.createElement('div');
-    bankWrap.style.cssText = 'padding: 16px; border-radius: 10px; background: linear-gradient(135deg, #2d3d28 0%, #3d4f35 100%); box-shadow: inset 0 2px 8px rgba(0,0,0,0.2);';
-    root.appendChild(bankWrap);
-
-    var bankTitle = document.createElement('div');
-    bankTitle.textContent = 'Word bank — drag or tap a word, then tap a slot';
-    bankTitle.className = 'ida-no-print';
-    bankTitle.style.cssText = 'font-size: 13px; font-weight: 700; color: #e8e4d4; margin-bottom: 10px; letter-spacing: 0.03em;';
-    bankWrap.appendChild(bankTitle);
-
-    bankEl = document.createElement('div');
-    bankEl.className = 'ida-bank-grid';
-    bankWrap.appendChild(bankEl);
-
-    var bankWords = shuffle(PAIRS.map(function (p) { return p[0]; }).concat(PAIRS.map(function (p) { return p[1]; })));
-    var cuesUsed = {};
-    rowData.forEach(function (r) {
-      cuesUsed[r.row.dataset.cue] = true;
-    });
-    var inBank = bankWords.filter(function (w) { return !cuesUsed[w]; });
-    shuffle(inBank).forEach(function (w) {
-      bankEl.appendChild(makeChip(w));
-    });
-  }
-
-  function checkAnswers() {
-    var correct = 0;
-    rows.forEach(function (r) {
-      var slot = r.slot;
-      var wrap = slot.querySelector('.ida-chip-wrap');
-      var exp = norm(r.expected);
-      slot.classList.remove('ida-slot-correct', 'ida-slot-wrong', 'ida-shake');
-      void slot.offsetWidth;
-      if (!wrap) {
-        slot.classList.add('ida-slot-wrong');
-        slot.classList.add('ida-shake');
-        return;
-      }
-      var got = norm(wrap.dataset.word);
-      if (got === norm(exp)) {
-        slot.classList.add('ida-slot-correct');
-        correct++;
-      } else {
-        slot.classList.add('ida-slot-wrong');
-        slot.classList.add('ida-shake');
-      }
-    });
-    if (feedbackEl) {
-      if (correct === rows.length) {
-        feedbackEl.textContent = 'Excellent — all ' + rows.length + ' pairs correct!';
-        feedbackEl.style.color = '#2d5a27';
-      } else {
-        feedbackEl.textContent = correct + ' / ' + rows.length + ' correct. Adjust the red slots and try again.';
-        feedbackEl.style.color = '#92400e';
-      }
-    }
-  }
-
-  build();
-})();
-</script>
