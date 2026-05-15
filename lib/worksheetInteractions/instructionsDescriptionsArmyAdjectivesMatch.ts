@@ -23,6 +23,32 @@ const PAIRS: ReadonlyArray<readonly [string, string]> = [
 
 const AUDIO_DIR = '/vocab-audio/instructions-descriptions-army/'
 
+/** Subtle blue UI for Vocabulary #1 so green “correct” feedback stands out clearly */
+const ADJ = {
+  chipBorder: '#5c7cab',
+  chipBg0: '#f0f6fc',
+  chipBg1: '#dceaf5',
+  chipShadow: 'rgba(30, 70, 120, 0.12)',
+  text: '#1a2a3d',
+  slotDash: '#94aecc',
+  slotBg: 'rgba(255,255,255,0.75)',
+  slotBgHover: 'rgba(55, 110, 170, 0.12)',
+  slotBorderHover: '#3d6ea8',
+  rowTint0: 'rgba(65, 115, 175, 0.12)',
+  rowBorder: '#cfdce8',
+  bank0: '#2a4058',
+  bank1: '#3d5d7a',
+  bankTitle: '#e4eef8',
+  check0: '#3b6fa8',
+  check1: '#234969',
+  checkShadow: 'rgba(30, 70, 120, 0.35)',
+  resetBorder: '#5c7cab',
+  resetText: '#1e3a5a',
+  selectedRing: '0 0 0 3px rgba(59, 130, 200, 0.45)',
+  selectedBorder: '#2563b8',
+  feedbackIdle: '#1e3a5a',
+} as const
+
 function shuffle<T>(arr: T[]): T[] {
   const a = arr.slice()
   let i = a.length
@@ -56,8 +82,8 @@ export function mountInstructionsDescriptionsArmyAdjectiveMatch(root: HTMLElemen
   function clearSelection() {
     if (selectedChip) {
       selectedChip.classList.remove('ida-chip-selected')
-      selectedChip.style.boxShadow = '0 2px 4px rgba(45,61,40,0.15)'
-      selectedChip.style.borderColor = '#5c6f4e'
+      selectedChip.style.boxShadow = `0 2px 4px ${ADJ.chipShadow}`
+      selectedChip.style.borderColor = ADJ.chipBorder
       selectedChip = null
     }
   }
@@ -75,7 +101,7 @@ export function mountInstructionsDescriptionsArmyAdjectiveMatch(root: HTMLElemen
     hit.textContent = '🔊'
     hit.title = 'Listen'
     hit.style.cssText =
-      'width: 28px; height: 28px; padding: 0; border: none; border-radius: 50%; font-size: 13px; line-height: 1; cursor: pointer; background: #f7f5ec; box-shadow: 0 1px 3px rgba(0,0,0,0.2); flex-shrink: 0;'
+      'width: 28px; height: 28px; padding: 0; border: none; border-radius: 50%; font-size: 13px; line-height: 1; cursor: pointer; background: #eef4fb; box-shadow: 0 1px 3px rgba(0,0,0,0.2); flex-shrink: 0;'
     hit.addEventListener('click', (e) => {
       e.preventDefault()
       e.stopPropagation()
@@ -107,13 +133,23 @@ export function mountInstructionsDescriptionsArmyAdjectiveMatch(root: HTMLElemen
 
   function wrapStyle(extra = ''): string {
     return (
-      'display: inline-flex; align-items: center; gap: 6px; font: 600 14px Arial, sans-serif; padding: 6px 10px; border-radius: 8px; border: 2px solid #5c6f4e; background: linear-gradient(180deg, #f4f6ef 0%, #e2e6d8 100%); color: #1e2418; cursor: grab; box-shadow: 0 2px 4px rgba(45,61,40,0.12); user-select: none; touch-action: manipulation; min-width: 0; width: 100%; box-sizing: border-box;' +
+      'display: inline-flex; align-items: center; gap: 6px; font: 600 14px Arial, sans-serif; padding: 6px 10px; border-radius: 8px; border: 2px solid ' +
+      ADJ.chipBorder +
+      '; background: linear-gradient(180deg, ' +
+      ADJ.chipBg0 +
+      ' 0%, ' +
+      ADJ.chipBg1 +
+      ' 100%); color: ' +
+      ADJ.text +
+      '; cursor: grab; box-shadow: 0 2px 4px ' +
+      ADJ.chipShadow +
+      '; user-select: none; touch-action: manipulation; min-width: 0; width: 100%; box-sizing: border-box;' +
       extra
     )
   }
 
   function slotStyle(): string {
-    return 'min-width: 0; min-height: 40px; flex: 1; border: 2px dashed #8a9578; border-radius: 8px; background: rgba(255,255,255,0.7); display: flex; flex-wrap: wrap; align-items: center; justify-content: center; transition: border-color 0.2s, background 0.2s; padding: 4px;'
+    return 'min-width: 0; min-height: 40px; flex: 1; border: 2px dashed ' + ADJ.slotDash + '; border-radius: 8px; background: ' + ADJ.slotBg + '; display: flex; flex-wrap: wrap; align-items: center; justify-content: center; transition: border-color 0.2s, background 0.2s; padding: 4px;'
   }
 
   function makeChip(label: string): HTMLElement {
@@ -156,14 +192,14 @@ export function mountInstructionsDescriptionsArmyAdjectiveMatch(root: HTMLElemen
         clearSelection()
         selectedChip = wrap
         wrap.classList.add('ida-chip-selected')
-        wrap.style.boxShadow = '0 0 0 3px #b8a265, 0 2px 6px rgba(0,0,0,0.2)'
-        wrap.style.borderColor = '#8a7340'
+        wrap.style.boxShadow = ADJ.selectedRing + ', 0 2px 6px rgba(0,0,0,0.15)'
+        wrap.style.borderColor = ADJ.selectedBorder
         return
       }
       if (wrap.parentElement?.classList.contains('ida-slot') && bankEl) {
         bankEl.appendChild(wrap)
-        wrap.style.boxShadow = '0 2px 4px rgba(45,61,40,0.15)'
-        wrap.style.borderColor = '#5c6f4e'
+        wrap.style.boxShadow = '0 2px 4px ' + ADJ.chipShadow
+        wrap.style.borderColor = ADJ.chipBorder
         clearSelection()
       }
     })
@@ -177,8 +213,8 @@ export function mountInstructionsDescriptionsArmyAdjectiveMatch(root: HTMLElemen
       bankEl.appendChild(slot.firstChild as Node)
     }
     slot.appendChild(chipWrap)
-    chipWrap.style.boxShadow = '0 2px 4px rgba(45,61,40,0.15)'
-    chipWrap.style.borderColor = '#5c6f4e'
+    chipWrap.style.boxShadow = '0 2px 4px ' + ADJ.chipShadow
+    chipWrap.style.borderColor = ADJ.chipBorder
     clearSelection()
   }
 
@@ -241,14 +277,24 @@ export function mountInstructionsDescriptionsArmyAdjectiveMatch(root: HTMLElemen
     btnCheck.textContent = 'Check answers'
     btnCheck.className = 'ida-check-answers-btn'
     btnCheck.style.cssText =
-      'font: 600 14px Arial; padding: 10px 18px; border-radius: 8px; border: none; background: linear-gradient(135deg, #4a5f3a 0%, #2d3d28 100%); color: #f7f5ec; cursor: pointer; box-shadow: 0 2px 6px rgba(45,61,40,0.35);'
+      'font: 600 14px Arial; padding: 10px 18px; border-radius: 8px; border: none; background: linear-gradient(135deg, ' +
+      ADJ.check0 +
+      ' 0%, ' +
+      ADJ.check1 +
+      ' 100%); color: #f7fafc; cursor: pointer; box-shadow: 0 2px 6px ' +
+      ADJ.checkShadow +
+      ';'
     btnCheck.addEventListener('click', checkAnswers)
 
     const btnReset = document.createElement('button')
     btnReset.type = 'button'
     btnReset.textContent = 'Shuffle & reset'
     btnReset.style.cssText =
-      'font: 600 14px Arial; padding: 10px 18px; border-radius: 8px; border: 2px solid #5c6f4e; background: #fff; color: #2d3d28; cursor: pointer;'
+      'font: 600 14px Arial; padding: 10px 18px; border-radius: 8px; border: 2px solid ' +
+      ADJ.resetBorder +
+      '; background: #fff; color: ' +
+      ADJ.resetText +
+      '; cursor: pointer;'
     btnReset.addEventListener('click', build)
 
     toolbar.appendChild(btnCheck)
@@ -256,7 +302,7 @@ export function mountInstructionsDescriptionsArmyAdjectiveMatch(root: HTMLElemen
 
     feedbackEl = document.createElement('p')
     feedbackEl.setAttribute('role', 'status')
-    feedbackEl.style.cssText = 'margin: 0; font-size: 15px; font-weight: 600; min-height: 22px; color: #2d3d28;'
+    feedbackEl.style.cssText = 'margin: 0; font-size: 15px; font-weight: 600; min-height: 22px; color: ' + ADJ.feedbackIdle + ';'
     toolbar.appendChild(feedbackEl)
 
     const board = document.createElement('div')
@@ -275,13 +321,17 @@ export function mountInstructionsDescriptionsArmyAdjectiveMatch(root: HTMLElemen
       const row = document.createElement('div')
       row.className = 'ida-row'
       row.style.cssText =
-        'display: flex; align-items: center; gap: 8px; flex-wrap: nowrap; padding: 6px 10px; background: linear-gradient(90deg, rgba(92,111,78,0.12) 0%, rgba(255,255,255,0.5) 100%); border-radius: 8px; border: 1px solid #d4d9c8; min-width: 0;'
+        'display: flex; align-items: center; gap: 8px; flex-wrap: nowrap; padding: 6px 10px; background: linear-gradient(90deg, ' +
+        ADJ.rowTint0 +
+        ' 0%, rgba(255,255,255,0.55) 100%); border-radius: 8px; border: 1px solid ' +
+        ADJ.rowBorder +
+        '; min-width: 0;'
       row.dataset.expected = answer
       row.dataset.cue = cue
 
       const cueEl = document.createElement('div')
       cueEl.style.cssText =
-        'font-weight: 700; font-size: 15px; color: #1a2416; flex: 0 1 auto; min-width: 0; display: flex; align-items: center; gap: 6px;'
+        'font-weight: 700; font-size: 15px; color: ' + ADJ.text + '; flex: 0 1 auto; min-width: 0; display: flex; align-items: center; gap: 6px;'
       cueEl.appendChild(makeListenBtn(cue))
       const wordSpan = document.createElement('span')
       wordSpan.textContent = cue
@@ -300,17 +350,17 @@ export function mountInstructionsDescriptionsArmyAdjectiveMatch(root: HTMLElemen
       slot.addEventListener('dragover', (e) => {
         e.preventDefault()
         if (e.dataTransfer) e.dataTransfer.dropEffect = 'move'
-        slot.style.borderColor = '#4a5f3a'
-        slot.style.background = 'rgba(74,95,58,0.08)'
+        slot.style.borderColor = ADJ.slotBorderHover
+        slot.style.background = ADJ.slotBgHover
       })
       slot.addEventListener('dragleave', () => {
-        slot.style.borderColor = ''
-        slot.style.background = 'rgba(255,255,255,0.7)'
+        slot.style.border = '2px dashed ' + ADJ.slotDash
+        slot.style.background = ADJ.slotBg
       })
       slot.addEventListener('drop', (e) => {
         e.preventDefault()
-        slot.style.borderColor = ''
-        slot.style.background = 'rgba(255,255,255,0.7)'
+        slot.style.border = '2px dashed ' + ADJ.slotDash
+        slot.style.background = ADJ.slotBg
         const txt = e.dataTransfer?.getData('text/plain') ?? ''
         const chip = findChipByLabel(txt)
         if (chip) placeInSlot(slot, chip)
@@ -326,14 +376,18 @@ export function mountInstructionsDescriptionsArmyAdjectiveMatch(root: HTMLElemen
 
     const bankWrap = document.createElement('div')
     bankWrap.style.cssText =
-      'padding: 16px; border-radius: 10px; background: linear-gradient(135deg, #2d3d28 0%, #3d4f35 100%); box-shadow: inset 0 2px 8px rgba(0,0,0,0.2);'
+      'padding: 16px; border-radius: 10px; background: linear-gradient(135deg, ' +
+      ADJ.bank0 +
+      ' 0%, ' +
+      ADJ.bank1 +
+      ' 100%); box-shadow: inset 0 2px 8px rgba(0,0,0,0.2);'
     root.appendChild(bankWrap)
 
     const bankTitle = document.createElement('div')
     bankTitle.textContent = 'Word bank — drag or tap a word, then tap a slot'
     bankTitle.className = 'ida-no-print'
     bankTitle.style.cssText =
-      'font-size: 13px; font-weight: 700; color: #e8e4d4; margin-bottom: 10px; letter-spacing: 0.03em;'
+      'font-size: 13px; font-weight: 700; color: ' + ADJ.bankTitle + '; margin-bottom: 10px; letter-spacing: 0.03em;'
     bankWrap.appendChild(bankTitle)
 
     bankEl = document.createElement('div')

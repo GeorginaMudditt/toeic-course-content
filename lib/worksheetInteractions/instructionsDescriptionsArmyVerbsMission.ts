@@ -28,7 +28,7 @@ const SCENARIOS: ReadonlyArray<{ answer: string; before: string; after: string }
   { answer: 'prepare', before: 'Before the convoy moved out the crew had time to ', after: ' vehicles and equipment.' },
   { answer: 'build', before: 'Engineers were tasked to ', after: ' a temporary footbridge over the stream.' },
   { answer: 'repair', before: 'The workshop team worked through the night to ', after: ' the damaged truck.' },
-  { answer: 'salute', before: 'All personnel ', after: ' when the national flag was raised.' },
+  { answer: 'salute', before: 'All personnel ', after: ' when the national flag is raised.' },
   { answer: 'survive', before: 'After the exercise the instructor reminded them how to ', after: ' in extreme cold.' },
 ]
 
@@ -56,8 +56,15 @@ function slug(w: string): string {
   return norm(w).replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '')
 }
 
-function displayVerb(verb: string): string {
-  return verb.charAt(0).toUpperCase() + verb.slice(1).toLowerCase()
+/** Min width (px) for the gap so the chip + listen control fit; scales with verb length */
+function slotStyleForAnswer(answer: string): string {
+  const len = answer.length
+  const minW = Math.max(72, Math.round(len * 9.2 + 46))
+  return (
+    'box-sizing: border-box; min-width: ' +
+    minW +
+    'px; max-width: 100%; min-height: 40px; flex: 0 1 auto; border: 2px dashed #8a9578; border-radius: 8px; background: rgba(255,255,255,0.85); display: flex; flex-wrap: wrap; align-items: center; justify-content: center; transition: border-color 0.2s, background 0.2s; padding: 4px;'
+  )
 }
 
 export function mountInstructionsDescriptionsArmyVerbsMission(root: HTMLElement): () => void {
@@ -122,10 +129,6 @@ export function mountInstructionsDescriptionsArmyVerbsMission(root: HTMLElement)
     return 'display: inline-flex; align-items: center; gap: 6px; font: 600 14px Arial, sans-serif; padding: 6px 10px; border-radius: 8px; border: 2px solid #5c6f4e; background: linear-gradient(180deg, #f4f6ef 0%, #e2e6d8 100%); color: #1e2418; cursor: grab; box-shadow: 0 2px 4px rgba(45,61,40,0.12); user-select: none; touch-action: manipulation; min-width: 0; width: 100%; box-sizing: border-box;'
   }
 
-  function slotStyle(): string {
-    return 'min-width: 100px; max-width: 140px; min-height: 40px; flex: 0 0 auto; border: 2px dashed #8a9578; border-radius: 8px; background: rgba(255,255,255,0.85); display: flex; flex-wrap: wrap; align-items: center; justify-content: center; transition: border-color 0.2s, background 0.2s; padding: 4px;'
-  }
-
   function makeChip(verb: string): HTMLElement {
     const wrap = document.createElement('div')
     wrap.className = 'ida-verb-chip-wrap'
@@ -138,7 +141,7 @@ export function mountInstructionsDescriptionsArmyVerbsMission(root: HTMLElement)
     const b = document.createElement('button')
     b.type = 'button'
     b.className = 'ida-verb-chip'
-    b.textContent = displayVerb(verb)
+    b.textContent = verb
     b.style.cssText =
       'font: inherit; font-weight: 700; border: none; background: transparent; color: inherit; cursor: grab; padding: 2px 0; flex: 1; min-width: 0; text-align: left;'
     wrap.appendChild(b)
@@ -294,7 +297,8 @@ export function mountInstructionsDescriptionsArmyVerbsMission(root: HTMLElement)
 
       const slot = document.createElement('div')
       slot.className = 'ida-verb-slot ida-slot'
-      slot.style.cssText = slotStyle()
+      const baseSlotStyle = slotStyleForAnswer(s.answer)
+      slot.style.cssText = baseSlotStyle
       slot.dataset.expected = s.answer
       slot.setAttribute('role', 'group')
       slot.setAttribute('aria-label', 'Choose verb for this scenario')
@@ -306,13 +310,11 @@ export function mountInstructionsDescriptionsArmyVerbsMission(root: HTMLElement)
         slot.style.background = 'rgba(74,95,58,0.08)'
       })
       slot.addEventListener('dragleave', () => {
-        slot.style.borderColor = ''
-        slot.style.background = 'rgba(255,255,255,0.85)'
+        slot.style.cssText = baseSlotStyle
       })
       slot.addEventListener('drop', (e) => {
         e.preventDefault()
-        slot.style.borderColor = ''
-        slot.style.background = 'rgba(255,255,255,0.85)'
+        slot.style.cssText = baseSlotStyle
         const txt = e.dataTransfer?.getData('text/plain') ?? ''
         const chip = findChipByLabel(norm(txt))
         if (chip) placeInSlot(slot, chip)
