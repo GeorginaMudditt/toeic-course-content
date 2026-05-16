@@ -61,6 +61,7 @@ npm run update:resource:supabase "Telephoning and Writing" "telephoning-writing-
 npm run update:resource:supabase "Travel Vocabulary" "travel-vocabulary-html.html"
 npm run update:resource:supabase "Vocabulary: Military and Marine" "military-marine-vocabulary-html.html"
 npm run update:resource:supabase "Instructions and Descriptions (Army)" "instructions-descriptions-army-vocabulary-html.html"
+npm run update:resource:supabase "Past Simple Practice (Army)" "past-simple-practice-army-html.html"
 
 # Speaking
 npm run update:resource:supabase "Speaking AI" "speaking-ai-html.html"

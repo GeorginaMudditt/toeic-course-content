@@ -6,6 +6,7 @@ import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { mountInstructionsDescriptionsArmyAdjectiveMatch } from '@/lib/worksheetInteractions/instructionsDescriptionsArmyAdjectivesMatch'
 import { mountInstructionsDescriptionsArmyVerbsMission } from '@/lib/worksheetInteractions/instructionsDescriptionsArmyVerbsMission'
+import { mountPastSimpleArmyEdPronunciation } from '@/lib/worksheetInteractions/pastSimpleArmyEdPronunciation'
 
 interface Resource {
   id: string
@@ -1807,6 +1808,23 @@ export default function WorksheetViewer({ assignmentId, resource, initialProgres
       if (!host) return
       const el = host.querySelector('[data-ida-verbs-mount]') as HTMLElement | null
       if (el) detach = mountInstructionsDescriptionsArmyVerbsMission(el)
+    })
+    return () => {
+      cancelAnimationFrame(rafId)
+      detach?.()
+    }
+  }, [resource.content])
+
+  // Past Simple Practice (Army): -ed pronunciation columns.
+  useEffect(() => {
+    const html = resource.content
+    if (typeof html !== 'string' || !html.includes('data-pspa-ed-pronunciation')) return
+    let detach: (() => void) | undefined
+    const rafId = requestAnimationFrame(() => {
+      const host = contentRef.current
+      if (!host) return
+      const el = host.querySelector('[data-pspa-ed-pronunciation]') as HTMLElement | null
+      if (el) detach = mountPastSimpleArmyEdPronunciation(el)
     })
     return () => {
       cancelAnimationFrame(rafId)

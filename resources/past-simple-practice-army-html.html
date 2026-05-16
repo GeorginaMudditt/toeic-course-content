@@ -1,0 +1,99 @@
+<!-- Past Simple Practice (Army) -->
+<style>
+  @media print { @page { margin: 1.5cm; } body { margin: 0; padding: 0; }
+    .pspa-page-break { page-break-before: always; }
+    .pspa-keep-together { page-break-inside: avoid; break-inside: avoid; }
+    .pspa-no-print { display: none !important; } }
+  @keyframes pspa-shake { 0%,100%{transform:translateX(0)} 20%,60%{transform:translateX(-6px)} 40%,80%{transform:translateX(6px)} }
+  .pspa-shake { animation: pspa-shake 0.45s ease; }
+  .pspa-slot-correct { border: 3px solid #15803d !important; background: #ecfdf5 !important; }
+  .pspa-slot-wrong { border-color: #b91c1c !important; background: #fee2e2 !important; }
+  .pspa-ed-board { display: grid; grid-template-columns: repeat(3,1fr); gap: 12px; margin-bottom: 14px; }
+  @media (max-width:720px){ .pspa-ed-board { grid-template-columns:1fr; } }
+  .pspa-ed-bank-grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:6px; }
+  @media (max-width:560px){ .pspa-ed-bank-grid { grid-template-columns:repeat(2,minmax(0,1fr)); } }
+  @keyframes pspa-spin { to { transform: rotate(360deg); } }
+  .pspa-loader-row { display:flex; align-items:center; justify-content:center; gap:14px; min-height:100px; padding:24px 16px; background:rgba(255,255,255,0.85); border-radius:10px; border:1px dashed #c5c9ba; }
+  .pspa-loader-ring { width:36px; height:36px; border:3px solid #d4d9c8; border-top-color:#5c6f4e; border-radius:50%; animation:pspa-spin 0.7s linear infinite; flex-shrink:0; }
+</style>
+<div style="max-width:820px;margin:0 auto;padding:20px;font-family:Arial,sans-serif;line-height:1.5;color:#2a2f24;background:linear-gradient(to bottom,#e6e9df,#f7f8f4);">  <div style="text-align:center;margin-bottom:25px;padding:22px;background:linear-gradient(135deg,#2d3d28 0%,#1a2416 100%);border-radius:12px;box-shadow:0 4px 14px rgba(26,36,22,0.45);" class="pspa-keep-together">
+    <div style="display:inline-block;margin-bottom:8px;"><img src="/brizzle-logo.png" alt="Brizzle Logo" style="width:50px;height:50px;object-fit:contain;background:white;padding:5px;border-radius:50%;" /></div>
+    <h1 style="font-size:26px;font-weight:bold;margin:0 0 6px 0;color:#f2efe4;text-shadow:0 2px 4px rgba(0,0,0,0.25);">Past Simple Practice (Army)</h1>
+    <p style="margin:0;font-size:14px;color:#c9c2a8;letter-spacing:0.04em;">Reading, Speaking and Pronunciation</p>
+  </div>  <div style="margin-bottom:24px;padding:22px;background:#fffef9;border-radius:10px;box-shadow:0 2px 8px rgba(0,0,0,0.06);border:1px solid #d4d9c8;" class="pspa-keep-together" data-grammar-per-section-check="true">
+    <h2 style="font-size:20px;font-weight:bold;margin:0 0 10px 0;color:#2d3d28;border-bottom:3px solid #5c6f4e;padding-bottom:8px;">Reading</h2>
+    <p style="font-size:15px;margin:0 0 14px 0;color:#4a5240;">Read the following text and then answer the True/False comprehension questions.</p>
+    <div style="background:#ffffff;padding:15px;border:1px solid #d4d9c8;border-radius:8px;margin-bottom:18px;">
+      <h3 style="font-size:18px;font-weight:bold;margin:0 0 10px 0;color:#1a2416;">A Typical Day at Military Training Camp</h3>
+      <div style="font-size:15px;line-height:1.65;color:#2a2f24;">
+        <p style="margin:0 0 10px 0;">Every morning at the military training camp, the recruits wake up at 5:30 a.m. They get dressed quickly, prepare their equipment, and clean their sleeping area before breakfast.</p>
+        <p style="margin:0 0 10px 0;">After breakfast, the recruits march together to the training field. The commander gives careful instructions, and everybody listens quietly. First, the recruits run several kilometres through the forest while they carry heavy bags and water bottles. Then they climb walls, crawl under nets, and jump over obstacles.</p>
+        <p style="margin:0 0 10px 0;">Later in the morning, the recruits learn how to observe dangerous situations and communicate by radio. One group practises rescue techniques while another group learns how to protect people during emergencies. The commander explains how teamwork helps soldiers survive in difficult situations.</p>
+        <p style="margin:0 0 10px 0;">After lunch, the recruits train in smaller teams. Some soldiers repair equipment, while others build temporary shelters or practise survival techniques in the woods. During one exercise, a team leader gives instructions, and the recruits must follow them carefully.</p>
+        <p style="margin:0 0 10px 0;">In the evening, the recruits return to the camp feeling tired but proud. Before dinner, they salute the commander and clean their boots and equipment. The commander speaks to the group about discipline, respect, and leadership.</p>
+        <p style="margin:0;">At the end of the day, the recruits finally rest in their rooms. Some write messages to their families, while others prepare for the next day of training. Although military life is sometimes stressful and exhausting, most recruits enjoy the experience because they become stronger, more confident, and more independent every day.</p>
+      </div>
+    </div>
+    <h3 style="font-size:17px;font-weight:bold;margin:0 0 10px 0;color:#1a2416;">True or False?</h3>
+    <ol style="padding-left:25px;font-size:15px;list-style-type:decimal;margin:0;">
+      <li style="margin-bottom:10px;">The recruits wake up at 5:30 a.m. <span data-grammar-input="reading1-tf-q1" data-grammar-input-type="select" data-grammar-input-options="True|False" style="display:inline-block;min-width:120px;vertical-align:middle;"></span></li>
+      <li style="margin-bottom:10px;">The recruits clean their sleeping area after they eat breakfast. <span data-grammar-input="reading1-tf-q2" data-grammar-input-type="select" data-grammar-input-options="True|False" style="display:inline-block;min-width:120px;vertical-align:middle;"></span></li>
+      <li style="margin-bottom:10px;">After breakfast, the recruits march to the training field. <span data-grammar-input="reading1-tf-q3" data-grammar-input-type="select" data-grammar-input-options="True|False" style="display:inline-block;min-width:120px;vertical-align:middle;"></span></li>
+      <li style="margin-bottom:10px;">During morning training, the recruits only run—they do not climb or crawl. <span data-grammar-input="reading1-tf-q4" data-grammar-input-type="select" data-grammar-input-options="True|False" style="display:inline-block;min-width:120px;vertical-align:middle;"></span></li>
+      <li style="margin-bottom:10px;">One group practises rescue techniques while another learns emergency protection. <span data-grammar-input="reading1-tf-q5" data-grammar-input-type="select" data-grammar-input-options="True|False" style="display:inline-block;min-width:120px;vertical-align:middle;"></span></li>
+      <li style="margin-bottom:10px;">The recruits salute the commander after dinner. <span data-grammar-input="reading1-tf-q6" data-grammar-input-type="select" data-grammar-input-options="True|False" style="display:inline-block;min-width:120px;vertical-align:middle;"></span></li>
+      <li style="margin-bottom:10px;">Most recruits dislike the training experience. <span data-grammar-input="reading1-tf-q7" data-grammar-input-type="select" data-grammar-input-options="True|False" style="display:inline-block;min-width:120px;vertical-align:middle;"></span></li>
+      <li style="margin-bottom:0;">In the evening, some recruits write messages to their families. <span data-grammar-input="reading1-tf-q8" data-grammar-input-type="select" data-grammar-input-options="True|False" style="display:inline-block;min-width:120px;vertical-align:middle;"></span></li>
+    </ol>
+    <p class="grammar-check-summary" style="margin:14px 0 0 0;font-size:14px;font-weight:600;color:#4a5240;"></p>
+  </div>  <div style="margin-bottom:24px;padding:22px;background:#fffef9;border-radius:10px;box-shadow:0 2px 8px rgba(0,0,0,0.06);border:1px solid #d4d9c8;" class="pspa-keep-together pspa-page-break" data-grammar-check-disabled="true">
+    <h2 style="font-size:20px;font-weight:bold;margin:0 0 10px 0;color:#2d3d28;border-bottom:3px solid #5c6f4e;padding-bottom:8px;">Speaking</h2>
+    <p style="font-size:15px;margin:0 0 12px 0;color:#4a5240;">Imagine that you are one of the army recruits in the previous text. Retell the story in the first person ("I …") as if you are describing what happened yesterday—using the Past Simple.</p>
+    <div style="padding:14px 16px;background:linear-gradient(to bottom,#e8ebe3,#ffffff);border-radius:8px;border-left:4px solid #5c6f4e;margin-bottom:14px;">
+      <p style="font-size:14px;margin:0;color:#2a2f24;font-style:italic;">Yesterday I got up at 5:30 a.m. I got dressed quickly and prepared my equipment …</p>
+    </div>
+    <p style="font-size:15px;margin:0 0 8px 0;color:#4a5240;">Record yourself or practise aloud with your teacher. You can make notes below:</p>
+    <span data-grammar-input="speaking-notes" data-grammar-input-type="textarea" style="display:block;min-height:140px;"></span>
+  </div>
+
+  <div style="margin-bottom:24px;padding:22px;background:linear-gradient(to bottom,#f4f8fc,#fafcfe);border-radius:10px;box-shadow:0 2px 8px rgba(0,0,0,0.06);border:1px solid #cfdce8;" class="pspa-keep-together pspa-page-break">
+    <h2 style="font-size:20px;font-weight:bold;margin:0 0 10px 0;color:#1e3a5a;border-bottom:3px solid #5c7cab;padding-bottom:8px;">Pronunciation</h2>
+    <p style="font-size:15px;margin:0 0 14px 0;color:#4a5240;">Regular verbs in the Past Simple all end in -ed. However, the pronunciation of this ending differs. Put the following verbs in the correct pronunciation column: /t/, /d/, or /ɪd/.</p>
+    <p style="font-size:14px;margin:0 0 12px 0;color:#4a5240;">Verbs: prepared, cleaned, marched, saluted, listened, carried, jumped, learned, protected, rested</p>
+    <div id="pspa-ed-pronunciation" data-pspa-ed-pronunciation="true" style="margin-top:8px;">
+      <div class="pspa-interactive-placeholder pspa-no-print" role="status" aria-live="polite">
+        <div class="pspa-loader-row">
+          <div class="pspa-loader-ring" aria-hidden="true"></div>
+          <span style="font-size:14px;color:#4a5240;">Loading activity…</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div style="max-width:820px;margin:0 auto;padding:20px;font-family:Arial,sans-serif;line-height:1.5;color:#333;" class="pspa-page-break">
+  <div style="margin-top:10px;padding-top:20px;border-top:2px solid #e5e7eb;" class="pspa-keep-together">
+    <h2 style="font-size:22px;font-weight:bold;margin-bottom:15px;color:#000;">📝 Answer Key</h2>
+
+    <div style="margin-bottom:20px;">
+      <h3 style="font-size:19px;font-weight:bold;margin-bottom:10px;color:#000;">Reading #1: True / False</h3>
+      <ol style="padding-left:25px;font-size:16px;list-style-type:decimal;">
+        <li style="margin-bottom:8px;"><strong>True</strong></li>
+        <li style="margin-bottom:8px;"><strong>False</strong></li>
+        <li style="margin-bottom:8px;"><strong>True</strong></li>
+        <li style="margin-bottom:8px;"><strong>False</strong></li>
+        <li style="margin-bottom:8px;"><strong>True</strong></li>
+        <li style="margin-bottom:8px;"><strong>False</strong></li>
+        <li style="margin-bottom:8px;"><strong>False</strong></li>
+        <li style="margin-bottom:0;"><strong>True</strong></li>
+      </ol>
+    </div>
+
+    <div style="margin-bottom:0;">
+      <h3 style="font-size:19px;font-weight:bold;margin-bottom:10px;color:#000;">Pronunciation: -ed endings</h3>
+      <p style="font-size:16px;margin-bottom:6px;"><strong>/t/:</strong> prepared, marched, jumped</p>
+      <p style="font-size:16px;margin-bottom:6px;"><strong>/d/:</strong> cleaned, listened, carried, learned</p>
+      <p style="font-size:16px;margin-bottom:0;"><strong>/ɪd/:</strong> saluted, protected, rested</p>
+    </div>
+  </div>
+</div>

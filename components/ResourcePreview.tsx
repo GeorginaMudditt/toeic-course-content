@@ -4,6 +4,7 @@ import { useState, useEffect, useRef, useCallback } from 'react'
 import { createRoot } from 'react-dom/client'
 import { mountInstructionsDescriptionsArmyAdjectiveMatch } from '@/lib/worksheetInteractions/instructionsDescriptionsArmyAdjectivesMatch'
 import { mountInstructionsDescriptionsArmyVerbsMission } from '@/lib/worksheetInteractions/instructionsDescriptionsArmyVerbsMission'
+import { mountPastSimpleArmyEdPronunciation } from '@/lib/worksheetInteractions/pastSimpleArmyEdPronunciation'
 
 interface Resource {
   id: string
@@ -300,6 +301,21 @@ export default function ResourcePreview({ resource, showActions = true }: Resour
       if (!host) return
       const el = host.querySelector('[data-ida-verbs-mount]') as HTMLElement | null
       if (el) detach = mountInstructionsDescriptionsArmyVerbsMission(el)
+    })
+    return () => {
+      cancelAnimationFrame(rafId)
+      detach?.()
+    }
+  }, [resource.content])
+
+  useEffect(() => {
+    if (typeof resource.content !== 'string' || !resource.content.includes('data-pspa-ed-pronunciation')) return
+    let detach: (() => void) | undefined
+    const rafId = requestAnimationFrame(() => {
+      const host = contentRef.current
+      if (!host) return
+      const el = host.querySelector('[data-pspa-ed-pronunciation]') as HTMLElement | null
+      if (el) detach = mountPastSimpleArmyEdPronunciation(el)
     })
     return () => {
       cancelAnimationFrame(rafId)
