@@ -5,7 +5,7 @@
 type Sound = 't' | 'd' | 'id'
 
 const VERBS: ReadonlyArray<{ word: string; sound: Sound }> = [
-  { word: 'prepared', sound: 't' },
+  { word: 'prepared', sound: 'd' },
   { word: 'cleaned', sound: 'd' },
   { word: 'marched', sound: 't' },
   { word: 'saluted', sound: 'id' },
