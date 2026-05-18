@@ -1532,10 +1532,10 @@ export default function WorksheetViewer({ assignmentId, resource, initialProgres
   useEffect(() => {
     if (!hasGrammarInputs || !contentRef.current) return
 
-    // Skip portal re-render while typing so focus is preserved; live-check still reapplies styles below.
-    const anyInputFocused = Array.from(contentRef.current.querySelectorAll('input[type="text"], textarea')).some(
-      (el) => document.activeElement === el
-    )
+    // Skip portal re-render while typing/selecting so focus is preserved; live-check still reapplies styles below.
+    const anyInputFocused = Array.from(
+      contentRef.current.querySelectorAll('input[type="text"], textarea, select')
+    ).some((el) => document.activeElement === el)
 
     if (!anyInputFocused) {
       const currentGrammarAnswers = getGrammarAnswers()
@@ -1577,11 +1577,15 @@ export default function WorksheetViewer({ assignmentId, resource, initialProgres
 
     // Re-apply tick/cross after React re-renders inputs (inline styles from Check Answers are otherwise cleared).
     const liveSections = Array.from(
-      contentRef.current.querySelectorAll('.keep-together[data-grammar-live-check="true"]')
+      contentRef.current.querySelectorAll('[data-grammar-live-check="true"]')
     ) as HTMLElement[]
     if (liveSections.length > 0) {
       const answerMap = buildGrammarAnswerMap()
-      liveSections.forEach((sec) => runGrammarCheckForContainer(sec, answerMap))
+      const reapplyLiveCheck = () => {
+        liveSections.forEach((sec) => runGrammarCheckForContainer(sec, answerMap))
+      }
+      reapplyLiveCheck()
+      requestAnimationFrame(reapplyLiveCheck)
     }
   }, [notes, hasGrammarInputs, updateGrammarAnswer, buildGrammarAnswerMap, runGrammarCheckForContainer])
 
@@ -1615,7 +1619,9 @@ export default function WorksheetViewer({ assignmentId, resource, initialProgres
 
     inputContainers.forEach((inputContainer) => {
       const section =
+        (inputContainer.closest('[data-grammar-per-section-check]') as HTMLElement | null) ||
         (inputContainer.closest('.keep-together') as HTMLElement | null) ||
+        (inputContainer.closest('[class*="-keep-together"]') as HTMLElement | null) ||
         (inputContainer.closest('div') as HTMLElement | null)
       if (!section) return
       const current = sectionMap.get(section) || []
