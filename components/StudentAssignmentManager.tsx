@@ -76,6 +76,7 @@ export default function StudentAssignmentManager({ student, resources, courses }
   const [loading, setLoading] = useState(false)
   const [selectedLevels, setSelectedLevels] = useState<string[]>(['All'])
   const [selectedSkills, setSelectedSkills] = useState<string[]>(['All'])
+  const [titleSearch, setTitleSearch] = useState('')
   const [showOnlyUnassigned, setShowOnlyUnassigned] = useState<Record<string, boolean>>({})
 
   // Use the utility function directly - it handles all cleaning
@@ -116,12 +117,19 @@ export default function StudentAssignmentManager({ student, resources, courses }
     return enrollment.assignments.map(assignment => assignment.resource.id)
   }
 
+  const titleSearchNormalized = titleSearch.trim().toLowerCase()
+
   // Filter resources based on selected filters and assigned status
   const getFilteredResources = (enrollment: Enrollment) => {
     const assignedResourceIds = getAssignedResourceIds(enrollment)
     const onlyUnassigned = showOnlyUnassigned[enrollment.id] || false
     
     return resources.filter((resource) => {
+      // Title search (word or phrase in resource title)
+      const titleMatch =
+        !titleSearchNormalized ||
+        (resource.title || '').toLowerCase().includes(titleSearchNormalized)
+
       // Level filter
       const levelMatch = selectedLevels.includes('All') || 
         selectedLevels.includes(resource.level || '')
@@ -133,7 +141,7 @@ export default function StudentAssignmentManager({ student, resources, courses }
       // Assigned filter
       const assignedMatch = !onlyUnassigned || !assignedResourceIds.includes(resource.id)
       
-      return levelMatch && skillMatch && assignedMatch
+      return titleMatch && levelMatch && skillMatch && assignedMatch
     })
   }
 
@@ -398,6 +406,38 @@ export default function StudentAssignmentManager({ student, resources, courses }
                 <>
                   {/* Filters */}
                   <div className="mb-4 space-y-3">
+                    <div>
+                      <label htmlFor={`resource-title-search-${enrollment.id}`} className="block text-sm font-medium text-gray-700 mb-2">
+                        Search by title:
+                      </label>
+                      <div className="relative max-w-md">
+                        <input
+                          id={`resource-title-search-${enrollment.id}`}
+                          type="search"
+                          value={titleSearch}
+                          onChange={(e) => setTitleSearch(e.target.value)}
+                          placeholder="e.g. past simple, army, prepositions…"
+                          className="w-full border border-gray-300 rounded-md pl-3 pr-9 py-2 text-sm focus:outline-none bg-white"
+                          onFocus={(e) => (e.currentTarget.style.borderColor = '#38438f')}
+                          onBlur={(e) => (e.currentTarget.style.borderColor = '#d1d5db')}
+                          autoComplete="off"
+                        />
+                        {titleSearch.trim() !== '' && (
+                          <button
+                            type="button"
+                            onClick={() => setTitleSearch('')}
+                            className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 p-1"
+                            aria-label="Clear search"
+                            title="Clear search"
+                          >
+                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                          </button>
+                        )}
+                      </div>
+                    </div>
+
                     {/* Show Only Unassigned Filter */}
                     <div>
                       <label className="flex items-center space-x-2 cursor-pointer">
@@ -469,9 +509,11 @@ export default function StudentAssignmentManager({ student, resources, courses }
                   <div className="space-y-2 max-h-64 overflow-y-auto mb-4 bg-white p-3 rounded border border-blue-100">
                     {getFilteredResources(enrollment).length === 0 ? (
                       <p className="text-sm text-gray-500 italic text-center py-4">
-                        {showOnlyUnassigned[enrollment.id] 
-                          ? 'All resources have been assigned to this enrollment.' 
-                          : 'No resources match the selected filters.'}
+                        {showOnlyUnassigned[enrollment.id] && !titleSearchNormalized
+                          ? 'All resources have been assigned to this enrollment.'
+                          : titleSearchNormalized
+                            ? 'No resources match your search and filters.'
+                            : 'No resources match the selected filters.'}
                       </p>
                     ) : (
                       getFilteredResources(enrollment).map((resource) => {
