@@ -74,6 +74,9 @@ npm run update:resource:supabase "Presentations" "speaking-presentations-html.ht
 npm run update:resource:supabase "Argumentation" "speaking-argumentation-html.html"
 npm run update:resource:supabase "TOEICⓇ Speaking: Your Future Career" "speaking-your-future-career-html.html"
 
+# Tests / TOEIC Reading
+npm run update:resource:supabase "Introduction to TOEICⓇ Reading" "introduction-toeic-reading-html.html"
+
 # Tests
 npm run update:resource:supabase "Placement Test" "placement-test-html.html"
 npm run update:resource:supabase "Final assessment" "final-assessment-html.html"
