@@ -55,6 +55,14 @@ const textareaAnswerMatches = (value: string, expected: string[]): boolean => {
   })
 }
 
+const parseGrammarAcceptable = (raw: string | null): string[] => {
+  if (!raw) return []
+  return raw
+    .split('|')
+    .map((part) => normalizeAnswerValue(part))
+    .filter(Boolean)
+}
+
 const expandAnswerVariants = (value: string): string[] => {
   const trimmed = value.trim()
   if (!trimmed) return []
@@ -721,6 +729,7 @@ export default function WorksheetViewer({ assignmentId, resource, initialProgres
   const enablePerSectionGrammarCheck = useMemo(() => {
     return (
       /prepositions of time and place/i.test(resource.title || '') ||
+      /advanced prepositions/i.test(resource.title || '') ||
       (typeof resource.content === 'string' && resource.content.includes('data-grammar-per-section-check'))
     )
   }, [resource.title, resource.content])
@@ -798,6 +807,16 @@ export default function WorksheetViewer({ assignmentId, resource, initialProgres
     const allInputs = Array.from(contentRef.current.querySelectorAll('[data-grammar-input]')) as HTMLElement[]
     if (!allInputs.length) return answerMap
 
+    allInputs.forEach((el) => {
+      const inputId = el.getAttribute('data-grammar-input')
+      if (!inputId || answerMap.has(inputId)) return
+      const acceptableRaw =
+        el.getAttribute('data-grammar-acceptable') || el.getAttribute('data-correct')
+      if (!acceptableRaw) return
+      const tokens = parseGrammarAcceptable(acceptableRaw)
+      if (tokens.length) answerMap.set(inputId, tokens)
+    })
+
     const groupedByPrefix = new Map<string, string[]>()
     allInputs.forEach((el) => {
       const inputId = el.getAttribute('data-grammar-input')
@@ -838,6 +857,7 @@ export default function WorksheetViewer({ assignmentId, resource, initialProgres
       const tokenGroups = extractAnswerTokenGroups(matchedSection)
 
       inputIds.forEach((id, index) => {
+        if (answerMap.has(id)) return
         const group = tokenGroups[index]
         if (!group?.length) return
         answerMap.set(id, group)

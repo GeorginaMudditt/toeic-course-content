@@ -9,7 +9,7 @@
     }
     h2, h3 { page-break-after: avoid; break-after: avoid; }
     table { page-break-inside: avoid; break-inside: avoid; }
-    .check-answers-btn { display: none !important; }
+    .grammar-check-controls { display: none !important; }
   }
 
   .adv-prep-wrap {
@@ -164,48 +164,60 @@
     margin: 0 0 8px 0;
   }
 
-  .prep-input {
-    width: 5.5em;
-    max-width: 100%;
-    border: 1px solid #94a3b8;
-    border-radius: 4px;
-    padding: 3px 6px;
-    font: inherit;
-    font-size: 14px;
-    vertical-align: baseline;
-    box-sizing: border-box;
+  [data-grammar-per-section-check] {
+    margin-top: 8px;
   }
 
-  .prep-input:focus,
-  .prep-input:focus-visible {
-    outline: 2px solid #2563eb;
-    outline-offset: 1px;
-    border-color: #2563eb;
-  }
-
-  .check-answers-btn {
+  .adv-prep-wrap .grammar-check-controls button {
     margin-top: 12px;
     padding: 8px 18px;
     font-size: 14px;
     font-weight: 700;
     color: #fff;
-    background: #0d9488;
+    background: #0d9488 !important;
     border: none;
     border-radius: 6px;
     cursor: pointer;
   }
 
-  .check-answers-btn:hover {
-    background: #0f766e;
+  .adv-prep-wrap .grammar-check-controls button:hover {
+    background: #0f766e !important;
   }
 
-  .check-answers-btn:focus-visible {
-    outline: 2px solid #134e4a;
-    outline-offset: 2px;
+  .adv-prep-wrap [data-grammar-input] input[type="text"] {
+    width: 5.5em;
+    max-width: 100%;
+    min-width: 3em;
+    margin-left: 0;
+    padding: 3px 6px;
+    font-size: 14px;
+    vertical-align: baseline;
+    box-sizing: border-box;
   }
 
-  .practice-with-check {
-    margin-top: 8px;
+  .adv-prep-wrap [data-grammar-input] input[type="text"]:focus,
+  .adv-prep-wrap [data-grammar-input] input[type="text"]:focus-visible {
+    outline: 2px solid #2563eb;
+    outline-offset: 1px;
+    border-color: #2563eb;
+  }
+
+  .adv-prep-wrap [data-grammar-input] textarea {
+    width: 100%;
+    min-height: 96px;
+    padding: 10px 12px;
+    font-size: 14px;
+    line-height: 1.45;
+    border-radius: 6px;
+    box-sizing: border-box;
+    resize: vertical;
+  }
+
+  .adv-prep-wrap [data-grammar-input] textarea:focus,
+  .adv-prep-wrap [data-grammar-input] textarea:focus-visible {
+    outline: 2px solid #2563eb;
+    outline-offset: 1px;
+    border-color: #2563eb;
   }
 
   .practice6-list {
@@ -225,29 +237,6 @@
   .practice6-item > p {
     margin: 0 0 8px 0;
     line-height: 1.5;
-  }
-
-  .practice6-rewrite {
-    display: block;
-    width: 100%;
-    min-height: 96px;
-    box-sizing: border-box;
-    font-family: inherit;
-    font-size: 14px;
-    line-height: 1.45;
-    padding: 10px 12px;
-    border: 1px solid #94a3b8;
-    border-radius: 6px;
-    resize: vertical;
-    color: #1e293b;
-    background: #fff;
-  }
-
-  .practice6-rewrite:focus,
-  .practice6-rewrite:focus-visible {
-    outline: 2px solid #2563eb;
-    outline-offset: 1px;
-    border-color: #2563eb;
   }
 
   .practice6-label {
@@ -420,18 +409,17 @@
     </div>
     <div class="tip">💬 <strong>Difference:</strong> <span class="prep-ex">on</span> time = punctual · <span class="prep-ex">in</span> time = early enough</div>
     <h3 style="margin-top:12px;">Practice #1: Choose the correct option: <span class="prep-ex">at</span>, <span class="prep-ex">on</span>, <span class="prep-ex">in</span></h3>
-    <div class="practice-with-check">
+    <div class="practice-with-check" data-grammar-per-section-check="true">
       <div class="practice-list">
-        <p>1. The legal team submitted the revised contract just <input type="text" class="prep-input" data-correct="in" maxlength="20" aria-label="Practice 1, answer 1" /> time for the deadline.</p>
-        <p>2. She is away <input type="text" class="prep-input" data-correct="on" maxlength="20" aria-label="Practice 1, answer 2" /> business, but I will send her an email.</p>
-        <p>3. We had to organise the product launch <input type="text" class="prep-input" data-correct="at" maxlength="20" aria-label="Practice 1, answer 3" /> very short notice.</p>
-        <p>4. The company expects significant growth <input type="text" class="prep-input" data-correct="in" maxlength="20" aria-label="Practice 1, answer 4" /> the long term.</p>
-        <p>5. Several operational issues appeared <input type="text" class="prep-input" data-correct="in" maxlength="20" aria-label="Practice 1, answer 5" /> the early stages of the merger.</p>
-        <p>6. She signed the agreement <input type="text" class="prep-input" data-correct="on" maxlength="20" aria-label="Practice 1, answer 6" /> behalf of the regional director.</p>
-        <p>7. Delegates received their conference materials <input type="text" class="prep-input" data-correct="on" maxlength="20" aria-label="Practice 1, answer 7" /> arrival.</p>
-        <p>8. The finance department usually reviews budgets <input type="text" class="prep-input" data-correct="at" maxlength="20" aria-label="Practice 1, answer 8" /> the end of each quarter.</p>
+        <p>1. The legal team submitted the revised contract just <span data-grammar-input="practice1-q1" data-grammar-acceptable="in" style="display: inline-block; min-width: 5.5em; max-width: 100%; vertical-align: baseline;"></span> time for the deadline.</p>
+        <p>2. She is away <span data-grammar-input="practice1-q2" data-grammar-acceptable="on" style="display: inline-block; min-width: 5.5em; max-width: 100%; vertical-align: baseline;"></span> business, but I will send her an email.</p>
+        <p>3. We had to organise the product launch <span data-grammar-input="practice1-q3" data-grammar-acceptable="at" style="display: inline-block; min-width: 5.5em; max-width: 100%; vertical-align: baseline;"></span> very short notice.</p>
+        <p>4. The company expects significant growth <span data-grammar-input="practice1-q4" data-grammar-acceptable="in" style="display: inline-block; min-width: 5.5em; max-width: 100%; vertical-align: baseline;"></span> the long term.</p>
+        <p>5. Several operational issues appeared <span data-grammar-input="practice1-q5" data-grammar-acceptable="in" style="display: inline-block; min-width: 5.5em; max-width: 100%; vertical-align: baseline;"></span> the early stages of the merger.</p>
+        <p>6. She signed the agreement <span data-grammar-input="practice1-q6" data-grammar-acceptable="on" style="display: inline-block; min-width: 5.5em; max-width: 100%; vertical-align: baseline;"></span> behalf of the regional director.</p>
+        <p>7. Delegates received their conference materials <span data-grammar-input="practice1-q7" data-grammar-acceptable="on" style="display: inline-block; min-width: 5.5em; max-width: 100%; vertical-align: baseline;"></span> arrival.</p>
+        <p>8. The finance department usually reviews budgets <span data-grammar-input="practice1-q8" data-grammar-acceptable="at" style="display: inline-block; min-width: 5.5em; max-width: 100%; vertical-align: baseline;"></span> the end of each quarter.</p>
       </div>
-      <button type="button" class="check-answers-btn">Check answers</button>
     </div>
   </div>
 
@@ -471,18 +459,17 @@
       </div>
     </div>
     <h3>Practice #2: Complete the sentences: <span class="prep-ex">in</span>, <span class="prep-ex">at</span>, <span class="prep-ex">on</span></h3>
-    <div class="practice-with-check">
+    <div class="practice-with-check" data-grammar-per-section-check="true">
       <div class="practice-list">
-        <p>1. Several candidates were waiting <input type="text" class="prep-input" data-correct="at|in" maxlength="20" aria-label="Practice 2, answer 1" /> reception before the interviews.</p>
-        <p>2. The company recently opened a regional office <input type="text" class="prep-input" data-correct="in" maxlength="20" aria-label="Practice 2, answer 2" /> Dubai.</p>
-        <p>3. Most of the negotiations took place <input type="text" class="prep-input" data-correct="in" maxlength="20" aria-label="Practice 2, answer 3" /> the executive meeting room.</p>
-        <p>4. The CEO’s office is located <input type="text" class="prep-input" data-correct="on" maxlength="20" aria-label="Practice 2, answer 4" /> the top floor of the building.</p>
-        <p>5. There was an important notice <input type="text" class="prep-input" data-correct="on" maxlength="20" aria-label="Practice 2, answer 5" /> the staff information board.</p>
-        <p>6. I met one of our suppliers <input type="text" class="prep-input" data-correct="at" maxlength="20" aria-label="Practice 2, answer 6" /> a trade exhibition last month.</p>
-        <p>7. The archived contracts are stored <input type="text" class="prep-input" data-correct="in" maxlength="20" aria-label="Practice 2, answer 7" /> the secure records department.</p>
-        <p>8. Traffic was extremely heavy <input type="text" class="prep-input" data-correct="on" maxlength="20" aria-label="Practice 2, answer 8" /> the ring road near the business district.</p>
+        <p>1. Several candidates were waiting <span data-grammar-input="practice2-q1" data-grammar-acceptable="at|in" style="display: inline-block; min-width: 5.5em; max-width: 100%; vertical-align: baseline;"></span> reception before the interviews.</p>
+        <p>2. The company recently opened a regional office <span data-grammar-input="practice2-q2" data-grammar-acceptable="in" style="display: inline-block; min-width: 5.5em; max-width: 100%; vertical-align: baseline;"></span> Dubai.</p>
+        <p>3. Most of the negotiations took place <span data-grammar-input="practice2-q3" data-grammar-acceptable="in" style="display: inline-block; min-width: 5.5em; max-width: 100%; vertical-align: baseline;"></span> the executive meeting room.</p>
+        <p>4. The CEO’s office is located <span data-grammar-input="practice2-q4" data-grammar-acceptable="on" style="display: inline-block; min-width: 5.5em; max-width: 100%; vertical-align: baseline;"></span> the top floor of the building.</p>
+        <p>5. There was an important notice <span data-grammar-input="practice2-q5" data-grammar-acceptable="on" style="display: inline-block; min-width: 5.5em; max-width: 100%; vertical-align: baseline;"></span> the staff information board.</p>
+        <p>6. I met one of our suppliers <span data-grammar-input="practice2-q6" data-grammar-acceptable="at" style="display: inline-block; min-width: 5.5em; max-width: 100%; vertical-align: baseline;"></span> a trade exhibition last month.</p>
+        <p>7. The archived contracts are stored <span data-grammar-input="practice2-q7" data-grammar-acceptable="in" style="display: inline-block; min-width: 5.5em; max-width: 100%; vertical-align: baseline;"></span> the secure records department.</p>
+        <p>8. Traffic was extremely heavy <span data-grammar-input="practice2-q8" data-grammar-acceptable="on" style="display: inline-block; min-width: 5.5em; max-width: 100%; vertical-align: baseline;"></span> the ring road near the business district.</p>
       </div>
-      <button type="button" class="check-answers-btn">Check answers</button>
     </div>
   </div>
 
@@ -521,20 +508,19 @@
     </div>
     <div class="tip">💬 There are usually no rules or logic for prepositions! Just try to learn the whole expression together.</div>
     <h3>Practice #3: Complete with the correct preposition: <span class="prep-ex">for</span>, <span class="prep-ex">in</span>, <span class="prep-ex">on</span>, <span class="prep-ex">to</span>, <span class="prep-ex">with</span></h3>
-    <div class="practice-with-check">
+    <div class="practice-with-check" data-grammar-per-section-check="true">
       <div class="practice-list">
-        <p>1. The marketing department relies <input type="text" class="prep-input" data-correct="on" maxlength="20" aria-label="Practice 3, answer 1" /> customer feedback to improve its campaigns.</p>
-        <p>2. She was heavily involved <input type="text" class="prep-input" data-correct="in" maxlength="20" aria-label="Practice 3, answer 2" /> the negotiations with the overseas supplier.</p>
-        <p>3. Our company specialises <input type="text" class="prep-input" data-correct="in" maxlength="20" aria-label="Practice 3, answer 3" /> cloud-based financial software.</p>
-        <p>4. Are you familiar <input type="text" class="prep-input" data-correct="with" maxlength="20" aria-label="Practice 3, answer 4" /> the new reporting procedures?</p>
-        <p>5. Several board members are opposed <input type="text" class="prep-input" data-correct="to" maxlength="20" aria-label="Practice 3, answer 5" /> outsourcing customer support.</p>
-        <p>6. The organisation is committed <input type="text" class="prep-input" data-correct="to" maxlength="20" aria-label="Practice 3, answer 6" /> reducing workplace waste.</p>
-        <p>7. Effective leadership contributes <input type="text" class="prep-input" data-correct="to" maxlength="20" aria-label="Practice 3, answer 7" /> employee satisfaction.</p>
-        <p>8. Some employees found it difficult to cope <input type="text" class="prep-input" data-correct="with" maxlength="20" aria-label="Practice 3, answer 8" /> the pressure of tight deadlines.</p>
-        <p>9. The project manager is responsible <input type="text" class="prep-input" data-correct="for" maxlength="20" aria-label="Practice 3, answer 9" /> coordinating communication between teams.</p>
-        <p>10. The legal department deals <input type="text" class="prep-input" data-correct="with" maxlength="20" aria-label="Practice 3, answer 10" /> contractual disputes.</p>
+        <p>1. The marketing department relies <span data-grammar-input="practice3-q1" data-grammar-acceptable="on" style="display: inline-block; min-width: 5.5em; max-width: 100%; vertical-align: baseline;"></span> customer feedback to improve its campaigns.</p>
+        <p>2. She was heavily involved <span data-grammar-input="practice3-q2" data-grammar-acceptable="in" style="display: inline-block; min-width: 5.5em; max-width: 100%; vertical-align: baseline;"></span> the negotiations with the overseas supplier.</p>
+        <p>3. Our company specialises <span data-grammar-input="practice3-q3" data-grammar-acceptable="in" style="display: inline-block; min-width: 5.5em; max-width: 100%; vertical-align: baseline;"></span> cloud-based financial software.</p>
+        <p>4. Are you familiar <span data-grammar-input="practice3-q4" data-grammar-acceptable="with" style="display: inline-block; min-width: 5.5em; max-width: 100%; vertical-align: baseline;"></span> the new reporting procedures?</p>
+        <p>5. Several board members are opposed <span data-grammar-input="practice3-q5" data-grammar-acceptable="to" style="display: inline-block; min-width: 5.5em; max-width: 100%; vertical-align: baseline;"></span> outsourcing customer support.</p>
+        <p>6. The organisation is committed <span data-grammar-input="practice3-q6" data-grammar-acceptable="to" style="display: inline-block; min-width: 5.5em; max-width: 100%; vertical-align: baseline;"></span> reducing workplace waste.</p>
+        <p>7. Effective leadership contributes <span data-grammar-input="practice3-q7" data-grammar-acceptable="to" style="display: inline-block; min-width: 5.5em; max-width: 100%; vertical-align: baseline;"></span> employee satisfaction.</p>
+        <p>8. Some employees found it difficult to cope <span data-grammar-input="practice3-q8" data-grammar-acceptable="with" style="display: inline-block; min-width: 5.5em; max-width: 100%; vertical-align: baseline;"></span> the pressure of tight deadlines.</p>
+        <p>9. The project manager is responsible <span data-grammar-input="practice3-q9" data-grammar-acceptable="for" style="display: inline-block; min-width: 5.5em; max-width: 100%; vertical-align: baseline;"></span> coordinating communication between teams.</p>
+        <p>10. The legal department deals <span data-grammar-input="practice3-q10" data-grammar-acceptable="with" style="display: inline-block; min-width: 5.5em; max-width: 100%; vertical-align: baseline;"></span> contractual disputes.</p>
       </div>
-      <button type="button" class="check-answers-btn">Check answers</button>
     </div>
   </div>
 
@@ -597,16 +583,15 @@
       </div>
     </div>
     <h3>Practice #4: Choose the correct preposition</h3>
-    <div class="practice-with-check">
+    <div class="practice-with-check" data-grammar-per-section-check="true">
       <div class="practice-list">
-        <p>1. The audit team spent the morning walking <input type="text" class="prep-input" data-correct="through" maxlength="24" aria-label="Practice 4, answer 1" /> (<span class="prep-ex">through</span> / <span class="prep-ex">across</span>) the manufacturing plant.</p>
-        <p>2. She rushed <input type="text" class="prep-input" data-correct="into" maxlength="24" aria-label="Practice 4, answer 2" /> (<span class="prep-ex">into</span> / <span class="prep-ex">across</span>) the meeting room just before the presentation began.</p>
-        <p>3. We had to go <input type="text" class="prep-input" data-correct="through" maxlength="24" aria-label="Practice 4, answer 3" /> (<span class="prep-ex">through</span> / <span class="prep-ex">across</span>) multiple approval stages before launching the product.</p>
-        <p>4. The visitors were guided <input type="text" class="prep-input" data-correct="along" maxlength="24" aria-label="Practice 4, answer 4" /> (<span class="prep-ex">along</span> / <span class="prep-ex">into</span>) the corridor towards the conference suite.</p>
-        <p>5. He walked <input type="text" class="prep-input" data-correct="out of" maxlength="24" aria-label="Practice 4, answer 5" /> (<span class="prep-ex">out of</span> / <span class="prep-ex">across</span>) the office without saying goodbye.</p>
-        <p>6. Senior management travelled <input type="text" class="prep-input" data-correct="to" maxlength="24" aria-label="Practice 4, answer 6" /> (<span class="prep-ex">to</span> / <span class="prep-ex">into</span>) Brussels for the trade negotiations.</p>
+        <p>1. The audit team spent the morning walking <span data-grammar-input="practice4-q1" data-grammar-acceptable="through" style="display: inline-block; min-width: 6.5em; max-width: 100%; vertical-align: baseline;"></span> (<span class="prep-ex">through</span> / <span class="prep-ex">across</span>) the manufacturing plant.</p>
+        <p>2. She rushed <span data-grammar-input="practice4-q2" data-grammar-acceptable="into" style="display: inline-block; min-width: 6.5em; max-width: 100%; vertical-align: baseline;"></span> (<span class="prep-ex">into</span> / <span class="prep-ex">across</span>) the meeting room just before the presentation began.</p>
+        <p>3. We had to go <span data-grammar-input="practice4-q3" data-grammar-acceptable="through" style="display: inline-block; min-width: 6.5em; max-width: 100%; vertical-align: baseline;"></span> (<span class="prep-ex">through</span> / <span class="prep-ex">across</span>) multiple approval stages before launching the product.</p>
+        <p>4. The visitors were guided <span data-grammar-input="practice4-q4" data-grammar-acceptable="along" style="display: inline-block; min-width: 6.5em; max-width: 100%; vertical-align: baseline;"></span> (<span class="prep-ex">along</span> / <span class="prep-ex">into</span>) the corridor towards the conference suite.</p>
+        <p>5. He walked <span data-grammar-input="practice4-q5" data-grammar-acceptable="out of" style="display: inline-block; min-width: 6.5em; max-width: 100%; vertical-align: baseline;"></span> (<span class="prep-ex">out of</span> / <span class="prep-ex">across</span>) the office without saying goodbye.</p>
+        <p>6. Senior management travelled <span data-grammar-input="practice4-q6" data-grammar-acceptable="to" style="display: inline-block; min-width: 6.5em; max-width: 100%; vertical-align: baseline;"></span> (<span class="prep-ex">to</span> / <span class="prep-ex">into</span>) Brussels for the trade negotiations.</p>
       </div>
-      <button type="button" class="check-answers-btn">Check answers</button>
     </div>
   </div>
 
@@ -637,18 +622,17 @@
       </div>
     </div>
     <h3>Practice #5: Complete the sentences</h3>
-    <div class="practice-with-check">
+    <div class="practice-with-check" data-grammar-per-section-check="true">
       <div class="practice-list">
-        <p>1. The company has been expanding internationally <input type="text" class="prep-input" data-correct="since" maxlength="20" aria-label="Practice 5, answer 1" /> 2022.</p>
-        <p>2. We discussed the proposal <input type="text" class="prep-input" data-correct="for" maxlength="20" aria-label="Practice 5, answer 2" /> nearly two hours.</p>
-        <p>3. Please submit your expense claims <input type="text" class="prep-input" data-correct="by" maxlength="20" aria-label="Practice 5, answer 3" /> the end of the week.</p>
-        <p>4. Several technical issues appeared <input type="text" class="prep-input" data-correct="during" maxlength="20" aria-label="Practice 5, answer 4" /> the product demonstration.</p>
-        <p>5. The negotiations continued <input type="text" class="prep-input" data-correct="until" maxlength="20" aria-label="Practice 5, answer 5" /> late in the evening.</p>
-        <p>6. She has worked in project management <input type="text" class="prep-input" data-correct="for" maxlength="20" aria-label="Practice 5, answer 6" /> more than a decade.</p>
-        <p>7. Nobody used their phones <input type="text" class="prep-input" data-correct="during" maxlength="20" aria-label="Practice 5, answer 7" /> the client presentation.</p>
-        <p>8. Can you complete the financial analysis <input type="text" class="prep-input" data-correct="by" maxlength="20" aria-label="Practice 5, answer 8" /> Thursday afternoon?</p>
+        <p>1. The company has been expanding internationally <span data-grammar-input="practice5-q1" data-grammar-acceptable="since" style="display: inline-block; min-width: 5.5em; max-width: 100%; vertical-align: baseline;"></span> 2022.</p>
+        <p>2. We discussed the proposal <span data-grammar-input="practice5-q2" data-grammar-acceptable="for" style="display: inline-block; min-width: 5.5em; max-width: 100%; vertical-align: baseline;"></span> nearly two hours.</p>
+        <p>3. Please submit your expense claims <span data-grammar-input="practice5-q3" data-grammar-acceptable="by" style="display: inline-block; min-width: 5.5em; max-width: 100%; vertical-align: baseline;"></span> the end of the week.</p>
+        <p>4. Several technical issues appeared <span data-grammar-input="practice5-q4" data-grammar-acceptable="during" style="display: inline-block; min-width: 5.5em; max-width: 100%; vertical-align: baseline;"></span> the product demonstration.</p>
+        <p>5. The negotiations continued <span data-grammar-input="practice5-q5" data-grammar-acceptable="until" style="display: inline-block; min-width: 5.5em; max-width: 100%; vertical-align: baseline;"></span> late in the evening.</p>
+        <p>6. She has worked in project management <span data-grammar-input="practice5-q6" data-grammar-acceptable="for" style="display: inline-block; min-width: 5.5em; max-width: 100%; vertical-align: baseline;"></span> more than a decade.</p>
+        <p>7. Nobody used their phones <span data-grammar-input="practice5-q7" data-grammar-acceptable="during" style="display: inline-block; min-width: 5.5em; max-width: 100%; vertical-align: baseline;"></span> the client presentation.</p>
+        <p>8. Can you complete the financial analysis <span data-grammar-input="practice5-q8" data-grammar-acceptable="by" style="display: inline-block; min-width: 5.5em; max-width: 100%; vertical-align: baseline;"></span> Thursday afternoon?</p>
       </div>
-      <button type="button" class="check-answers-btn">Check answers</button>
     </div>
   </div>
 
@@ -656,48 +640,50 @@
   <div class="section-block keep-together">
     <h2>Practice #6: Correct the mistakes</h2>
     <p style="font-size:14px;margin-bottom:14px;">Each sentence contains one preposition mistake. Rewrite the full sentence correctly in the box.</p>
+    <div class="practice-with-check" data-grammar-per-section-check="true">
     <ol class="practice6-list">
       <li class="practice6-item">
         <p>The department is responsible of staff recruitment.</p>
-        <label class="practice6-label" for="p6-rewrite-1">Your corrected sentence</label>
-        <textarea id="p6-rewrite-1" class="practice6-rewrite" rows="5" spellcheck="true" aria-label="Practice 6, corrected sentence 1"></textarea>
+        <label class="practice6-label">Your corrected sentence</label>
+        <span data-grammar-input="practice6-q1" data-grammar-input-type="textarea" style="display: block; width: 100%; min-height: 96px;"></span>
       </li>
       <li class="practice6-item">
         <p>We arrived to the client meeting earlier than expected.</p>
-        <label class="practice6-label" for="p6-rewrite-2">Your corrected sentence</label>
-        <textarea id="p6-rewrite-2" class="practice6-rewrite" rows="5" spellcheck="true" aria-label="Practice 6, corrected sentence 2"></textarea>
+        <label class="practice6-label">Your corrected sentence</label>
+        <span data-grammar-input="practice6-q2" data-grammar-input-type="textarea" style="display: block; width: 100%; min-height: 96px;"></span>
       </li>
       <li class="practice6-item">
         <p>Several employees are familiar to the updated procedures.</p>
-        <label class="practice6-label" for="p6-rewrite-3">Your corrected sentence</label>
-        <textarea id="p6-rewrite-3" class="practice6-rewrite" rows="5" spellcheck="true" aria-label="Practice 6, corrected sentence 3"></textarea>
+        <label class="practice6-label">Your corrected sentence</label>
+        <span data-grammar-input="practice6-q3" data-grammar-input-type="textarea" style="display: block; width: 100%; min-height: 96px;"></span>
       </li>
       <li class="practice6-item">
         <p>The company has operated in Asia since fifteen years.</p>
-        <label class="practice6-label" for="p6-rewrite-4">Your corrected sentence</label>
-        <textarea id="p6-rewrite-4" class="practice6-rewrite" rows="5" spellcheck="true" aria-label="Practice 6, corrected sentence 4"></textarea>
+        <label class="practice6-label">Your corrected sentence</label>
+        <span data-grammar-input="practice6-q4" data-grammar-input-type="textarea" style="display: block; width: 100%; min-height: 96px;"></span>
       </li>
       <li class="practice6-item">
         <p>The proposal moved across the approval process very quickly.</p>
-        <label class="practice6-label" for="p6-rewrite-5">Your corrected sentence</label>
-        <textarea id="p6-rewrite-5" class="practice6-rewrite" rows="5" spellcheck="true" aria-label="Practice 6, corrected sentence 5"></textarea>
+        <label class="practice6-label">Your corrected sentence</label>
+        <span data-grammar-input="practice6-q5" data-grammar-input-type="textarea" style="display: block; width: 100%; min-height: 96px;"></span>
       </li>
       <li class="practice6-item">
         <p>Many managers rely in weekly performance reports.</p>
-        <label class="practice6-label" for="p6-rewrite-6">Your corrected sentence</label>
-        <textarea id="p6-rewrite-6" class="practice6-rewrite" rows="5" spellcheck="true" aria-label="Practice 6, corrected sentence 6"></textarea>
+        <label class="practice6-label">Your corrected sentence</label>
+        <span data-grammar-input="practice6-q6" data-grammar-input-type="textarea" style="display: block; width: 100%; min-height: 96px;"></span>
       </li>
       <li class="practice6-item">
         <p>She walked in the boardroom and greeted the clients.</p>
-        <label class="practice6-label" for="p6-rewrite-7">Your corrected sentence</label>
-        <textarea id="p6-rewrite-7" class="practice6-rewrite" rows="5" spellcheck="true" aria-label="Practice 6, corrected sentence 7"></textarea>
+        <label class="practice6-label">Your corrected sentence</label>
+        <span data-grammar-input="practice6-q7" data-grammar-input-type="textarea" style="display: block; width: 100%; min-height: 96px;"></span>
       </li>
       <li class="practice6-item">
         <p>The strategy meeting continued by 7pm because of the disagreement.</p>
-        <label class="practice6-label" for="p6-rewrite-8">Your corrected sentence</label>
-        <textarea id="p6-rewrite-8" class="practice6-rewrite" rows="5" spellcheck="true" aria-label="Practice 6, corrected sentence 8"></textarea>
+        <label class="practice6-label">Your corrected sentence</label>
+        <span data-grammar-input="practice6-q8" data-grammar-input-type="textarea" style="display: block; width: 100%; min-height: 96px;"></span>
       </li>
     </ol>
+    </div>
   </div>
 
   <!-- Answer key -->
@@ -725,98 +711,20 @@
         <p>1. since · 2. for · 3. by · 4. during · 5. until · 6. for · 7. during · 8. by</p>
       </div>
       <div class="card">
-        <strong>Practice #6</strong>
-        <p style="font-size:13px;">1. The department is responsible <span class="prep-ex">for</span> staff recruitment.<br />
-        2. We arrived <span class="prep-ex">at</span> the client meeting earlier than expected.<br />
-        3. Several employees are familiar <span class="prep-ex">with</span> the updated procedures.<br />
-        4. The company has operated in Asia <span class="prep-ex">for</span> fifteen years.<br />
-        5. The proposal moved <span class="prep-ex">through</span> the approval process very quickly.<br />
-        6. Many managers rely <span class="prep-ex">on</span> weekly performance reports.<br />
-        7. She walked <span class="prep-ex">into</span> the boardroom and greeted the clients.<br />
-        8. The strategy meeting continued <span class="prep-ex">until</span> 7pm because of the disagreement.</p>
+        <h3 style="font-size: 16px; margin: 0 0 8px 0; color: #0f766e;">Practice #6</h3>
+        <ol style="margin: 0; padding-left: 1.35em; font-size: 13px; list-style-type: decimal;">
+          <li>The department is responsible for staff recruitment.</li>
+          <li>We arrived at the client meeting earlier than expected.</li>
+          <li>Several employees are familiar with the updated procedures.</li>
+          <li>The company has operated in Asia for fifteen years.</li>
+          <li>The proposal moved through the approval process very quickly.</li>
+          <li>Many managers rely on weekly performance reports.</li>
+          <li>She walked into the boardroom and greeted the clients.</li>
+          <li>The strategy meeting continued until 7pm because of the disagreement.</li>
+        </ol>
       </div>
     </div>
   </div>
 
 </div>
 
-<script>
-(function () {
-  function norm(s) {
-    return String(s || '')
-      .trim()
-      .toLowerCase()
-      .replace(/\s+/g, ' ');
-  }
-
-  function parseAcceptable(raw) {
-    raw = raw || '';
-    var parts = raw.split('|').map(norm).filter(function (x) {
-      return x.length > 0;
-    });
-    if (parts.length === 0 && norm(raw)) {
-      parts = [norm(raw)];
-    }
-    return parts;
-  }
-
-  /** @returns {'empty'|'nocriteria'|'correct'|'incorrect'} */
-  function checkSingleInput(inp) {
-    var got = norm(inp.value);
-    if (got === '') {
-      inp.style.borderWidth = '1px';
-      inp.style.borderStyle = 'solid';
-      inp.style.borderColor = '#94a3b8';
-      inp.style.background = '';
-      return 'empty';
-    }
-    var acceptable = parseAcceptable(inp.getAttribute('data-correct'));
-    if (acceptable.length === 0) {
-      inp.style.borderWidth = '1px';
-      inp.style.borderStyle = 'solid';
-      inp.style.borderColor = '#94a3b8';
-      inp.style.background = '';
-      return 'nocriteria';
-    }
-    var ok = acceptable.indexOf(got) !== -1;
-    inp.style.borderWidth = '2px';
-    inp.style.borderStyle = 'solid';
-    inp.style.borderColor = ok ? '#16a34a' : '#dc2626';
-    inp.style.background = ok ? '#f0fdf4' : '#fef2f2';
-    return ok ? 'correct' : 'incorrect';
-  }
-
-  document.querySelectorAll('.practice-with-check').forEach(function (block) {
-    block.querySelectorAll('.prep-input').forEach(function (inp) {
-      inp.addEventListener('input', function () {
-        if (block.getAttribute('data-prep-checked') !== 'true') return;
-        if (!inp.hasAttribute('data-prep-live-track')) return;
-        var r = checkSingleInput(inp);
-        if (r === 'correct') inp.removeAttribute('data-prep-live-track');
-      });
-      inp.addEventListener('paste', function () {
-        if (block.getAttribute('data-prep-checked') !== 'true') return;
-        if (!inp.hasAttribute('data-prep-live-track')) return;
-        requestAnimationFrame(function () {
-          var r = checkSingleInput(inp);
-          if (r === 'correct') inp.removeAttribute('data-prep-live-track');
-        });
-      });
-    });
-    var btn = block.querySelector('.check-answers-btn');
-    if (btn) {
-      btn.addEventListener('click', function () {
-        block.setAttribute('data-prep-checked', 'true');
-        block.querySelectorAll('.prep-input').forEach(function (inp) {
-          var r = checkSingleInput(inp);
-          if (r === 'incorrect') {
-            inp.setAttribute('data-prep-live-track', 'true');
-          } else {
-            inp.removeAttribute('data-prep-live-track');
-          }
-        });
-      });
-    }
-  });
-})();
-</script>
