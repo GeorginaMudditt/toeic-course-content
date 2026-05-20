@@ -1734,6 +1734,8 @@ export default function WorksheetViewer({ assignmentId, resource, initialProgres
         <div style="font-size:14px;line-height:1.6;color:#334155;">${formatFeedbackForDisplay(aiMarkdown)}</div>
       `
       panel.style.display = 'block'
+      panel.style.maxHeight = panel.style.maxHeight || 'min(70vh, 520px)'
+      panel.style.overflowY = 'auto'
     },
     []
   )
@@ -1833,6 +1835,10 @@ export default function WorksheetViewer({ assignmentId, resource, initialProgres
         aiPanel.style.background = '#f8fafc'
         aiPanel.style.border = '1px solid #c7d2fe'
         aiPanel.style.borderRadius = '8px'
+        aiPanel.style.maxHeight = 'min(70vh, 520px)'
+        aiPanel.style.overflowX = 'hidden'
+        aiPanel.style.overflowY = 'auto'
+        aiPanel.style.webkitOverflowScrolling = 'touch'
 
         const aiClickHandler = async () => {
           const inputId = getInputIdForTask(aiTask)
