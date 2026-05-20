@@ -8,6 +8,12 @@
     .screen-only { display: none !important; }
   }
   .itw-keep-together { page-break-inside: avoid; break-inside: avoid; }
+  @media screen {
+    .itw-keep-together {
+      page-break-inside: auto;
+      break-inside: auto;
+    }
+  }
   .itw-photo-img {
     display: block;
     width: 100%;
@@ -26,34 +32,19 @@
     margin: 0 0 14px 0;
     letter-spacing: 0.02em;
   }
-  /* AI feedback panel — scrollable so full feedback is readable */
+  /* AI feedback — outer frame + inner scroll area (fixes Safari / E-mail 1 clipping) */
   .grammar-ai-feedback-panel {
-    position: relative;
+    display: flex;
+    flex-direction: column;
     max-height: 400px;
-    overflow-x: hidden;
-    overflow-y: scroll;
-    scrollbar-gutter: stable;
-    -webkit-overflow-scrolling: touch;
+    overflow: hidden;
     border: 2px solid #818cf8 !important;
-    box-shadow: inset 0 -24px 24px -12px rgba(99, 102, 241, 0.12);
-  }
-  .grammar-ai-feedback-panel::-webkit-scrollbar {
-    width: 14px;
-  }
-  .grammar-ai-feedback-panel::-webkit-scrollbar-track {
-    background: #e0e7ff;
     border-radius: 8px;
-  }
-  .grammar-ai-feedback-panel::-webkit-scrollbar-thumb {
-    background: #4f46e5;
-    border-radius: 8px;
-    border: 3px solid #e0e7ff;
+    background: #f8fafc;
+    box-shadow: 0 4px 14px rgba(79, 70, 229, 0.15);
   }
   .grammar-ai-feedback-scroll-hint {
-    position: sticky;
-    top: 0;
-    z-index: 2;
-    margin: -16px -18px 14px -18px;
+    flex-shrink: 0;
     padding: 10px 14px;
     background: linear-gradient(180deg, #c7d2fe 0%, #e0e7ff 100%);
     border-bottom: 2px solid #818cf8;
@@ -63,10 +54,42 @@
     text-align: center;
     letter-spacing: 0.02em;
   }
-  [data-grammar-save-section] {
+  .grammar-ai-feedback-scroll-inner {
+    flex: 1 1 0;
+    min-height: 0;
+    height: 0;
+    overflow-x: hidden;
+    overflow-y: scroll;
+    scrollbar-gutter: stable;
+    -webkit-overflow-scrolling: touch;
+    padding: 14px 16px 18px 16px;
+    box-shadow: inset 0 -20px 20px -10px rgba(99, 102, 241, 0.1);
+  }
+  .grammar-ai-feedback-scroll-inner::-webkit-scrollbar {
+    width: 14px;
+  }
+  .grammar-ai-feedback-scroll-inner::-webkit-scrollbar-track {
+    background: #e0e7ff;
+    border-radius: 8px;
+  }
+  .grammar-ai-feedback-scroll-inner::-webkit-scrollbar-thumb {
+    background: #4f46e5;
+    border-radius: 8px;
+    border: 3px solid #e0e7ff;
+  }
+  .grammar-ai-feedback-mount {
+    margin-top: 14px;
     overflow: visible;
   }
-  /* Don't trap tall feedback inside print "keep together" blocks */
+  [data-grammar-save-section],
+  [data-grammar-ai-feedback-host] {
+    overflow: visible;
+  }
+  .itw-email-task-host {
+    break-inside: auto;
+    page-break-inside: auto;
+    overflow: visible;
+  }
   .itw-response-block {
     break-inside: auto;
     page-break-inside: auto;
@@ -149,14 +172,16 @@
   <div style="margin-bottom: 24px; padding: 20px 22px; background: #ffffff; border-radius: 10px; border: 1px solid #c7d2fe; box-shadow: 0 2px 8px rgba(0,0,0,0.05);" class="itw-response-block itw-page-break">
     <h2 style="font-size: 20px; font-weight: bold; margin: 0 0 16px 0; color: #1e3a8a; border-bottom: 3px solid #6366f1; padding-bottom: 8px;">Response</h2>
 
-    <div style="margin-bottom: 22px; padding: 16px 18px; background: #f8fafc; border: 1px solid #1e293b; border-radius: 8px; font-size: 14px; line-height: 1.65; color: #334155;" class="itw-keep-together">
+    <div style="margin-bottom: 0; padding: 16px 18px; background: #f8fafc; border: 1px solid #1e293b; border-radius: 8px; font-size: 14px; line-height: 1.65; color: #334155;">
       <p style="margin: 0 0 10px 0; font-weight: bold; font-size: 13px; letter-spacing: 0.04em; color: #1e293b; text-transform: uppercase;">Respond to a written request</p>
       <p style="margin: 0; font-size: 14px; color: #334155;"><strong>Directions:</strong> In this part of the test, you will show how well you can write a response to an e-mail. Your response will be scored on the quality and variety of your sentences, vocabulary and organisation. You will have 10 minutes to read and answer each e-mail.</p>
     </div>
+  </div>
 
+  <div style="margin-bottom: 24px; padding: 20px 22px; background: #ffffff; border-radius: 10px; border: 1px solid #c7d2fe; box-shadow: 0 2px 8px rgba(0,0,0,0.05);" class="itw-email-task-host" data-grammar-ai-feedback-host="email1">
     <h3 style="font-size: 17px; font-weight: bold; margin: 0 0 12px 0; color: #1e3a8a;">E-mail 1</h3>
     <p style="font-size: 14px; margin: 0 0 12px 0; color: #64748b;"><strong>Directions:</strong> Read the e-mail.</p>
-    <div style="margin-bottom: 16px; padding: 16px 18px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; font-size: 14px; line-height: 1.7; color: #334155;" class="itw-keep-together">
+    <div style="margin-bottom: 16px; padding: 16px 18px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; font-size: 14px; line-height: 1.7; color: #334155;">
       <p style="margin: 0 0 4px 0;"><strong>From:</strong> fkraus@kystone.co.uk</p>
       <p style="margin: 0 0 4px 0;"><strong>To:</strong> trandall@kystone.co.uk</p>
       <p style="margin: 0 0 4px 0;"><strong>Subject:</strong> Business Leadership conference?</p>
@@ -169,10 +194,13 @@
     <div data-grammar-save-section="true" data-grammar-ai-feedback="email1">
       <span data-grammar-input="writing-response-email1" data-grammar-input-type="textarea" data-grammar-textarea-rows="12" style="display: block; min-height: 220px;"></span>
     </div>
+    <div class="grammar-ai-feedback-mount" data-for="email1"></div>
+  </div>
 
-    <h3 style="font-size: 17px; font-weight: bold; margin: 28px 0 12px 0; color: #1e3a8a;">E-mail 2</h3>
+  <div style="margin-bottom: 24px; padding: 20px 22px; background: #ffffff; border-radius: 10px; border: 1px solid #c7d2fe; box-shadow: 0 2px 8px rgba(0,0,0,0.05);" class="itw-email-task-host" data-grammar-ai-feedback-host="email2">
+    <h3 style="font-size: 17px; font-weight: bold; margin: 0 0 12px 0; color: #1e3a8a;">E-mail 2</h3>
     <p style="font-size: 14px; margin: 0 0 12px 0; color: #64748b;"><strong>Directions:</strong> Read the e-mail.</p>
-    <div style="margin-bottom: 16px; padding: 16px 18px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; font-size: 14px; line-height: 1.7; color: #334155;" class="itw-keep-together">
+    <div style="margin-bottom: 16px; padding: 16px 18px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; font-size: 14px; line-height: 1.7; color: #334155;">
       <p style="margin: 0 0 4px 0;"><strong>From:</strong> Dale City Welcome Committee</p>
       <p style="margin: 0 0 4px 0;"><strong>To:</strong> Dale City Residents</p>
       <p style="margin: 0 0 4px 0;"><strong>Subject:</strong> Welcome to your new home!</p>
@@ -183,6 +211,7 @@
     <div data-grammar-save-section="true" data-grammar-ai-feedback="email2">
       <span data-grammar-input="writing-response-email2" data-grammar-input-type="textarea" data-grammar-textarea-rows="12" style="display: block; min-height: 220px;"></span>
     </div>
+    <div class="grammar-ai-feedback-mount" data-for="email2"></div>
   </div>
 
   <div style="margin-bottom: 24px; padding: 20px 22px; background: #ffffff; border-radius: 10px; border: 1px solid #c7d2fe; box-shadow: 0 2px 8px rgba(0,0,0,0.05);" class="itw-keep-together itw-page-break">
@@ -198,9 +227,10 @@
       <p style="margin: 0;">Give reasons and examples to support your opinion.</p>
     </div>
 
-    <div data-grammar-save-section="true" data-grammar-ai-feedback="essay">
+    <div data-grammar-save-section="true" data-grammar-ai-feedback="essay" data-grammar-ai-feedback-host="essay">
       <span data-grammar-input="writing-essay" data-grammar-input-type="textarea" data-grammar-textarea-rows="18" style="display: block; min-height: 360px;"></span>
     </div>
+    <div class="grammar-ai-feedback-mount" data-for="essay"></div>
   </div>
 
 </div>

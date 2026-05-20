@@ -1719,22 +1719,41 @@ export default function WorksheetViewer({ assignmentId, resource, initialProgres
   }, [hasGrammarInputs, grammarInputsReady, resource.content, resource.title, buildGrammarAnswerMap, runGrammarCheckForContainer, enablePerSectionGrammarCheck])
 
   const applyAiFeedbackPanelStyles = useCallback((panel: HTMLElement) => {
-    panel.style.position = 'relative'
+    panel.style.display = 'flex'
+    panel.style.flexDirection = 'column'
     panel.style.maxHeight = '400px'
-    panel.style.overflowX = 'hidden'
-    panel.style.overflowY = 'scroll'
-    panel.style.scrollbarGutter = 'stable'
+    panel.style.overflow = 'hidden'
     panel.style.border = '2px solid #818cf8'
-    panel.style.boxShadow = 'inset 0 -24px 24px -12px rgba(99, 102, 241, 0.12)'
-    ;(panel.style as CSSStyleDeclaration & { webkitOverflowScrolling?: string }).webkitOverflowScrolling =
-      'touch'
+    panel.style.borderRadius = '8px'
+    panel.style.background = '#f8fafc'
+    panel.style.boxShadow = '0 4px 14px rgba(79, 70, 229, 0.15)'
     panel.setAttribute('tabindex', '0')
     panel.setAttribute('role', 'region')
     panel.setAttribute('aria-label', 'AI feedback — scroll inside this box to read all comments')
   }, [])
 
+  const attachInnerScrollTrap = useCallback((inner: HTMLElement) => {
+    const onWheel = (e: WheelEvent) => {
+      const { scrollTop, scrollHeight, clientHeight } = inner
+      const goingUp = e.deltaY < 0
+      const goingDown = e.deltaY > 0
+      const atTop = scrollTop <= 0
+      const atBottom = scrollTop + clientHeight >= scrollHeight - 2
+      if ((goingUp && !atTop) || (goingDown && !atBottom)) {
+        e.stopPropagation()
+      }
+    }
+    inner.addEventListener('wheel', onWheel, { passive: false })
+    return () => inner.removeEventListener('wheel', onWheel)
+  }, [])
+
   const renderAiFeedbackPanel = useCallback(
-    (panel: HTMLElement, structural: { items: { ok: boolean; message: string }[] }, aiMarkdown: string) => {
+    (
+      panel: HTMLElement,
+      structural: { items: { ok: boolean; message: string }[] },
+      aiMarkdown: string,
+      onInnerScrollReady?: (cleanup: () => void) => void
+    ) => {
       applyAiFeedbackPanelStyles(panel)
 
       const structuralHtml = structural.items
@@ -1745,23 +1764,41 @@ export default function WorksheetViewer({ assignmentId, resource, initialProgres
         .join('')
 
       panel.innerHTML = `
-        <div class="grammar-ai-feedback-scroll-hint">↕ Scroll inside this box to read all feedback</div>
-        <p style="margin:0 0 8px 0;font-size:12px;font-weight:600;color:#64748b;">Instant checks</p>
-        <ul style="margin:0 0 14px 0;padding-left:20px;font-size:13px;line-height:1.5;">${structuralHtml}</ul>
-        <p style="margin:0 0 8px 0;font-size:12px;font-weight:600;color:#64748b;">AI feedback <span style="font-weight:400;">(not human marking)</span></p>
-        <div class="grammar-ai-feedback-body" style="font-size:14px;line-height:1.6;color:#334155;padding-bottom:8px;">${formatFeedbackForDisplay(aiMarkdown)}</div>
+        <div class="grammar-ai-feedback-scroll-hint">↕ Scroll here — use the purple scrollbar on the right →</div>
+        <div class="grammar-ai-feedback-scroll-inner" tabindex="0">
+          <p style="margin:0 0 8px 0;font-size:12px;font-weight:600;color:#64748b;">Instant checks</p>
+          <ul style="margin:0 0 14px 0;padding-left:20px;font-size:13px;line-height:1.5;">${structuralHtml}</ul>
+          <p style="margin:0 0 8px 0;font-size:12px;font-weight:600;color:#64748b;">AI feedback <span style="font-weight:400;">(not human marking)</span></p>
+          <div class="grammar-ai-feedback-body" style="font-size:14px;line-height:1.6;color:#334155;padding-bottom:8px;">${formatFeedbackForDisplay(aiMarkdown)}</div>
+        </div>
       `
-      panel.style.display = 'block'
 
-      requestAnimationFrame(() => {
-        const needsScroll = panel.scrollHeight > panel.clientHeight + 4
+      const inner = panel.querySelector('.grammar-ai-feedback-scroll-inner') as HTMLElement | null
+      if (inner) {
+        inner.style.flex = '1 1 0'
+        inner.style.minHeight = '0'
+        inner.style.height = '0'
+        inner.style.overflowY = 'scroll'
+        inner.style.overflowX = 'hidden'
+        ;(inner.style as CSSStyleDeclaration & { webkitOverflowScrolling?: string }).webkitOverflowScrolling =
+          'touch'
+        onInnerScrollReady?.(attachInnerScrollTrap(inner))
+      }
+
+      const updateScrollHint = () => {
+        const scrollEl = panel.querySelector('.grammar-ai-feedback-scroll-inner') as HTMLElement | null
         const hint = panel.querySelector('.grammar-ai-feedback-scroll-hint') as HTMLElement | null
-        if (hint) {
+        if (scrollEl && hint) {
+          const needsScroll = scrollEl.scrollHeight > scrollEl.clientHeight + 4
           hint.style.display = needsScroll ? 'block' : 'none'
         }
+      }
+      requestAnimationFrame(() => {
+        updateScrollHint()
+        requestAnimationFrame(updateScrollHint)
       })
     },
-    [applyAiFeedbackPanelStyles]
+    [applyAiFeedbackPanelStyles, attachInnerScrollTrap]
   )
 
   const readGrammarAnswerFromNotes = useCallback((inputId: string): string => {
@@ -1779,6 +1816,7 @@ export default function WorksheetViewer({ assignmentId, resource, initialProgres
     if (!resource.content.includes('data-grammar-save-section')) return
 
     const cleanupFns: Array<() => void> = []
+    const innerScrollCleanups: Array<() => void> = []
     const sections = Array.from(
       contentRef.current.querySelectorAll('[data-grammar-save-section]')
     ) as HTMLElement[]
@@ -1854,12 +1892,7 @@ export default function WorksheetViewer({ assignmentId, resource, initialProgres
         aiPanel = document.createElement('div')
         aiPanel.className = 'grammar-ai-feedback-panel screen-only'
         aiPanel.style.display = 'none'
-        aiPanel.style.marginTop = '14px'
-        aiPanel.style.padding = '16px 18px'
-        aiPanel.style.background = '#f8fafc'
-        aiPanel.style.borderRadius = '8px'
-        aiPanel.style.padding = '16px 18px'
-        applyAiFeedbackPanelStyles(aiPanel)
+        aiPanel.dataset.aiTask = aiTask
 
         const aiClickHandler = async () => {
           const inputId = getInputIdForTask(aiTask)
@@ -1880,9 +1913,14 @@ export default function WorksheetViewer({ assignmentId, resource, initialProgres
           aiButton.textContent = 'Getting feedback...'
           aiStatus.textContent = ''
           aiStatus.style.color = '#64748b'
-          aiPanel!.style.display = 'block'
-          aiPanel!.innerHTML =
-            '<p style="margin:0;font-size:14px;color:#64748b;">Analysing your writing…</p>'
+          applyAiFeedbackPanelStyles(aiPanel!)
+          aiPanel!.style.display = 'flex'
+          aiPanel!.innerHTML = `
+            <div class="grammar-ai-feedback-scroll-hint">Analysing your writing…</div>
+            <div class="grammar-ai-feedback-scroll-inner" style="flex:1 1 auto;min-height:0;overflow-y:auto;padding:14px 16px;">
+              <p style="margin:0;font-size:14px;color:#64748b;">Please wait a moment.</p>
+            </div>
+          `
 
           try {
             const res = await fetch('/api/writing-feedback', {
@@ -1895,7 +1933,16 @@ export default function WorksheetViewer({ assignmentId, resource, initialProgres
               throw new Error(data.error || 'Failed to get feedback')
             }
 
-            renderAiFeedbackPanel(aiPanel!, data.structural, data.aiFeedback)
+            renderAiFeedbackPanel(aiPanel!, data.structural, data.aiFeedback, (cleanup) => {
+              innerScrollCleanups.push(cleanup)
+            })
+            const scrollInner = aiPanel!.querySelector(
+              '.grammar-ai-feedback-scroll-inner'
+            ) as HTMLElement | null
+            requestAnimationFrame(() => {
+              aiPanel!.scrollIntoView({ block: 'nearest', behavior: 'smooth' })
+              scrollInner?.focus({ preventScroll: true })
+            })
 
             const feedbackKey = getFeedbackNotesKey(aiTask)
             updateGrammarAnswer(
@@ -1929,8 +1976,23 @@ export default function WorksheetViewer({ assignmentId, resource, initialProgres
 
         controls.appendChild(aiButton)
         controls.appendChild(aiStatus)
-        // Append after save controls; lift out of any break-inside parent for reliable scroll
-        if (section.parentElement) {
+
+        const host = section.closest('[data-grammar-ai-feedback-host]') as HTMLElement | null
+        const mount =
+          (contentRef.current?.querySelector(
+            `.grammar-ai-feedback-mount[data-for="${aiTask}"]`
+          ) as HTMLElement | null) ||
+          (host?.querySelector(`.grammar-ai-feedback-mount[data-for="${aiTask}"]`) as HTMLElement | null) ||
+          (host?.querySelector('.grammar-ai-feedback-mount') as HTMLElement | null)
+        if (mount) {
+          mount.appendChild(aiPanel)
+          mount.style.overflow = 'visible'
+          let ancestor: HTMLElement | null = mount.parentElement
+          while (ancestor && ancestor !== contentRef.current) {
+            ancestor.style.overflow = 'visible'
+            ancestor = ancestor.parentElement
+          }
+        } else if (section.parentElement) {
           section.parentElement.insertBefore(aiPanel, section.nextSibling)
         } else {
           section.appendChild(aiPanel)
@@ -1945,7 +2007,10 @@ export default function WorksheetViewer({ assignmentId, resource, initialProgres
               aiFeedback?: string
             }
             if (saved.structural?.items?.length && saved.aiFeedback) {
-              renderAiFeedbackPanel(aiPanel, saved.structural, saved.aiFeedback)
+              aiPanel.style.display = 'flex'
+              renderAiFeedbackPanel(aiPanel, saved.structural, saved.aiFeedback, (cleanup) => {
+                innerScrollCleanups.push(cleanup)
+              })
             }
           }
         } catch {
@@ -1958,6 +2023,7 @@ export default function WorksheetViewer({ assignmentId, resource, initialProgres
 
     return () => {
       cleanupFns.forEach((fn) => fn())
+      innerScrollCleanups.forEach((fn) => fn())
       if (!contentRef.current) return
       contentRef.current.querySelectorAll('.grammar-save-controls').forEach((el) => el.remove())
       contentRef.current.querySelectorAll('.grammar-ai-feedback-panel').forEach((el) => el.remove())
@@ -1972,6 +2038,7 @@ export default function WorksheetViewer({ assignmentId, resource, initialProgres
     readGrammarAnswerFromNotes,
     updateGrammarAnswer,
     applyAiFeedbackPanelStyles,
+    attachInnerScrollTrap,
   ])
 
   // After the first Check Answers for a section, update tick/cross when the student edits (vocabulary-style).
