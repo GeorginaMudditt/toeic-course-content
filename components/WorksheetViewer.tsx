@@ -1337,6 +1337,8 @@ export default function WorksheetViewer({ assignmentId, resource, initialProgres
     inputType = 'text',
     width,
     options = [],
+    textareaRows,
+    textareaMinHeight,
   }: {
     inputId: string
     value: string
@@ -1344,6 +1346,8 @@ export default function WorksheetViewer({ assignmentId, resource, initialProgres
     inputType?: 'text' | 'textarea' | 'select'
     width?: string
     options?: string[]
+    textareaRows?: number
+    textareaMinHeight?: string
   }) {
     const [localValue, setLocalValue] = useState(value)
     const timeoutRef = useRef<NodeJS.Timeout | null>(null)
@@ -1401,7 +1405,7 @@ export default function WorksheetViewer({ assignmentId, resource, initialProgres
       display: 'block',
       width: '100%',
       minWidth: '100%',
-      minHeight: '60px',
+      minHeight: textareaMinHeight || '60px',
       padding: '8px',
       resize: 'vertical',
       marginTop: '4px'
@@ -1413,7 +1417,7 @@ export default function WorksheetViewer({ assignmentId, resource, initialProgres
           {...commonPropsWithoutRef}
           ref={textareaRef}
           style={textareaStyle}
-          rows={2}
+          rows={textareaRows || 2}
         />
       )
     }
@@ -1491,6 +1495,8 @@ export default function WorksheetViewer({ assignmentId, resource, initialProgres
             .map((option) => option.trim())
             .filter(Boolean)
         const configuredWidth = (container as HTMLElement).style.minWidth || (container as HTMLElement).style.width || undefined
+        const textareaRows = parseInt(container.getAttribute('data-grammar-textarea-rows') || '', 10)
+        const textareaMinHeight = (container as HTMLElement).style.minHeight || undefined
         
         try {
           container.innerHTML = ''
@@ -1523,6 +1529,8 @@ export default function WorksheetViewer({ assignmentId, resource, initialProgres
               inputType={inputType}
               width={configuredWidth}
               options={options}
+              textareaRows={Number.isFinite(textareaRows) ? textareaRows : undefined}
+              textareaMinHeight={textareaMinHeight}
             />
           )
           
@@ -1578,6 +1586,8 @@ export default function WorksheetViewer({ assignmentId, resource, initialProgres
             .map((option) => option.trim())
             .filter(Boolean)
         const configuredWidth = (container as HTMLElement).style.minWidth || (container as HTMLElement).style.width || undefined
+        const textareaRows = parseInt(container.getAttribute('data-grammar-textarea-rows') || '', 10)
+        const textareaMinHeight = (container as HTMLElement).style.minHeight || undefined
         const root = (container as any)._reactRoot
         if (root) {
           const currentValue = currentGrammarAnswers[inputId] || ''
@@ -1589,6 +1599,8 @@ export default function WorksheetViewer({ assignmentId, resource, initialProgres
               inputType={inputType}
               width={configuredWidth}
               options={options}
+              textareaRows={Number.isFinite(textareaRows) ? textareaRows : undefined}
+              textareaMinHeight={textareaMinHeight}
             />
           )
         }
@@ -1698,6 +1710,73 @@ export default function WorksheetViewer({ assignmentId, resource, initialProgres
       controls.forEach((control) => control.remove())
     }
   }, [hasGrammarInputs, grammarInputsReady, resource.content, resource.title, buildGrammarAnswerMap, runGrammarCheckForContainer, enablePerSectionGrammarCheck])
+
+  // Per-section "Save" for long-form responses (e.g. TOEIC Writing e-mail replies).
+  useEffect(() => {
+    if (!hasGrammarInputs || !contentRef.current || !grammarInputsReady) return
+    if (!resource.content.includes('data-grammar-save-section')) return
+
+    const cleanupFns: Array<() => void> = []
+    const sections = Array.from(
+      contentRef.current.querySelectorAll('[data-grammar-save-section]')
+    ) as HTMLElement[]
+
+    sections.forEach((section) => {
+      if (section.querySelector('.grammar-save-controls')) return
+
+      const controls = document.createElement('div')
+      controls.className = 'grammar-save-controls screen-only'
+      controls.style.display = 'flex'
+      controls.style.alignItems = 'center'
+      controls.style.gap = '10px'
+      controls.style.marginTop = '10px'
+
+      const button = document.createElement('button')
+      button.type = 'button'
+      button.textContent = 'Save'
+      button.style.backgroundColor = '#38438f'
+      button.style.color = '#fff'
+      button.style.border = 'none'
+      button.style.borderRadius = '6px'
+      button.style.padding = '8px 16px'
+      button.style.fontSize = '14px'
+      button.style.cursor = 'pointer'
+
+      const feedback = document.createElement('span')
+      feedback.className = 'grammar-save-feedback'
+      feedback.style.fontSize = '13px'
+      feedback.style.fontWeight = '600'
+      feedback.style.color = '#059669'
+
+      const clickHandler = async () => {
+        const active = document.activeElement
+        if (active instanceof HTMLTextAreaElement && section.contains(active)) {
+          active.dispatchEvent(new Event('blur', { bubbles: true }))
+        }
+        button.disabled = true
+        button.textContent = 'Saving...'
+        await saveProgress()
+        button.disabled = false
+        button.textContent = 'Save'
+        feedback.textContent = '✓ Saved'
+        window.setTimeout(() => {
+          feedback.textContent = ''
+        }, 2000)
+      }
+      button.addEventListener('click', clickHandler)
+      cleanupFns.push(() => button.removeEventListener('click', clickHandler))
+
+      controls.appendChild(button)
+      controls.appendChild(feedback)
+      section.appendChild(controls)
+    })
+
+    return () => {
+      cleanupFns.forEach((fn) => fn())
+      if (!contentRef.current) return
+      contentRef.current.querySelectorAll('.grammar-save-controls').forEach((el) => el.remove())
+    }
+  }, [hasGrammarInputs, grammarInputsReady, resource.content, saveProgress])
 
   // After the first Check Answers for a section, update tick/cross when the student edits (vocabulary-style).
   useEffect(() => {
