@@ -56,6 +56,7 @@ Add each of these **one by one** by clicking the **"Add variable"** button:
 - **Variable value**: Your API key from [Google AI Studio](https://aistudio.google.com/apikey)
 - **Required for**: **Get AI Feedback** on the Introduction to TOEIC Writing resource
 - See `docs/WRITING_AI_FEEDBACK_SETUP.md` for full setup steps
+- Optional: `GEMINI_MODEL` = `gemini-2.5-flash` (this is the default if omitted)
 - Click **"Save"**
 
 #### 7. SUPABASE_SERVICE_ROLE_KEY

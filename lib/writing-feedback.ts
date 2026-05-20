@@ -243,7 +243,8 @@ export async function generateAiFeedback(
     throw new Error('GEMINI_API_KEY is not configured')
   }
 
-  const model = process.env.GEMINI_MODEL || 'gemini-2.0-flash'
+  // gemini-2.0-flash often has zero free-tier quota; 2.5-flash works on new API keys.
+  const model = process.env.GEMINI_MODEL || 'gemini-2.5-flash'
   const prompt = buildGeminiPrompt(task, studentText, structural)
 
   const response = await fetch(
@@ -264,7 +265,28 @@ export async function generateAiFeedback(
   if (!response.ok) {
     const errText = await response.text()
     console.error('Gemini API error:', response.status, errText)
-    throw new Error('AI feedback service is temporarily unavailable. Please try again later.')
+    let apiMessage = ''
+    try {
+      const parsed = JSON.parse(errText) as { error?: { message?: string } }
+      apiMessage = parsed?.error?.message || ''
+    } catch {
+      apiMessage = errText.slice(0, 200)
+    }
+    if (response.status === 429) {
+      throw new Error(
+        'AI feedback quota reached. Please wait a few minutes and try again, or ask your teacher to check the Gemini API plan.'
+      )
+    }
+    if (response.status === 404) {
+      throw new Error(
+        `AI model "${model}" is not available. Set GEMINI_MODEL to gemini-2.5-flash in Netlify environment variables.`
+      )
+    }
+    throw new Error(
+      apiMessage
+        ? `AI feedback failed: ${apiMessage.slice(0, 180)}`
+        : 'AI feedback service is temporarily unavailable. Please try again later.'
+    )
   }
 
   const data = await response.json()

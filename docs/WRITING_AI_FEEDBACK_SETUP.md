@@ -21,11 +21,13 @@ In the project root, open or create `.env.local` and add:
 GEMINI_API_KEY=your_api_key_here
 ```
 
-Optional — change the model (default is `gemini-2.0-flash`):
+Optional — change the model (default is `gemini-2.5-flash`):
 
 ```env
-GEMINI_MODEL=gemini-2.0-flash
+GEMINI_MODEL=gemini-2.5-flash
 ```
+
+Do **not** use `gemini-2.0-flash` on the free tier unless you have billing enabled — it often returns quota errors.
 
 Restart the dev server after saving:
 
