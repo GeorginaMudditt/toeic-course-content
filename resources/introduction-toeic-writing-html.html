@@ -32,6 +32,10 @@
     margin: 0 0 14px 0;
     letter-spacing: 0.02em;
   }
+  /* Hide legacy scroll banner if an old app bundle left it in the DOM */
+  .grammar-ai-feedback-scroll-hint {
+    display: none !important;
+  }
   /* AI feedback — outer frame + inner scroll area (fixes Safari / E-mail 1 clipping) */
   .grammar-ai-feedback-panel {
     display: flex;

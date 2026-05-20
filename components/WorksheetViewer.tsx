@@ -1756,6 +1756,7 @@ export default function WorksheetViewer({ assignmentId, resource, initialProgres
       onInnerScrollReady?: (cleanup: () => void) => void
     ) => {
       applyAiFeedbackPanelStyles(panel)
+      panel.querySelectorAll('.grammar-ai-feedback-scroll-hint').forEach((el) => el.remove())
 
       const structuralHtml = structural.items
         .map(
@@ -1802,6 +1803,8 @@ export default function WorksheetViewer({ assignmentId, resource, initialProgres
     if (!hasGrammarInputs || !contentRef.current || !grammarInputsReady) return
     if (!resource.content.includes('data-grammar-save-section')) return
 
+    contentRef.current.querySelectorAll('.grammar-ai-feedback-scroll-hint').forEach((el) => el.remove())
+
     const cleanupFns: Array<() => void> = []
     const innerScrollCleanups: Array<() => void> = []
     const sections = Array.from(
@@ -1819,10 +1822,36 @@ export default function WorksheetViewer({ assignmentId, resource, initialProgres
     }
 
     sections.forEach((section) => {
-      if (section.querySelector('.grammar-save-controls')) return
-
       const aiTaskAttr = section.getAttribute('data-grammar-ai-feedback')
       const aiTask = aiTaskAttr && isWritingTaskType(aiTaskAttr) ? aiTaskAttr : null
+
+      if (section.querySelector('.grammar-save-controls')) {
+        if (aiTask) {
+          const stalePanel = contentRef.current?.querySelector(
+            `.grammar-ai-feedback-panel[data-ai-task="${aiTask}"]`
+          ) as HTMLElement | null
+          if (stalePanel?.querySelector('.grammar-ai-feedback-scroll-hint')) {
+            try {
+              const raw = readGrammarAnswerFromNotes(getFeedbackNotesKey(aiTask))
+              if (raw) {
+                const saved = JSON.parse(raw) as {
+                  structural?: { items: { ok: boolean; message: string }[] }
+                  aiFeedback?: string
+                }
+                if (saved.structural?.items?.length && saved.aiFeedback) {
+                  stalePanel.style.display = 'flex'
+                  renderAiFeedbackPanel(stalePanel, saved.structural, saved.aiFeedback, (cleanup) => {
+                    innerScrollCleanups.push(cleanup)
+                  })
+                }
+              }
+            } catch {
+              stalePanel.querySelectorAll('.grammar-ai-feedback-scroll-hint').forEach((el) => el.remove())
+            }
+          }
+        }
+        return
+      }
 
       const controls = document.createElement('div')
       controls.className = 'grammar-save-controls screen-only'
@@ -2006,6 +2035,8 @@ export default function WorksheetViewer({ assignmentId, resource, initialProgres
 
       section.appendChild(controls)
     })
+
+    contentRef.current.querySelectorAll('.grammar-ai-feedback-scroll-hint').forEach((el) => el.remove())
 
     return () => {
       cleanupFns.forEach((fn) => fn())
