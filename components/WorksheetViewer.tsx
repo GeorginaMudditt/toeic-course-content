@@ -1056,33 +1056,35 @@ export default function WorksheetViewer({ assignmentId, resource, initialProgres
     [updatePlacementTestAnswer]
   )
 
-  const saveProgress = async (notesToSave?: string) => {
-    // Use notesRef for latest when manual save (avoids stale state if Save clicked right after typing)
-    const notesValue = notesToSave ?? notesRef.current ?? notes
-    setSaving(true)
-    try {
-      const response = await fetch(`/api/progress/${assignmentId}`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          notes: notesValue,
-          status: status === 'NOT_STARTED' ? 'IN_PROGRESS' : status
+  const saveProgress = useCallback(
+    async (notesToSave?: string) => {
+      const notesValue = notesToSave ?? notesRef.current ?? notes
+      setSaving(true)
+      try {
+        const response = await fetch(`/api/progress/${assignmentId}`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            notes: notesValue,
+            status: status === 'NOT_STARTED' ? 'IN_PROGRESS' : status,
+          }),
         })
-      })
 
-      if (response.ok) {
-        setSaved(true)
-        setTimeout(() => setSaved(false), 2000)
-        if (status === 'NOT_STARTED') {
-          setStatus('IN_PROGRESS')
+        if (response.ok) {
+          setSaved(true)
+          setTimeout(() => setSaved(false), 2000)
+          if (status === 'NOT_STARTED') {
+            setStatus('IN_PROGRESS')
+          }
         }
+      } catch (error) {
+        console.error('Failed to save progress:', error)
+      } finally {
+        setSaving(false)
       }
-    } catch (error) {
-      console.error('Failed to save progress:', error)
-    } finally {
-      setSaving(false)
-    }
-  }
+    },
+    [assignmentId, notes, status]
+  )
   
   // Auto-save placement test answers when notes change
   useEffect(() => {
@@ -1090,7 +1092,7 @@ export default function WorksheetViewer({ assignmentId, resource, initialProgres
       const timeoutId = setTimeout(() => saveProgress(), 500)
       return () => clearTimeout(timeoutId)
     }
-  }, [notes, isPlacementTest])
+  }, [notes, isPlacementTest, saveProgress])
   
   // Auto-save grammar worksheet answers when notes change
   useEffect(() => {
@@ -1098,7 +1100,7 @@ export default function WorksheetViewer({ assignmentId, resource, initialProgres
       const timeoutId = setTimeout(() => saveProgress(), 1000)
       return () => clearTimeout(timeoutId)
     }
-  }, [notes, hasGrammarInputs, isPlacementTest])
+  }, [notes, hasGrammarInputs, isPlacementTest, saveProgress])
   
   // Helper function to get current value for an answer path
   const getAnswerValue = useCallback((answerPath: string, answers: any) => {
@@ -1732,8 +1734,11 @@ export default function WorksheetViewer({ assignmentId, resource, initialProgres
   const applyAiFeedbackPanelStyles = useCallback((panel: HTMLElement) => {
     panel.style.display = 'block'
     panel.style.boxSizing = 'border-box'
-    panel.style.height = 'min(75vh, 600px)'
-    panel.style.maxHeight = 'min(75vh, 600px)'
+    panel.style.height = 'min(38vh, 300px)'
+    panel.style.maxHeight = 'min(38vh, 300px)'
+    panel.style.minHeight = '200px'
+    ;(panel.style as CSSStyleDeclaration & { overscrollBehavior?: string }).overscrollBehavior =
+      'contain'
     panel.style.overflowX = 'hidden'
     panel.style.overflowY = 'scroll'
     panel.style.scrollbarGutter = 'stable'
@@ -1769,27 +1774,11 @@ export default function WorksheetViewer({ assignmentId, resource, initialProgres
     [applyAiFeedbackPanelStyles, migrateLegacyAiFeedbackMarkup]
   )
 
-  const attachPanelScrollTrap = useCallback((panel: HTMLElement) => {
-    const onWheel = (e: WheelEvent) => {
-      const { scrollTop, scrollHeight, clientHeight } = panel
-      const goingUp = e.deltaY < 0
-      const goingDown = e.deltaY > 0
-      const atTop = scrollTop <= 0
-      const atBottom = scrollTop + clientHeight >= scrollHeight - 2
-      if ((goingUp && !atTop) || (goingDown && !atBottom)) {
-        e.stopPropagation()
-      }
-    }
-    panel.addEventListener('wheel', onWheel, { passive: false })
-    return () => panel.removeEventListener('wheel', onWheel)
-  }, [])
-
   const renderAiFeedbackPanel = useCallback(
     (
       panel: HTMLElement,
       structural: { items: { ok: boolean; message: string }[] },
-      aiMarkdown: string,
-      onScrollReady?: (cleanup: () => void) => void
+      aiMarkdown: string
     ) => {
       migrateLegacyAiFeedbackMarkup(panel)
       applyAiFeedbackPanelStyles(panel)
@@ -1807,10 +1796,8 @@ export default function WorksheetViewer({ assignmentId, resource, initialProgres
         <p style="margin:0 0 8px 0;font-size:12px;font-weight:600;color:#64748b;">AI feedback <span style="font-weight:400;">(not human marking)</span></p>
         <div class="grammar-ai-feedback-body" style="font-size:14px;line-height:1.6;color:#334155;padding-bottom:8px;">${formatFeedbackForDisplay(aiMarkdown)}</div>
       `
-
-      onScrollReady?.(attachPanelScrollTrap(panel))
     },
-    [applyAiFeedbackPanelStyles, attachPanelScrollTrap, migrateLegacyAiFeedbackMarkup]
+    [applyAiFeedbackPanelStyles, migrateLegacyAiFeedbackMarkup]
   )
 
   const getAiFeedbackMount = useCallback((section: HTMLElement, aiTask: WritingTaskType) => {
@@ -1840,13 +1827,28 @@ export default function WorksheetViewer({ assignmentId, resource, initialProgres
     }
   }, [])
 
+  const getWritingAnswerText = useCallback(
+    (section: HTMLElement, inputId: string): string => {
+      const host =
+        (section.closest('[data-grammar-ai-feedback-host]') as HTMLElement | null) ?? section
+      const textarea = host.querySelector('textarea') as HTMLTextAreaElement | null
+      const domValue = textarea?.value?.trim() ?? ''
+      if (domValue) {
+        updateGrammarAnswer(inputId, domValue)
+        return domValue
+      }
+      return readGrammarAnswerFromNotes(inputId).trim()
+    },
+    [readGrammarAnswerFromNotes, updateGrammarAnswer]
+  )
+
   // Per-section "Save" and optional "Get AI Feedback" for long-form writing (TOEIC Writing).
+  // Depends only on resource mount — not on saveProgress/callbacks (avoids tearing down panels mid-request).
   useEffect(() => {
     if (!hasGrammarInputs || !contentRef.current || !grammarInputsReady) return
     if (!resource.content.includes('data-grammar-save-section')) return
 
     const cleanupFns: Array<() => void> = []
-    const panelScrollCleanups: Array<() => void> = []
     const sections = Array.from(
       contentRef.current.querySelectorAll('[data-grammar-save-section]')
     ) as HTMLElement[]
@@ -1862,43 +1864,10 @@ export default function WorksheetViewer({ assignmentId, resource, initialProgres
     }
 
     sections.forEach((section) => {
+      if (section.querySelector('.grammar-save-controls')) return
+
       const aiTaskAttr = section.getAttribute('data-grammar-ai-feedback')
       const aiTask = aiTaskAttr && isWritingTaskType(aiTaskAttr) ? aiTaskAttr : null
-
-      if (section.querySelector('.grammar-save-controls')) {
-        if (aiTask) {
-          const host = section.closest('[data-grammar-ai-feedback-host]') as HTMLElement | null
-          const mount = getAiFeedbackMount(section, aiTask)
-          const panel = mount?.querySelector(
-            `.grammar-ai-feedback-panel[data-ai-task="${aiTask}"]`
-          ) as HTMLElement | null
-          if (panel) {
-            migrateLegacyAiFeedbackMarkup(panel)
-            try {
-              const raw = readGrammarAnswerFromNotes(getFeedbackNotesKey(aiTask))
-              if (raw) {
-                const saved = JSON.parse(raw) as {
-                  structural?: { items: { ok: boolean; message: string }[] }
-                  aiFeedback?: string
-                }
-                if (saved.structural?.items?.length && saved.aiFeedback) {
-                  renderAiFeedbackPanel(panel, saved.structural, saved.aiFeedback, (cleanup) => {
-                    panelScrollCleanups.push(cleanup)
-                  })
-                } else {
-                  panel.style.display = 'none'
-                }
-              } else {
-                panel.style.display = 'none'
-              }
-            } catch {
-              panel.style.display = 'none'
-            }
-          }
-          clearOrphanAiFeedbackPanels(host, mount)
-        }
-        return
-      }
 
       const controls = document.createElement('div')
       controls.className = 'grammar-save-controls screen-only'
@@ -1958,15 +1927,16 @@ export default function WorksheetViewer({ assignmentId, resource, initialProgres
         aiPanel.dataset.aiTask = aiTask
 
         const aiClickHandler = async () => {
+          if (!aiPanel) return
+          const panel = aiPanel
           const inputId = getInputIdForTask(aiTask)
           const active = document.activeElement
-          if (active instanceof HTMLTextAreaElement && section.contains(active)) {
-            active.dispatchEvent(new Event('blur', { bubbles: true }))
+          if (active instanceof HTMLTextAreaElement) {
+            active.blur()
           }
-          await new Promise((r) => setTimeout(r, 50))
 
-          const text = readGrammarAnswerFromNotes(inputId)
-          if (!text.trim()) {
+          const text = getWritingAnswerText(section, inputId)
+          if (!text) {
             aiStatus.textContent = 'Please write your answer first.'
             aiStatus.style.color = '#dc2626'
             return
@@ -1976,7 +1946,8 @@ export default function WorksheetViewer({ assignmentId, resource, initialProgres
           aiButton.textContent = 'Getting feedback...'
           aiStatus.textContent = ''
           aiStatus.style.color = '#64748b'
-          showAiFeedbackMessage(aiPanel!, 'Analysing your writing… Please wait a moment.', 'loading')
+          showAiFeedbackMessage(panel, 'Analysing your writing… Please wait a moment.', 'loading')
+          panel.scrollIntoView({ block: 'nearest', behavior: 'smooth' })
 
           try {
             const res = await fetch('/api/writing-feedback', {
@@ -1989,12 +1960,9 @@ export default function WorksheetViewer({ assignmentId, resource, initialProgres
               if (data.structural?.items?.length) {
                 const errMsg = data.error || 'Failed to get feedback'
                 renderAiFeedbackPanel(
-                  aiPanel!,
+                  panel,
                   data.structural,
-                  `**AI feedback is temporarily unavailable.**\n\n${errMsg}\n\nYour instant checks above are still valid. Please try again in a minute.`,
-                  (cleanup) => {
-                    panelScrollCleanups.push(cleanup)
-                  }
+                  `**AI feedback is temporarily unavailable.**\n\n${errMsg}\n\nYour instant checks above are still valid. Please try again in a minute.`
                 )
                 aiStatus.textContent = ''
                 aiStatus.style.color = '#b45309'
@@ -2003,12 +1971,9 @@ export default function WorksheetViewer({ assignmentId, resource, initialProgres
               throw new Error(data.error || 'Failed to get feedback')
             }
 
-            renderAiFeedbackPanel(aiPanel!, data.structural, data.aiFeedback, (cleanup) => {
-              panelScrollCleanups.push(cleanup)
-            })
+            renderAiFeedbackPanel(panel, data.structural, data.aiFeedback)
             requestAnimationFrame(() => {
-              aiPanel!.scrollIntoView({ block: 'nearest', behavior: 'smooth' })
-              aiPanel!.focus({ preventScroll: true })
+              panel.scrollIntoView({ block: 'nearest', behavior: 'smooth' })
             })
 
             const feedbackKey = getFeedbackNotesKey(aiTask)
@@ -2030,7 +1995,7 @@ export default function WorksheetViewer({ assignmentId, resource, initialProgres
             }, 3000)
           } catch (err) {
             const msg = err instanceof Error ? err.message : 'Something went wrong'
-            showAiFeedbackMessage(aiPanel!, msg, 'error')
+            showAiFeedbackMessage(panel, msg, 'error')
             aiStatus.textContent = ''
           } finally {
             aiButton.disabled = false
@@ -2074,10 +2039,7 @@ export default function WorksheetViewer({ assignmentId, resource, initialProgres
               aiFeedback?: string
             }
             if (saved.structural?.items?.length && saved.aiFeedback) {
-              aiPanel.style.display = 'block'
-              renderAiFeedbackPanel(aiPanel, saved.structural, saved.aiFeedback, (cleanup) => {
-                panelScrollCleanups.push(cleanup)
-              })
+              renderAiFeedbackPanel(aiPanel, saved.structural, saved.aiFeedback)
             }
           }
         } catch {
@@ -2090,27 +2052,12 @@ export default function WorksheetViewer({ assignmentId, resource, initialProgres
 
     return () => {
       cleanupFns.forEach((fn) => fn())
-      panelScrollCleanups.forEach((fn) => fn())
       if (!contentRef.current) return
       contentRef.current.querySelectorAll('.grammar-save-controls').forEach((el) => el.remove())
       contentRef.current.querySelectorAll('.grammar-ai-feedback-panel').forEach((el) => el.remove())
     }
-  }, [
-    hasGrammarInputs,
-    grammarInputsReady,
-    resource.content,
-    saveProgress,
-    assignmentId,
-    renderAiFeedbackPanel,
-    readGrammarAnswerFromNotes,
-    updateGrammarAnswer,
-    applyAiFeedbackPanelStyles,
-    attachPanelScrollTrap,
-    getAiFeedbackMount,
-    clearOrphanAiFeedbackPanels,
-    migrateLegacyAiFeedbackMarkup,
-    showAiFeedbackMessage,
-  ])
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- intentional: stable mount; handlers use latest closure
+  }, [hasGrammarInputs, grammarInputsReady, resource.content])
 
   // After the first Check Answers for a section, update tick/cross when the student edits (vocabulary-style).
   useEffect(() => {

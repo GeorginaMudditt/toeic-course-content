@@ -40,9 +40,12 @@
   .grammar-ai-feedback-panel {
     display: none;
     box-sizing: border-box;
-    max-height: min(75vh, 600px);
+    height: min(38vh, 300px);
+    max-height: min(38vh, 300px);
+    min-height: 200px;
     overflow-x: hidden;
     overflow-y: scroll;
+    overscroll-behavior: contain;
     scrollbar-gutter: stable;
     -webkit-overflow-scrolling: touch;
     padding: 14px 16px 18px 16px;
@@ -50,6 +53,8 @@
     border-radius: 8px;
     background: #f8fafc;
     box-shadow: 0 4px 14px rgba(79, 70, 229, 0.15);
+    position: relative;
+    z-index: 2;
   }
   .grammar-ai-feedback-panel::-webkit-scrollbar {
     width: 14px;
@@ -74,6 +79,12 @@
   .itw-email-task-host {
     break-inside: auto;
     page-break-inside: auto;
+    overflow: visible;
+    position: relative;
+    z-index: 1;
+  }
+  #worksheet-content .itw-email-task-host .grammar-ai-feedback-mount,
+  #worksheet-content .itw-email-task-host .grammar-ai-feedback-panel {
     overflow: visible;
   }
   .itw-response-block {
