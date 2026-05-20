@@ -2052,12 +2052,77 @@ export default function WorksheetViewer({ assignmentId, resource, initialProgres
 
     return () => {
       cleanupFns.forEach((fn) => fn())
+      // Keep panels/buttons in the DOM — removing them here caused feedback to vanish ~30s later
+      // when unrelated re-renders re-ran this effect (e.g. auto-save). Teardown only on resource change.
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- intentional: stable mount; handlers use latest closure
+  }, [hasGrammarInputs, grammarInputsReady, resource.content])
+
+  // Remove injected controls/panels only when the worksheet HTML changes (navigation / resource update).
+  useEffect(() => {
+    return () => {
       if (!contentRef.current) return
       contentRef.current.querySelectorAll('.grammar-save-controls').forEach((el) => el.remove())
       contentRef.current.querySelectorAll('.grammar-ai-feedback-panel').forEach((el) => el.remove())
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps -- intentional: stable mount; handlers use latest closure
-  }, [hasGrammarInputs, grammarInputsReady, resource.content])
+  }, [resource.content])
+
+  // Re-apply saved AI feedback when notes change (auto-save, restore after navigation, etc.).
+  useEffect(() => {
+    if (!hasGrammarInputs || !grammarInputsReady || !contentRef.current) return
+    if (!resource.content.includes('data-grammar-save-section')) return
+
+    const tasks: WritingTaskType[] = ['email1', 'email2', 'essay']
+    for (const task of tasks) {
+      const section = contentRef.current.querySelector(
+        `[data-grammar-save-section][data-grammar-ai-feedback="${task}"]`
+      ) as HTMLElement | null
+      if (!section) continue
+
+      let raw = ''
+      try {
+        raw = readGrammarAnswerFromNotes(getFeedbackNotesKey(task))
+      } catch {
+        continue
+      }
+      if (!raw) continue
+
+      let saved: {
+        structural?: { items: { ok: boolean; message: string }[] }
+        aiFeedback?: string
+      }
+      try {
+        saved = JSON.parse(raw)
+      } catch {
+        continue
+      }
+      if (!saved.structural?.items?.length || !saved.aiFeedback) continue
+
+      const mount = getAiFeedbackMount(section, task)
+      if (!mount) continue
+
+      let panel = mount.querySelector(
+        `.grammar-ai-feedback-panel[data-ai-task="${task}"]`
+      ) as HTMLElement | null
+
+      if (!panel) {
+        panel = document.createElement('div')
+        panel.className = 'grammar-ai-feedback-panel screen-only'
+        panel.dataset.aiTask = task
+        mount.appendChild(panel)
+      }
+
+      renderAiFeedbackPanel(panel, saved.structural, saved.aiFeedback)
+    }
+  }, [
+    notes,
+    hasGrammarInputs,
+    grammarInputsReady,
+    resource.content,
+    readGrammarAnswerFromNotes,
+    getAiFeedbackMount,
+    renderAiFeedbackPanel,
+  ])
 
   // After the first Check Answers for a section, update tick/cross when the student edits (vocabulary-style).
   useEffect(() => {
@@ -2250,15 +2315,14 @@ export default function WorksheetViewer({ assignmentId, resource, initialProgres
   }, [resource.content])
 
   useEffect(() => {
-    // Auto-save every 30 seconds
     const autoSave = setInterval(() => {
-      if (notes && status !== 'NOT_STARTED') {
+      if (notesRef.current && status !== 'NOT_STARTED') {
         saveProgress()
       }
     }, 30000)
 
     return () => clearInterval(autoSave)
-  }, [notes, status, saveProgress])
+  }, [status, saveProgress])
 
   const markComplete = async () => {
     setSaving(true)
