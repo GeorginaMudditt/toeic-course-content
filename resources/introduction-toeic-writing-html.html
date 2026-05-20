@@ -32,16 +32,14 @@
     margin: 0 0 14px 0;
     letter-spacing: 0.02em;
   }
-  /* Hide legacy scroll banner if an old app bundle left it in the DOM */
-  .grammar-ai-feedback-scroll-hint,
-  .grammar-ai-feedback-scroll-inner {
+  /* Hide legacy scroll banner only (do not hide scroll-inner — old bundles put content there) */
+  .grammar-ai-feedback-scroll-hint {
     display: none !important;
   }
   /* AI feedback — one scrollable panel (same for E-mail 1, E-mail 2, Essay) */
   .grammar-ai-feedback-panel {
-    display: block;
+    display: none;
     box-sizing: border-box;
-    height: min(75vh, 600px);
     max-height: min(75vh, 600px);
     overflow-x: hidden;
     overflow-y: scroll;

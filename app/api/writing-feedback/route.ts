@@ -90,7 +90,10 @@ export async function POST(request: NextRequest) {
       if (elapsed < RATE_LIMIT_MS) {
         const waitSec = Math.ceil((RATE_LIMIT_MS - elapsed) / 1000)
         return NextResponse.json(
-          { error: `Please wait ${waitSec} seconds before requesting feedback again.` },
+          {
+            error: `Please wait ${waitSec} seconds before requesting feedback again.`,
+            structural: runStructuralChecks(taskType, text),
+          },
           { status: 429 }
         )
       }
@@ -109,7 +112,7 @@ export async function POST(request: NextRequest) {
           { status: 503 }
         )
       }
-      return NextResponse.json({ error: message }, { status: 502 })
+      return NextResponse.json({ error: message, structural }, { status: 502 })
     }
 
     return NextResponse.json({

@@ -1718,6 +1718,17 @@ export default function WorksheetViewer({ assignmentId, resource, initialProgres
     }
   }, [hasGrammarInputs, grammarInputsReady, resource.content, resource.title, buildGrammarAnswerMap, runGrammarCheckForContainer, enablePerSectionGrammarCheck])
 
+  const migrateLegacyAiFeedbackMarkup = useCallback((panel: HTMLElement) => {
+    panel.querySelectorAll('.grammar-ai-feedback-scroll-hint').forEach((el) => el.remove())
+    const legacyInner = panel.querySelector('.grammar-ai-feedback-scroll-inner')
+    if (legacyInner) {
+      while (legacyInner.firstChild) {
+        panel.insertBefore(legacyInner.firstChild, legacyInner)
+      }
+      legacyInner.remove()
+    }
+  }, [])
+
   const applyAiFeedbackPanelStyles = useCallback((panel: HTMLElement) => {
     panel.style.display = 'block'
     panel.style.boxSizing = 'border-box'
@@ -1737,6 +1748,26 @@ export default function WorksheetViewer({ assignmentId, resource, initialProgres
     panel.setAttribute('role', 'region')
     panel.setAttribute('aria-label', 'AI feedback — scroll inside this box to read all comments')
   }, [])
+
+  const showAiFeedbackMessage = useCallback(
+    (panel: HTMLElement, message: string, variant: 'loading' | 'error') => {
+      migrateLegacyAiFeedbackMarkup(panel)
+      if (variant === 'error') {
+        panel.style.display = 'block'
+        panel.style.height = 'auto'
+        panel.style.maxHeight = 'none'
+        panel.style.overflowY = 'visible'
+        panel.style.padding = '14px 16px'
+        panel.style.border = '2px solid #fca5a5'
+        panel.style.background = '#fef2f2'
+        panel.innerHTML = `<p style="margin:0;font-size:14px;color:#dc2626;">${message.replace(/</g, '&lt;')}</p>`
+        return
+      }
+      applyAiFeedbackPanelStyles(panel)
+      panel.innerHTML = `<p style="margin:0;font-size:14px;color:#64748b;">${message.replace(/</g, '&lt;')}</p>`
+    },
+    [applyAiFeedbackPanelStyles, migrateLegacyAiFeedbackMarkup]
+  )
 
   const attachPanelScrollTrap = useCallback((panel: HTMLElement) => {
     const onWheel = (e: WheelEvent) => {
@@ -1760,6 +1791,7 @@ export default function WorksheetViewer({ assignmentId, resource, initialProgres
       aiMarkdown: string,
       onScrollReady?: (cleanup: () => void) => void
     ) => {
+      migrateLegacyAiFeedbackMarkup(panel)
       applyAiFeedbackPanelStyles(panel)
 
       const structuralHtml = structural.items
@@ -1778,7 +1810,7 @@ export default function WorksheetViewer({ assignmentId, resource, initialProgres
 
       onScrollReady?.(attachPanelScrollTrap(panel))
     },
-    [applyAiFeedbackPanelStyles, attachPanelScrollTrap]
+    [applyAiFeedbackPanelStyles, attachPanelScrollTrap, migrateLegacyAiFeedbackMarkup]
   )
 
   const getAiFeedbackMount = useCallback((section: HTMLElement, aiTask: WritingTaskType) => {
@@ -1841,6 +1873,7 @@ export default function WorksheetViewer({ assignmentId, resource, initialProgres
             `.grammar-ai-feedback-panel[data-ai-task="${aiTask}"]`
           ) as HTMLElement | null
           if (panel) {
+            migrateLegacyAiFeedbackMarkup(panel)
             try {
               const raw = readGrammarAnswerFromNotes(getFeedbackNotesKey(aiTask))
               if (raw) {
@@ -1849,14 +1882,17 @@ export default function WorksheetViewer({ assignmentId, resource, initialProgres
                   aiFeedback?: string
                 }
                 if (saved.structural?.items?.length && saved.aiFeedback) {
-                  panel.style.display = 'block'
                   renderAiFeedbackPanel(panel, saved.structural, saved.aiFeedback, (cleanup) => {
                     panelScrollCleanups.push(cleanup)
                   })
+                } else {
+                  panel.style.display = 'none'
                 }
+              } else {
+                panel.style.display = 'none'
               }
             } catch {
-              /* ignore */
+              panel.style.display = 'none'
             }
           }
           clearOrphanAiFeedbackPanels(host, mount)
@@ -1940,10 +1976,7 @@ export default function WorksheetViewer({ assignmentId, resource, initialProgres
           aiButton.textContent = 'Getting feedback...'
           aiStatus.textContent = ''
           aiStatus.style.color = '#64748b'
-          applyAiFeedbackPanelStyles(aiPanel!)
-          aiPanel!.style.display = 'block'
-          aiPanel!.innerHTML =
-            '<p style="margin:0;font-size:14px;color:#64748b;">Analysing your writing… Please wait a moment.</p>'
+          showAiFeedbackMessage(aiPanel!, 'Analysing your writing… Please wait a moment.', 'loading')
 
           try {
             const res = await fetch('/api/writing-feedback', {
@@ -1953,6 +1986,20 @@ export default function WorksheetViewer({ assignmentId, resource, initialProgres
             })
             const data = await res.json()
             if (!res.ok) {
+              if (data.structural?.items?.length) {
+                const errMsg = data.error || 'Failed to get feedback'
+                renderAiFeedbackPanel(
+                  aiPanel!,
+                  data.structural,
+                  `**AI feedback is temporarily unavailable.**\n\n${errMsg}\n\nYour instant checks above are still valid. Please try again in a minute.`,
+                  (cleanup) => {
+                    panelScrollCleanups.push(cleanup)
+                  }
+                )
+                aiStatus.textContent = ''
+                aiStatus.style.color = '#b45309'
+                return
+              }
               throw new Error(data.error || 'Failed to get feedback')
             }
 
@@ -1983,7 +2030,7 @@ export default function WorksheetViewer({ assignmentId, resource, initialProgres
             }, 3000)
           } catch (err) {
             const msg = err instanceof Error ? err.message : 'Something went wrong'
-            aiPanel!.innerHTML = `<p style="margin:0;font-size:14px;color:#dc2626;">${msg.replace(/</g, '&lt;')}</p>`
+            showAiFeedbackMessage(aiPanel!, msg, 'error')
             aiStatus.textContent = ''
           } finally {
             aiButton.disabled = false
@@ -2061,6 +2108,8 @@ export default function WorksheetViewer({ assignmentId, resource, initialProgres
     attachPanelScrollTrap,
     getAiFeedbackMount,
     clearOrphanAiFeedbackPanels,
+    migrateLegacyAiFeedbackMarkup,
+    showAiFeedbackMessage,
   ])
 
   // After the first Check Answers for a section, update tick/cross when the student edits (vocabulary-style).
