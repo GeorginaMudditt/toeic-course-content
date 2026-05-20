@@ -36,23 +36,13 @@
   .grammar-ai-feedback-panel {
     display: flex;
     flex-direction: column;
-    max-height: 400px;
+    height: min(75vh, 600px);
+    max-height: min(75vh, 600px);
     overflow: hidden;
     border: 2px solid #818cf8 !important;
     border-radius: 8px;
     background: #f8fafc;
     box-shadow: 0 4px 14px rgba(79, 70, 229, 0.15);
-  }
-  .grammar-ai-feedback-scroll-hint {
-    flex-shrink: 0;
-    padding: 10px 14px;
-    background: linear-gradient(180deg, #c7d2fe 0%, #e0e7ff 100%);
-    border-bottom: 2px solid #818cf8;
-    font-size: 13px;
-    font-weight: 700;
-    color: #312e81;
-    text-align: center;
-    letter-spacing: 0.02em;
   }
   .grammar-ai-feedback-scroll-inner {
     flex: 1 1 0;

@@ -1721,7 +1721,8 @@ export default function WorksheetViewer({ assignmentId, resource, initialProgres
   const applyAiFeedbackPanelStyles = useCallback((panel: HTMLElement) => {
     panel.style.display = 'flex'
     panel.style.flexDirection = 'column'
-    panel.style.maxHeight = '400px'
+    panel.style.height = 'min(75vh, 600px)'
+    panel.style.maxHeight = 'min(75vh, 600px)'
     panel.style.overflow = 'hidden'
     panel.style.border = '2px solid #818cf8'
     panel.style.borderRadius = '8px'
@@ -1764,7 +1765,6 @@ export default function WorksheetViewer({ assignmentId, resource, initialProgres
         .join('')
 
       panel.innerHTML = `
-        <div class="grammar-ai-feedback-scroll-hint">↕ Scroll here — use the purple scrollbar on the right →</div>
         <div class="grammar-ai-feedback-scroll-inner" tabindex="0">
           <p style="margin:0 0 8px 0;font-size:12px;font-weight:600;color:#64748b;">Instant checks</p>
           <ul style="margin:0 0 14px 0;padding-left:20px;font-size:13px;line-height:1.5;">${structuralHtml}</ul>
@@ -1784,19 +1784,6 @@ export default function WorksheetViewer({ assignmentId, resource, initialProgres
           'touch'
         onInnerScrollReady?.(attachInnerScrollTrap(inner))
       }
-
-      const updateScrollHint = () => {
-        const scrollEl = panel.querySelector('.grammar-ai-feedback-scroll-inner') as HTMLElement | null
-        const hint = panel.querySelector('.grammar-ai-feedback-scroll-hint') as HTMLElement | null
-        if (scrollEl && hint) {
-          const needsScroll = scrollEl.scrollHeight > scrollEl.clientHeight + 4
-          hint.style.display = needsScroll ? 'block' : 'none'
-        }
-      }
-      requestAnimationFrame(() => {
-        updateScrollHint()
-        requestAnimationFrame(updateScrollHint)
-      })
     },
     [applyAiFeedbackPanelStyles, attachInnerScrollTrap]
   )
@@ -1916,9 +1903,8 @@ export default function WorksheetViewer({ assignmentId, resource, initialProgres
           applyAiFeedbackPanelStyles(aiPanel!)
           aiPanel!.style.display = 'flex'
           aiPanel!.innerHTML = `
-            <div class="grammar-ai-feedback-scroll-hint">Analysing your writing…</div>
-            <div class="grammar-ai-feedback-scroll-inner" style="flex:1 1 auto;min-height:0;overflow-y:auto;padding:14px 16px;">
-              <p style="margin:0;font-size:14px;color:#64748b;">Please wait a moment.</p>
+            <div class="grammar-ai-feedback-scroll-inner" style="flex:1 1 0;min-height:0;height:0;overflow-y:auto;padding:14px 16px;">
+              <p style="margin:0;font-size:14px;color:#64748b;">Analysing your writing… Please wait a moment.</p>
             </div>
           `
 
