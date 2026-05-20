@@ -7,6 +7,13 @@ import { useRouter } from 'next/navigation'
 import { mountInstructionsDescriptionsArmyAdjectiveMatch } from '@/lib/worksheetInteractions/instructionsDescriptionsArmyAdjectivesMatch'
 import { mountInstructionsDescriptionsArmyVerbsMission } from '@/lib/worksheetInteractions/instructionsDescriptionsArmyVerbsMission'
 import { mountPastSimpleArmyEdPronunciation } from '@/lib/worksheetInteractions/pastSimpleArmyEdPronunciation'
+import {
+  formatFeedbackForDisplay,
+  getFeedbackNotesKey,
+  getInputIdForTask,
+  isWritingTaskType,
+  type WritingTaskType,
+} from '@/lib/writing-feedback'
 
 interface Resource {
   id: string
@@ -1711,7 +1718,36 @@ export default function WorksheetViewer({ assignmentId, resource, initialProgres
     }
   }, [hasGrammarInputs, grammarInputsReady, resource.content, resource.title, buildGrammarAnswerMap, runGrammarCheckForContainer, enablePerSectionGrammarCheck])
 
-  // Per-section "Save" for long-form responses (e.g. TOEIC Writing e-mail replies).
+  const renderAiFeedbackPanel = useCallback(
+    (panel: HTMLElement, structural: { items: { ok: boolean; message: string }[] }, aiMarkdown: string) => {
+      const structuralHtml = structural.items
+        .map(
+          (item) =>
+            `<li style="margin-bottom:6px;color:${item.ok ? '#047857' : '#b45309'};">${item.ok ? '✓' : '○'} ${item.message.replace(/</g, '&lt;')}</li>`
+        )
+        .join('')
+
+      panel.innerHTML = `
+        <p style="margin:0 0 8px 0;font-size:12px;font-weight:600;color:#64748b;">Instant checks</p>
+        <ul style="margin:0 0 14px 0;padding-left:20px;font-size:13px;line-height:1.5;">${structuralHtml}</ul>
+        <p style="margin:0 0 8px 0;font-size:12px;font-weight:600;color:#64748b;">AI feedback <span style="font-weight:400;">(not human marking)</span></p>
+        <div style="font-size:14px;line-height:1.6;color:#334155;">${formatFeedbackForDisplay(aiMarkdown)}</div>
+      `
+      panel.style.display = 'block'
+    },
+    []
+  )
+
+  const readGrammarAnswerFromNotes = useCallback((inputId: string): string => {
+    try {
+      const parsed = JSON.parse(notesRef.current || '{}') as Record<string, string>
+      return parsed[inputId] || ''
+    } catch {
+      return ''
+    }
+  }, [])
+
+  // Per-section "Save" and optional "Get AI Feedback" for long-form writing (TOEIC Writing).
   useEffect(() => {
     if (!hasGrammarInputs || !contentRef.current || !grammarInputsReady) return
     if (!resource.content.includes('data-grammar-save-section')) return
@@ -1721,53 +1757,170 @@ export default function WorksheetViewer({ assignmentId, resource, initialProgres
       contentRef.current.querySelectorAll('[data-grammar-save-section]')
     ) as HTMLElement[]
 
+    const buttonStyle = {
+      backgroundColor: '#38438f',
+      color: '#fff',
+      border: 'none',
+      borderRadius: '6px',
+      padding: '8px 16px',
+      fontSize: '14px',
+      cursor: 'pointer',
+    }
+
     sections.forEach((section) => {
       if (section.querySelector('.grammar-save-controls')) return
+
+      const aiTaskAttr = section.getAttribute('data-grammar-ai-feedback')
+      const aiTask = aiTaskAttr && isWritingTaskType(aiTaskAttr) ? aiTaskAttr : null
 
       const controls = document.createElement('div')
       controls.className = 'grammar-save-controls screen-only'
       controls.style.display = 'flex'
+      controls.style.flexWrap = 'wrap'
       controls.style.alignItems = 'center'
       controls.style.gap = '10px'
       controls.style.marginTop = '10px'
 
-      const button = document.createElement('button')
-      button.type = 'button'
-      button.textContent = 'Save'
-      button.style.backgroundColor = '#38438f'
-      button.style.color = '#fff'
-      button.style.border = 'none'
-      button.style.borderRadius = '6px'
-      button.style.padding = '8px 16px'
-      button.style.fontSize = '14px'
-      button.style.cursor = 'pointer'
+      const saveButton = document.createElement('button')
+      saveButton.type = 'button'
+      saveButton.textContent = 'Save'
+      Object.assign(saveButton.style, buttonStyle)
 
-      const feedback = document.createElement('span')
-      feedback.className = 'grammar-save-feedback'
-      feedback.style.fontSize = '13px'
-      feedback.style.fontWeight = '600'
-      feedback.style.color = '#059669'
+      const saveFeedback = document.createElement('span')
+      saveFeedback.className = 'grammar-save-feedback'
+      saveFeedback.style.fontSize = '13px'
+      saveFeedback.style.fontWeight = '600'
+      saveFeedback.style.color = '#059669'
 
-      const clickHandler = async () => {
+      const saveClickHandler = async () => {
         const active = document.activeElement
         if (active instanceof HTMLTextAreaElement && section.contains(active)) {
           active.dispatchEvent(new Event('blur', { bubbles: true }))
         }
-        button.disabled = true
-        button.textContent = 'Saving...'
+        saveButton.disabled = true
+        saveButton.textContent = 'Saving...'
         await saveProgress()
-        button.disabled = false
-        button.textContent = 'Save'
-        feedback.textContent = '✓ Saved'
+        saveButton.disabled = false
+        saveButton.textContent = 'Save'
+        saveFeedback.textContent = '✓ Saved'
         window.setTimeout(() => {
-          feedback.textContent = ''
+          saveFeedback.textContent = ''
         }, 2000)
       }
-      button.addEventListener('click', clickHandler)
-      cleanupFns.push(() => button.removeEventListener('click', clickHandler))
+      saveButton.addEventListener('click', saveClickHandler)
+      cleanupFns.push(() => saveButton.removeEventListener('click', saveClickHandler))
 
-      controls.appendChild(button)
-      controls.appendChild(feedback)
+      controls.appendChild(saveButton)
+      controls.appendChild(saveFeedback)
+
+      let aiPanel: HTMLElement | null = null
+
+      if (aiTask) {
+        const aiButton = document.createElement('button')
+        aiButton.type = 'button'
+        aiButton.textContent = 'Get AI Feedback'
+        Object.assign(aiButton.style, { ...buttonStyle, backgroundColor: '#1e40af' })
+
+        const aiStatus = document.createElement('span')
+        aiStatus.style.fontSize = '12px'
+        aiStatus.style.color = '#64748b'
+
+        aiPanel = document.createElement('div')
+        aiPanel.className = 'grammar-ai-feedback-panel screen-only'
+        aiPanel.style.display = 'none'
+        aiPanel.style.marginTop = '14px'
+        aiPanel.style.padding = '16px 18px'
+        aiPanel.style.background = '#f8fafc'
+        aiPanel.style.border = '1px solid #c7d2fe'
+        aiPanel.style.borderRadius = '8px'
+
+        const aiClickHandler = async () => {
+          const inputId = getInputIdForTask(aiTask)
+          const active = document.activeElement
+          if (active instanceof HTMLTextAreaElement && section.contains(active)) {
+            active.dispatchEvent(new Event('blur', { bubbles: true }))
+          }
+          await new Promise((r) => setTimeout(r, 50))
+
+          const text = readGrammarAnswerFromNotes(inputId)
+          if (!text.trim()) {
+            aiStatus.textContent = 'Please write your answer first.'
+            aiStatus.style.color = '#dc2626'
+            return
+          }
+
+          aiButton.disabled = true
+          aiButton.textContent = 'Getting feedback...'
+          aiStatus.textContent = ''
+          aiStatus.style.color = '#64748b'
+          aiPanel!.style.display = 'block'
+          aiPanel!.innerHTML =
+            '<p style="margin:0;font-size:14px;color:#64748b;">Analysing your writing…</p>'
+
+          try {
+            const res = await fetch('/api/writing-feedback', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ assignmentId, taskType: aiTask, text }),
+            })
+            const data = await res.json()
+            if (!res.ok) {
+              throw new Error(data.error || 'Failed to get feedback')
+            }
+
+            renderAiFeedbackPanel(aiPanel!, data.structural, data.aiFeedback)
+
+            const feedbackKey = getFeedbackNotesKey(aiTask)
+            updateGrammarAnswer(
+              feedbackKey,
+              JSON.stringify({
+                structural: data.structural,
+                aiFeedback: data.aiFeedback,
+                generatedAt: data.generatedAt,
+              })
+            )
+            updateGrammarAnswer(data.rateLimitKey, data.generatedAt)
+            await saveProgress()
+
+            aiStatus.textContent = '✓ Feedback ready'
+            aiStatus.style.color = '#059669'
+            window.setTimeout(() => {
+              aiStatus.textContent = ''
+            }, 3000)
+          } catch (err) {
+            const msg = err instanceof Error ? err.message : 'Something went wrong'
+            aiPanel!.innerHTML = `<p style="margin:0;font-size:14px;color:#dc2626;">${msg.replace(/</g, '&lt;')}</p>`
+            aiStatus.textContent = ''
+          } finally {
+            aiButton.disabled = false
+            aiButton.textContent = 'Get AI Feedback'
+          }
+        }
+
+        aiButton.addEventListener('click', aiClickHandler)
+        cleanupFns.push(() => aiButton.removeEventListener('click', aiClickHandler))
+
+        controls.appendChild(aiButton)
+        controls.appendChild(aiStatus)
+        section.appendChild(aiPanel)
+
+        const feedbackKey = getFeedbackNotesKey(aiTask)
+        try {
+          const raw = readGrammarAnswerFromNotes(feedbackKey)
+          if (raw) {
+            const saved = JSON.parse(raw) as {
+              structural?: { items: { ok: boolean; message: string }[] }
+              aiFeedback?: string
+            }
+            if (saved.structural?.items?.length && saved.aiFeedback) {
+              renderAiFeedbackPanel(aiPanel, saved.structural, saved.aiFeedback)
+            }
+          }
+        } catch {
+          /* ignore invalid saved feedback */
+        }
+      }
+
       section.appendChild(controls)
     })
 
@@ -1775,8 +1928,18 @@ export default function WorksheetViewer({ assignmentId, resource, initialProgres
       cleanupFns.forEach((fn) => fn())
       if (!contentRef.current) return
       contentRef.current.querySelectorAll('.grammar-save-controls').forEach((el) => el.remove())
+      contentRef.current.querySelectorAll('.grammar-ai-feedback-panel').forEach((el) => el.remove())
     }
-  }, [hasGrammarInputs, grammarInputsReady, resource.content, saveProgress])
+  }, [
+    hasGrammarInputs,
+    grammarInputsReady,
+    resource.content,
+    saveProgress,
+    assignmentId,
+    renderAiFeedbackPanel,
+    readGrammarAnswerFromNotes,
+    updateGrammarAnswer,
+  ])
 
   // After the first Check Answers for a section, update tick/cross when the student edits (vocabulary-style).
   useEffect(() => {

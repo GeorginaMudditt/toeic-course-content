@@ -51,7 +51,14 @@ Add each of these **one by one** by clicking the **"Add variable"** button:
 - **Variable value**: `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVscndjb3J0eWhhc3NteXRrY2lqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDExODgwMDgsImV4cCI6MjA1Njc2NDAwOH0.XXtNa4UG27BSjrdT44QwafQAZ0GGa6nbGkYMRcHENis`
 - Click **"Save"**
 
-#### 6. SUPABASE_SERVICE_ROLE_KEY
+#### 6. GEMINI_API_KEY (TOEIC Writing AI feedback)
+- **Variable key**: `GEMINI_API_KEY`
+- **Variable value**: Your API key from [Google AI Studio](https://aistudio.google.com/apikey)
+- **Required for**: **Get AI Feedback** on the Introduction to TOEIC Writing resource
+- See `docs/WRITING_AI_FEEDBACK_SETUP.md` for full setup steps
+- Click **"Save"**
+
+#### 7. SUPABASE_SERVICE_ROLE_KEY
 - **Variable key**: `SUPABASE_SERVICE_ROLE_KEY`
 - **Variable value**: `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVscndjb3J0eWhhc3NteXRrY2lqIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc0MTE4ODAwOCwiZXhwIjoyMDU2NzY0MDA4fQ.OBb-fOGrWXrqpJpo65fYbtO2YEFeozLmSiw_Z9wE7fo`
 - Click **"Save"**
