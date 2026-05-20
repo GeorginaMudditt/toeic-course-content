@@ -1718,8 +1718,25 @@ export default function WorksheetViewer({ assignmentId, resource, initialProgres
     }
   }, [hasGrammarInputs, grammarInputsReady, resource.content, resource.title, buildGrammarAnswerMap, runGrammarCheckForContainer, enablePerSectionGrammarCheck])
 
+  const applyAiFeedbackPanelStyles = useCallback((panel: HTMLElement) => {
+    panel.style.position = 'relative'
+    panel.style.maxHeight = '400px'
+    panel.style.overflowX = 'hidden'
+    panel.style.overflowY = 'scroll'
+    panel.style.scrollbarGutter = 'stable'
+    panel.style.border = '2px solid #818cf8'
+    panel.style.boxShadow = 'inset 0 -24px 24px -12px rgba(99, 102, 241, 0.12)'
+    ;(panel.style as CSSStyleDeclaration & { webkitOverflowScrolling?: string }).webkitOverflowScrolling =
+      'touch'
+    panel.setAttribute('tabindex', '0')
+    panel.setAttribute('role', 'region')
+    panel.setAttribute('aria-label', 'AI feedback — scroll inside this box to read all comments')
+  }, [])
+
   const renderAiFeedbackPanel = useCallback(
     (panel: HTMLElement, structural: { items: { ok: boolean; message: string }[] }, aiMarkdown: string) => {
+      applyAiFeedbackPanelStyles(panel)
+
       const structuralHtml = structural.items
         .map(
           (item) =>
@@ -1728,16 +1745,23 @@ export default function WorksheetViewer({ assignmentId, resource, initialProgres
         .join('')
 
       panel.innerHTML = `
+        <div class="grammar-ai-feedback-scroll-hint">↕ Scroll inside this box to read all feedback</div>
         <p style="margin:0 0 8px 0;font-size:12px;font-weight:600;color:#64748b;">Instant checks</p>
         <ul style="margin:0 0 14px 0;padding-left:20px;font-size:13px;line-height:1.5;">${structuralHtml}</ul>
         <p style="margin:0 0 8px 0;font-size:12px;font-weight:600;color:#64748b;">AI feedback <span style="font-weight:400;">(not human marking)</span></p>
-        <div style="font-size:14px;line-height:1.6;color:#334155;">${formatFeedbackForDisplay(aiMarkdown)}</div>
+        <div class="grammar-ai-feedback-body" style="font-size:14px;line-height:1.6;color:#334155;padding-bottom:8px;">${formatFeedbackForDisplay(aiMarkdown)}</div>
       `
       panel.style.display = 'block'
-      panel.style.maxHeight = panel.style.maxHeight || 'min(70vh, 520px)'
-      panel.style.overflowY = 'auto'
+
+      requestAnimationFrame(() => {
+        const needsScroll = panel.scrollHeight > panel.clientHeight + 4
+        const hint = panel.querySelector('.grammar-ai-feedback-scroll-hint') as HTMLElement | null
+        if (hint) {
+          hint.style.display = needsScroll ? 'block' : 'none'
+        }
+      })
     },
-    []
+    [applyAiFeedbackPanelStyles]
   )
 
   const readGrammarAnswerFromNotes = useCallback((inputId: string): string => {
@@ -1833,12 +1857,9 @@ export default function WorksheetViewer({ assignmentId, resource, initialProgres
         aiPanel.style.marginTop = '14px'
         aiPanel.style.padding = '16px 18px'
         aiPanel.style.background = '#f8fafc'
-        aiPanel.style.border = '1px solid #c7d2fe'
         aiPanel.style.borderRadius = '8px'
-        aiPanel.style.maxHeight = 'min(70vh, 520px)'
-        aiPanel.style.overflowX = 'hidden'
-        aiPanel.style.overflowY = 'auto'
-        aiPanel.style.webkitOverflowScrolling = 'touch'
+        aiPanel.style.padding = '16px 18px'
+        applyAiFeedbackPanelStyles(aiPanel)
 
         const aiClickHandler = async () => {
           const inputId = getInputIdForTask(aiTask)
@@ -1908,7 +1929,12 @@ export default function WorksheetViewer({ assignmentId, resource, initialProgres
 
         controls.appendChild(aiButton)
         controls.appendChild(aiStatus)
-        section.appendChild(aiPanel)
+        // Append after save controls; lift out of any break-inside parent for reliable scroll
+        if (section.parentElement) {
+          section.parentElement.insertBefore(aiPanel, section.nextSibling)
+        } else {
+          section.appendChild(aiPanel)
+        }
 
         const feedbackKey = getFeedbackNotesKey(aiTask)
         try {
@@ -1945,6 +1971,7 @@ export default function WorksheetViewer({ assignmentId, resource, initialProgres
     renderAiFeedbackPanel,
     readGrammarAnswerFromNotes,
     updateGrammarAnswer,
+    applyAiFeedbackPanelStyles,
   ])
 
   // After the first Check Answers for a section, update tick/cross when the student edits (vocabulary-style).
