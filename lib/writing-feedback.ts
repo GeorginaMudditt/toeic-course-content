@@ -56,6 +56,143 @@ function countReasonSignals(text: string): number {
   return markers ? markers.length : 0
 }
 
+function countPatternMatches(text: string, patterns: RegExp[]): number {
+  let n = 0
+  for (const re of patterns) {
+    if (re.test(text)) n++
+  }
+  return n
+}
+
+/** Heuristic: does the answer address this worksheet's prompt (not just "good writing")? */
+function assessTaskRelevance(
+  task: WritingTaskType,
+  text: string
+): { ok: boolean; message: string } {
+  const t = text.toLowerCase()
+
+  if (task === 'essay') {
+    const careerPatterns = [
+      /\bcompan(y|ies)\b/,
+      /\bcareer(s)?\b/,
+      /\bemployer(s)?\b/,
+      /\bemployee(s)?\b/,
+      /\bworkplace\b/,
+      /\bwork (for|at|with)\b/,
+      /\bsame (company|employer|firm|organisation|organization)\b/,
+      /\bentire career\b/,
+      /\bstay(ing)? (at|with) (the )?(same )?(company|employer|firm)\b/,
+      /\b(all|whole) (their |my )?(working )?life\b/,
+      /\blifelong\b/,
+      /\byears (at|with) (the )?same\b/,
+      /\bone (company|employer|firm) (for|throughout)\b/,
+    ]
+    const offTopicPatterns = [
+      /\b(nigeria|nigerian)\b/,
+      /\bartists?\b/,
+      /\bpaintings?\b/,
+      /\bsculptures?\b/,
+      /\bmuseums?\b/,
+      /\bcultural identity\b/,
+      /\bheritage\b/,
+      /\bclimate change\b/,
+      /\b(?:global )?warming\b/,
+    ]
+    const careerScore = countPatternMatches(t, careerPatterns)
+    const offTopicScore = countPatternMatches(t, offTopicPatterns)
+    const discussesAdvDis = /\b(advantages?|disadvantages?)\b/.test(t)
+
+    if (offTopicScore >= 2 && careerScore < 2) {
+      return {
+        ok: false,
+        message:
+          'Topic: your writing appears to be about a different subject (not careers / staying at one company). On TOEIC, off-topic essays cannot score well — rewrite for the prompt above.',
+      }
+    }
+    if (careerScore < 1) {
+      return {
+        ok: false,
+        message:
+          'Topic: your essay does not clearly discuss working for the same company or an entire career at one employer. Address the assigned prompt.',
+      }
+    }
+    if (!discussesAdvDis) {
+      return {
+        ok: false,
+        message:
+          'Topic: the prompt asks for advantages and disadvantages of staying at one company — make sure you discuss both.',
+      }
+    }
+    return {
+      ok: true,
+      message:
+        'Topic: your essay appears to address the prompt (career / same company, advantages and disadvantages).',
+    }
+  }
+
+  if (task === 'email1') {
+    const hasConference = /\bconference\b/.test(t)
+    const hasPromptContext =
+      /\b(business leadership|francine|last year|attended|didn't|did not|not good|disappointing|reasons?)\b/.test(
+        t
+      )
+    const offTopic =
+      countPatternMatches(t, [/\b(nigeria|nigerian)\b/, /\bartists?\b/, /\bmuseums?\b/, /\bcultural identity\b/]) >=
+        2 && !hasConference
+
+    if (offTopic) {
+      return {
+        ok: false,
+        message:
+          'Topic: this does not look like a reply about the Business Leadership conference. Write as Tim to Francine with three reasons not to attend.',
+      }
+    }
+    if (!hasConference) {
+      return {
+        ok: false,
+        message: 'Topic: mention the conference and your experience last year.',
+      }
+    }
+    if (!hasPromptContext) {
+      return {
+        ok: false,
+        message:
+          'Topic: respond to Francine\'s e-mail — explain why the conference was not good and give three clear reasons.',
+      }
+    }
+    return {
+      ok: true,
+      message: 'Topic: your e-mail appears to respond to the conference prompt.',
+    }
+  }
+
+  if (task === 'email2') {
+    const hasMoveContext = /\b(move|moved|dale city|new (home|city|resident|area))\b/.test(t)
+    const offTopic =
+      countPatternMatches(t, [/\b(nigeria|nigerian)\b/, /\bconference\b/, /\bartists?\b/]) >= 2 && !hasMoveContext
+
+    if (offTopic) {
+      return {
+        ok: false,
+        message:
+          'Topic: this does not look like an e-mail to the Dale City Welcome Committee. Write as a new resident with requests for local information.',
+      }
+    }
+    if (!hasMoveContext) {
+      return {
+        ok: false,
+        message: 'Topic: mention that you have recently moved to Dale City.',
+      }
+    }
+    return {
+      ok: true,
+      message: 'Topic: your e-mail appears to fit the new-resident / Dale City prompt.',
+    }
+  }
+
+  return { ok: true, message: 'Topic: answer appears related to the task.' }
+}
+
 export function runStructuralChecks(task: WritingTaskType, text: string): StructuralFeedback {
   const trimmed = text.trim()
   const words = wordCount(trimmed)
@@ -66,6 +203,9 @@ export function runStructuralChecks(task: WritingTaskType, text: string): Struct
       items: [{ ok: false, message: 'Write your answer before requesting feedback.' }],
     }
   }
+
+  const topicRelevance = assessTaskRelevance(task, trimmed)
+  items.push(topicRelevance)
 
   if (task === 'email1') {
     items.push({
@@ -94,12 +234,6 @@ export function runStructuralChecks(task: WritingTaskType, text: string): Struct
         reasons >= 2
           ? 'Task: your reply appears to develop several points (good for "three reasons").'
           : 'Task: make sure you give three clear reasons — use linking words (First, Furthermore, Finally).',
-    })
-    items.push({
-      ok: /\bconference\b/i.test(trimmed),
-      message: /\bconference\b/i.test(trimmed)
-        ? 'Topic: you refer to the conference.'
-        : 'Topic: mention the conference and your experience last year.',
     })
   }
 
@@ -131,12 +265,6 @@ export function runStructuralChecks(task: WritingTaskType, text: string): Struct
           ? `Task: you appear to make at least two requests (${requests} detected).`
           : 'Task: include at least two clear requests for information (use questions or "Could you please…").',
     })
-    items.push({
-      ok: /\b(move|moved|dale city|new (home|city))\b/i.test(trimmed),
-      message: /\b(move|moved|dale city|new (home|city))\b/i.test(trimmed)
-        ? 'Context: you mention having recently moved.'
-        : 'Context: mention that you have recently moved to the area.',
-    })
   }
 
   if (task === 'essay') {
@@ -147,15 +275,15 @@ export function runStructuralChecks(task: WritingTaskType, text: string): Struct
           ? `Length: about ${words} words — meets the 300-word minimum.`
           : `Length: about ${words} words — aim for at least 300 words (about ${Math.max(0, 300 - words)} more needed).`,
     })
-    const hasOpinion =
-      /\b(in my opinion|i think|i believe|advantages|disadvantages|on the one hand|on the other hand)\b/i.test(
-        trimmed
-      )
+    const hasOpinionFrame =
+      /\b(in my opinion|i think|i believe|on the one hand|on the other hand)\b/i.test(trimmed) ||
+      (topicRelevance.ok &&
+        /\b(advantages?|disadvantages?)\b/i.test(trimmed))
     items.push({
-      ok: hasOpinion,
-      message: hasOpinion
+      ok: hasOpinionFrame,
+      message: hasOpinionFrame
         ? 'Task: you state an opinion and discuss advantages/disadvantages.'
-        : 'Task: clearly state your opinion and discuss both advantages and disadvantages.',
+        : 'Task: clearly state your opinion and discuss both advantages and disadvantages of staying at one company.',
     })
     const paragraphs = trimmed.split(/\n\s*\n/).filter((p) => p.trim().length > 0)
     items.push({
@@ -177,19 +305,21 @@ export function runStructuralChecks(task: WritingTaskType, text: string): Struct
 }
 
 const TASK_PROMPTS: Record<WritingTaskType, string> = {
-  email1: `Task: TOEIC Writing — Respond to an e-mail (E-mail 1).
-The student must respond as Tim, who attended the Business Leadership conference last year, and give THREE reasons why the conference was not good / why Francine should not go.
-Score on: task completion (three reasons), organisation, register (semi-formal e-mail to a colleague), sentence variety, vocabulary, grammar.
-Do NOT rewrite their entire e-mail. Give brief encouraging feedback.`,
-  email2: `Task: TOEIC Writing — Respond to an e-mail (E-mail 2).
-The student must respond as a new resident of Dale City to the Welcome Committee and make at least TWO requests for information (e.g. local services, clubs, banks).
-Score on: task completion (two+ requests), organisation, formal register, sentence variety, vocabulary, grammar.
-Do NOT rewrite their entire e-mail. Give brief encouraging feedback.`,
-  essay: `Task: TOEIC Writing — Opinion essay (minimum 300 words).
-Prompt: Some people work for the same company for their entire career. What are the advantages and disadvantages of staying at one company? Give reasons and examples.
-Score on: task completion, clear opinion, balanced discussion, organisation (intro/body/conclusion), sentence variety, vocabulary, grammar.
-Do NOT rewrite the whole essay. Give brief encouraging feedback.`,
+  email1: `ASSIGNED TASK (E-mail 1) — the student's answer MUST match this:
+Francine e-mailed Tim asking about the Business Leadership conference. The student writes AS TIM, replying that they attended last year, and gives THREE reasons why the conference was not good / why Francine should not go.`,
+  email2: `ASSIGNED TASK (E-mail 2) — the student's answer MUST match this:
+The Welcome Committee e-mailed new Dale City residents. The student writes AS a new resident who has recently moved, and makes at least TWO polite requests for local information (e.g. clubs, services, banks).`,
+  essay: `ASSIGNED TASK (Essay) — the student's answer MUST match this exact prompt:
+"Some people work for the same company for their entire career. What are the advantages and disadvantages of staying at one company? Give reasons and examples."
+Minimum 300 words. The essay must be about careers / staying at one employer — NOT another topic (e.g. art, history, environment) even if well written.`,
 }
+
+const AI_FEEDBACK_RULES = `CRITICAL RULES:
+1. Read the ASSIGNED TASK first. Decide whether the student's text actually answers THAT task.
+2. If the answer is off-topic, wrong persona, or about a different subject: say so clearly. Do NOT praise task completion, "understanding the documents", or content quality for the wrong topic.
+3. Grammar and style are secondary when the task is not addressed — mention them briefly only after flagging off-topic content.
+4. Automated "Topic" checks in the instant checks are hints — use your own judgment too, but trust an off-topic warning when the text is clearly unrelated.
+5. Do NOT rewrite their entire answer. Be supportive but honest.`
 
 export function buildGeminiPrompt(
   task: WritingTaskType,
@@ -200,12 +330,19 @@ export function buildGeminiPrompt(
     .map((i) => `${i.ok ? '✓' : '○'} ${i.message}`)
     .join('\n')
 
+  const topicCheck = structural.items.find((i) => i.message.startsWith('Topic:'))
+  const topicHint = topicCheck
+    ? `\nTopic check result: ${topicCheck.ok ? 'ON-TOPIC (heuristic)' : 'LIKELY OFF-TOPIC (heuristic) — ' + topicCheck.message}`
+    : ''
+
   return `You are a supportive TOEIC Writing tutor. This is practice feedback generated by AI — not an official TOEIC score.
 
 ${TASK_PROMPTS[task]}
 
+${AI_FEEDBACK_RULES}
+
 Automated checks already ran:
-${structuralSummary}
+${structuralSummary}${topicHint}
 
 Student's writing:
 ---
@@ -214,11 +351,14 @@ ${studentText.trim()}
 
 Respond in English with this exact structure (use markdown headings):
 
+## Task relevance
+(State clearly: ON-TOPIC / PARTIALLY ON-TOPIC / OFF-TOPIC for the assigned task above. If off-topic, name what the text is actually about vs what was required. 2–4 sentences.)
+
 ## Overall
-(1–2 sentences)
+(1–2 sentences; if off-topic, lead with that — do not call it a "good essay" for this task)
 
 ## Task completion
-(1–2 sentences)
+(1–2 sentences about whether they fulfilled the ASSIGNED prompt, not generic writing quality)
 
 ## Strengths
 - (bullet 1)
@@ -364,7 +504,7 @@ async function tryOpenAiFeedback(prompt: string): Promise<{ text: string; model:
         {
           role: 'system',
           content:
-            'You are a supportive TOEIC Writing tutor. Give brief practice feedback in English using markdown headings. Do not rewrite the whole answer.',
+            'You are a supportive TOEIC Writing tutor. Always judge whether the answer matches the ASSIGNED TOEIC task before praising grammar or structure. If off-topic, say so clearly in Task relevance and Overall. Use the markdown headings requested in the user message. Do not rewrite the whole answer.',
         },
         { role: 'user', content: prompt },
       ],
@@ -421,8 +561,15 @@ export function generateTemplateFeedback(
       : '- You have made a solid start on this task.'
 
   const tipBullets = taskTips[task].map((t) => `- ${t}`).join('\n')
+  const topicItem = structural.items.find((i) => i.message.startsWith('Topic:'))
+  const offTopicLead = topicItem && !topicItem.ok
+    ? `**Important:** Your answer may not match the assigned task. ${topicItem.message.replace(/^Topic:\s*/i, '')} Fix the topic before polishing language.\n\n`
+    : ''
 
-  return `## Overall
+  return `## Task relevance
+${offTopicLead || ''}${topicItem ? (topicItem.ok ? 'Your instant checks suggest you are on the right topic. The AI tutor was busy — review the points below.' : topicItem.message.replace(/^Topic:\s*/i, '')) : 'Check that your answer matches the prompt on the worksheet.'}
+
+## Overall
 This is **practice guidance** based on your instant checks (the Google AI quota was busy). Use the points below to revise your draft.
 
 ## Task completion
