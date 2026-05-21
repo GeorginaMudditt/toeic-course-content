@@ -101,9 +101,16 @@ export async function POST(request: NextRequest) {
 
     const structural = runStructuralChecks(taskType, text)
 
-    let aiFeedback: string
     try {
-      aiFeedback = await generateAiFeedback(taskType, text, structural)
+      const result = await generateAiFeedback(taskType, text, structural)
+      return NextResponse.json({
+        structural,
+        aiFeedback: result.text,
+        aiSource: result.source,
+        aiSourceNote: result.sourceNote,
+        generatedAt: new Date().toISOString(),
+        rateLimitKey: rateKey,
+      })
     } catch (err) {
       const message = err instanceof Error ? err.message : 'AI feedback failed'
       if (message.includes('GEMINI_API_KEY')) {
@@ -114,13 +121,6 @@ export async function POST(request: NextRequest) {
       }
       return NextResponse.json({ error: message, structural }, { status: 502 })
     }
-
-    return NextResponse.json({
-      structural,
-      aiFeedback,
-      generatedAt: new Date().toISOString(),
-      rateLimitKey: rateKey,
-    })
   } catch (error) {
     console.error('Writing feedback error:', error)
     return NextResponse.json({ error: 'Failed to generate feedback' }, { status: 500 })

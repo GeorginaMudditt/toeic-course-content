@@ -233,20 +233,38 @@ Respond in English with this exact structure (use markdown headings):
 - Quote a short phrase from their text and suggest a correction or improvement (up to 4 bullets). Do not list more than 4.`
 }
 
-export async function generateAiFeedback(
-  task: WritingTaskType,
-  studentText: string,
-  structural: StructuralFeedback
+export type AiFeedbackSource = 'gemini' | 'openai' | 'template'
+
+export interface AiFeedbackResult {
+  text: string
+  source: AiFeedbackSource
+  model?: string
+  /** Shown when a backup path was used (quota, optional OpenAI, or offline tips). */
+  sourceNote?: string
+}
+
+const DEFAULT_GEMINI_FALLBACK_MODELS = ['gemini-2.5-flash', 'gemini-2.0-flash-lite']
+
+function getGeminiModelChain(): string[] {
+  // flash-lite has higher free-tier limits; flash is tried next if lite is busy
+  const primary = process.env.GEMINI_MODEL || 'gemini-2.5-flash-lite'
+  const fromEnv = (process.env.GEMINI_FALLBACK_MODELS || '')
+    .split(',')
+    .map((m) => m.trim())
+    .filter(Boolean)
+  const fallbacks = fromEnv.length > 0 ? fromEnv : DEFAULT_GEMINI_FALLBACK_MODELS
+  return [...new Set([primary, ...fallbacks])]
+}
+
+function isGeminiRetryableStatus(status: number): boolean {
+  return status === 429 || status === 503 || status === 500
+}
+
+async function callGeminiModel(
+  apiKey: string,
+  model: string,
+  prompt: string
 ): Promise<string> {
-  const apiKey = process.env.GEMINI_API_KEY
-  if (!apiKey) {
-    throw new Error('GEMINI_API_KEY is not configured')
-  }
-
-  // gemini-2.0-flash often has zero free-tier quota; 2.5-flash works on new API keys.
-  const model = process.env.GEMINI_MODEL || 'gemini-2.5-flash'
-  const prompt = buildGeminiPrompt(task, studentText, structural)
-
   const response = await fetch(
     `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`,
     {
@@ -264,7 +282,6 @@ export async function generateAiFeedback(
 
   if (!response.ok) {
     const errText = await response.text()
-    console.error('Gemini API error:', response.status, errText)
     let apiMessage = ''
     try {
       const parsed = JSON.parse(errText) as { error?: { message?: string } }
@@ -272,29 +289,201 @@ export async function generateAiFeedback(
     } catch {
       apiMessage = errText.slice(0, 200)
     }
-    if (response.status === 429) {
-      throw new Error(
-        'AI feedback quota reached. Please wait a few minutes and try again, or ask your teacher to check the Gemini API plan.'
-      )
+    const err = new Error(apiMessage || `Gemini HTTP ${response.status}`) as Error & {
+      status?: number
+      retryable?: boolean
     }
-    if (response.status === 404) {
-      throw new Error(
-        `AI model "${model}" is not available. Set GEMINI_MODEL to gemini-2.5-flash in Netlify environment variables.`
-      )
-    }
-    throw new Error(
-      apiMessage
-        ? `AI feedback failed: ${apiMessage.slice(0, 180)}`
-        : 'AI feedback service is temporarily unavailable. Please try again later.'
-    )
+    err.status = response.status
+    err.retryable = isGeminiRetryableStatus(response.status)
+    console.error('Gemini API error:', model, response.status, errText.slice(0, 400))
+    throw err
   }
 
   const data = await response.json()
   const text = data?.candidates?.[0]?.content?.parts?.[0]?.text
   if (!text || typeof text !== 'string') {
-    throw new Error('AI returned an empty response. Please try again.')
+    throw new Error('AI returned an empty response')
   }
   return text.trim()
+}
+
+async function tryGeminiChain(
+  prompt: string
+): Promise<{ text: string; model: string } | null> {
+  const apiKey = process.env.GEMINI_API_KEY
+  if (!apiKey) return null
+
+  const models = getGeminiModelChain()
+  let lastRetryable: Error | null = null
+
+  for (let i = 0; i < models.length; i++) {
+    const model = models[i]
+    if (i > 0) {
+      await new Promise((r) => setTimeout(r, 400))
+    }
+    try {
+      const text = await callGeminiModel(apiKey, model, prompt)
+      return { text, model }
+    } catch (err) {
+      const e = err as Error & { retryable?: boolean; status?: number }
+      if (e.status === 401 || e.status === 403) {
+        throw err
+      }
+      if (e.retryable || e.status === 404) {
+        if (e.retryable) lastRetryable = e
+        else console.warn(`Gemini model unavailable, skipping: ${model}`)
+        continue
+      }
+      console.warn(`Gemini error on ${model}, trying next:`, e.message)
+      continue
+    }
+  }
+
+  if (lastRetryable) {
+    console.warn('All Gemini models exhausted quota:', models.join(', '))
+  }
+  return null
+}
+
+async function tryOpenAiFeedback(prompt: string): Promise<{ text: string; model: string } | null> {
+  const apiKey = process.env.OPENAI_API_KEY
+  if (!apiKey) return null
+
+  const model = process.env.OPENAI_MODEL || 'gpt-4o-mini'
+  const response = await fetch('https://api.openai.com/v1/chat/completions', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${apiKey}`,
+    },
+    body: JSON.stringify({
+      model,
+      temperature: 0.4,
+      max_tokens: 1024,
+      messages: [
+        {
+          role: 'system',
+          content:
+            'You are a supportive TOEIC Writing tutor. Give brief practice feedback in English using markdown headings. Do not rewrite the whole answer.',
+        },
+        { role: 'user', content: prompt },
+      ],
+    }),
+  })
+
+  if (!response.ok) {
+    const errText = await response.text()
+    console.error('OpenAI API error:', response.status, errText.slice(0, 400))
+    if (response.status === 429 || response.status === 503) return null
+    throw new Error('OpenAI backup failed')
+  }
+
+  const data = await response.json()
+  const text = data?.choices?.[0]?.message?.content
+  if (!text || typeof text !== 'string') return null
+  return { text: text.trim(), model }
+}
+
+/** Offline-style feedback from instant checks when all AI providers are unavailable. */
+export function generateTemplateFeedback(
+  task: WritingTaskType,
+  structural: StructuralFeedback
+): string {
+  const improve = structural.items.filter((i) => !i.ok).map((i) => i.message)
+  const strengths = structural.items.filter((i) => i.ok).map((i) => i.message)
+
+  const taskTips: Record<WritingTaskType, string[]> = {
+    email1: [
+      'Give **three clear reasons** why the conference was disappointing (one idea per paragraph or bullet).',
+      'Use linking words: *First,* *Furthermore,* *Finally,* or *In addition,*.',
+      'Keep a semi-formal tone — you are replying to a colleague (Tim → Francine).',
+    ],
+    email2: [
+      'Make **at least two polite requests** for information (questions work well).',
+      'Use formal register: *Dear Sir or Madam,* and *Yours faithfully,*.',
+      'Mention that you have **recently moved** to Dale City.',
+    ],
+    essay: [
+      'State your opinion in the introduction and discuss **both** advantages and disadvantages.',
+      'Support ideas with short examples from work life.',
+      'Use clear paragraphs and end with *In conclusion,* or *To sum up,*.',
+    ],
+  }
+
+  const improveBullets =
+    improve.length > 0
+      ? improve.map((m) => `- ${m}`).join('\n')
+      : '- Keep developing your ideas with more detail and examples.'
+
+  const strengthBullets =
+    strengths.length > 0
+      ? strengths.slice(0, 4).map((m) => `- ${m}`).join('\n')
+      : '- You have made a solid start on this task.'
+
+  const tipBullets = taskTips[task].map((t) => `- ${t}`).join('\n')
+
+  return `## Overall
+This is **practice guidance** based on your instant checks (the Google AI quota was busy). Use the points below to revise your draft.
+
+## Task completion
+${improveBullets}
+
+## Strengths
+${strengthBullets}
+
+## Areas to improve
+${tipBullets}
+
+## Language notes
+- Read your answer aloud and fix any awkward phrases.
+- Check subject–verb agreement and past tenses where you describe experiences.
+- Try one more complex sentence (e.g. with *although*, *because*, or *which*).`
+}
+
+export async function generateAiFeedback(
+  task: WritingTaskType,
+  studentText: string,
+  structural: StructuralFeedback
+): Promise<AiFeedbackResult> {
+  const prompt = buildGeminiPrompt(task, studentText, structural)
+  const useTemplateFallback = process.env.WRITING_AI_TEMPLATE_FALLBACK !== 'false'
+
+  const gemini = await tryGeminiChain(prompt)
+  if (gemini) {
+    return {
+      text: gemini.text,
+      source: 'gemini',
+      model: gemini.model,
+    }
+  }
+
+  const openai = await tryOpenAiFeedback(prompt)
+  if (openai) {
+    return {
+      text: openai.text,
+      source: 'openai',
+      model: openai.model,
+      sourceNote:
+        'Full AI feedback (backup service). Google Gemini was temporarily busy.',
+    }
+  }
+
+  if (!process.env.GEMINI_API_KEY && !process.env.OPENAI_API_KEY) {
+    throw new Error('GEMINI_API_KEY is not configured')
+  }
+
+  if (useTemplateFallback) {
+    return {
+      text: generateTemplateFeedback(task, structural),
+      source: 'template',
+      sourceNote:
+        "Practice tips from your instant checks — the Google AI quota was reached. Wait a few minutes and click **Get AI Feedback** again for full AI comments, or ask your teacher about API limits.",
+    }
+  }
+
+  throw new Error(
+    'AI feedback quota reached on all configured models. Please wait a few minutes and try again, or ask your teacher to add a backup API key (OpenAI) or enable billing on Google AI Studio.'
+  )
 }
 
 /** Simple markdown-ish to HTML for display in feedback panel */

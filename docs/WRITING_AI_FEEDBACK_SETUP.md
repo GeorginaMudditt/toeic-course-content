@@ -11,7 +11,16 @@ Students can click **Get AI Feedback** on E-mail 1, E-mail 2, and the Essay in *
 3. Click **Create API key**
 4. Copy the key (starts with `AIza...`)
 
-The free tier is usually enough for classroom use. Limits apply per minute/day.
+The free tier is enough for light practice, but limits are **easy to hit in a classroom** (many students clicking at once). Expect occasional “quota reached” messages unless you add a paid plan or a backup key (see below).
+
+**Typical free-tier limits (2026, approximate):**
+
+| Model | Rough limit |
+|-------|-------------|
+| `gemini-2.5-flash` | ~10 requests/minute, limited requests/day |
+| `gemini-2.5-flash-lite` | Higher limits — used as automatic fallback |
+
+Check your real limits: [AI Studio → Rate limits](https://aistudio.google.com/rate-limit).
 
 ### 2. Add the key locally (for testing)
 
@@ -21,13 +30,36 @@ In the project root, open or create `.env.local` and add:
 GEMINI_API_KEY=your_api_key_here
 ```
 
-Optional — change the model (default is `gemini-2.5-flash`):
+Optional — change the primary model (default `gemini-2.5-flash-lite`, higher free quota):
 
 ```env
-GEMINI_MODEL=gemini-2.5-flash
+GEMINI_MODEL=gemini-2.5-flash-lite
 ```
 
-Do **not** use `gemini-2.0-flash` on the free tier unless you have billing enabled — it often returns quota errors.
+Optional — extra Gemini models to try if the primary hits quota (comma-separated):
+
+```env
+GEMINI_FALLBACK_MODELS=gemini-2.5-flash-lite,gemini-2.0-flash-lite
+```
+
+These are tried automatically before showing an error.
+
+### Backup: OpenAI (optional, recommended for classes)
+
+If Gemini quota is hit often, add an OpenAI key. The app tries Gemini first, then OpenAI, then offline practice tips.
+
+```env
+OPENAI_API_KEY=sk-...
+OPENAI_MODEL=gpt-4o-mini
+```
+
+Add the same variables in **Netlify** and redeploy.
+
+### Offline practice tips (always on)
+
+If all AI providers fail, students still get structured **practice tips** from their instant checks (`WRITING_AI_TEMPLATE_FALLBACK` is on by default). Set `WRITING_AI_TEMPLATE_FALLBACK=false` only if you prefer a hard error instead.
+
+Do **not** use `gemini-2.0-flash` as the **only** model on the free tier — it often has zero quota.
 
 Restart the dev server after saving:
 
@@ -89,5 +121,6 @@ You may want to mention in class: their writing is sent to Google’s API to gen
 |---------|-----|
 | "AI feedback is not configured yet" | Add `GEMINI_API_KEY` to Netlify and redeploy |
 | "Please wait X seconds" | Normal rate limit; wait and try again |
-| "AI feedback service is temporarily unavailable" | Gemini outage or quota — try later or check [AI Studio usage](https://aistudio.google.com/) |
+| Yellow box + practice tips only | Gemini quota hit; app used offline tips — wait and retry, or add `OPENAI_API_KEY` |
+| "AI feedback service is temporarily unavailable" | All providers failed — try later or check [AI Studio usage](https://aistudio.google.com/) |
 | Button missing | Resource HTML needs `data-grammar-ai-feedback="email1"` etc.; redeploy app + update Supabase resource |

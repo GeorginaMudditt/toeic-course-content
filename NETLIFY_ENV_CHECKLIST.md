@@ -56,7 +56,9 @@ Add each of these **one by one** by clicking the **"Add variable"** button:
 - **Variable value**: Your API key from [Google AI Studio](https://aistudio.google.com/apikey)
 - **Required for**: **Get AI Feedback** on the Introduction to TOEIC Writing resource
 - See `docs/WRITING_AI_FEEDBACK_SETUP.md` for full setup steps
-- Optional: `GEMINI_MODEL` = `gemini-2.5-flash` (this is the default if omitted)
+- Optional: `GEMINI_MODEL` = `gemini-2.5-flash-lite` (default if omitted — better free-tier limits)
+- Optional: `GEMINI_FALLBACK_MODELS` = `gemini-2.5-flash-lite,gemini-2.0-flash-lite` (tried automatically on quota errors)
+- Optional backup: `OPENAI_API_KEY` + `OPENAI_MODEL` = `gpt-4o-mini` (used when Gemini is busy)
 - Click **"Save"**
 
 #### 7. SUPABASE_SERVICE_ROLE_KEY

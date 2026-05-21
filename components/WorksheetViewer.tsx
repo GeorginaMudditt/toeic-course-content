@@ -1778,7 +1778,8 @@ export default function WorksheetViewer({ assignmentId, resource, initialProgres
     (
       panel: HTMLElement,
       structural: { items: { ok: boolean; message: string }[] },
-      aiMarkdown: string
+      aiMarkdown: string,
+      sourceNote?: string
     ) => {
       migrateLegacyAiFeedbackMarkup(panel)
       applyAiFeedbackPanelStyles(panel)
@@ -1790,10 +1791,15 @@ export default function WorksheetViewer({ assignmentId, resource, initialProgres
         )
         .join('')
 
+      const sourceNoteHtml = sourceNote
+        ? `<p style="margin:0 0 10px 0;padding:10px 12px;background:#fffbeb;border:1px solid #fcd34d;border-radius:6px;font-size:13px;color:#92400e;line-height:1.5;">${sourceNote.replace(/</g, '&lt;')}</p>`
+        : ''
+
       panel.innerHTML = `
         <p style="margin:0 0 8px 0;font-size:12px;font-weight:600;color:#64748b;">Instant checks</p>
         <ul style="margin:0 0 14px 0;padding-left:20px;font-size:13px;line-height:1.5;">${structuralHtml}</ul>
         <p style="margin:0 0 8px 0;font-size:12px;font-weight:600;color:#64748b;">AI feedback <span style="font-weight:400;">(not human marking)</span></p>
+        ${sourceNoteHtml}
         <div class="grammar-ai-feedback-body" style="font-size:14px;line-height:1.6;color:#334155;padding-bottom:8px;">${formatFeedbackForDisplay(aiMarkdown)}</div>
       `
     },
@@ -1802,9 +1808,14 @@ export default function WorksheetViewer({ assignmentId, resource, initialProgres
 
   const getAiFeedbackMount = useCallback((section: HTMLElement, aiTask: WritingTaskType) => {
     const host = section.closest('[data-grammar-ai-feedback-host]') as HTMLElement | null
-    return (
+    const inHost =
       (host?.querySelector(`.grammar-ai-feedback-mount[data-for="${aiTask}"]`) as HTMLElement | null) ||
       (host?.querySelector('.grammar-ai-feedback-mount') as HTMLElement | null)
+    if (inHost) return inHost
+    const parent = section.parentElement
+    return (
+      (parent?.querySelector(`.grammar-ai-feedback-mount[data-for="${aiTask}"]`) as HTMLElement | null) ||
+      (parent?.querySelector('.grammar-ai-feedback-mount') as HTMLElement | null)
     )
   }, [])
 
@@ -1924,6 +1935,7 @@ export default function WorksheetViewer({ assignmentId, resource, initialProgres
         aiPanel = document.createElement('div')
         aiPanel.className = 'grammar-ai-feedback-panel screen-only'
         aiPanel.style.display = 'none'
+        aiPanel.style.marginTop = '16px'
         aiPanel.dataset.aiTask = aiTask
 
         const aiClickHandler = async () => {
@@ -1957,21 +1969,10 @@ export default function WorksheetViewer({ assignmentId, resource, initialProgres
             })
             const data = await res.json()
             if (!res.ok) {
-              if (data.structural?.items?.length) {
-                const errMsg = data.error || 'Failed to get feedback'
-                renderAiFeedbackPanel(
-                  panel,
-                  data.structural,
-                  `**AI feedback is temporarily unavailable.**\n\n${errMsg}\n\nYour instant checks above are still valid. Please try again in a minute.`
-                )
-                aiStatus.textContent = ''
-                aiStatus.style.color = '#b45309'
-                return
-              }
               throw new Error(data.error || 'Failed to get feedback')
             }
 
-            renderAiFeedbackPanel(panel, data.structural, data.aiFeedback)
+            renderAiFeedbackPanel(panel, data.structural, data.aiFeedback, data.aiSourceNote)
             requestAnimationFrame(() => {
               panel.scrollIntoView({ block: 'nearest', behavior: 'smooth' })
             })
@@ -1982,6 +1983,8 @@ export default function WorksheetViewer({ assignmentId, resource, initialProgres
               JSON.stringify({
                 structural: data.structural,
                 aiFeedback: data.aiFeedback,
+                aiSource: data.aiSource,
+                aiSourceNote: data.aiSourceNote,
                 generatedAt: data.generatedAt,
               })
             )
@@ -2037,9 +2040,10 @@ export default function WorksheetViewer({ assignmentId, resource, initialProgres
             const saved = JSON.parse(raw) as {
               structural?: { items: { ok: boolean; message: string }[] }
               aiFeedback?: string
+              aiSourceNote?: string
             }
             if (saved.structural?.items?.length && saved.aiFeedback) {
-              renderAiFeedbackPanel(aiPanel, saved.structural, saved.aiFeedback)
+              renderAiFeedbackPanel(aiPanel, saved.structural, saved.aiFeedback, saved.aiSourceNote)
             }
           }
         } catch {
@@ -2090,6 +2094,7 @@ export default function WorksheetViewer({ assignmentId, resource, initialProgres
       let saved: {
         structural?: { items: { ok: boolean; message: string }[] }
         aiFeedback?: string
+        aiSourceNote?: string
       }
       try {
         saved = JSON.parse(raw)
@@ -2108,11 +2113,12 @@ export default function WorksheetViewer({ assignmentId, resource, initialProgres
       if (!panel) {
         panel = document.createElement('div')
         panel.className = 'grammar-ai-feedback-panel screen-only'
+        panel.style.marginTop = '16px'
         panel.dataset.aiTask = task
         mount.appendChild(panel)
       }
 
-      renderAiFeedbackPanel(panel, saved.structural, saved.aiFeedback)
+      renderAiFeedbackPanel(panel, saved.structural, saved.aiFeedback, saved.aiSourceNote)
     }
   }, [
     notes,
