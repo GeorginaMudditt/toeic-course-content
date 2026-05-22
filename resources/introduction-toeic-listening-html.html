@@ -89,6 +89,65 @@
     color: #4338ca;
     min-width: 28px;
   }
+  .itl-dialogue-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 0 0 16px 0;
+    font-size: 14px;
+    color: #334155;
+  }
+  .itl-dialogue-table td {
+    padding: 8px 10px;
+    vertical-align: top;
+    border: 1px solid #e2e8f0;
+  }
+  .itl-dialogue-table td:first-child {
+    width: 72px;
+    font-weight: 600;
+    color: #475569;
+    background: #f8fafc;
+  }
+  .itl-conv-question {
+    margin-bottom: 20px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #e2e8f0;
+  }
+  .itl-conv-question:last-child {
+    margin-bottom: 0;
+    padding-bottom: 0;
+    border-bottom: none;
+  }
+  .itl-conv-options {
+    margin: 8px 0 12px 0;
+    padding-left: 22px;
+    font-size: 14px;
+    color: #334155;
+    list-style-type: none;
+  }
+  .itl-conv-options li {
+    margin-bottom: 6px;
+  }
+  .itl-invoice-box {
+    max-width: 320px;
+    margin: 0 0 18px 0;
+    padding: 14px 16px;
+    background: #fffbeb;
+    border: 2px solid #1e293b;
+    border-radius: 6px;
+    font-size: 14px;
+    color: #334155;
+    line-height: 1.55;
+  }
+  .itl-invoice-box p {
+    margin: 0 0 6px 0;
+  }
+  .itl-invoice-box .itl-invoice-total {
+    margin-top: 10px;
+    padding-top: 8px;
+    border-top: 1px solid #cbd5e1;
+    font-weight: 700;
+    font-size: 15px;
+  }
 </style>
 
 <div style="max-width: 820px; margin: 0 auto; padding: 24px; font-family: Arial, sans-serif; line-height: 1.6; color: #1e293b; background: linear-gradient(to bottom, #eef2ff, #ffffff);">
@@ -232,7 +291,178 @@
     </div>
   </div>
 
-  <!-- Further sections (Conversations, Talks) to be added -->
+  <div style="margin-bottom: 24px; padding: 20px 22px; background: #ffffff; border-radius: 10px; border: 1px solid #c7d2fe; box-shadow: 0 2px 8px rgba(0,0,0,0.05);" class="itl-keep-together itl-page-break" data-grammar-per-section-check="true">
+    <h2 style="font-size: 20px; font-weight: bold; margin: 0 0 16px 0; color: #1e3a8a; border-bottom: 3px solid #6366f1; padding-bottom: 8px;">Conversations</h2>
+
+    <div class="itl-directions-box itl-keep-together">
+      <p style="margin: 0 0 10px 0; font-weight: bold; font-size: 13px; letter-spacing: 0.04em; color: #1e293b; text-transform: uppercase;">Conversations</p>
+      <p style="margin: 0; font-size: 14px; color: #334155;"><strong>Directions:</strong> You will hear some conversations between two or more people. You will be asked to answer three questions about what the speakers say in each conversation. Select the best response to each question and click on the letter (A), (B), (C), or (D). The conversations will not appear on the screen and will be spoken only one time.</p>
+    </div>
+
+    <div style="margin-bottom: 28px; padding: 18px 20px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px;" class="itl-keep-together">
+      <p style="margin: 0 0 12px 0; font-size: 15px; font-weight: 600; color: #1e3a8a;">Example</p>
+      <p style="margin: 0 0 10px 0; font-size: 14px; color: #475569;"><strong>You will hear:</strong></p>
+      <table class="itl-dialogue-table itl-keep-together">
+        <tr><td>Woman:</td><td>Hi Daniel, do you have a minute to talk about the client presentation tomorrow?</td></tr>
+        <tr><td>Man:</td><td>Sure, Emma. What&apos;s the issue?</td></tr>
+        <tr><td>Woman:</td><td>I reviewed the slides, and I think we might be missing the updated sales figures for Q2.</td></tr>
+        <tr><td>Man:</td><td>Oh, I thought you had already added them. I can update them this afternoon.</td></tr>
+        <tr><td>Woman:</td><td>That would be great. Also, the manager asked if we could shorten the presentation by five minutes.</td></tr>
+        <tr><td>Man:</td><td>No problem. I&apos;ll remove the extra slides on the market overview.</td></tr>
+        <tr><td>Woman:</td><td>Perfect. And can you send me the final version before 6 p.m.?</td></tr>
+        <tr><td>Man:</td><td>Yes, I&apos;ll make sure it&apos;s done by then.</td></tr>
+      </table>
+
+      <div class="itl-conv-question itl-keep-together">
+        <p style="margin: 0 0 8px 0; font-size: 15px; font-weight: 600; color: #334155;">1. What is the main topic of the conversation?</p>
+        <ul class="itl-conv-options">
+          <li>(A) Scheduling a meeting with a client</li>
+          <li>(B) Ordering office supplies</li>
+          <li>(C) Hiring a new employee</li>
+          <li>(D) Preparing a presentation</li>
+        </ul>
+      </div>
+      <div class="itl-conv-question itl-keep-together">
+        <p style="margin: 0 0 8px 0; font-size: 15px; font-weight: 600; color: #334155;">2. What problem does Emma mention?</p>
+        <ul class="itl-conv-options">
+          <li>(A) The presentation is too short</li>
+          <li>(B) The slides are missing some data</li>
+          <li>(C) The meeting has been cancelled</li>
+          <li>(D) The client is unhappy with the product</li>
+        </ul>
+      </div>
+      <div class="itl-conv-question itl-keep-together">
+        <p style="margin: 0 0 8px 0; font-size: 15px; font-weight: 600; color: #334155;">3. What will Daniel do next?</p>
+        <ul class="itl-conv-options">
+          <li>(A) Contact the client directly</li>
+          <li>(B) Rewrite the entire presentation</li>
+          <li>(C) Update the slides and shorten the presentation</li>
+          <li>(D) Print documents for the meeting</li>
+        </ul>
+      </div>
+      <p style="margin: 0; font-size: 14px; color: #334155;"><strong>You will answer:</strong> <span style="font-weight: 700; color: #4338ca;">D, B, C</span></p>
+    </div>
+
+    <p style="font-size: 15px; margin: 0 0 18px 0; color: #475569;">Listen once to each recording below (each clip plays the conversation, then the questions). The questions and answer choices are shown on the screen. Choose <strong>A</strong>, <strong>B</strong>, <strong>C</strong>, or <strong>D</strong> for each item, then click <strong>Check Answers</strong>.</p>
+
+    <div style="margin-bottom: 28px; padding: 18px 20px; background: #ffffff; border: 1px solid #e2e8f0; border-radius: 8px;" class="itl-keep-together">
+      <p style="margin: 0 0 8px 0; font-size: 14px; font-weight: 600; color: #1e3a8a;" class="screen-only">Audio: Piste 45 &amp; Piste 46</p>
+      <audio class="itl-audio screen-only" controls preload="metadata" data-itl-chained-audio="true" data-itl-audio-sources="/images/toeic-intro-listening/part-3-piste-45.mp3|/images/toeic-intro-listening/part-3-piste-46.mp3">Your browser does not support audio playback.</audio>
+
+      <div class="itl-conv-question itl-keep-together">
+        <p style="margin: 0 0 8px 0; font-size: 15px; font-weight: 600; color: #334155;">1. Where most likely are the speakers?</p>
+        <ul class="itl-conv-options">
+          <li>(A) In a garage</li>
+          <li>(B) At the man&apos;s workplace</li>
+          <li>(C) At the woman&apos;s workplace</li>
+          <li>(D) In a supermarket</li>
+        </ul>
+        <span data-grammar-input="listening-conv-q1" data-grammar-input-type="radio" data-correct="C" style="display: block;"></span>
+      </div>
+      <div class="itl-conv-question itl-keep-together">
+        <p style="margin: 0 0 8px 0; font-size: 15px; font-weight: 600; color: #334155;">2. When will the man return?</p>
+        <ul class="itl-conv-options">
+          <li>(A) After lunch</li>
+          <li>(B) In 5 minutes</li>
+          <li>(C) Tomorrow</li>
+          <li>(D) In an hour</li>
+        </ul>
+        <span data-grammar-input="listening-conv-q2" data-grammar-input-type="radio" data-correct="A" style="display: block;"></span>
+      </div>
+      <div class="itl-conv-question itl-keep-together">
+        <p style="margin: 0 0 8px 0; font-size: 15px; font-weight: 600; color: #334155;">3. What will the man show when he returns?</p>
+        <ul class="itl-conv-options">
+          <li>(A) Some ID</li>
+          <li>(B) A prescription</li>
+          <li>(C) A document from the insurance</li>
+          <li>(D) His driver&apos;s license</li>
+        </ul>
+        <span data-grammar-input="listening-conv-q3" data-grammar-input-type="radio" data-correct="B" style="display: block;"></span>
+      </div>
+    </div>
+
+    <div style="margin-bottom: 28px; padding: 18px 20px; background: #ffffff; border: 1px solid #e2e8f0; border-radius: 8px;" class="itl-keep-together">
+      <p style="margin: 0 0 8px 0; font-size: 14px; font-weight: 600; color: #1e3a8a;" class="screen-only">Audio: Piste 47 &amp; Piste 48</p>
+      <audio class="itl-audio screen-only" controls preload="metadata" data-itl-chained-audio="true" data-itl-audio-sources="/images/toeic-intro-listening/part-3-piste-47.mp3|/images/toeic-intro-listening/part-3-piste-48.mp3">Your browser does not support audio playback.</audio>
+
+      <div class="itl-conv-question itl-keep-together">
+        <p style="margin: 0 0 8px 0; font-size: 15px; font-weight: 600; color: #334155;">4. Where does the man probably work?</p>
+        <ul class="itl-conv-options">
+          <li>(A) In a service station</li>
+          <li>(B) In a supermarket</li>
+          <li>(C) In a garage</li>
+          <li>(D) In a pharmacy</li>
+        </ul>
+        <span data-grammar-input="listening-conv-q4" data-grammar-input-type="radio" data-correct="B" style="display: block;"></span>
+      </div>
+      <div class="itl-conv-question itl-keep-together">
+        <p style="margin: 0 0 8px 0; font-size: 15px; font-weight: 600; color: #334155;">5. What is going to happen tomorrow?</p>
+        <ul class="itl-conv-options">
+          <li>(A) A special offer will start.</li>
+          <li>(B) The store will be closed.</li>
+          <li>(C) A special offer will end.</li>
+          <li>(D) The store will open early.</li>
+        </ul>
+        <span data-grammar-input="listening-conv-q5" data-grammar-input-type="radio" data-correct="B" style="display: block;"></span>
+      </div>
+      <div class="itl-conv-question itl-keep-together">
+        <p style="margin: 0 0 8px 0; font-size: 15px; font-weight: 600; color: #334155;">6. What will the woman probably do next?</p>
+        <ul class="itl-conv-options">
+          <li>(A) Return her items to the shelves</li>
+          <li>(B) Pay by card</li>
+          <li>(C) Pay by check</li>
+          <li>(D) Add an item to her cart</li>
+        </ul>
+        <span data-grammar-input="listening-conv-q6" data-grammar-input-type="radio" data-correct="D" style="display: block;"></span>
+      </div>
+    </div>
+
+    <div style="margin-bottom: 0; padding: 18px 20px; background: #ffffff; border: 1px solid #e2e8f0; border-radius: 8px;" class="itl-keep-together">
+      <p style="margin: 0 0 8px 0; font-size: 14px; font-weight: 600; color: #1e3a8a;" class="screen-only">Audio: Piste 49 &amp; Piste 50</p>
+      <audio class="itl-audio screen-only" controls preload="metadata" data-itl-chained-audio="true" data-itl-audio-sources="/images/toeic-intro-listening/part-3-piste-49.mp3|/images/toeic-intro-listening/part-3-piste-50.mp3">Your browser does not support audio playback.</audio>
+
+      <div class="itl-invoice-box itl-keep-together" aria-label="Invoice">
+        <p><strong>Invoice n&deg; 563-04</strong></p>
+        <p>Date: 27/04</p>
+        <p>4 tires: 4 @ $50 per unit &rarr; $200</p>
+        <p>Labor: $50</p>
+        <p class="itl-invoice-total">TOTAL: $250</p>
+      </div>
+
+      <div class="itl-conv-question itl-keep-together">
+        <p style="margin: 0 0 8px 0; font-size: 15px; font-weight: 600; color: #334155;">7. Where most likely are the speakers?</p>
+        <ul class="itl-conv-options">
+          <li>(A) In a car park</li>
+          <li>(B) At the woman&apos;s work</li>
+          <li>(C) At a garage</li>
+          <li>(D) In the woman&apos;s house</li>
+        </ul>
+        <span data-grammar-input="listening-conv-q7" data-grammar-input-type="radio" data-correct="C" style="display: block;"></span>
+      </div>
+      <div class="itl-conv-question itl-keep-together">
+        <p style="margin: 0 0 8px 0; font-size: 15px; font-weight: 600; color: #334155;">8. What does the man suggest the woman might like to do?</p>
+        <ul class="itl-conv-options">
+          <li>(A) Buy four tires</li>
+          <li>(B) Check the work done on the car</li>
+          <li>(C) Pay her invoice in instalments</li>
+          <li>(D) Get a refund</li>
+        </ul>
+        <span data-grammar-input="listening-conv-q8" data-grammar-input-type="radio" data-correct="B" style="display: block;"></span>
+      </div>
+      <div class="itl-conv-question itl-keep-together">
+        <p style="margin: 0 0 8px 0; font-size: 15px; font-weight: 600; color: #334155;">9. How much will the woman pay?</p>
+        <ul class="itl-conv-options">
+          <li>(A) $50</li>
+          <li>(B) $100</li>
+          <li>(C) $150</li>
+          <li>(D) $250</li>
+        </ul>
+        <span data-grammar-input="listening-conv-q9" data-grammar-input-type="radio" data-correct="C" style="display: block;"></span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Talks section to be added -->
 
 </div>
 
@@ -246,6 +476,22 @@
         <li style="margin-bottom: 14px;"><strong>Exercise 3 — D</strong> — The woman is holding some books (library photo).</li>
         <li style="margin-bottom: 14px;"><strong>Exercise 9 — C</strong> — Everyone is shaking hands (business meeting photo).</li>
         <li style="margin-bottom: 0;"><strong>Exercise 24 — C</strong> — Some people are working side by side (kitchen photo).</li>
+      </ol>
+    </div>
+
+    <div style="margin-bottom: 28px;">
+      <h3 style="font-size: 19px; font-weight: bold; margin-bottom: 12px; color: #000;">Conversations</h3>
+      <ol style="padding-left: 22px; font-size: 15px; list-style-type: decimal; margin: 0;">
+        <li style="margin-bottom: 14px;"><strong>Example — D, B, C</strong> — Preparing a presentation; missing slide data; Daniel will update slides and shorten the talk.</li>
+        <li style="margin-bottom: 14px;"><strong>1 — C</strong> — At the woman&apos;s workplace (pharmacy).</li>
+        <li style="margin-bottom: 14px;"><strong>2 — A</strong> — After lunch (he will return this afternoon).</li>
+        <li style="margin-bottom: 14px;"><strong>3 — B</strong> — A prescription.</li>
+        <li style="margin-bottom: 14px;"><strong>4 — B</strong> — In a supermarket (checkout).</li>
+        <li style="margin-bottom: 14px;"><strong>5 — B</strong> — The store will be closed (stock taking tomorrow).</li>
+        <li style="margin-bottom: 14px;"><strong>6 — D</strong> — Add an item to her cart (she runs to get more cheese).</li>
+        <li style="margin-bottom: 14px;"><strong>7 — C</strong> — At a garage.</li>
+        <li style="margin-bottom: 14px;"><strong>8 — B</strong> — Check the work done on the car before paying.</li>
+        <li style="margin-bottom: 0;"><strong>9 — C</strong> — $150 (only two front tires were replaced; invoice total was $250).</li>
       </ol>
     </div>
 

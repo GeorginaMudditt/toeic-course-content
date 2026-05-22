@@ -750,6 +750,68 @@ export default function WorksheetViewer({ assignmentId, resource, initialProgres
       return () => cancelAnimationFrame(id)
     }
   }, [hasGrammarInputs])
+
+  // Sequential listening audio: one player, multiple sources (e.g. conversation then questions)
+  useEffect(() => {
+    if (!contentRef.current || !resource.content.includes('data-itl-chained-audio')) return
+
+    const cleanups: Array<() => void> = []
+
+    const setup = () => {
+      const players = Array.from(
+        contentRef.current!.querySelectorAll('audio[data-itl-chained-audio="true"]')
+      ) as HTMLAudioElement[]
+
+      players.forEach((audio) => {
+        const sources = (audio.getAttribute('data-itl-audio-sources') || '')
+          .split('|')
+          .map((src) => src.trim())
+          .filter(Boolean)
+        if (sources.length < 2) return
+
+        let segment = 0
+        let chaining = false
+        audio.src = sources[0]
+
+        const onEnded = () => {
+          const next = segment + 1
+          if (next < sources.length) {
+            chaining = true
+            segment = next
+            audio.src = sources[next]!
+            audio.load()
+            void audio.play().finally(() => {
+              chaining = false
+            })
+          }
+        }
+
+        const onPlay = () => {
+          if (chaining) return
+          if (audio.ended || (audio.currentTime < 0.15 && segment > 0)) {
+            segment = 0
+            if (!audio.src.endsWith(sources[0]!)) {
+              audio.src = sources[0]!
+              audio.load()
+            }
+          }
+        }
+
+        audio.addEventListener('ended', onEnded)
+        audio.addEventListener('play', onPlay)
+        cleanups.push(() => {
+          audio.removeEventListener('ended', onEnded)
+          audio.removeEventListener('play', onPlay)
+        })
+      })
+    }
+
+    const id = requestAnimationFrame(setup)
+    return () => {
+      cancelAnimationFrame(id)
+      cleanups.forEach((fn) => fn())
+    }
+  }, [resource.content])
   
   // Parse placement test answers from notes
   const getPlacementTestAnswers = () => {
