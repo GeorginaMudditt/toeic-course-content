@@ -77,6 +77,7 @@ npm run update:resource:supabase "TOEICⓇ Speaking: Your Future Career" "speaki
 # Tests / TOEIC Reading & Writing
 npm run update:resource:supabase "Introduction to TOEICⓇ Reading" "introduction-toeic-reading-html.html"
 npm run update:resource:supabase "Introduction to TOEICⓇ Writing" "introduction-toeic-writing-html.html"
+npm run update:resource:supabase "Introduction to TOEICⓇ Listening" "introduction-toeic-listening-html.html"
 
 # Tests
 npm run update:resource:supabase "Placement Test" "placement-test-html.html"

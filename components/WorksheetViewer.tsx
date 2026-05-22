@@ -905,15 +905,60 @@ export default function WorksheetViewer({ assignmentId, resource, initialProgres
       const inputId = inputContainer.getAttribute('data-grammar-input')
       if (!inputId) return
 
-      const field = inputContainer.querySelector('input, textarea, select') as HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement | null
+      const expected = answerMap.get(inputId) || []
+      const rawType = inputContainer.getAttribute('data-grammar-input-type')
+      const inputType =
+        rawType === 'textarea'
+          ? 'textarea'
+          : rawType === 'select'
+            ? 'select'
+            : rawType === 'radio'
+              ? 'radio'
+              : 'text'
+
+      let result: GrammarCheckResult
+      if (inputType === 'radio') {
+        const checked = inputContainer.querySelector(
+          'input[type=radio]:checked'
+        ) as HTMLInputElement | null
+        const radioValue = checked ? normalizeAnswerValue(checked.value) : ''
+        const expected = answerMap.get(inputId) || []
+        if (!radioValue) {
+          result = { status: 'review' }
+        } else if (!expected.length) {
+          result = { status: 'review' }
+        } else if (expected.some((token) => normalizeAnswerValue(token) === radioValue)) {
+          result = { status: 'correct' }
+        } else {
+          result = { status: 'incorrect' }
+        }
+        inputContainer.style.borderRadius = '6px'
+        inputContainer.style.padding = '8px 10px'
+        if (result.status === 'correct') {
+          inputContainer.style.border = '2px solid #16a34a'
+          inputContainer.style.backgroundColor = '#f0fdf4'
+        } else if (result.status === 'incorrect') {
+          inputContainer.style.border = '2px solid #dc2626'
+          inputContainer.style.backgroundColor = '#fef2f2'
+        } else {
+          inputContainer.style.border = '2px solid #d97706'
+          inputContainer.style.backgroundColor = '#fffbeb'
+        }
+        if (result.status === 'correct') correct += 1
+        else if (result.status === 'incorrect') incorrect += 1
+        else review += 1
+        return
+      }
+
+      const field = inputContainer.querySelector('input, textarea, select') as
+        | HTMLInputElement
+        | HTMLTextAreaElement
+        | HTMLSelectElement
+        | null
       if (!field) return
 
       const value = normalizeAnswerValue(field.value || '')
-      const expected = answerMap.get(inputId) || []
-      const rawType = inputContainer.getAttribute('data-grammar-input-type')
-      const inputType = rawType === 'textarea' ? 'textarea' : rawType === 'select' ? 'select' : 'text'
 
-      let result: GrammarCheckResult
       if (!value) {
         result = { status: 'review' }
       } else if (inputType === 'textarea') {
@@ -1352,7 +1397,7 @@ export default function WorksheetViewer({ assignmentId, resource, initialProgres
     inputId: string
     value: string
     onChange: (value: string) => void
-    inputType?: 'text' | 'textarea' | 'select'
+    inputType?: 'text' | 'textarea' | 'select' | 'radio'
     width?: string
     options?: string[]
     textareaRows?: number
@@ -1458,7 +1503,50 @@ export default function WorksheetViewer({ assignmentId, resource, initialProgres
         </select>
       )
     }
-    
+
+    if (inputType === 'radio') {
+      const letters = options.length ? options : ['A', 'B', 'C', 'D']
+      return (
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            flexWrap: 'wrap',
+            gap: '12px',
+          }}
+        >
+          {letters.map((option) => (
+            <label
+              key={option}
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '6px',
+                cursor: 'pointer',
+                fontSize: '15px',
+                fontWeight: 600,
+                color: '#334155',
+              }}
+            >
+              <input
+                type="radio"
+                name={inputId}
+                value={option}
+                checked={localValue === option}
+                onChange={(e) => {
+                  const newValue = e.target.value
+                  setLocalValue(newValue)
+                  onChange(newValue)
+                }}
+                style={{ width: '18px', height: '18px', cursor: 'pointer' }}
+              />
+              <span>{option}</span>
+            </label>
+          ))}
+        </div>
+      )
+    }
+
     return (
       <input
         {...commonPropsWithoutRef}
@@ -1497,7 +1585,9 @@ export default function WorksheetViewer({ assignmentId, resource, initialProgres
             ? 'textarea'
             : inputTypeAttr === 'select'
               ? 'select'
-              : 'text'
+              : inputTypeAttr === 'radio'
+                ? 'radio'
+                : 'text'
         const options =
           (container.getAttribute('data-grammar-input-options') || '')
             .split('|')
@@ -1513,16 +1603,15 @@ export default function WorksheetViewer({ assignmentId, resource, initialProgres
           containerEl.style.pointerEvents = 'auto'
           containerEl.style.position = 'relative'
           containerEl.style.zIndex = '10'
-          if (inputType !== 'textarea') {
+          if (inputType === 'radio' || inputType === 'textarea') {
+            containerEl.style.display = 'block'
+          } else {
             containerEl.style.display = 'inline-block'
             if (configuredWidth) {
               containerEl.style.minWidth = configuredWidth
               containerEl.style.width = configuredWidth
               containerEl.style.maxWidth = configuredWidth
             }
-          }
-          if (inputType === 'textarea') {
-            containerEl.style.display = 'block'
           }
           
           const root = createRoot(containerEl)
@@ -1588,7 +1677,9 @@ export default function WorksheetViewer({ assignmentId, resource, initialProgres
             ? 'textarea'
             : inputTypeAttr === 'select'
               ? 'select'
-              : 'text'
+              : inputTypeAttr === 'radio'
+                ? 'radio'
+                : 'text'
         const options =
           (container.getAttribute('data-grammar-input-options') || '')
             .split('|')
