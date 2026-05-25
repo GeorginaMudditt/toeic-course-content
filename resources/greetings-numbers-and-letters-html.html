@@ -215,6 +215,97 @@
     margin-top: 12px;
   }
 
+  .symbol-prompt {
+    font-size: 16px;
+    margin: 0 0 12px;
+    font-weight: 600;
+    color: var(--exam-ink);
+  }
+
+  .symbol-grid {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 10px;
+    margin-bottom: 14px;
+  }
+
+  .symbol-chip {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 76px;
+    border-radius: 12px;
+    border: 2px solid transparent;
+    background: #fff;
+    box-shadow: 0 2px 6px rgba(30, 58, 138, 0.1);
+  }
+
+  .symbol-chip-char {
+    font-size: 40px;
+    font-weight: 700;
+    line-height: 1;
+    color: #0f172a;
+  }
+
+  .symbol-chip--at {
+    background: linear-gradient(160deg, #eff6ff, #dbeafe);
+    border-color: #93c5fd;
+  }
+
+  .symbol-chip--at .symbol-chip-char {
+    color: #1d4ed8;
+  }
+
+  .symbol-chip--dash {
+    background: linear-gradient(160deg, #f0fdf4, #dcfce7);
+    border-color: #86efac;
+  }
+
+  .symbol-chip--dash .symbol-chip-char {
+    color: #15803d;
+  }
+
+  .symbol-chip--question {
+    background: linear-gradient(160deg, #fff7ed, #ffedd5);
+    border-color: #fdba74;
+  }
+
+  .symbol-chip--question .symbol-chip-char {
+    color: #c2410c;
+  }
+
+  .symbol-chip--dot {
+    background: linear-gradient(160deg, #f5f3ff, #ede9fe);
+    border-color: #c4b5fd;
+  }
+
+  .symbol-chip--dot .symbol-chip-char {
+    color: #6d28d9;
+  }
+
+  .symbol-chip--comma {
+    background: linear-gradient(160deg, #fdf2f8, #fce7f3);
+    border-color: #f9a8d4;
+  }
+
+  .symbol-chip--comma .symbol-chip-char {
+    color: #be185d;
+  }
+
+  @media (max-width: 640px) {
+    .symbol-grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .symbol-chip {
+      min-height: 68px;
+    }
+
+    .symbol-chip-char {
+      font-size: 34px;
+    }
+  }
+
   /* Force visible markers (global app styles can hide them). */
   ol {
     list-style-type: decimal !important;
@@ -294,6 +385,21 @@
       background: #fff;
       border-color: #d1d5db;
     }
+
+    .symbol-grid {
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 6px;
+    }
+
+    .symbol-chip {
+      min-height: 56px;
+      box-shadow: none;
+      background: #fff !important;
+    }
+
+    .symbol-chip-char {
+      font-size: 28px !important;
+    }
   }
 </style>
 
@@ -303,7 +409,7 @@
       <img src="/brizzle-logo.png" alt="Brizzle Logo" style="width: 45px; height: 45px; object-fit: contain;" />
     </div>
     <h1 style="font-size: 30px; line-height: 1.2; margin: 0 0 4px; color: #0f172a;">Greetings, Numbers and Letters</h1>
-    <h2 style="font-size: 22px; margin: 0; font-weight: 700;">Travel English</h2>
+    <h2 style="font-size: 22px; margin: 0; font-weight: 700;">Everyday English</h2>
   </div>
 
   <div class="keep-together">
@@ -386,8 +492,25 @@
     </div>
 
     <h3 style="font-size: 20px; font-weight: 700; margin: 18px 0 8px;">Email/web addresses</h3>
+    <p class="symbol-prompt">What do you call these?</p>
+    <div class="symbol-grid" aria-label="Email and web address symbols">
+      <div class="symbol-chip symbol-chip--at">
+        <span class="symbol-chip-char" aria-hidden="true">@</span>
+      </div>
+      <div class="symbol-chip symbol-chip--dash">
+        <span class="symbol-chip-char" aria-hidden="true">-</span>
+      </div>
+      <div class="symbol-chip symbol-chip--question">
+        <span class="symbol-chip-char" aria-hidden="true">?</span>
+      </div>
+      <div class="symbol-chip symbol-chip--dot">
+        <span class="symbol-chip-char" aria-hidden="true">.</span>
+      </div>
+      <div class="symbol-chip symbol-chip--comma">
+        <span class="symbol-chip-char" aria-hidden="true">,</span>
+      </div>
+    </div>
     <ul class="reflection-list" style="font-size: 16px; border-color: rgba(30, 58, 138, 0.25);">
-      <li>What do you call these: @ - ? . ,</li>
       <li>What is your email address?</li>
     </ul>
 
