@@ -207,6 +207,31 @@
     word-break: break-word;
   }
 
+  .alphabet-video-wrap {
+    margin: 8px 0 12px;
+    max-width: 280px;
+  }
+
+  .alphabet-video {
+    width: 100%;
+    height: auto;
+    display: block;
+    border-radius: 8px;
+    border: 1px solid var(--exam-soft-border);
+    background: #0f172a;
+  }
+
+  .count-audio-wrap {
+    margin: 0 0 12px;
+    max-width: 280px;
+  }
+
+  .count-audio {
+    width: 100%;
+    height: 40px;
+    display: block;
+  }
+
   .note-box {
     border: 1px solid #c7d2fe;
     border-radius: 8px;
@@ -224,20 +249,29 @@
 
   .symbol-grid {
     display: grid;
-    grid-template-columns: repeat(5, minmax(0, 1fr));
+    grid-template-columns: repeat(6, minmax(0, 1fr));
     gap: 10px;
     margin-bottom: 14px;
   }
 
   .symbol-chip {
     display: flex;
-    align-items: center;
-    justify-content: center;
-    min-height: 76px;
+    flex-direction: column;
+    align-items: stretch;
+    justify-content: flex-start;
+    min-height: 0;
+    padding: 10px 8px 8px;
     border-radius: 12px;
     border: 2px solid transparent;
     background: #fff;
     box-shadow: 0 2px 6px rgba(30, 58, 138, 0.1);
+  }
+
+  .symbol-chip-top {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 52px;
   }
 
   .symbol-chip-char {
@@ -245,6 +279,55 @@
     font-weight: 700;
     line-height: 1;
     color: #0f172a;
+  }
+
+  .symbol-reveal {
+    margin-top: 4px;
+    padding-top: 8px;
+    border-top: 1px solid rgba(15, 23, 42, 0.08);
+  }
+
+  .symbol-reveal summary {
+    list-style: none;
+    cursor: pointer;
+    font-size: 11px;
+    font-weight: 700;
+    text-align: center;
+    color: #1e3a8a;
+    padding: 5px 6px;
+    border-radius: 6px;
+    background: rgba(255, 255, 255, 0.9);
+    border: 1px solid rgba(30, 58, 138, 0.22);
+    user-select: none;
+  }
+
+  .symbol-reveal summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .symbol-reveal[open] summary {
+    background: #1e3a8a;
+    color: #fff;
+    border-color: #1e3a8a;
+  }
+
+  .symbol-reveal-content {
+    margin-top: 8px;
+    text-align: center;
+  }
+
+  .symbol-answer-label {
+    font-size: 12px;
+    font-weight: 700;
+    line-height: 1.3;
+    margin: 0 0 6px;
+    color: #0f172a;
+  }
+
+  .symbol-answer-audio {
+    width: 100%;
+    height: 32px;
+    display: block;
   }
 
   .symbol-chip--at {
@@ -274,6 +357,15 @@
     color: #c2410c;
   }
 
+  .symbol-chip--exclamation {
+    background: linear-gradient(160deg, #fef2f2, #fee2e2);
+    border-color: #fca5a5;
+  }
+
+  .symbol-chip--exclamation .symbol-chip-char {
+    color: #b91c1c;
+  }
+
   .symbol-chip--dot {
     background: linear-gradient(160deg, #f5f3ff, #ede9fe);
     border-color: #c4b5fd;
@@ -297,12 +389,16 @@
       grid-template-columns: repeat(3, minmax(0, 1fr));
     }
 
-    .symbol-chip {
-      min-height: 68px;
+    .symbol-chip-top {
+      min-height: 44px;
     }
 
     .symbol-chip-char {
       font-size: 34px;
+    }
+
+    .symbol-reveal summary {
+      font-size: 10px;
     }
   }
 
@@ -387,7 +483,7 @@
     }
 
     .symbol-grid {
-      grid-template-columns: repeat(5, minmax(0, 1fr));
+      grid-template-columns: repeat(6, minmax(0, 1fr));
       gap: 6px;
     }
 
@@ -483,6 +579,12 @@
     <h3 style="font-size: 20px; font-weight: 700; margin: 0 0 8px;">Words</h3>
     <p style="font-size: 16px; margin: 0 0 6px;">Read the alphabet in English:</p>
     <p class="alphabet-line" style="font-weight: 600;">A B C D E F G H I J K L M N O P Q R S T U V W X Y Z</p>
+    <div class="alphabet-video-wrap">
+      <video class="alphabet-video" controls preload="metadata" playsinline>
+        <source src="/images/everyday-english/alphabet.mp4" type="video/mp4" />
+        Your browser does not support the video element.
+      </video>
+    </div>
     <ul class="reflection-list" style="font-size: 16px; border-color: rgba(30, 58, 138, 0.25);">
       <li>Which letters do you think are the most difficult for French speakers?</li>
       <li>How do you spell your first name? What about your surname?</li>
@@ -495,19 +597,76 @@
     <p class="symbol-prompt">What do you call these?</p>
     <div class="symbol-grid" aria-label="Email and web address symbols">
       <div class="symbol-chip symbol-chip--at">
-        <span class="symbol-chip-char" aria-hidden="true">@</span>
+        <div class="symbol-chip-top">
+          <span class="symbol-chip-char" aria-hidden="true">@</span>
+        </div>
+        <details class="symbol-reveal">
+          <summary>Reveal Answer</summary>
+          <div class="symbol-reveal-content">
+            <p class="symbol-answer-label">at symbol</p>
+            <audio class="symbol-answer-audio" controls preload="none" src="/images/everyday-english/punctuation-audio/at.mp3">Your browser does not support audio playback.</audio>
+          </div>
+        </details>
       </div>
       <div class="symbol-chip symbol-chip--dash">
-        <span class="symbol-chip-char" aria-hidden="true">-</span>
+        <div class="symbol-chip-top">
+          <span class="symbol-chip-char" aria-hidden="true">-</span>
+        </div>
+        <details class="symbol-reveal">
+          <summary>Reveal Answer</summary>
+          <div class="symbol-reveal-content">
+            <p class="symbol-answer-label">hyphen</p>
+            <audio class="symbol-answer-audio" controls preload="none" src="/images/everyday-english/punctuation-audio/hyphen.mp3">Your browser does not support audio playback.</audio>
+          </div>
+        </details>
       </div>
       <div class="symbol-chip symbol-chip--question">
-        <span class="symbol-chip-char" aria-hidden="true">?</span>
+        <div class="symbol-chip-top">
+          <span class="symbol-chip-char" aria-hidden="true">?</span>
+        </div>
+        <details class="symbol-reveal">
+          <summary>Reveal Answer</summary>
+          <div class="symbol-reveal-content">
+            <p class="symbol-answer-label">question mark</p>
+            <audio class="symbol-answer-audio" controls preload="none" src="/images/everyday-english/punctuation-audio/question%20mark.mp3">Your browser does not support audio playback.</audio>
+          </div>
+        </details>
+      </div>
+      <div class="symbol-chip symbol-chip--exclamation">
+        <div class="symbol-chip-top">
+          <span class="symbol-chip-char" aria-hidden="true">!</span>
+        </div>
+        <details class="symbol-reveal">
+          <summary>Reveal Answer</summary>
+          <div class="symbol-reveal-content">
+            <p class="symbol-answer-label">exclamation mark</p>
+            <audio class="symbol-answer-audio" controls preload="none" src="/images/everyday-english/punctuation-audio/exclamation%20mark.mp3">Your browser does not support audio playback.</audio>
+          </div>
+        </details>
       </div>
       <div class="symbol-chip symbol-chip--dot">
-        <span class="symbol-chip-char" aria-hidden="true">.</span>
+        <div class="symbol-chip-top">
+          <span class="symbol-chip-char" aria-hidden="true">.</span>
+        </div>
+        <details class="symbol-reveal">
+          <summary>Reveal Answer</summary>
+          <div class="symbol-reveal-content">
+            <p class="symbol-answer-label">full stop</p>
+            <audio class="symbol-answer-audio" controls preload="none" src="/images/everyday-english/punctuation-audio/full%20stop.mp3">Your browser does not support audio playback.</audio>
+          </div>
+        </details>
       </div>
       <div class="symbol-chip symbol-chip--comma">
-        <span class="symbol-chip-char" aria-hidden="true">,</span>
+        <div class="symbol-chip-top">
+          <span class="symbol-chip-char" aria-hidden="true">,</span>
+        </div>
+        <details class="symbol-reveal">
+          <summary>Reveal Answer</summary>
+          <div class="symbol-reveal-content">
+            <p class="symbol-answer-label">comma</p>
+            <audio class="symbol-answer-audio" controls preload="none" src="/images/everyday-english/punctuation-audio/comma.mp3">Your browser does not support audio playback.</audio>
+          </div>
+        </details>
       </div>
     </div>
     <ul class="reflection-list" style="font-size: 16px; border-color: rgba(30, 58, 138, 0.25);">
@@ -516,6 +675,12 @@
 
     <h3 style="font-size: 20px; font-weight: 700; margin: 18px 0 8px;">Numbers</h3>
     <p style="font-size: 16px; margin: 0 0 8px;">Count to 50 in English.</p>
+    <div class="count-audio-wrap">
+      <audio class="count-audio" controls preload="metadata">
+        <source src="/images/everyday-english/one-to-fifty.mp4" type="audio/mp4" />
+        Your browser does not support the audio element.
+      </audio>
+    </div>
     <ul class="reflection-list" style="font-size: 16px; border-color: rgba(30, 58, 138, 0.25);">
       <li>Which numbers do you think could be easily confused?</li>
       <li>How do you say 0 in English? (This is a trick question – there are several ways!)</li>
