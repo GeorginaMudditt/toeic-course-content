@@ -1,0 +1,414 @@
+<!-- Greetings, Numbers and Letters -->
+<style>
+  :root {
+    --exam-ink: #1f2937;
+    --exam-subtle-ink: #4b5563;
+    --exam-border: #cfd6df;
+    --exam-soft-border: #e5e7eb;
+    --exam-header-bg: #f6f8fb;
+    --exam-panel-bg: #fbfcfe;
+    --exam-accent: #1e3a8a;
+  }
+
+  body {
+    color: var(--exam-ink);
+  }
+
+  .exam-header {
+    border: 1px solid var(--exam-border);
+    background: linear-gradient(to bottom, #ffffff, var(--exam-header-bg));
+    border-radius: 8px;
+    padding: 12px 14px;
+  }
+
+  .keep-together {
+    border: 1px solid var(--exam-soft-border);
+    border-radius: 8px;
+    background: var(--exam-panel-bg);
+    padding: 12px 14px;
+    margin-bottom: 18px;
+  }
+
+  .keep-together:last-child {
+    margin-bottom: 0;
+  }
+
+  h2 {
+    color: var(--exam-accent) !important;
+    margin-top: 0;
+  }
+
+  h3 {
+    margin-top: 0;
+    color: #0f172a;
+  }
+
+  .key-lang-grid {
+    display: grid;
+    gap: 14px;
+  }
+
+  .key-lang-card {
+    border-radius: 10px;
+    padding: 12px 14px;
+    border: 1px solid transparent;
+  }
+
+  .key-lang-card--greetings {
+    background: linear-gradient(135deg, #eff6ff 0%, #f8fafc 100%);
+    border-color: #bfdbfe;
+  }
+
+  .key-lang-card--time {
+    background: linear-gradient(135deg, #fff7ed 0%, #fffbeb 100%);
+    border-color: #fed7aa;
+  }
+
+  .key-lang-card--questions {
+    background: linear-gradient(135deg, #f5f3ff 0%, #faf5ff 100%);
+    border-color: #ddd6fe;
+  }
+
+  .key-lang-card-title {
+    font-size: 14px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    margin: 0 0 10px;
+  }
+
+  .key-lang-card--greetings .key-lang-card-title {
+    color: #1d4ed8;
+  }
+
+  .key-lang-card--time .key-lang-card-title {
+    color: #c2410c;
+  }
+
+  .key-lang-card--questions .key-lang-card-title {
+    color: #6d28d9;
+  }
+
+  .phrase-list {
+    list-style-type: none !important;
+    padding-left: 0 !important;
+    margin: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .phrase-list li {
+    display: inline-block !important;
+    margin: 0;
+    padding: 6px 12px;
+    background: #fff;
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    border-radius: 999px;
+    font-size: 15px;
+    font-weight: 600;
+    color: #0f172a;
+    box-shadow: 0 1px 2px rgba(15, 23, 42, 0.06);
+  }
+
+  .key-lang-card--greetings .phrase-list li {
+    border-color: #93c5fd;
+    background: #fff;
+  }
+
+  .key-lang-card--time .phrase-list li {
+    border-color: #fdba74;
+    background: #fff;
+  }
+
+  .question-pair-list {
+    list-style-type: none !important;
+    padding-left: 0 !important;
+    margin: 0;
+  }
+
+  .question-pair {
+    margin: 0 0 18px;
+    padding: 10px 12px;
+    background: #fff;
+    border-radius: 8px;
+    border-left: 4px solid #8b5cf6;
+    box-shadow: 0 1px 3px rgba(109, 40, 217, 0.08);
+  }
+
+  .question-pair:last-of-type {
+    margin-bottom: 0;
+  }
+
+  .question-pair li {
+    display: list-item !important;
+    list-style-type: disc !important;
+    list-style-position: outside !important;
+    margin-left: 18px;
+    padding-left: 4px;
+    font-size: 16px;
+    margin-bottom: 4px;
+  }
+
+  .question-pair li:last-child {
+    margin-bottom: 0;
+  }
+
+  .reflection-list {
+    list-style-type: none !important;
+    padding-left: 0 !important;
+    margin: 12px 0 0;
+    background: rgba(255, 255, 255, 0.7);
+    border-radius: 8px;
+    padding: 10px 12px !important;
+    border: 1px dashed rgba(109, 40, 217, 0.35);
+  }
+
+  .reflection-list li {
+    margin-bottom: 0;
+    padding-left: 14px;
+    position: relative;
+    display: block !important;
+    font-size: 15px;
+    color: var(--exam-subtle-ink);
+    font-style: italic;
+  }
+
+  .reflection-list li::before {
+    content: "–";
+    position: absolute;
+    left: 0;
+    color: #7c3aed;
+    font-style: normal;
+  }
+
+  .key-lang-card .reflection-list {
+    margin-top: 12px;
+    border-color: rgba(29, 78, 216, 0.3);
+  }
+
+  .key-lang-card--time .reflection-list {
+    border-color: rgba(194, 65, 12, 0.3);
+  }
+
+  .key-lang-card--time .reflection-list li::before {
+    color: #ea580c;
+  }
+
+  .key-lang-card--questions .reflection-list {
+    margin-top: 14px;
+  }
+
+  .alphabet-line {
+    font-size: 17px;
+    letter-spacing: 0.06em;
+    line-height: 1.6;
+    margin: 8px 0 12px;
+    word-break: break-word;
+  }
+
+  .note-box {
+    border: 1px solid #c7d2fe;
+    border-radius: 8px;
+    background: #eef2ff;
+    padding: 10px 12px;
+    margin-top: 12px;
+  }
+
+  /* Force visible markers (global app styles can hide them). */
+  ol {
+    list-style-type: decimal !important;
+    list-style-position: outside !important;
+    padding-left: 24px !important;
+  }
+
+  ul:not(.phrase-list):not(.question-pair-list):not(.reflection-list) {
+    list-style-type: disc !important;
+    list-style-position: outside !important;
+    padding-left: 22px !important;
+  }
+
+  @media print {
+    @page {
+      margin: 1.5cm;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+    }
+
+    .resource-wrap {
+      max-width: 100% !important;
+      padding: 5mm 6mm !important;
+      box-sizing: border-box !important;
+      line-height: 1.25 !important;
+      font-size: 14px !important;
+    }
+
+    h1 {
+      font-size: 24px !important;
+      margin-bottom: 2px !important;
+    }
+
+    h2 {
+      font-size: 18px !important;
+      margin-bottom: 6px !important;
+    }
+
+    h3 {
+      font-size: 16px !important;
+      margin-bottom: 6px !important;
+    }
+
+    p,
+    li,
+    .alphabet-line {
+      font-size: 14px !important;
+    }
+
+    .keep-together {
+      break-inside: auto;
+      page-break-inside: auto;
+      background: #fff;
+      border-color: #d1d5db;
+      padding: 8px 10px;
+      margin-bottom: 10px;
+    }
+
+    .key-lang-card {
+      background: #fff !important;
+    }
+
+    .phrase-list li {
+      box-shadow: none;
+    }
+
+    h2,
+    h3 {
+      break-after: avoid;
+      page-break-after: avoid;
+    }
+
+    .note-box {
+      background: #fff;
+      border-color: #d1d5db;
+    }
+  }
+</style>
+
+<div class="resource-wrap" style="max-width: 900px; margin: 0 auto; padding: 20px; font-family: Arial, sans-serif; line-height: 1.45; color: #333;">
+  <div class="exam-header" style="text-align: center; margin-bottom: 18px;">
+    <div style="display: inline-block; margin-bottom: 6px;">
+      <img src="/brizzle-logo.png" alt="Brizzle Logo" style="width: 45px; height: 45px; object-fit: contain;" />
+    </div>
+    <h1 style="font-size: 30px; line-height: 1.2; margin: 0 0 4px; color: #0f172a;">Greetings, Numbers and Letters</h1>
+    <h2 style="font-size: 22px; margin: 0; font-weight: 700;">Travel English</h2>
+  </div>
+
+  <div class="keep-together">
+    <h2 style="font-size: 22px; font-weight: 700; margin-bottom: 14px;">Key Language</h2>
+
+    <div class="key-lang-grid">
+      <div class="key-lang-card key-lang-card--greetings">
+        <p class="key-lang-card-title">Basic greetings</p>
+        <ul class="phrase-list">
+          <li>Hello</li>
+          <li>Hi</li>
+          <li>Welcome</li>
+          <li>Goodbye</li>
+          <li>Bye</li>
+        </ul>
+        <ul class="reflection-list">
+          <li>What is the difference between these greetings?</li>
+        </ul>
+      </div>
+
+      <div class="key-lang-card key-lang-card--time">
+        <p class="key-lang-card-title">Time of day</p>
+        <ul class="phrase-list">
+          <li>Good morning</li>
+          <li>Good afternoon</li>
+          <li>Good evening</li>
+          <li>Goodnight</li>
+        </ul>
+        <ul class="reflection-list">
+          <li>Which expression(s) do you use when you meet someone? Which expression(s) do you use when you say goodbye to someone? What time of day would you use each of these expressions?</li>
+        </ul>
+      </div>
+
+      <div class="key-lang-card key-lang-card--questions">
+        <p class="key-lang-card-title">Helpful phrases &amp; questions</p>
+        <ul class="question-pair-list">
+          <li class="question-pair">
+            <ul style="margin: 0; padding: 0; list-style: none !important;">
+              <li>Do you need some help?</li>
+              <li>How can I help you?</li>
+            </ul>
+          </li>
+          <li class="question-pair">
+            <ul style="margin: 0; padding: 0; list-style: none !important;">
+              <li>Do you have a reservation?</li>
+              <li>What name is the reservation in?</li>
+            </ul>
+          </li>
+          <li class="question-pair">
+            <ul style="margin: 0; padding: 0; list-style: none !important;">
+              <li>What's your first name?</li>
+              <li>What's your surname? (You may also hear, "What's your family name?")</li>
+            </ul>
+          </li>
+        </ul>
+        <ul class="reflection-list">
+          <li>What are the differences between these pairs of questions?</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="keep-together">
+    <h2 style="font-size: 22px; font-weight: 700; margin-bottom: 10px;">Role Play</h2>
+    <p style="font-size: 16px; margin: 0;">In English, greet a customer who arrives at your workplace.</p>
+  </div>
+
+  <div class="keep-together">
+    <h2 style="font-size: 22px; font-weight: 700; margin-bottom: 10px;">Collecting Information</h2>
+
+    <h3 style="font-size: 20px; font-weight: 700; margin: 0 0 8px;">Words</h3>
+    <p style="font-size: 16px; margin: 0 0 6px;">Read the alphabet in English:</p>
+    <p class="alphabet-line" style="font-weight: 600;">A B C D E F G H I J K L M N O P Q R S T U V W X Y Z</p>
+    <ul class="reflection-list" style="font-size: 16px; border-color: rgba(30, 58, 138, 0.25);">
+      <li>Which letters do you think are the most difficult for French speakers?</li>
+      <li>How do you spell your first name? What about your surname?</li>
+    </ul>
+    <div class="note-box">
+      <p style="margin: 0; font-size: 16px;"><strong>💬 Note:</strong> English speakers will always write their first name before their surname, and usually only capitalise the first letter. So, Peter Allan = first name Peter, surname Allan.</p>
+    </div>
+
+    <h3 style="font-size: 20px; font-weight: 700; margin: 18px 0 8px;">Email/web addresses</h3>
+    <ul class="reflection-list" style="font-size: 16px; border-color: rgba(30, 58, 138, 0.25);">
+      <li>What do you call these: @ - ? . ,</li>
+      <li>What is your email address?</li>
+    </ul>
+
+    <h3 style="font-size: 20px; font-weight: 700; margin: 18px 0 8px;">Numbers</h3>
+    <p style="font-size: 16px; margin: 0 0 8px;">Count to 50 in English.</p>
+    <ul class="reflection-list" style="font-size: 16px; border-color: rgba(30, 58, 138, 0.25);">
+      <li>Which numbers do you think could be easily confused?</li>
+      <li>How do you say 0 in English? (This is a trick question – there are several ways!)</li>
+      <li>What's your telephone number?</li>
+    </ul>
+    <div class="note-box">
+      <p style="margin: 0; font-size: 16px;"><strong>💬 Note:</strong> English speakers will usually give their phone number digit by digit (not in pairs like French speakers do). So, 0787 145527 would be "oh" seven eight seven one four five five two seven (or "double five").</p>
+    </div>
+
+    <h3 style="font-size: 20px; font-weight: 700; margin: 18px 0 8px;">Times</h3>
+    <div style="border: 1px solid var(--exam-soft-border); border-radius: 10px; background: #fff; padding: 10px;">
+      <img
+        src="https://ulrwcortyhassmytkcij.supabase.co/storage/v1/object/public/travel-english/telling-time.png"
+        alt="Telling the time in English"
+        style="width: 100%; height: auto; display: block;"
+      />
+    </div>
+  </div>
+</div>
