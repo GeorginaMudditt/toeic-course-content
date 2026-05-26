@@ -722,6 +722,7 @@ export default function WorksheetViewer({ assignmentId, resource, initialProgres
   // Ref to hold latest notes for save - avoids stale state when Save clicked right after typing
   const notesRef = useRef(notes)
   notesRef.current = notes
+  const latestSaveIdRef = useRef(0)
 
   // Check if this is a Placement Test
   const isPlacementTest = resource.title.toLowerCase().includes('placement test')
@@ -1163,9 +1164,71 @@ export default function WorksheetViewer({ assignmentId, resource, initialProgres
     [updatePlacementTestAnswer]
   )
 
+  /** Read live values from injected grammar fields into notesRef (and optionally React state). */
+  const flushGrammarInputsToNotes = useCallback(
+    (syncState = true): string => {
+      if (!hasGrammarInputs || !contentRef.current) {
+        return notesRef.current || notes || ''
+      }
+
+      let currentData: Record<string, unknown> = {}
+      try {
+        currentData = JSON.parse(notesRef.current || '{}') as Record<string, unknown>
+      } catch {
+        currentData = {}
+      }
+
+      const containers = contentRef.current.querySelectorAll('[data-grammar-input]')
+      containers.forEach((container) => {
+        const inputId = container.getAttribute('data-grammar-input')
+        if (!inputId) return
+
+        const textarea = container.querySelector('textarea')
+        const textInput = container.querySelector('input[type="text"]')
+        const select = container.querySelector('select')
+        const checkedRadio = container.querySelector('input[type="radio"]:checked')
+
+        let value = ''
+        if (textarea) value = textarea.value
+        else if (select) value = (select as HTMLSelectElement).value
+        else if (checkedRadio) value = (checkedRadio as HTMLInputElement).value
+        else if (textInput) value = (textInput as HTMLInputElement).value
+
+        if (isPlacementTest) {
+          if (!currentData.grammarAnswers || typeof currentData.grammarAnswers !== 'object') {
+            currentData.grammarAnswers = {}
+          }
+          ;(currentData.grammarAnswers as Record<string, string>)[inputId] = value
+        } else {
+          currentData[inputId] = value
+        }
+      })
+
+      const newNotes = JSON.stringify(currentData, null, 2)
+      notesRef.current = newNotes
+      if (syncState) {
+        setNotes(newNotes)
+      }
+      return newNotes
+    },
+    [hasGrammarInputs, isPlacementTest, notes]
+  )
+
   const saveProgress = useCallback(
-    async (notesToSave?: string) => {
-      const notesValue = notesToSave ?? notesRef.current ?? notes
+    async (notesToSave?: string): Promise<boolean> => {
+      const saveId = ++latestSaveIdRef.current
+
+      let notesValue: string
+      if (notesToSave !== undefined) {
+        notesValue = notesToSave
+      } else if (hasGrammarInputs) {
+        notesValue = flushGrammarInputsToNotes(true)
+      } else {
+        notesValue = notesRef.current || notes
+      }
+
+      const statusToSave = status === 'NOT_STARTED' ? 'IN_PROGRESS' : status
+
       setSaving(true)
       try {
         const response = await fetch(`/api/progress/${assignmentId}`, {
@@ -1173,9 +1236,13 @@ export default function WorksheetViewer({ assignmentId, resource, initialProgres
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             notes: notesValue,
-            status: status === 'NOT_STARTED' ? 'IN_PROGRESS' : status,
+            status: statusToSave,
           }),
         })
+
+        if (saveId !== latestSaveIdRef.current) {
+          return false
+        }
 
         if (response.ok) {
           setSaved(true)
@@ -1183,14 +1250,21 @@ export default function WorksheetViewer({ assignmentId, resource, initialProgres
           if (status === 'NOT_STARTED') {
             setStatus('IN_PROGRESS')
           }
+          return true
         }
+
+        console.error('Failed to save progress:', await response.text().catch(() => ''))
+        return false
       } catch (error) {
         console.error('Failed to save progress:', error)
+        return false
       } finally {
-        setSaving(false)
+        if (saveId === latestSaveIdRef.current) {
+          setSaving(false)
+        }
       }
     },
-    [assignmentId, notes, status]
+    [assignmentId, flushGrammarInputsToNotes, hasGrammarInputs, notes, status]
   )
   
   // Auto-save placement test answers when notes change
@@ -1495,7 +1569,7 @@ export default function WorksheetViewer({ assignmentId, resource, initialProgres
           clearTimeout(timeoutRef.current)
           timeoutRef.current = null
         }
-        if (localValue !== value) onChange(localValue)
+        onChange(localValue)
       }
     }
     
@@ -2055,17 +2129,23 @@ export default function WorksheetViewer({ assignmentId, resource, initialProgres
       const saveClickHandler = async () => {
         const active = document.activeElement
         if (active instanceof HTMLTextAreaElement && section.contains(active)) {
-          active.dispatchEvent(new Event('blur', { bubbles: true }))
+          active.blur()
         }
         saveButton.disabled = true
         saveButton.textContent = 'Saving...'
-        await saveProgress()
+        const ok = await saveProgress()
         saveButton.disabled = false
         saveButton.textContent = 'Save'
-        saveFeedback.textContent = '✓ Saved'
+        if (ok) {
+          saveFeedback.textContent = '✓ Saved'
+          saveFeedback.style.color = '#059669'
+        } else {
+          saveFeedback.textContent = 'Save failed — please try again'
+          saveFeedback.style.color = '#dc2626'
+        }
         window.setTimeout(() => {
           saveFeedback.textContent = ''
-        }, 2000)
+        }, 3000)
       }
       saveButton.addEventListener('click', saveClickHandler)
       cleanupFns.push(() => saveButton.removeEventListener('click', saveClickHandler))
@@ -2483,14 +2563,56 @@ export default function WorksheetViewer({ assignmentId, resource, initialProgres
     return () => clearInterval(autoSave)
   }, [status, saveProgress])
 
+  // Flush and persist when the student leaves the tab or closes the page.
+  useEffect(() => {
+    if (!hasGrammarInputs && !isPlacementTest) return
+
+    const persistOnLeave = () => {
+      const notesValue = hasGrammarInputs
+        ? flushGrammarInputsToNotes(false)
+        : notesRef.current || notes
+      if (!notesValue?.trim() || notesValue.trim() === '{}') return
+
+      const statusToSave = status === 'NOT_STARTED' ? 'IN_PROGRESS' : status
+      const payload = JSON.stringify({ notes: notesValue, status: statusToSave })
+      if (typeof navigator.sendBeacon === 'function') {
+        navigator.sendBeacon(
+          `/api/progress/${assignmentId}`,
+          new Blob([payload], { type: 'application/json' })
+        )
+      }
+    }
+
+    const onVisibilityChange = () => {
+      if (document.visibilityState === 'hidden') {
+        persistOnLeave()
+      }
+    }
+
+    window.addEventListener('pagehide', persistOnLeave)
+    document.addEventListener('visibilitychange', onVisibilityChange)
+    return () => {
+      window.removeEventListener('pagehide', persistOnLeave)
+      document.removeEventListener('visibilitychange', onVisibilityChange)
+    }
+  }, [
+    assignmentId,
+    flushGrammarInputsToNotes,
+    hasGrammarInputs,
+    isPlacementTest,
+    notes,
+    status,
+  ])
+
   const markComplete = async () => {
     setSaving(true)
     try {
+      const notesValue = hasGrammarInputs ? flushGrammarInputsToNotes(true) : notesRef.current || notes
       const response = await fetch(`/api/progress/${assignmentId}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          notes,
+          notes: notesValue,
           status: 'COMPLETED'
         })
       })
