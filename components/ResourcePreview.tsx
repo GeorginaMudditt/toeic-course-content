@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, useRef, useCallback } from 'react'
+import React, { useState, useEffect, useLayoutEffect, useRef, useCallback } from 'react'
 import { createRoot } from 'react-dom/client'
 import { mountInstructionsDescriptionsArmyAdjectiveMatch } from '@/lib/worksheetInteractions/instructionsDescriptionsArmyAdjectivesMatch'
 import { mountInstructionsDescriptionsArmyVerbsMission } from '@/lib/worksheetInteractions/instructionsDescriptionsArmyVerbsMission'
@@ -22,6 +22,13 @@ interface ResourcePreviewProps {
   resource: Resource
   showActions?: boolean
 }
+
+const MemoizedHtmlContent = React.memo(
+  function MemoizedHtmlContent({ html }: { html: string }) {
+    return <div className="prose max-w-none" dangerouslySetInnerHTML={{ __html: html }} />
+  },
+  (prev, next) => prev.html === next.html,
+)
 
 // Inline answer input component for placement test (same as WorksheetViewer)
 function InlineAnswerInput({ 
@@ -157,6 +164,8 @@ export default function ResourcePreview({ resource, showActions = true }: Resour
 
   // Check if this resource has grammar worksheet inputs
   const hasGrammarInputs = resource.content.includes('data-grammar-input')
+  const hasKlActivity =
+    typeof resource.content === 'string' && resource.content.includes('data-kl-activity')
   const [grammarInputsReady, setGrammarInputsReady] = useState(false)
 
   // Defer grammar injection until after mount/hydration timing is settled
@@ -309,20 +318,42 @@ export default function ResourcePreview({ resource, showActions = true }: Resour
     }
   }, [resource.content])
 
-  useEffect(() => {
-    if (typeof resource.content !== 'string' || !resource.content.includes('data-kl-activity')) return
+  useLayoutEffect(() => {
+    if (!hasKlActivity) return
     let detach: (() => void) | undefined
-    const rafId = requestAnimationFrame(() => {
+    let cancelled = false
+
+    const tryMount = () => {
+      if (cancelled) return
       const host = contentRef.current
       if (!host) return
       const el = host.querySelector('[data-kl-activity]') as HTMLElement | null
-      if (el) detach = mountPresentingServicesProductsKeyLanguage(el)
-    })
+      if (!el || el.querySelector('.kl-table')) return
+      detach?.()
+      detach = mountPresentingServicesProductsKeyLanguage(el)
+    }
+
+    tryMount()
+    const rafId = requestAnimationFrame(tryMount)
+
+    const host = contentRef.current
+    const observer =
+      host &&
+      new MutationObserver(() => {
+        const el = host.querySelector('[data-kl-activity]') as HTMLElement | null
+        if (el && !el.querySelector('.kl-table')) tryMount()
+      })
+    if (observer && host) {
+      observer.observe(host, { childList: true, subtree: true })
+    }
+
     return () => {
+      cancelled = true
       cancelAnimationFrame(rafId)
+      observer?.disconnect()
       detach?.()
     }
-  }, [resource.content])
+  }, [resource.content, hasKlActivity])
 
   useEffect(() => {
     if (typeof resource.content !== 'string' || !resource.content.includes('data-pspa-ed-pronunciation')) return
@@ -711,10 +742,11 @@ export default function ResourcePreview({ resource, showActions = true }: Resour
                   />
                 )
               }
+            } else if (hasKlActivity || hasGrammarInputs) {
+              return <MemoizedHtmlContent html={resource.content} />
             } else {
-              // Render normally for non-placement tests
               return (
-                <div 
+                <div
                   className="prose max-w-none"
                   dangerouslySetInnerHTML={{ __html: resource.content }}
                 />

@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react'
+import React, { useState, useEffect, useLayoutEffect, useRef, useCallback, useMemo } from 'react'
 import { createRoot } from 'react-dom/client'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
@@ -733,6 +733,10 @@ export default function WorksheetViewer({ assignmentId, resource, initialProgres
   
   // Check if this resource has grammar worksheet inputs
   const hasGrammarInputs = resource.content.includes('data-grammar-input')
+
+  /** Interactive Key Language (drag-and-drop); HTML must not re-render via dangerouslySetInnerHTML. */
+  const hasKlActivity =
+    typeof resource.content === 'string' && resource.content.includes('data-kl-activity')
 
   /** Per-section Check Answers + live tick/cross (see resources using data-grammar-per-section-check). */
   const enablePerSectionGrammarCheck = useMemo(() => {
@@ -2507,21 +2511,42 @@ export default function WorksheetViewer({ assignmentId, resource, initialProgres
   }, [resource.content])
 
   // Presenting Services and Products: Key Language audio + French drag-and-drop.
-  useEffect(() => {
-    const html = resource.content
-    if (typeof html !== 'string' || !html.includes('data-kl-activity')) return
+  useLayoutEffect(() => {
+    if (!hasKlActivity) return
     let detach: (() => void) | undefined
-    const rafId = requestAnimationFrame(() => {
+    let cancelled = false
+
+    const tryMount = () => {
+      if (cancelled) return
       const host = contentRef.current
       if (!host) return
       const el = host.querySelector('[data-kl-activity]') as HTMLElement | null
-      if (el) detach = mountPresentingServicesProductsKeyLanguage(el)
-    })
+      if (!el || el.querySelector('.kl-table')) return
+      detach?.()
+      detach = mountPresentingServicesProductsKeyLanguage(el)
+    }
+
+    tryMount()
+    const rafId = requestAnimationFrame(tryMount)
+
+    const host = contentRef.current
+    const observer =
+      host &&
+      new MutationObserver(() => {
+        const el = host.querySelector('[data-kl-activity]') as HTMLElement | null
+        if (el && !el.querySelector('.kl-table')) tryMount()
+      })
+    if (observer && host) {
+      observer.observe(host, { childList: true, subtree: true })
+    }
+
     return () => {
+      cancelled = true
       cancelAnimationFrame(rafId)
+      observer?.disconnect()
       detach?.()
     }
-  }, [resource.content])
+  }, [resource.content, hasKlActivity])
 
   // Past Simple Practice (Army): -ed pronunciation columns.
   useEffect(() => {
@@ -2879,9 +2904,8 @@ export default function WorksheetViewer({ assignmentId, resource, initialProgres
               }
             } else {
               // Render normally for non-placement tests
-              // If it has grammar inputs, use MemoizedContent to prevent re-renders when notes change
-              // (typing updates notes -> without memo, dangerouslySetInnerHTML would reset DOM and destroy inputs)
-              if (hasGrammarInputs) {
+              // Memoize HTML when it has injected inputs/activities (re-renders would reset the DOM).
+              if (hasGrammarInputs || hasKlActivity) {
                 return (
                   <MemoizedContent
                     html={resource.content}
@@ -2889,10 +2913,9 @@ export default function WorksheetViewer({ assignmentId, resource, initialProgres
                 )
               } else {
                 return (
-                  <div 
+                  <div
                     className="prose max-w-none"
                     dangerouslySetInnerHTML={{ __html: resource.content }}
-                    ref={contentRef}
                   />
                 )
               }
