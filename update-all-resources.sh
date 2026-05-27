@@ -29,6 +29,7 @@ npm run update:resource:supabase "Travel English Lesson 2" "travel-english-lesso
 npm run update:resource:supabase "Travel English Lesson 3" "travel-english-lesson-3-html.html"
 npm run update:resource:supabase "Travel English Lesson 5" "travel-english-lesson-5-html.html"
 npm run update:resource:supabase "Greetings, Numbers and Letters" "greetings-numbers-and-letters-html.html"
+npm run update:resource:supabase "Presenting Services and Products" "presenting-services-and-products-html.html"
 npm run update:resource:supabase "Modal Verbs" "modal-verbs-html.html"
 npm run update:resource:supabase "Mixed Tense Review" "mixed-tense-review-html.html"
 npm run update:resource:supabase "Mixed Tenses" "mixed-tenses-html.html"
