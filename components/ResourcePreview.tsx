@@ -742,7 +742,15 @@ export default function ResourcePreview({ resource, showActions = true }: Resour
                   />
                 )
               }
-            } else if (hasKlActivity || hasGrammarInputs) {
+            } else if (hasKlActivity) {
+              return (
+                <div
+                  className="prose max-w-none w-full"
+                  style={{ width: '100%', maxWidth: '100%' }}
+                  dangerouslySetInnerHTML={{ __html: resource.content }}
+                />
+              )
+            } else if (hasGrammarInputs) {
               return <MemoizedHtmlContent html={resource.content} />
             } else {
               return (

@@ -198,16 +198,23 @@ const CHECK_ICON_CROSS = `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.or
 
 // Memoized content component to prevent re-renders when notes change
 // (Do not attach contentRef here — #worksheet-content is the single ref root so listeners and querySelector see one tree.)
-const MemoizedContent = React.memo(function MemoizedContent({ html }: { html: string }) {
+const MemoizedContent = React.memo(function MemoizedContent({
+  html,
+  fullWidth = false,
+}: {
+  html: string
+  fullWidth?: boolean
+}) {
   return (
-    <div 
-      className="prose max-w-none"
+    <div
+      className={fullWidth ? 'prose max-w-none w-full' : 'prose max-w-none'}
+      style={fullWidth ? { width: '100%', maxWidth: '100%' } : undefined}
       dangerouslySetInnerHTML={{ __html: html }}
     />
   )
 }, (prevProps, nextProps) => {
   // Only re-render if HTML content actually changed
-  return prevProps.html === nextProps.html
+  return prevProps.html === nextProps.html && prevProps.fullWidth === nextProps.fullWidth
 })
 
 // Direct textarea component for Placement Test writing section (like Modal Verbs)
@@ -2907,18 +2914,15 @@ export default function WorksheetViewer({ assignmentId, resource, initialProgres
               // Memoize HTML when it has injected inputs/activities (re-renders would reset the DOM).
               if (hasGrammarInputs || hasKlActivity) {
                 return (
-                  <MemoizedContent
-                    html={resource.content}
-                  />
-                )
-              } else {
-                return (
-                  <div
-                    className="prose max-w-none"
-                    dangerouslySetInnerHTML={{ __html: resource.content }}
-                  />
+                  <MemoizedContent html={resource.content} fullWidth={hasKlActivity} />
                 )
               }
+              return (
+                <div
+                  className="prose max-w-none"
+                  dangerouslySetInnerHTML={{ __html: resource.content }}
+                />
+              )
             }
           }
         })()}

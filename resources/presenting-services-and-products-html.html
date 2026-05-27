@@ -266,25 +266,29 @@
 
   .kl-board {
     width: 100%;
+    max-width: 100%;
+    /* Breakpoints follow the worksheet panel width, not the browser window */
+    container-type: inline-size;
+    container-name: kl-board;
   }
 
   .kl-table {
     display: flex;
     flex-direction: column;
-    gap: 8px;
-    margin: 0 0 18px;
+    gap: 6px;
+    margin: 0 0 14px;
   }
 
   .kl-table-head,
   .kl-table-row {
     display: grid;
-    grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr) minmax(0, 1.15fr);
-    gap: 12px 14px;
+    grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr) minmax(0, 1.2fr);
+    gap: 10px 12px;
     align-items: stretch;
   }
 
   .kl-table-head {
-    font-size: 12px;
+    font-size: 11px;
     font-weight: 800;
     text-transform: uppercase;
     letter-spacing: 0.05em;
@@ -294,14 +298,15 @@
   }
 
   .kl-table-row {
-    padding: 10px 12px;
+    padding: 8px 10px;
     background: #fff;
     border: 1px solid rgba(15, 23, 42, 0.1);
     border-radius: 10px;
     border-left: 4px solid #1d4ed8;
   }
 
-  @media (max-width: 900px) {
+  /* Keep three columns on laptops/tablets; stack only on narrow phones */
+  @container kl-board (max-width: 480px) {
     .kl-table-head,
     .kl-table-row {
       grid-template-columns: 1fr;
@@ -333,7 +338,7 @@
 
   .kl-chip-slot {
     width: 100%;
-    min-height: 44px;
+    min-height: 40px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -349,9 +354,9 @@
 
   .kl-en-text {
     display: block;
-    font-size: 15px;
+    font-size: 14px;
     font-weight: 700;
-    line-height: 1.35;
+    line-height: 1.3;
     color: #0f172a;
   }
 
@@ -461,7 +466,7 @@
   }
 </style>
 
-<div class="resource-wrap" style="max-width: 100%; margin: 0 auto; padding: 20px; font-family: Arial, sans-serif; line-height: 1.45; color: #333;">
+<div class="resource-wrap" style="width: 100%; max-width: 100%; margin: 0 auto; padding: 16px 12px; font-family: Arial, sans-serif; line-height: 1.45; color: #333; box-sizing: border-box;">
   <div class="exam-header" style="text-align: center; margin-bottom: 18px;">
     <div style="display: inline-block; margin-bottom: 6px;">
       <img src="/brizzle-logo.png" alt="Brizzle Logo" style="width: 45px; height: 45px; object-fit: contain;" />
