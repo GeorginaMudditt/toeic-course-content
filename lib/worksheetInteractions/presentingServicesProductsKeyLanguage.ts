@@ -171,12 +171,11 @@ export function mountPresentingServicesProductsKeyLanguage(root: HTMLElement): (
   }
 
   let rowIndex = 0
-  const sectionsHtml = SECTIONS.map((section) => {
-    const rows = section.items
-      .map((item) => {
-        rowIndex += 1
-        const id = `kl-${rowIndex}`
-        return `
+  const allRows = SECTIONS.flatMap((section) =>
+    section.items.map((item) => {
+      rowIndex += 1
+      const id = `kl-${rowIndex}`
+      return `
         <div class="kl-table-row">
           <div class="kl-cell kl-cell--en">
             <button type="button" class="phrase-audio-btn" data-audio-src="${escapeHtml(audioUrl(item.audio))}" aria-label="Listen: ${escapeHtml(item.en)}">🔊</button>
@@ -191,24 +190,19 @@ export function mountPresentingServicesProductsKeyLanguage(root: HTMLElement): (
             <div class="kl-chip-slot" data-kl-chip-slot="${id}"></div>
           </div>
         </div>`
-      })
-      .join('')
+    }),
+  ).join('')
 
-    return `
-      <p class="kl-section-title">${escapeHtml(section.title)}</p>
+  root.innerHTML = `
+    <div class="kl-board">
       <div class="kl-table">
         <div class="kl-table-head" aria-hidden="true">
           <span>English</span>
           <span>Your answer</span>
           <span>French — drag left →</span>
         </div>
-        ${rows}
-      </div>`
-  }).join('')
-
-  root.innerHTML = `
-    <div class="kl-board">
-      ${sectionsHtml}
+        ${allRows}
+      </div>
       <div class="kl-actions">
         <button type="button" class="kl-btn" data-kl-check="true">Check answers</button>
         <button type="button" class="kl-btn kl-btn--secondary" data-kl-reset="true">Reset</button>
