@@ -140,12 +140,11 @@
   }
 
   .phrase-audio-btn {
-    flex-shrink: 0;
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    width: 32px;
-    height: 32px;
+    width: 36px;
+    height: 36px;
     padding: 0;
     border: 1px solid var(--exam-border);
     border-radius: 6px;
@@ -153,18 +152,17 @@
     color: #1e3a8a;
     font-size: 14px;
     line-height: 1;
-    cursor: not-allowed;
-    opacity: 0.55;
-  }
-
-  .phrase-audio-btn:not(:disabled) {
     cursor: pointer;
-    opacity: 1;
   }
 
-  .phrase-audio-btn:not(:disabled):hover {
+  .phrase-audio-btn:hover {
     background: #eff6ff;
     border-color: #93c5fd;
+  }
+
+  .phrase-audio-btn:disabled {
+    cursor: not-allowed;
+    opacity: 0.45;
   }
 
   .phrase-en {
@@ -266,42 +264,66 @@
     color: #0f172a;
   }
 
-  .kl-match-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 10px 12px;
-    align-items: stretch;
-    margin: 0 0 14px;
-  }
-
-  @media (max-width: 720px) {
-    .kl-match-grid {
-      grid-template-columns: 1fr;
-    }
-  }
-
-  .kl-row {
+  .kl-table {
     display: flex;
-    align-items: stretch;
-    gap: 10px;
-    padding: 10px 12px;
+    flex-direction: column;
+    gap: 8px;
+    margin: 0 0 18px;
+  }
+
+  .kl-table-head,
+  .kl-table-row {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 44px minmax(0, 1fr);
+    gap: 10px 12px;
+    align-items: center;
+  }
+
+  .kl-table-head {
+    font-size: 12px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--exam-subtle-ink);
+    padding: 0 4px 4px;
+    border-bottom: 1px solid var(--exam-soft-border);
+  }
+
+  .kl-table-head span:nth-child(2) {
+    visibility: hidden;
+  }
+
+  .kl-table-row {
+    padding: 8px 10px;
     background: #fff;
     border: 1px solid rgba(15, 23, 42, 0.1);
     border-radius: 10px;
-  }
-
-  .kl-row--en {
     border-left: 4px solid #1d4ed8;
   }
 
-  .kl-row--fr {
-    border-left: 4px dashed rgba(109, 40, 217, 0.55);
-    background: rgba(255, 255, 255, 0.75);
+  @media (max-width: 720px) {
+    .kl-table-head,
+    .kl-table-row {
+      grid-template-columns: minmax(0, 1fr) 40px minmax(0, 1fr);
+      gap: 8px;
+    }
+  }
+
+  .kl-cell--en {
+    min-width: 0;
+  }
+
+  .kl-cell--audio {
+    display: flex;
+    justify-content: center;
+  }
+
+  .kl-cell--fr {
+    min-width: 0;
   }
 
   .kl-en-text {
-    flex: 1;
-    min-width: 0;
+    display: block;
     font-size: 15px;
     font-weight: 700;
     line-height: 1.35;
@@ -309,7 +331,7 @@
   }
 
   .kl-drop {
-    flex: 1;
+    width: 100%;
     min-height: 38px;
     border-radius: 10px;
     border: 2px dashed rgba(109, 40, 217, 0.35);
@@ -451,384 +473,9 @@
     <h2 style="font-size: 22px; font-weight: 700; margin-bottom: 8px;">Key Language</h2>
     <p class="kl-instructions">Read the sentences in English on the left. Drag and drop the French translation.</p>
 
-    <div id="kl-activity" data-kl-activity="true">
-      <p class="kl-section-title">Greeting</p>
-      <div class="kl-match-grid">
-        <div class="kl-row kl-row--en">
-          <button type="button" class="phrase-audio-btn" data-audio-src="/images/everyday-english/presenting-services-products-audio/Good%20afternoon%20and%20welcome..mp3" aria-label="Listen: Good afternoon and welcome.">🔊</button>
-          <span class="kl-en-text">Good afternoon and welcome.</span>
-        </div>
-        <div class="kl-row kl-row--fr">
-          <div class="kl-drop" data-drop-for="en-1" data-correct="Bonjour et bienvenue."><span class="kl-drop-placeholder">Drop French translation here</span></div>
-        </div>
-
-        <div class="kl-row kl-row--en">
-          <button type="button" class="phrase-audio-btn" data-audio-src="/images/everyday-english/presenting-services-products-audio/How%20can%20I%20help%20you%20today%3F.mp3" aria-label="Listen: How can I help you today?">🔊</button>
-          <span class="kl-en-text">How can I help you today?</span>
-        </div>
-        <div class="kl-row kl-row--fr">
-          <div class="kl-drop" data-drop-for="en-2" data-correct="Comment puis-je vous aider aujourd’hui ?"><span class="kl-drop-placeholder">Drop French translation here</span></div>
-        </div>
-
-        <div class="kl-row kl-row--en">
-          <button type="button" class="phrase-audio-btn" data-audio-src="/images/everyday-english/presenting-services-products-audio/What%20is%20the%20name%20of%20the%20reservation%3F.mp3" aria-label="Listen: What is the name of the reservation?">🔊</button>
-          <span class="kl-en-text">What is the name of the reservation?</span>
-        </div>
-        <div class="kl-row kl-row--fr">
-          <div class="kl-drop" data-drop-for="en-3" data-correct="Quel est le nom de la réservation ?"><span class="kl-drop-placeholder">Drop French translation here</span></div>
-        </div>
-      </div>
-
-      <p class="kl-section-title">Presenting Products and Services</p>
-      <div class="kl-match-grid">
-        <div class="kl-row kl-row--en">
-          <button type="button" class="phrase-audio-btn" data-audio-src="/images/everyday-english/presenting-services-products-audio/We%20have%20three%20different%20packages%20available.%20.mp3" aria-label="Listen: We have three different packages available.">🔊</button>
-          <span class="kl-en-text">We have three different packages available.</span>
-        </div>
-        <div class="kl-row kl-row--fr">
-          <div class="kl-drop" data-drop-for="en-4" data-correct="Nous avons trois forfaits différents disponibles."><span class="kl-drop-placeholder">Drop French translation here</span></div>
-        </div>
-
-        <div class="kl-row kl-row--en">
-          <button type="button" class="phrase-audio-btn" data-audio-src="/images/everyday-english/presenting-services-products-audio/The%20price%20includes%20all%20the%20equipment.%20.mp3" aria-label="Listen: The price includes all the equipment.">🔊</button>
-          <span class="kl-en-text">The price includes all the equipment.</span>
-        </div>
-        <div class="kl-row kl-row--fr">
-          <div class="kl-drop" data-drop-for="en-5" data-correct="Le prix comprend tout le matériel."><span class="kl-drop-placeholder">Drop French translation here</span></div>
-        </div>
-
-        <div class="kl-row kl-row--en">
-          <button type="button" class="phrase-audio-btn" data-audio-src="/images/everyday-english/presenting-services-products-audio/The%20activity%20lasts%20two%20hours.%20.mp3" aria-label="Listen: The activity lasts two hours.">🔊</button>
-          <span class="kl-en-text">The activity lasts two hours.</span>
-        </div>
-        <div class="kl-row kl-row--fr">
-          <div class="kl-drop" data-drop-for="en-6" data-correct="L’activité dure deux heures."><span class="kl-drop-placeholder">Drop French translation here</span></div>
-        </div>
-
-        <div class="kl-row kl-row--en">
-          <button type="button" class="phrase-audio-btn" data-audio-src="/images/everyday-english/presenting-services-products-audio/We%20still%20have%20space%20available..mp3" aria-label="Listen: We still have space available.">🔊</button>
-          <span class="kl-en-text">We still have space available.</span>
-        </div>
-        <div class="kl-row kl-row--fr">
-          <div class="kl-drop" data-drop-for="en-7" data-correct="Nous avons encore de la place disponible."><span class="kl-drop-placeholder">Drop French translation here</span></div>
-        </div>
-
-        <div class="kl-row kl-row--en">
-          <button type="button" class="phrase-audio-btn" data-audio-src="/images/everyday-english/presenting-services-products-audio/We%20have%20this%20special%20offer%20at%20the%20moment.%20.mp3" aria-label="Listen: We have this special offer at the moment.">🔊</button>
-          <span class="kl-en-text">We have this special offer at the moment.</span>
-        </div>
-        <div class="kl-row kl-row--fr">
-          <div class="kl-drop" data-drop-for="en-8" data-correct="Nous avons cette offre spéciale en ce moment."><span class="kl-drop-placeholder">Drop French translation here</span></div>
-        </div>
-
-        <div class="kl-row kl-row--en">
-          <button type="button" class="phrase-audio-btn" data-audio-src="/images/everyday-english/presenting-services-products-audio/You%20can%20book%20tickets%20online%20or%20at%20the%20booking%20office..mp3" aria-label="Listen: You can book tickets online or at the booking office.">🔊</button>
-          <span class="kl-en-text">You can book tickets online or at the booking office.</span>
-        </div>
-        <div class="kl-row kl-row--fr">
-          <div class="kl-drop" data-drop-for="en-9" data-correct="Vous pouvez réserver des billets en ligne ou au guichet."><span class="kl-drop-placeholder">Drop French translation here</span></div>
-        </div>
-
-        <div class="kl-row kl-row--en">
-          <button type="button" class="phrase-audio-btn" data-audio-src="/images/everyday-english/presenting-services-products-audio/Would%20you%20like%20to%20book%3F.mp3" aria-label="Listen: Would you like to book?">🔊</button>
-          <span class="kl-en-text">Would you like to book?</span>
-        </div>
-        <div class="kl-row kl-row--fr">
-          <div class="kl-drop" data-drop-for="en-10" data-correct="Souhaitez-vous réserver ?"><span class="kl-drop-placeholder">Drop French translation here</span></div>
-        </div>
-      </div>
-
-      <p class="kl-section-title">Recommending</p>
-      <div class="kl-match-grid">
-        <div class="kl-row kl-row--en">
-          <button type="button" class="phrase-audio-btn" data-audio-src="/images/everyday-english/presenting-services-products-audio/This%20is%20great%20for%20families..mp3" aria-label="Listen: This is great for families.">🔊</button>
-          <span class="kl-en-text">This is great for families.</span>
-        </div>
-        <div class="kl-row kl-row--fr">
-          <div class="kl-drop" data-drop-for="en-11" data-correct="C’est idéal pour les familles."><span class="kl-drop-placeholder">Drop French translation here</span></div>
-        </div>
-
-        <div class="kl-row kl-row--en">
-          <button type="button" class="phrase-audio-btn" data-audio-src="/images/everyday-english/presenting-services-products-audio/I%20recommend%20this%20activity%20for%20groups..mp3" aria-label="Listen: I recommend this activity for groups.">🔊</button>
-          <span class="kl-en-text">I recommend this activity for groups.</span>
-        </div>
-        <div class="kl-row kl-row--fr">
-          <div class="kl-drop" data-drop-for="en-12" data-correct="Je recommande cette activité pour les groupes."><span class="kl-drop-placeholder">Drop French translation here</span></div>
-        </div>
-
-        <div class="kl-row kl-row--en">
-          <button type="button" class="phrase-audio-btn" data-audio-src="/images/everyday-english/presenting-services-products-audio/This%20one%20is%20suitable%20for%20beginners..mp3" aria-label="Listen: This one is suitable for beginners.">🔊</button>
-          <span class="kl-en-text">This one is suitable for beginners.</span>
-        </div>
-        <div class="kl-row kl-row--fr">
-          <div class="kl-drop" data-drop-for="en-13" data-correct="Celui-ci convient aux débutants."><span class="kl-drop-placeholder">Drop French translation here</span></div>
-        </div>
-
-        <div class="kl-row kl-row--en">
-          <button type="button" class="phrase-audio-btn" data-audio-src="/images/everyday-english/presenting-services-products-audio/This%20option%20is%20my%20favourite..mp3" aria-label="Listen: This option is my favourite.">🔊</button>
-          <span class="kl-en-text">This option is my favourite.</span>
-        </div>
-        <div class="kl-row kl-row--fr">
-          <div class="kl-drop" data-drop-for="en-14" data-correct="Cette option est ma préférée."><span class="kl-drop-placeholder">Drop French translation here</span></div>
-        </div>
-
-        <div class="kl-row kl-row--en">
-          <button type="button" class="phrase-audio-btn" data-audio-src="/images/everyday-english/presenting-services-products-audio/This%20is%20our%20most%20popular%20option.%20.mp3" aria-label="Listen: This is our most popular option.">🔊</button>
-          <span class="kl-en-text">This is our most popular option.</span>
-        </div>
-        <div class="kl-row kl-row--fr">
-          <div class="kl-drop" data-drop-for="en-15" data-correct="C’est notre option la plus populaire."><span class="kl-drop-placeholder">Drop French translation here</span></div>
-        </div>
-
-        <div class="kl-row kl-row--en">
-          <button type="button" class="phrase-audio-btn" data-audio-src="/images/everyday-english/presenting-services-products-audio/A%20lot%20of%20tourists%20like%20this.%20.mp3" aria-label="Listen: A lot of tourists like this.">🔊</button>
-          <span class="kl-en-text">A lot of tourists like this.</span>
-        </div>
-        <div class="kl-row kl-row--fr">
-          <div class="kl-drop" data-drop-for="en-16" data-correct="Beaucoup de touristes aiment ça."><span class="kl-drop-placeholder">Drop French translation here</span></div>
-        </div>
-
-        <div class="kl-row kl-row--en">
-          <button type="button" class="phrase-audio-btn" data-audio-src="/images/everyday-english/presenting-services-products-audio/I%20think%20this%20would%20be%20perfect%20for%20you.%20.mp3" aria-label="Listen: I think this would be perfect for you.">🔊</button>
-          <span class="kl-en-text">I think this would be perfect for you.</span>
-        </div>
-        <div class="kl-row kl-row--fr">
-          <div class="kl-drop" data-drop-for="en-17" data-correct="Je pense que ce serait parfait pour vous."><span class="kl-drop-placeholder">Drop French translation here</span></div>
-        </div>
-      </div>
-
-      <p class="kl-section-title">Closing</p>
-      <div class="kl-match-grid">
-        <div class="kl-row kl-row--en">
-          <button type="button" class="phrase-audio-btn" data-audio-src="/images/everyday-english/presenting-services-products-audio/I%20hope%20you%20enjoyed%20it.%20.mp3" aria-label="Listen: I hope you enjoyed it.">🔊</button>
-          <span class="kl-en-text">I hope you enjoyed it.</span>
-        </div>
-        <div class="kl-row kl-row--fr">
-          <div class="kl-drop" data-drop-for="en-18" data-correct="J’espère que vous avez apprécié."><span class="kl-drop-placeholder">Drop French translation here</span></div>
-        </div>
-
-        <div class="kl-row kl-row--en">
-          <button type="button" class="phrase-audio-btn" data-audio-src="/images/everyday-english/presenting-services-products-audio/Hopefully%20we%20will%20see%20you%20again.%20.mp3" aria-label="Listen: Hopefully we will see you again.">🔊</button>
-          <span class="kl-en-text">Hopefully we will see you again.</span>
-        </div>
-        <div class="kl-row kl-row--fr">
-          <div class="kl-drop" data-drop-for="en-19" data-correct="J’espère que nous vous reverrons."><span class="kl-drop-placeholder">Drop French translation here</span></div>
-        </div>
-
-        <div class="kl-row kl-row--en">
-          <button type="button" class="phrase-audio-btn" data-audio-src="/images/everyday-english/presenting-services-products-audio/Enjoy%20the%20rest%20of%20your%20holiday..mp3" aria-label="Listen: Enjoy the rest of your holiday.">🔊</button>
-          <span class="kl-en-text">Enjoy the rest of your holiday.</span>
-        </div>
-        <div class="kl-row kl-row--fr">
-          <div class="kl-drop" data-drop-for="en-20" data-correct="Profitez du reste de vos vacances."><span class="kl-drop-placeholder">Drop French translation here</span></div>
-        </div>
-
-        <div class="kl-row kl-row--en">
-          <button type="button" class="phrase-audio-btn" data-audio-src="/images/everyday-english/presenting-services-products-audio/Have%20a%20great%20weekend..mp3" aria-label="Listen: Have a great weekend.">🔊</button>
-          <span class="kl-en-text">Have a great weekend.</span>
-        </div>
-        <div class="kl-row kl-row--fr">
-          <div class="kl-drop" data-drop-for="en-21" data-correct="Passez un excellent week-end."><span class="kl-drop-placeholder">Drop French translation here</span></div>
-        </div>
-      </div>
-
-      <div class="kl-bank" aria-label="French translation bank">
-        <p class="kl-bank-title">French translations</p>
-        <div class="kl-chip-grid" data-kl-chip-grid="true"></div>
-        <div class="kl-actions">
-          <button type="button" class="kl-btn" data-kl-check="true">Check answers</button>
-          <button type="button" class="kl-btn kl-btn--secondary" data-kl-reset="true">Reset</button>
-          <span class="kl-status" data-kl-status="true"></span>
-        </div>
-      </div>
+    <!-- Activity UI is built by mountPresentingServicesProductsKeyLanguage (WorksheetViewer) -->
+    <div id="kl-activity" data-kl-activity="true" aria-live="polite">
+      <p style="margin:0;font-size:14px;color:#64748b;">Loading activity…</p>
     </div>
   </div>
 </div>
-
-<script>
-  (function () {
-    const root = document.querySelector('[data-kl-activity=\"true\"]')
-    if (!root) return
-
-    // Audio: small cache to avoid repeated loads.
-    const audioCache = new Map()
-    const audioButtons = Array.from(root.querySelectorAll('button.phrase-audio-btn'))
-    audioButtons.forEach((btn) => {
-      const src = btn.getAttribute('data-audio-src') || ''
-      if (!src) return
-      btn.disabled = false
-      btn.removeAttribute('title')
-      btn.addEventListener('click', () => {
-        try {
-          let a = audioCache.get(src)
-          if (!a) {
-            a = new Audio(src)
-            audioCache.set(src, a)
-          }
-          a.currentTime = 0
-          a.play()
-        } catch (e) {
-          // no-op
-        }
-      })
-    })
-
-    const drops = Array.from(root.querySelectorAll('[data-drop-for]'))
-    const chipGrid = root.querySelector('[data-kl-chip-grid=\"true\"]')
-    const statusEl = root.querySelector('[data-kl-status=\"true\"]')
-    const checkBtn = root.querySelector('[data-kl-check=\"true\"]')
-    const resetBtn = root.querySelector('[data-kl-reset=\"true\"]')
-    if (!chipGrid || !statusEl || !checkBtn || !resetBtn) return
-
-    const translations = drops
-      .map((d) => d.getAttribute('data-correct') || '')
-      .filter(Boolean)
-
-    function shuffle(arr) {
-      const a = arr.slice()
-      for (let i = a.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1))
-        const tmp = a[i]
-        a[i] = a[j]
-        a[j] = tmp
-      }
-      return a
-    }
-
-    let selectedChip = null
-
-    function setStatus(text) {
-      statusEl.textContent = text || ''
-    }
-
-    function clearFeedback() {
-      drops.forEach((d) => {
-        d.classList.remove('is-correct', 'is-wrong', 'is-over')
-      })
-      setStatus('')
-    }
-
-    function makeChip(text) {
-      const chip = document.createElement('div')
-      chip.className = 'kl-chip'
-      chip.textContent = text
-      chip.setAttribute('draggable', 'true')
-      chip.setAttribute('role', 'button')
-      chip.setAttribute('tabindex', '0')
-      chip.setAttribute('aria-label', `French: ${text}`)
-
-      chip.addEventListener('dragstart', (e) => {
-        e.dataTransfer.setData('text/plain', text)
-        e.dataTransfer.effectAllowed = 'move'
-      })
-
-      // Tap/click mode for mobile: select then tap a drop zone.
-      chip.addEventListener('click', () => {
-        clearFeedback()
-        if (selectedChip === chip) {
-          chip.classList.remove('is-selected')
-          selectedChip = null
-          return
-        }
-        const all = Array.from(chipGrid.querySelectorAll('.kl-chip'))
-        all.forEach((c) => c.classList.remove('is-selected'))
-        chip.classList.add('is-selected')
-        selectedChip = chip
-      })
-
-      chip.addEventListener('keydown', (e) => {
-        if (e.key === 'Enter' || e.key === ' ') {
-          e.preventDefault()
-          chip.click()
-        }
-      })
-
-      return chip
-    }
-
-    function placeTextIntoDrop(dropEl, text) {
-      clearFeedback()
-      const existingChip = dropEl.querySelector('.kl-chip')
-      if (existingChip) {
-        chipGrid.appendChild(existingChip)
-      }
-      const newChip = makeChip(text)
-      newChip.classList.remove('is-selected')
-      newChip.setAttribute('draggable', 'false')
-      newChip.style.cursor = 'default'
-      dropEl.innerHTML = ''
-      dropEl.appendChild(newChip)
-    }
-
-    drops.forEach((dropEl) => {
-      dropEl.addEventListener('dragover', (e) => {
-        e.preventDefault()
-        dropEl.classList.add('is-over')
-      })
-      dropEl.addEventListener('dragleave', () => {
-        dropEl.classList.remove('is-over')
-      })
-      dropEl.addEventListener('drop', (e) => {
-        e.preventDefault()
-        dropEl.classList.remove('is-over')
-        const text = e.dataTransfer.getData('text/plain')
-        if (!text) return
-        // Remove matching chip from bank (or any other drop).
-        const bankChip = Array.from(chipGrid.querySelectorAll('.kl-chip')).find((c) => c.textContent === text)
-        if (bankChip) bankChip.remove()
-        const otherDropChip = Array.from(root.querySelectorAll('.kl-drop .kl-chip')).find((c) => c.textContent === text)
-        if (otherDropChip) {
-          const parent = otherDropChip.closest('.kl-drop')
-          if (parent) parent.innerHTML = '<span class=\"kl-drop-placeholder\">Drop French translation here</span>'
-        }
-        placeTextIntoDrop(dropEl, text)
-      })
-
-      // Click-to-place mode.
-      dropEl.addEventListener('click', () => {
-        if (!selectedChip) return
-        const text = selectedChip.textContent || ''
-        if (!text) return
-        selectedChip.remove()
-        selectedChip = null
-        placeTextIntoDrop(dropEl, text)
-      })
-    })
-
-    function reset() {
-      chipGrid.innerHTML = ''
-      shuffle(translations).forEach((t) => chipGrid.appendChild(makeChip(t)))
-      drops.forEach((d) => {
-        d.innerHTML = '<span class=\"kl-drop-placeholder\">Drop French translation here</span>'
-      })
-      selectedChip = null
-      clearFeedback()
-    }
-
-    function checkAnswers() {
-      let correct = 0
-      let answered = 0
-      drops.forEach((dropEl) => {
-        const expected = (dropEl.getAttribute('data-correct') || '').trim()
-        const chip = dropEl.querySelector('.kl-chip')
-        const got = (chip ? chip.textContent : '').trim()
-        dropEl.classList.remove('is-correct', 'is-wrong')
-        if (!got) return
-        answered += 1
-        if (got === expected) {
-          correct += 1
-          dropEl.classList.add('is-correct')
-        } else {
-          dropEl.classList.add('is-wrong')
-        }
-      })
-
-      setStatus(answered === 0 ? 'Add some translations first, then check.' : `Score: ${correct} / ${drops.length}`)
-    }
-
-    checkBtn.addEventListener('click', checkAnswers)
-    resetBtn.addEventListener('click', reset)
-
-    reset()
-  })()
-</script>
