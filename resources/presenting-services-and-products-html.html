@@ -672,29 +672,40 @@
     border-top: 1px solid var(--exam-soft-border);
   }
 
-  .psp-answer-key {
+  .psp-answer-key,
+  .psp-audioscript {
     margin-top: 12px;
     border-top: 1px solid var(--exam-soft-border);
     padding-top: 10px;
+  }
+
+  .psp-answer-key summary,
+  .psp-audioscript summary {
+    cursor: pointer;
+    font-size: 16px;
+    color: var(--exam-accent);
+    margin-bottom: 8px;
   }
 
   .psp-answer-key ol {
     margin: 0;
   }
 
-  .psp-audioscript {
-    margin-top: 12px;
+  .psp-audioscript-body {
     border: 1px solid var(--exam-border);
     border-radius: 10px;
     background: #fff;
     padding: 12px 14px;
+    margin-top: 8px;
   }
 
-  .psp-audioscript p {
+  .psp-audioscript-body p {
     margin: 0 0 10px;
+    font-size: 15px;
+    line-height: 1.45;
   }
 
-  .psp-audioscript p:last-child {
+  .psp-audioscript-body p:last-child {
     margin-bottom: 0;
   }
 
@@ -979,14 +990,16 @@
       </ol>
     </details>
 
-    <div class="psp-audioscript">
-      <h3 style="font-size: 20px; font-weight: 700; margin-bottom: 10px;">Audioscript</h3>
-      <p>Hello everyone, and welcome to Adventure Coast Sports Centre &mdash; the perfect place for active weekends, company events and special celebrations!</p>
-      <p>We offer exciting outdoor activities for adults of all ages and experience levels. Whether you are planning a birthday party, a team-building day with colleagues, or simply a fun activity with friends, we have something for you.</p>
-      <p>Our first activity is <strong>mountain biking</strong> through the hills and forest trails near Silver Lake. These guided tours are available every Saturday morning from 9 a.m. until 1 p.m. Each session lasts four hours and includes all safety equipment, bikes and helmets. Groups can have between 6 and 15 people. The price is &euro;45 per person. This activity is suitable for beginners, although participants should have a reasonable level of fitness because some of the routes are quite steep.</p>
-      <p>If you prefer water sports, why not try our <strong>stand-up paddleboarding experience</strong> at Blue Water Beach? This relaxing but active session is very popular with hen parties and summer events. Lessons take place on Friday evenings and Sunday afternoons and last two and a half hours. Group sizes are smaller, with a maximum of 8 people, so instructors can give more individual attention. The cost is &euro;35 per person, including wetsuits and paddleboards. Participants must be able to swim confidently.</p>
-      <p>Finally, we offer <strong>tennis social sessions</strong> at our modern sports club in the town centre. These sessions are ideal for company groups or adults who want to meet new people while improving their tennis skills. Sessions are available three evenings a week and last 90 minutes. Players are divided into beginner and intermediate groups. Each group can include up to 12 people. Equipment rental is possible for an extra &euro;5, although many players bring their own rackets. Prices start at &euro;20 per session, and discounts are available for groups of more than 10 people.</p>
-      <p>At Adventure Coast Sports Centre, we believe exercise should be social, exciting and enjoyable. To book your activity, visit our website or call our reception team today. We look forward to seeing you soon!</p>
-    </div>
+    <details class="psp-audioscript">
+      <summary><strong>Audioscript</strong></summary>
+      <div class="psp-audioscript-body">
+        <p>Hello everyone, and welcome to Adventure Coast Sports Centre &mdash; the perfect place for active weekends, company events and special celebrations!</p>
+        <p>We offer exciting outdoor activities for adults of all ages and experience levels. Whether you are planning a birthday party, a team-building day with colleagues, or simply a fun activity with friends, we have something for you.</p>
+        <p>Our first activity is <strong>mountain biking</strong> through the hills and forest trails near Silver Lake. These guided tours are available every Saturday morning from 9 a.m. until 1 p.m. Each session lasts four hours and includes all safety equipment, bikes and helmets. Groups can have between 6 and 15 people. The price is &euro;45 per person. This activity is suitable for beginners, although participants should have a reasonable level of fitness because some of the routes are quite steep.</p>
+        <p>If you prefer water sports, why not try our <strong>stand-up paddleboarding experience</strong> at Blue Water Beach? This relaxing but active session is very popular with hen parties and summer events. Lessons take place on Friday evenings and Sunday afternoons and last two and a half hours. Group sizes are smaller, with a maximum of 8 people, so instructors can give more individual attention. The cost is &euro;35 per person, including wetsuits and paddleboards. Participants must be able to swim confidently.</p>
+        <p>Finally, we offer <strong>tennis social sessions</strong> at our modern sports club in the town centre. These sessions are ideal for company groups or adults who want to meet new people while improving their tennis skills. Sessions are available three evenings a week and last 90 minutes. Players are divided into beginner and intermediate groups. Each group can include up to 12 people. Equipment rental is possible for an extra &euro;5, although many players bring their own rackets. Prices start at &euro;20 per session, and discounts are available for groups of more than 10 people.</p>
+        <p>At Adventure Coast Sports Centre, we believe exercise should be social, exciting and enjoyable. To book your activity, visit our website or call our reception team today. We look forward to seeing you soon!</p>
+      </div>
+    </details>
   </div>
 </div>
