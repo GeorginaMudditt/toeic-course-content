@@ -15,17 +15,17 @@ const SECTIONS: KlSection[] = [
       {
         en: 'Good afternoon and welcome.',
         fr: 'Bonjour et bienvenue.',
-        audio: 'Good afternoon and welcome..mp3',
+        audio: 'good-afternoon-and-welcome.mp3',
       },
       {
         en: 'How can I help you today?',
         fr: 'Comment puis-je vous aider aujourd’hui ?',
-        audio: 'How can I help you today?.mp3',
+        audio: 'how-can-i-help-you-today.mp3',
       },
       {
         en: 'What is the name of the reservation?',
         fr: 'Quel est le nom de la réservation ?',
-        audio: 'What is the name of the reservation?.mp3',
+        audio: 'what-is-the-name-of-the-reservation.mp3',
       },
     ],
   },
@@ -35,37 +35,37 @@ const SECTIONS: KlSection[] = [
       {
         en: 'We have three different packages available.',
         fr: 'Nous avons trois forfaits différents disponibles.',
-        audio: 'We have three different packages available. .mp3',
+        audio: 'we-have-three-different-packages-available.mp3',
       },
       {
         en: 'The price includes all the equipment.',
         fr: 'Le prix comprend tout le matériel.',
-        audio: 'The price includes all the equipment. .mp3',
+        audio: 'the-price-includes-all-the-equipment.mp3',
       },
       {
         en: 'The activity lasts two hours.',
         fr: 'L’activité dure deux heures.',
-        audio: 'The activity lasts two hours. .mp3',
+        audio: 'the-activity-lasts-two-hours.mp3',
       },
       {
         en: 'We still have space available.',
         fr: 'Nous avons encore de la place disponible.',
-        audio: 'We still have space available..mp3',
+        audio: 'we-still-have-space-available.mp3',
       },
       {
         en: 'We have this special offer at the moment.',
         fr: 'Nous avons cette offre spéciale en ce moment.',
-        audio: 'We have this special offer at the moment. .mp3',
+        audio: 'we-have-this-special-offer-at-the-moment.mp3',
       },
       {
         en: 'You can book tickets online or at the booking office.',
         fr: 'Vous pouvez réserver des billets en ligne ou au guichet.',
-        audio: 'You can book tickets online or at the booking office..mp3',
+        audio: 'you-can-book-tickets-online-or-at-the-booking-office.mp3',
       },
       {
         en: 'Would you like to book?',
         fr: 'Souhaitez-vous réserver ?',
-        audio: 'Would you like to book?.mp3',
+        audio: 'would-you-like-to-book.mp3',
       },
     ],
   },
@@ -75,37 +75,37 @@ const SECTIONS: KlSection[] = [
       {
         en: 'This is great for families.',
         fr: 'C’est idéal pour les familles.',
-        audio: 'This is great for families..mp3',
+        audio: 'this-is-great-for-families.mp3',
       },
       {
         en: 'I recommend this activity for groups.',
         fr: 'Je recommande cette activité pour les groupes.',
-        audio: 'I recommend this activity for groups..mp3',
+        audio: 'i-recommend-this-activity-for-groups.mp3',
       },
       {
         en: 'This one is suitable for beginners.',
         fr: 'Celui-ci convient aux débutants.',
-        audio: 'This one is suitable for beginners..mp3',
+        audio: 'this-one-is-suitable-for-beginners.mp3',
       },
       {
         en: 'This option is my favourite.',
         fr: 'Cette option est ma préférée.',
-        audio: 'This option is my favourite..mp3',
+        audio: 'this-option-is-my-favourite.mp3',
       },
       {
         en: 'This is our most popular option.',
         fr: 'C’est notre option la plus populaire.',
-        audio: 'This is our most popular option. .mp3',
+        audio: 'this-is-our-most-popular-option.mp3',
       },
       {
         en: 'A lot of tourists like this.',
         fr: 'Beaucoup de touristes aiment ça.',
-        audio: 'A lot of tourists like this. .mp3',
+        audio: 'a-lot-of-tourists-like-this.mp3',
       },
       {
         en: 'I think this would be perfect for you.',
         fr: 'Je pense que ce serait parfait pour vous.',
-        audio: 'I think this would be perfect for you. .mp3',
+        audio: 'i-think-this-would-be-perfect-for-you.mp3',
       },
     ],
   },
@@ -115,29 +115,29 @@ const SECTIONS: KlSection[] = [
       {
         en: 'I hope you enjoyed it.',
         fr: 'J’espère que vous avez apprécié.',
-        audio: 'I hope you enjoyed it. .mp3',
+        audio: 'i-hope-you-enjoyed-it.mp3',
       },
       {
         en: 'Hopefully we will see you again.',
         fr: 'J’espère que nous vous reverrons.',
-        audio: 'Hopefully we will see you again. .mp3',
+        audio: 'hopefully-we-will-see-you-again.mp3',
       },
       {
         en: 'Enjoy the rest of your holiday.',
         fr: 'Profitez du reste de vos vacances.',
-        audio: 'Enjoy the rest of your holiday..mp3',
+        audio: 'enjoy-the-rest-of-your-holiday.mp3',
       },
       {
         en: 'Have a great weekend.',
         fr: 'Passez un excellent week-end.',
-        audio: 'Have a great weekend..mp3',
+        audio: 'have-a-great-weekend.mp3',
       },
     ],
   },
 ]
 
 function audioUrl(filename: string): string {
-  return AUDIO_BASE + encodeURIComponent(filename)
+  return AUDIO_BASE + filename
 }
 
 function shuffle<T>(arr: T[]): T[] {
