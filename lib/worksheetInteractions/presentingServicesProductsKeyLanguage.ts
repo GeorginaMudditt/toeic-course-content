@@ -6,133 +6,112 @@
 const AUDIO_BASE = '/images/everyday-english/presenting-services-products-audio/'
 
 type KlItem = { en: string; fr: string; audio: string }
-type KlSection = { title: string; items: KlItem[] }
 
-const SECTIONS: KlSection[] = [
+const ITEMS: KlItem[] = [
   {
-    title: 'Greeting',
-    items: [
-      {
-        en: 'Good afternoon and welcome.',
-        fr: 'Bonjour et bienvenue.',
-        audio: 'good-afternoon-and-welcome.mp3',
-      },
-      {
-        en: 'How can I help you today?',
-        fr: 'Comment puis-je vous aider aujourd’hui ?',
-        audio: 'how-can-i-help-you-today.mp3',
-      },
-      {
-        en: 'What is the name of the reservation?',
-        fr: 'Quel est le nom de la réservation ?',
-        audio: 'what-is-the-name-of-the-reservation.mp3',
-      },
-    ],
+    en: 'Good afternoon and welcome.',
+    fr: 'Bonjour et bienvenue.',
+    audio: 'good-afternoon-and-welcome.mp3',
   },
   {
-    title: 'Presenting Products and Services',
-    items: [
-      {
-        en: 'We have three different packages available.',
-        fr: 'Nous avons trois forfaits différents disponibles.',
-        audio: 'we-have-three-different-packages-available.mp3',
-      },
-      {
-        en: 'The price includes all the equipment.',
-        fr: 'Le prix comprend tout le matériel.',
-        audio: 'the-price-includes-all-the-equipment.mp3',
-      },
-      {
-        en: 'The activity lasts two hours.',
-        fr: 'L’activité dure deux heures.',
-        audio: 'the-activity-lasts-two-hours.mp3',
-      },
-      {
-        en: 'We still have space available.',
-        fr: 'Nous avons encore de la place disponible.',
-        audio: 'we-still-have-space-available.mp3',
-      },
-      {
-        en: 'We have this special offer at the moment.',
-        fr: 'Nous avons cette offre spéciale en ce moment.',
-        audio: 'we-have-this-special-offer-at-the-moment.mp3',
-      },
-      {
-        en: 'You can book tickets online or at the booking office.',
-        fr: 'Vous pouvez réserver des billets en ligne ou au guichet.',
-        audio: 'you-can-book-tickets-online-or-at-the-booking-office.mp3',
-      },
-      {
-        en: 'Would you like to book?',
-        fr: 'Souhaitez-vous réserver ?',
-        audio: 'would-you-like-to-book.mp3',
-      },
-    ],
+    en: 'How can I help you today?',
+    fr: 'Comment puis-je vous aider aujourd’hui ?',
+    audio: 'how-can-i-help-you-today.mp3',
   },
   {
-    title: 'Recommending',
-    items: [
-      {
-        en: 'This is great for families.',
-        fr: 'C’est idéal pour les familles.',
-        audio: 'this-is-great-for-families.mp3',
-      },
-      {
-        en: 'I recommend this activity for groups.',
-        fr: 'Je recommande cette activité pour les groupes.',
-        audio: 'i-recommend-this-activity-for-groups.mp3',
-      },
-      {
-        en: 'This one is suitable for beginners.',
-        fr: 'Celui-ci convient aux débutants.',
-        audio: 'this-one-is-suitable-for-beginners.mp3',
-      },
-      {
-        en: 'This option is my favourite.',
-        fr: 'Cette option est ma préférée.',
-        audio: 'this-option-is-my-favourite.mp3',
-      },
-      {
-        en: 'This is our most popular option.',
-        fr: 'C’est notre option la plus populaire.',
-        audio: 'this-is-our-most-popular-option.mp3',
-      },
-      {
-        en: 'A lot of tourists like this.',
-        fr: 'Beaucoup de touristes aiment ça.',
-        audio: 'a-lot-of-tourists-like-this.mp3',
-      },
-      {
-        en: 'I think this would be perfect for you.',
-        fr: 'Je pense que ce serait parfait pour vous.',
-        audio: 'i-think-this-would-be-perfect-for-you.mp3',
-      },
-    ],
+    en: 'What is the name of the reservation?',
+    fr: 'Quel est le nom de la réservation ?',
+    audio: 'what-is-the-name-of-the-reservation.mp3',
   },
   {
-    title: 'Closing',
-    items: [
-      {
-        en: 'I hope you enjoyed it.',
-        fr: 'J’espère que vous avez apprécié.',
-        audio: 'i-hope-you-enjoyed-it.mp3',
-      },
-      {
-        en: 'Hopefully we will see you again.',
-        fr: 'J’espère que nous vous reverrons.',
-        audio: 'hopefully-we-will-see-you-again.mp3',
-      },
-      {
-        en: 'Enjoy the rest of your holiday.',
-        fr: 'Profitez du reste de vos vacances.',
-        audio: 'enjoy-the-rest-of-your-holiday.mp3',
-      },
-      {
-        en: 'Have a great weekend.',
-        fr: 'Passez un excellent week-end.',
-        audio: 'have-a-great-weekend.mp3',
-      },
-    ],
+    en: 'We have three different packages available.',
+    fr: 'Nous avons trois forfaits différents disponibles.',
+    audio: 'we-have-three-different-packages-available.mp3',
+  },
+  {
+    en: 'The price includes all the equipment.',
+    fr: 'Le prix comprend tout le matériel.',
+    audio: 'the-price-includes-all-the-equipment.mp3',
+  },
+  {
+    en: 'The activity lasts two hours.',
+    fr: 'L’activité dure deux heures.',
+    audio: 'the-activity-lasts-two-hours.mp3',
+  },
+  {
+    en: 'We still have space available.',
+    fr: 'Nous avons encore de la place disponible.',
+    audio: 'we-still-have-space-available.mp3',
+  },
+  {
+    en: 'We have this special offer at the moment.',
+    fr: 'Nous avons cette offre spéciale en ce moment.',
+    audio: 'we-have-this-special-offer-at-the-moment.mp3',
+  },
+  {
+    en: 'You can book tickets online or at the booking office.',
+    fr: 'Vous pouvez réserver des billets en ligne ou au guichet.',
+    audio: 'you-can-book-tickets-online-or-at-the-booking-office.mp3',
+  },
+  {
+    en: 'Would you like to book?',
+    fr: 'Souhaitez-vous réserver ?',
+    audio: 'would-you-like-to-book.mp3',
+  },
+  {
+    en: 'This is great for families.',
+    fr: 'C’est idéal pour les familles.',
+    audio: 'this-is-great-for-families.mp3',
+  },
+  {
+    en: 'I recommend this activity for groups.',
+    fr: 'Je recommande cette activité pour les groupes.',
+    audio: 'i-recommend-this-activity-for-groups.mp3',
+  },
+  {
+    en: 'This one is suitable for beginners.',
+    fr: 'Celui-ci convient aux débutants.',
+    audio: 'this-one-is-suitable-for-beginners.mp3',
+  },
+  {
+    en: 'This option is my favourite.',
+    fr: 'Cette option est ma préférée.',
+    audio: 'this-option-is-my-favourite.mp3',
+  },
+  {
+    en: 'This is our most popular option.',
+    fr: 'C’est notre option la plus populaire.',
+    audio: 'this-is-our-most-popular-option.mp3',
+  },
+  {
+    en: 'A lot of tourists like this.',
+    fr: 'Beaucoup de touristes aiment ça.',
+    audio: 'a-lot-of-tourists-like-this.mp3',
+  },
+  {
+    en: 'I think this would be perfect for you.',
+    fr: 'Je pense que ce serait parfait pour vous.',
+    audio: 'i-think-this-would-be-perfect-for-you.mp3',
+  },
+  {
+    en: 'I hope you enjoyed it.',
+    fr: 'J’espère que vous avez apprécié.',
+    audio: 'i-hope-you-enjoyed-it.mp3',
+  },
+  {
+    en: 'Hopefully we will see you again.',
+    fr: 'J’espère que nous vous reverrons.',
+    audio: 'hopefully-we-will-see-you-again.mp3',
+  },
+  {
+    en: 'Enjoy the rest of your holiday.',
+    fr: 'Profitez du reste de vos vacances.',
+    audio: 'enjoy-the-rest-of-your-holiday.mp3',
+  },
+  {
+    en: 'Have a great weekend.',
+    fr: 'Passez un excellent week-end.',
+    audio: 'have-a-great-weekend.mp3',
   },
 ]
 
@@ -171,11 +150,10 @@ export function mountPresentingServicesProductsKeyLanguage(root: HTMLElement): (
   }
 
   let rowIndex = 0
-  const allRows = SECTIONS.flatMap((section) =>
-    section.items.map((item) => {
-      rowIndex += 1
-      const id = `kl-${rowIndex}`
-      return `
+  const allRows = ITEMS.map((item) => {
+    rowIndex += 1
+    const id = `kl-${rowIndex}`
+    return `
         <div class="kl-table-row">
           <div class="kl-cell kl-cell--en">
             <button type="button" class="phrase-audio-btn" data-audio-src="${escapeHtml(audioUrl(item.audio))}" aria-label="Listen: ${escapeHtml(item.en)}">🔊</button>
@@ -190,8 +168,7 @@ export function mountPresentingServicesProductsKeyLanguage(root: HTMLElement): (
             <div class="kl-chip-slot" data-kl-chip-slot="${id}"></div>
           </div>
         </div>`
-    }),
-  ).join('')
+  }).join('')
 
   root.innerHTML = `
     <div class="kl-board">
@@ -394,8 +371,11 @@ export function mountPresentingServicesProductsKeyLanguage(root: HTMLElement): (
 
   reset()
 
+  root.setAttribute('data-kl-mounted', 'true')
+
   return () => {
     cleanups.forEach((fn) => fn())
+    root.removeAttribute('data-kl-mounted')
     root.innerHTML = ''
   }
 }

@@ -328,7 +328,7 @@ export default function ResourcePreview({ resource, showActions = true }: Resour
       const host = contentRef.current
       if (!host) return
       const el = host.querySelector('[data-kl-activity]') as HTMLElement | null
-      if (!el || el.querySelector('.kl-table')) return
+      if (!el || el.getAttribute('data-kl-mounted') === 'true') return
       detach?.()
       detach = mountPresentingServicesProductsKeyLanguage(el)
     }
@@ -341,7 +341,7 @@ export default function ResourcePreview({ resource, showActions = true }: Resour
       host &&
       new MutationObserver(() => {
         const el = host.querySelector('[data-kl-activity]') as HTMLElement | null
-        if (el && !el.querySelector('.kl-table')) tryMount()
+        if (el && el.getAttribute('data-kl-mounted') !== 'true') tryMount()
       })
     if (observer && host) {
       observer.observe(host, { childList: true, subtree: true })
