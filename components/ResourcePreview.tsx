@@ -5,7 +5,7 @@ import { createRoot } from 'react-dom/client'
 import { mountInstructionsDescriptionsArmyAdjectiveMatch } from '@/lib/worksheetInteractions/instructionsDescriptionsArmyAdjectivesMatch'
 import { mountInstructionsDescriptionsArmyVerbsMission } from '@/lib/worksheetInteractions/instructionsDescriptionsArmyVerbsMission'
 import { mountPastSimpleArmyEdPronunciation } from '@/lib/worksheetInteractions/pastSimpleArmyEdPronunciation'
-import { mountPresentingServicesProductsKeyLanguage } from '@/lib/worksheetInteractions/presentingServicesProductsKeyLanguage'
+import { mountPresentingServicesProductsActivities } from '@/lib/worksheetInteractions/presentingServicesProductsKeyLanguage'
 
 interface Resource {
   id: string
@@ -166,6 +166,9 @@ export default function ResourcePreview({ resource, showActions = true }: Resour
   const hasGrammarInputs = resource.content.includes('data-grammar-input')
   const hasKlActivity =
     typeof resource.content === 'string' && resource.content.includes('data-kl-activity')
+  const hasListeningActivity =
+    typeof resource.content === 'string' && resource.content.includes('data-listening-activity')
+  const hasPspActivities = hasKlActivity || hasListeningActivity
   const [grammarInputsReady, setGrammarInputsReady] = useState(false)
 
   // Defer grammar injection until after mount/hydration timing is settled
@@ -319,7 +322,7 @@ export default function ResourcePreview({ resource, showActions = true }: Resour
   }, [resource.content])
 
   useLayoutEffect(() => {
-    if (!hasKlActivity) return
+    if (!hasPspActivities) return
     let detach: (() => void) | undefined
     let cancelled = false
 
@@ -327,10 +330,13 @@ export default function ResourcePreview({ resource, showActions = true }: Resour
       if (cancelled) return
       const host = contentRef.current
       if (!host) return
-      const el = host.querySelector('[data-kl-activity]') as HTMLElement | null
-      if (!el || el.getAttribute('data-kl-mounted') === 'true') return
+      const klEl = host.querySelector('[data-kl-activity]') as HTMLElement | null
+      const listeningEl = host.querySelector('[data-listening-activity]') as HTMLElement | null
+      const klReady = !klEl || klEl.getAttribute('data-kl-mounted') === 'true'
+      const listeningReady = !listeningEl || listeningEl.getAttribute('data-listening-mounted') === 'true'
+      if (klReady && listeningReady) return
       detach?.()
-      detach = mountPresentingServicesProductsKeyLanguage(el)
+      detach = mountPresentingServicesProductsActivities(host)
     }
 
     tryMount()
@@ -340,8 +346,7 @@ export default function ResourcePreview({ resource, showActions = true }: Resour
     const observer =
       host &&
       new MutationObserver(() => {
-        const el = host.querySelector('[data-kl-activity]') as HTMLElement | null
-        if (el && el.getAttribute('data-kl-mounted') !== 'true') tryMount()
+        tryMount()
       })
     if (observer && host) {
       observer.observe(host, { childList: true, subtree: true })
@@ -353,7 +358,7 @@ export default function ResourcePreview({ resource, showActions = true }: Resour
       observer?.disconnect()
       detach?.()
     }
-  }, [resource.content, hasKlActivity])
+  }, [resource.content, hasPspActivities])
 
   useEffect(() => {
     if (typeof resource.content !== 'string' || !resource.content.includes('data-pspa-ed-pronunciation')) return
@@ -742,7 +747,7 @@ export default function ResourcePreview({ resource, showActions = true }: Resour
                   />
                 )
               }
-            } else if (hasKlActivity) {
+            } else if (hasPspActivities) {
               return (
                 <div
                   className="prose max-w-none w-full"

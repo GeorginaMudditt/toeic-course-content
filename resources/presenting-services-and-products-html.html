@@ -476,6 +476,234 @@
       background: #fff !important;
     }
   }
+
+  /* Reading and Speaking */
+  .rs-intro {
+    font-size: 16px;
+    margin: 0 0 16px;
+    color: var(--exam-subtle-ink);
+  }
+
+  .rs-adverts-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px;
+    margin-bottom: 20px;
+  }
+
+  @media (max-width: 720px) {
+    .rs-adverts-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .rs-advert {
+    border: 1px solid var(--exam-border);
+    border-radius: 10px;
+    background: #fff;
+    padding: 12px 14px;
+    font-size: 15px;
+    line-height: 1.45;
+  }
+
+  .rs-advert-title {
+    font-size: 18px;
+    font-weight: 800;
+    margin: 0 0 6px;
+    color: #0f172a;
+  }
+
+  .rs-advert-tagline {
+    font-size: 15px;
+    font-weight: 700;
+    margin: 0 0 8px;
+    color: var(--exam-accent);
+  }
+
+  .rs-advert p {
+    margin: 0 0 8px;
+    font-size: 15px;
+  }
+
+  .rs-advert ul {
+    margin: 0 0 8px;
+    padding-left: 20px;
+    font-size: 15px;
+  }
+
+  .rs-advert li {
+    margin-bottom: 4px;
+  }
+
+  .rs-advert-details {
+    margin: 8px 0 0;
+    padding: 0;
+    list-style: none !important;
+  }
+
+  .rs-advert-details li {
+    margin-bottom: 4px;
+    padding-left: 0;
+    font-size: 14px;
+  }
+
+  .rs-advert-note {
+    margin: 8px 0 0;
+    padding: 8px 10px;
+    border-radius: 8px;
+    background: #fffbeb;
+    border-left: 3px solid #f59e0b;
+    font-size: 14px;
+  }
+
+  .rs-family-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    margin: 0;
+    padding: 0;
+    list-style: none !important;
+  }
+
+  .rs-family-item {
+    padding: 12px 0;
+    border-bottom: 1px solid var(--exam-soft-border);
+  }
+
+  .rs-family-item:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+  }
+
+  .rs-family-item h3 {
+    font-size: 17px;
+    font-weight: 800;
+    margin: 0 0 6px;
+    color: var(--exam-accent);
+  }
+
+  .rs-family-item p {
+    margin: 0;
+    font-size: 15px;
+    line-height: 1.45;
+  }
+
+  /* Listening */
+  .psp-listening-intro {
+    margin: 0 0 10px;
+    font-size: 16px;
+    color: var(--exam-subtle-ink);
+  }
+
+  .psp-audio-wrap {
+    margin: 10px 0 14px;
+    padding: 10px 12px;
+    border: 1px solid var(--exam-soft-border);
+    border-radius: 10px;
+    background: #fff;
+  }
+
+  .psp-audio-wrap audio {
+    width: 100%;
+    max-width: 760px;
+  }
+
+  .psp-listening-board {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .psp-listening-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .psp-listening-row {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 12px;
+    align-items: center;
+    border: 1px solid var(--exam-soft-border);
+    border-radius: 10px;
+    background: #fff;
+    padding: 9px 10px;
+  }
+
+  .psp-listening-row.is-correct {
+    border-color: #15803d;
+    background: #ecfdf5;
+  }
+
+  .psp-listening-row.is-wrong {
+    border-color: #b91c1c;
+    background: #fee2e2;
+  }
+
+  .psp-listening-statement {
+    font-size: 15px;
+    line-height: 1.4;
+  }
+
+  .psp-listening-choices {
+    display: inline-flex;
+    gap: 12px;
+    align-items: center;
+    white-space: nowrap;
+    font-size: 14px;
+    font-weight: 600;
+  }
+
+  .psp-listening-choices label {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    cursor: pointer;
+  }
+
+  .psp-listening-actions {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 2px;
+    padding-top: 10px;
+    border-top: 1px solid var(--exam-soft-border);
+  }
+
+  .psp-answer-key {
+    margin-top: 12px;
+    border-top: 1px solid var(--exam-soft-border);
+    padding-top: 10px;
+  }
+
+  .psp-answer-key ol {
+    margin: 0;
+  }
+
+  .psp-audioscript {
+    margin-top: 12px;
+    border: 1px solid var(--exam-border);
+    border-radius: 10px;
+    background: #fff;
+    padding: 12px 14px;
+  }
+
+  .psp-audioscript p {
+    margin: 0 0 10px;
+  }
+
+  .psp-audioscript p:last-child {
+    margin-bottom: 0;
+  }
+
+  @media (max-width: 760px) {
+    .psp-listening-row {
+      grid-template-columns: 1fr;
+      gap: 8px;
+    }
+  }
 </style>
 
 <div class="resource-wrap" style="width: 100%; max-width: 100%; margin: 0 auto; padding: 16px 12px; font-family: Arial, sans-serif; line-height: 1.45; color: #333; box-sizing: border-box;">
@@ -494,6 +722,271 @@
     <!-- Activity UI is built by mountPresentingServicesProductsKeyLanguage (WorksheetViewer) -->
     <div id="kl-activity" data-kl-activity="true" aria-live="polite">
       <p style="margin:0;font-size:14px;color:#64748b;">Loading activity…</p>
+    </div>
+  </div>
+
+  <div class="keep-together">
+    <h2 style="font-size: 22px; font-weight: 700; margin-bottom: 8px;">Reading and Speaking</h2>
+    <p class="rs-intro">Read the adverts for the children&rsquo;s activities. Then read the family situations and decide which activity is the best choice for each family. Try to explain your answers in full sentences.</p>
+
+    <div class="rs-adverts-grid">
+      <article class="rs-advert">
+        <h3 class="rs-advert-title">Forest Explorers Club</h3>
+        <p class="rs-advert-tagline">🌲 Outdoor Adventure Mornings for Curious Kids! 🌲</p>
+        <p>Do your children love nature, climbing, running and discovering new things? Join our exciting Forest Explorers Club!</p>
+        <p><strong>Children will:</strong></p>
+        <ul>
+          <li>build small shelters</li>
+          <li>look for animal tracks</li>
+          <li>learn basic map-reading skills</li>
+          <li>play team games in the woods</li>
+          <li>cook marshmallows over a campfire</li>
+        </ul>
+        <ul class="rs-advert-details">
+          <li>📍 <strong>Location:</strong> Greenhill Country Park</li>
+          <li>🕒 <strong>Time:</strong> Saturdays, 9:00 a.m. – 12:00 p.m.</li>
+          <li>💵 <strong>Price:</strong> €18 per child</li>
+          <li>👧 <strong>Minimum age:</strong> 6 years old</li>
+          <li>👥 <strong>Group size:</strong> Maximum 12 children</li>
+          <li>⭐ <strong>Difficulty level:</strong> Easy to medium</li>
+          <li>⏰ <strong>Duration:</strong> 3 hours</li>
+        </ul>
+        <p><strong>Please bring:</strong></p>
+        <ul>
+          <li>comfortable shoes</li>
+          <li>a water bottle</li>
+          <li>a rain jacket</li>
+        </ul>
+        <p class="rs-advert-note">⚠️ <strong>Important:</strong> Children must be comfortable walking for long periods outside.</p>
+      </article>
+
+      <article class="rs-advert">
+        <h3 class="rs-advert-title">Little Chefs Cooking Studio</h3>
+        <p class="rs-advert-tagline">🍕 Mix, Bake &amp; Taste! 🍪</p>
+        <p>Young cooks can learn how to prepare delicious snacks and simple meals in our modern cooking studio.</p>
+        <p><strong>This week&rsquo;s menu:</strong></p>
+        <ul>
+          <li>homemade pizza</li>
+          <li>chocolate chip cookies</li>
+          <li>fruit smoothies</li>
+          <li>mini sandwiches</li>
+        </ul>
+        <p><strong>Children will also learn:</strong></p>
+        <ul>
+          <li>kitchen safety</li>
+          <li>measuring ingredients</li>
+          <li>teamwork and communication</li>
+        </ul>
+        <ul class="rs-advert-details">
+          <li>📍 <strong>Location:</strong> Maple Street Community Centre</li>
+          <li>🕒 <strong>Time:</strong> Sundays, 10:00 a.m. – 1:00 p.m.</li>
+          <li>💵 <strong>Price:</strong> €22 per child (all ingredients included)</li>
+          <li>👧 <strong>Minimum age:</strong> 5 years old</li>
+          <li>👥 <strong>Group size:</strong> 8 children only</li>
+          <li>⭐ <strong>Difficulty level:</strong> Easy</li>
+          <li>⏰ <strong>Duration:</strong> 3 hours</li>
+          <li>🥗 Vegetarian options available.</li>
+          <li>⚠️ Please inform us about food allergies before the class.</li>
+        </ul>
+      </article>
+
+      <article class="rs-advert">
+        <h3 class="rs-advert-title">Junior Robotics Lab</h3>
+        <p class="rs-advert-tagline">🤖 Design, Build and Code Your Own Robot! 💡</p>
+        <p>A hands-on technology workshop for creative young minds.</p>
+        <p><strong>Children will:</strong></p>
+        <ul>
+          <li>build simple robots</li>
+          <li>learn beginner coding</li>
+          <li>solve engineering challenges</li>
+          <li>work in pairs and small teams</li>
+        </ul>
+        <p>No previous experience needed.</p>
+        <ul class="rs-advert-details">
+          <li>📍 <strong>Location:</strong> City Science Museum</li>
+          <li>🕒 <strong>Time:</strong> Saturdays, 1:00 p.m. – 4:30 p.m.</li>
+          <li>💵 <strong>Price:</strong> €40 per child</li>
+          <li>👧 <strong>Minimum age:</strong> 9 years old</li>
+          <li>👥 <strong>Group size:</strong> Maximum 10 children</li>
+          <li>⭐ <strong>Difficulty level:</strong> Medium to challenging</li>
+          <li>⏰ <strong>Duration:</strong> 3.5 hours</li>
+          <li>💻 All equipment is provided.</li>
+          <li>🏆 Children can take their robot home at the end of the workshop.</li>
+        </ul>
+      </article>
+
+      <article class="rs-advert">
+        <h3 class="rs-advert-title">Splash &amp; Paddle Water Camp</h3>
+        <p class="rs-advert-tagline">🏖️ A Fun Introduction to Water Sports! 🛶</p>
+        <p>Try kayaking, paddleboarding and beach games with our friendly instructors.</p>
+        <p>Perfect for energetic children who enjoy being near the sea!</p>
+        <p><strong>Activities include:</strong></p>
+        <ul>
+          <li>beginner kayaking lessons</li>
+          <li>balance games on paddleboards</li>
+          <li>treasure hunts on the beach</li>
+          <li>water safety practice</li>
+        </ul>
+        <ul class="rs-advert-details">
+          <li>📍 <strong>Location:</strong> Blue Bay Beach Centre</li>
+          <li>🕒 <strong>Time:</strong> Monday–Friday, 2:00 p.m. – 5:30 p.m.</li>
+          <li>💵 <strong>Price:</strong> €35 per session</li>
+          <li>👧 <strong>Minimum age:</strong> 8 years old</li>
+          <li>👥 <strong>Group size:</strong> Up to 16 children</li>
+          <li>⭐ <strong>Difficulty level:</strong> Medium</li>
+          <li>⏰ <strong>Duration:</strong> 3.5 hours</li>
+        </ul>
+        <p class="rs-advert-note">🏊 <strong>Important requirements:</strong></p>
+        <ul>
+          <li>children must be able to swim at least 25 metres</li>
+          <li>swimming certificate preferred</li>
+        </ul>
+        <p>🧴 Don&rsquo;t forget sunscreen and a towel!</p>
+      </article>
+    </div>
+
+    <ul class="rs-family-list">
+      <li class="rs-family-item">
+        <h3>Family 1</h3>
+        <p>We are looking for something for our two children during the weekend. One child enjoys being outdoors and trying practical activities, while the other prefers quieter hobbies and sometimes gets tired easily. We would like an activity that keeps both children interested without being too difficult or too expensive.</p>
+      </li>
+      <li class="rs-family-item">
+        <h3>Family 2</h3>
+        <p>Our daughter is very creative and enjoys learning new skills, especially when she can make something herself. She does not enjoy large noisy groups and can be nervous when meeting new people. We are free either in the morning or early afternoon.</p>
+      </li>
+      <li class="rs-family-item">
+        <h3>Family 3</h3>
+        <p>We will be on holiday near the coast this summer and want our son to try something active and different from his usual routine. He likes team activities and has plenty of energy, but he sometimes loses confidence if an activity feels too challenging.</p>
+      </li>
+      <li class="rs-family-item">
+        <h3>Family 4</h3>
+        <p>We are searching for an activity for a group of cousins aged between 7 and 10. They all have different personalities and interests, so we need something flexible that offers both fun and learning. The adults would also prefer a location that is easy to reach and organised safely.</p>
+      </li>
+      <li class="rs-family-item">
+        <h3>Family 5</h3>
+        <p>My child enjoys solving problems and asking questions about how things work. However, she already spends a lot of time indoors during the school week, so we are not sure whether to choose a creative indoor activity or something more active outside.</p>
+      </li>
+    </ul>
+  </div>
+
+  <div class="keep-together">
+    <h2 style="font-size: 22px; font-weight: 700; margin-bottom: 8px;">Listening</h2>
+    <p class="psp-listening-intro">Listen to the advert and decide if each sentence is <strong>True (T)</strong> or <strong>False (F)</strong>.</p>
+
+    <div class="psp-audio-wrap">
+      <audio controls preload="metadata">
+        <source src="/images/everyday-english/Adventure-Coast-Sports-Centre.mp4" type="audio/mp4" />
+        Your browser does not support audio playback. You can download the file
+        <a href="/images/everyday-english/Adventure-Coast-Sports-Centre.mp4">here</a>.
+      </audio>
+    </div>
+
+    <div data-listening-activity="true" aria-live="polite">
+      <div class="psp-listening-board">
+        <div class="psp-listening-list">
+          <div class="psp-listening-row" data-lq-row="1">
+            <div class="psp-listening-statement"><strong>1.</strong> The mountain biking activity takes place in the afternoon.</div>
+            <div class="psp-listening-choices" role="radiogroup" aria-label="Question 1">
+              <label><input type="radio" name="psp-tf-1" value="T" /> True</label>
+              <label><input type="radio" name="psp-tf-1" value="F" /> False</label>
+            </div>
+          </div>
+          <div class="psp-listening-row" data-lq-row="2">
+            <div class="psp-listening-statement"><strong>2.</strong> Helmets are included in the price of the mountain biking tour.</div>
+            <div class="psp-listening-choices" role="radiogroup" aria-label="Question 2">
+              <label><input type="radio" name="psp-tf-2" value="T" /> True</label>
+              <label><input type="radio" name="psp-tf-2" value="F" /> False</label>
+            </div>
+          </div>
+          <div class="psp-listening-row" data-lq-row="3">
+            <div class="psp-listening-statement"><strong>3.</strong> People need to be very experienced cyclists to join the mountain biking activity.</div>
+            <div class="psp-listening-choices" role="radiogroup" aria-label="Question 3">
+              <label><input type="radio" name="psp-tf-3" value="T" /> True</label>
+              <label><input type="radio" name="psp-tf-3" value="F" /> False</label>
+            </div>
+          </div>
+          <div class="psp-listening-row" data-lq-row="4">
+            <div class="psp-listening-statement"><strong>4.</strong> The paddleboarding sessions are suitable for people who cannot swim.</div>
+            <div class="psp-listening-choices" role="radiogroup" aria-label="Question 4">
+              <label><input type="radio" name="psp-tf-4" value="T" /> True</label>
+              <label><input type="radio" name="psp-tf-4" value="F" /> False</label>
+            </div>
+          </div>
+          <div class="psp-listening-row" data-lq-row="5">
+            <div class="psp-listening-statement"><strong>5.</strong> Paddleboarding groups are smaller than the mountain biking groups.</div>
+            <div class="psp-listening-choices" role="radiogroup" aria-label="Question 5">
+              <label><input type="radio" name="psp-tf-5" value="T" /> True</label>
+              <label><input type="radio" name="psp-tf-5" value="F" /> False</label>
+            </div>
+          </div>
+          <div class="psp-listening-row" data-lq-row="6">
+            <div class="psp-listening-statement"><strong>6.</strong> Tennis sessions are held in the countryside.</div>
+            <div class="psp-listening-choices" role="radiogroup" aria-label="Question 6">
+              <label><input type="radio" name="psp-tf-6" value="T" /> True</label>
+              <label><input type="radio" name="psp-tf-6" value="F" /> False</label>
+            </div>
+          </div>
+          <div class="psp-listening-row" data-lq-row="7">
+            <div class="psp-listening-statement"><strong>7.</strong> Tennis players can rent equipment if they need it.</div>
+            <div class="psp-listening-choices" role="radiogroup" aria-label="Question 7">
+              <label><input type="radio" name="psp-tf-7" value="T" /> True</label>
+              <label><input type="radio" name="psp-tf-7" value="F" /> False</label>
+            </div>
+          </div>
+          <div class="psp-listening-row" data-lq-row="8">
+            <div class="psp-listening-statement"><strong>8.</strong> The cheapest activity at the sports centre is tennis.</div>
+            <div class="psp-listening-choices" role="radiogroup" aria-label="Question 8">
+              <label><input type="radio" name="psp-tf-8" value="T" /> True</label>
+              <label><input type="radio" name="psp-tf-8" value="F" /> False</label>
+            </div>
+          </div>
+          <div class="psp-listening-row" data-lq-row="9">
+            <div class="psp-listening-statement"><strong>9.</strong> Company groups might enjoy both the mountain biking and tennis activities.</div>
+            <div class="psp-listening-choices" role="radiogroup" aria-label="Question 9">
+              <label><input type="radio" name="psp-tf-9" value="T" /> True</label>
+              <label><input type="radio" name="psp-tf-9" value="F" /> False</label>
+            </div>
+          </div>
+          <div class="psp-listening-row" data-lq-row="10">
+            <div class="psp-listening-statement"><strong>10.</strong> All three activities are designed only for professional athletes.</div>
+            <div class="psp-listening-choices" role="radiogroup" aria-label="Question 10">
+              <label><input type="radio" name="psp-tf-10" value="T" /> True</label>
+              <label><input type="radio" name="psp-tf-10" value="F" /> False</label>
+            </div>
+          </div>
+        </div>
+        <div class="psp-listening-actions">
+          <button type="button" class="kl-btn" data-listening-check="true">Check answers</button>
+          <button type="button" class="kl-btn kl-btn--secondary" data-listening-reset="true">Reset</button>
+          <span class="kl-status" data-listening-status="true"></span>
+        </div>
+      </div>
+    </div>
+
+    <details class="psp-answer-key">
+      <summary><strong>Answer key</strong></summary>
+      <ol>
+        <li>False</li>
+        <li>True</li>
+        <li>False</li>
+        <li>False</li>
+        <li>True</li>
+        <li>False</li>
+        <li>True</li>
+        <li>True</li>
+        <li>True</li>
+        <li>False</li>
+      </ol>
+    </details>
+
+    <div class="psp-audioscript">
+      <h3 style="font-size: 20px; font-weight: 700; margin-bottom: 10px;">Audioscript</h3>
+      <p>Hello everyone, and welcome to Adventure Coast Sports Centre &mdash; the perfect place for active weekends, company events and special celebrations!</p>
+      <p>We offer exciting outdoor activities for adults of all ages and experience levels. Whether you are planning a birthday party, a team-building day with colleagues, or simply a fun activity with friends, we have something for you.</p>
+      <p>Our first activity is <strong>mountain biking</strong> through the hills and forest trails near Silver Lake. These guided tours are available every Saturday morning from 9 a.m. until 1 p.m. Each session lasts four hours and includes all safety equipment, bikes and helmets. Groups can have between 6 and 15 people. The price is &euro;45 per person. This activity is suitable for beginners, although participants should have a reasonable level of fitness because some of the routes are quite steep.</p>
+      <p>If you prefer water sports, why not try our <strong>stand-up paddleboarding experience</strong> at Blue Water Beach? This relaxing but active session is very popular with hen parties and summer events. Lessons take place on Friday evenings and Sunday afternoons and last two and a half hours. Group sizes are smaller, with a maximum of 8 people, so instructors can give more individual attention. The cost is &euro;35 per person, including wetsuits and paddleboards. Participants must be able to swim confidently.</p>
+      <p>Finally, we offer <strong>tennis social sessions</strong> at our modern sports club in the town centre. These sessions are ideal for company groups or adults who want to meet new people while improving their tennis skills. Sessions are available three evenings a week and last 90 minutes. Players are divided into beginner and intermediate groups. Each group can include up to 12 people. Equipment rental is possible for an extra &euro;5, although many players bring their own rackets. Prices start at &euro;20 per session, and discounts are available for groups of more than 10 people.</p>
+      <p>At Adventure Coast Sports Centre, we believe exercise should be social, exciting and enjoyable. To book your activity, visit our website or call our reception team today. We look forward to seeing you soon!</p>
     </div>
   </div>
 </div>

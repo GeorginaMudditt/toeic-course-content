@@ -7,7 +7,7 @@ import { useRouter } from 'next/navigation'
 import { mountInstructionsDescriptionsArmyAdjectiveMatch } from '@/lib/worksheetInteractions/instructionsDescriptionsArmyAdjectivesMatch'
 import { mountInstructionsDescriptionsArmyVerbsMission } from '@/lib/worksheetInteractions/instructionsDescriptionsArmyVerbsMission'
 import { mountPastSimpleArmyEdPronunciation } from '@/lib/worksheetInteractions/pastSimpleArmyEdPronunciation'
-import { mountPresentingServicesProductsKeyLanguage } from '@/lib/worksheetInteractions/presentingServicesProductsKeyLanguage'
+import { mountPresentingServicesProductsActivities } from '@/lib/worksheetInteractions/presentingServicesProductsKeyLanguage'
 import {
   formatFeedbackForDisplay,
   getFeedbackNotesKey,
@@ -741,9 +741,12 @@ export default function WorksheetViewer({ assignmentId, resource, initialProgres
   // Check if this resource has grammar worksheet inputs
   const hasGrammarInputs = resource.content.includes('data-grammar-input')
 
-  /** Interactive Key Language (drag-and-drop); HTML must not re-render via dangerouslySetInnerHTML. */
+  /** Interactive Key Language + Listening; HTML must not re-render via dangerouslySetInnerHTML. */
   const hasKlActivity =
     typeof resource.content === 'string' && resource.content.includes('data-kl-activity')
+  const hasListeningActivity =
+    typeof resource.content === 'string' && resource.content.includes('data-listening-activity')
+  const hasPspActivities = hasKlActivity || hasListeningActivity
 
   /** Per-section Check Answers + live tick/cross (see resources using data-grammar-per-section-check). */
   const enablePerSectionGrammarCheck = useMemo(() => {
@@ -2517,9 +2520,9 @@ export default function WorksheetViewer({ assignmentId, resource, initialProgres
     }
   }, [resource.content])
 
-  // Presenting Services and Products: Key Language audio + French drag-and-drop.
+  // Presenting Services and Products: Key Language + Listening activities.
   useLayoutEffect(() => {
-    if (!hasKlActivity) return
+    if (!hasPspActivities) return
     let detach: (() => void) | undefined
     let cancelled = false
 
@@ -2527,10 +2530,13 @@ export default function WorksheetViewer({ assignmentId, resource, initialProgres
       if (cancelled) return
       const host = contentRef.current
       if (!host) return
-      const el = host.querySelector('[data-kl-activity]') as HTMLElement | null
-      if (!el || el.getAttribute('data-kl-mounted') === 'true') return
+      const klEl = host.querySelector('[data-kl-activity]') as HTMLElement | null
+      const listeningEl = host.querySelector('[data-listening-activity]') as HTMLElement | null
+      const klReady = !klEl || klEl.getAttribute('data-kl-mounted') === 'true'
+      const listeningReady = !listeningEl || listeningEl.getAttribute('data-listening-mounted') === 'true'
+      if (klReady && listeningReady) return
       detach?.()
-      detach = mountPresentingServicesProductsKeyLanguage(el)
+      detach = mountPresentingServicesProductsActivities(host)
     }
 
     tryMount()
@@ -2540,8 +2546,7 @@ export default function WorksheetViewer({ assignmentId, resource, initialProgres
     const observer =
       host &&
       new MutationObserver(() => {
-        const el = host.querySelector('[data-kl-activity]') as HTMLElement | null
-        if (el && el.getAttribute('data-kl-mounted') !== 'true') tryMount()
+        tryMount()
       })
     if (observer && host) {
       observer.observe(host, { childList: true, subtree: true })
@@ -2553,7 +2558,7 @@ export default function WorksheetViewer({ assignmentId, resource, initialProgres
       observer?.disconnect()
       detach?.()
     }
-  }, [resource.content, hasKlActivity])
+  }, [resource.content, hasPspActivities])
 
   // Past Simple Practice (Army): -ed pronunciation columns.
   useEffect(() => {
@@ -2912,9 +2917,9 @@ export default function WorksheetViewer({ assignmentId, resource, initialProgres
             } else {
               // Render normally for non-placement tests
               // Memoize HTML when it has injected inputs/activities (re-renders would reset the DOM).
-              if (hasGrammarInputs || hasKlActivity) {
+              if (hasGrammarInputs || hasPspActivities) {
                 return (
-                  <MemoizedContent html={resource.content} fullWidth={hasKlActivity} />
+                  <MemoizedContent html={resource.content} fullWidth={hasPspActivities} />
                 )
               }
               return (

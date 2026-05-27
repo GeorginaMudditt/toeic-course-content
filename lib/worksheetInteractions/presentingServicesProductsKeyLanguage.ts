@@ -6,6 +6,7 @@
 const AUDIO_BASE = '/images/everyday-english/presenting-services-products-audio/'
 
 type KlItem = { en: string; fr: string; audio: string }
+type TfItem = { statement: string; answer: 'T' | 'F' }
 
 const ITEMS: KlItem[] = [
   {
@@ -113,6 +114,19 @@ const ITEMS: KlItem[] = [
     fr: 'Passez un excellent week-end.',
     audio: 'have-a-great-weekend.mp3',
   },
+]
+
+const LISTENING_ITEMS: TfItem[] = [
+  { statement: 'The mountain biking activity takes place in the afternoon.', answer: 'F' },
+  { statement: 'Helmets are included in the price of the mountain biking tour.', answer: 'T' },
+  { statement: 'People need to be very experienced cyclists to join the mountain biking activity.', answer: 'F' },
+  { statement: 'The paddleboarding sessions are suitable for people who cannot swim.', answer: 'F' },
+  { statement: 'Paddleboarding groups are smaller than the mountain biking groups.', answer: 'T' },
+  { statement: 'Tennis sessions are held in the countryside.', answer: 'F' },
+  { statement: 'Tennis players can rent equipment if they need it.', answer: 'T' },
+  { statement: 'The cheapest activity at the sports centre is tennis.', answer: 'T' },
+  { statement: 'Company groups might enjoy both the mountain biking and tennis activities.', answer: 'T' },
+  { statement: 'All three activities are designed only for professional athletes.', answer: 'F' },
 ]
 
 function audioUrl(filename: string): string {
@@ -399,5 +413,111 @@ export function mountPresentingServicesProductsKeyLanguage(root: HTMLElement): (
     cleanups.forEach((fn) => fn())
     root.removeAttribute('data-kl-mounted')
     root.innerHTML = ''
+  }
+}
+
+export function mountPresentingServicesProductsListening(root: HTMLElement): () => void {
+  const cleanups: (() => void)[] = []
+  const on = (el: HTMLElement, type: string, fn: EventListener) => {
+    el.addEventListener(type, fn)
+    cleanups.push(() => el.removeEventListener(type, fn))
+  }
+
+  if (!root.querySelector('.psp-listening-board')) {
+    const rows = LISTENING_ITEMS.map((item, index) => {
+      const qNum = index + 1
+      return `
+        <div class="psp-listening-row" data-lq-row="${qNum}">
+          <div class="psp-listening-statement"><strong>${qNum}.</strong> ${escapeHtml(item.statement)}</div>
+          <div class="psp-listening-choices" role="radiogroup" aria-label="Question ${qNum}">
+            <label><input type="radio" name="psp-tf-${qNum}" value="T" /> True</label>
+            <label><input type="radio" name="psp-tf-${qNum}" value="F" /> False</label>
+          </div>
+        </div>
+      `
+    }).join('')
+
+    root.innerHTML = `
+      <div class="psp-listening-board">
+        <div class="psp-listening-list">${rows}</div>
+        <div class="psp-listening-actions">
+          <button type="button" class="kl-btn" data-listening-check="true">Check answers</button>
+          <button type="button" class="kl-btn kl-btn--secondary" data-listening-reset="true">Reset</button>
+          <span class="kl-status" data-listening-status="true"></span>
+        </div>
+      </div>
+    `
+  }
+
+  const statusEl = root.querySelector('[data-listening-status="true"]') as HTMLElement | null
+  const checkBtn = root.querySelector('[data-listening-check="true"]') as HTMLButtonElement | null
+  const resetBtn = root.querySelector('[data-listening-reset="true"]') as HTMLButtonElement | null
+  if (!statusEl || !checkBtn || !resetBtn) return () => {}
+
+  const clearFeedback = () => {
+    root.querySelectorAll('.psp-listening-row').forEach((row) => {
+      row.classList.remove('is-correct', 'is-wrong')
+    })
+    statusEl.textContent = ''
+  }
+
+  const checkAnswers = () => {
+    let answered = 0
+    let correct = 0
+    LISTENING_ITEMS.forEach((item, index) => {
+      const qNum = index + 1
+      const row = root.querySelector(`[data-lq-row="${qNum}"]`) as HTMLElement | null
+      const selected = root.querySelector(`input[name="psp-tf-${qNum}"]:checked`) as HTMLInputElement | null
+      if (!row) return
+      row.classList.remove('is-correct', 'is-wrong')
+      if (!selected) return
+      answered += 1
+      if (selected.value === item.answer) {
+        correct += 1
+        row.classList.add('is-correct')
+      } else {
+        row.classList.add('is-wrong')
+      }
+    })
+    statusEl.textContent =
+      answered === 0
+        ? 'Select True or False first, then check.'
+        : `Score: ${correct} / ${LISTENING_ITEMS.length}`
+  }
+
+  const reset = () => {
+    root.querySelectorAll('input[type="radio"]').forEach((input) => {
+      ;(input as HTMLInputElement).checked = false
+    })
+    clearFeedback()
+  }
+
+  on(checkBtn, 'click', checkAnswers)
+  on(resetBtn, 'click', reset)
+
+  root.setAttribute('data-listening-mounted', 'true')
+  return () => {
+    cleanups.forEach((fn) => fn())
+    root.removeAttribute('data-listening-mounted')
+    root.innerHTML = ''
+  }
+}
+
+/** Mount Key Language + Listening activities within a worksheet content root. */
+export function mountPresentingServicesProductsActivities(host: HTMLElement): () => void {
+  const cleanups: (() => void)[] = []
+
+  const klEl = host.querySelector('[data-kl-activity]') as HTMLElement | null
+  if (klEl && klEl.getAttribute('data-kl-mounted') !== 'true') {
+    cleanups.push(mountPresentingServicesProductsKeyLanguage(klEl))
+  }
+
+  const listeningEl = host.querySelector('[data-listening-activity]') as HTMLElement | null
+  if (listeningEl && listeningEl.getAttribute('data-listening-mounted') !== 'true') {
+    cleanups.push(mountPresentingServicesProductsListening(listeningEl))
+  }
+
+  return () => {
+    cleanups.forEach((fn) => fn())
   }
 }
