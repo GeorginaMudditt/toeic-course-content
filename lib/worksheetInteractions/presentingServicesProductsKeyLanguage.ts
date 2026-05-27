@@ -160,7 +160,7 @@ function escapeHtml(s: string): string {
 export function mountPresentingServicesProductsKeyLanguage(root: HTMLElement): () => void {
   let selectedChip: HTMLElement | null = null
   let drops: HTMLElement[] = []
-  let chipGrid: HTMLElement | null = null
+  let chipSlots: HTMLElement[] = []
   let statusEl: HTMLElement | null = null
   const audioCache = new Map<string, HTMLAudioElement>()
   const cleanups: (() => void)[] = []
@@ -179,15 +179,16 @@ export function mountPresentingServicesProductsKeyLanguage(root: HTMLElement): (
         return `
         <div class="kl-table-row">
           <div class="kl-cell kl-cell--en">
+            <button type="button" class="phrase-audio-btn" data-audio-src="${escapeHtml(audioUrl(item.audio))}" aria-label="Listen: ${escapeHtml(item.en)}">🔊</button>
             <span class="kl-en-text">${escapeHtml(item.en)}</span>
           </div>
-          <div class="kl-cell kl-cell--audio">
-            <button type="button" class="phrase-audio-btn" data-audio-src="${escapeHtml(audioUrl(item.audio))}" aria-label="Listen: ${escapeHtml(item.en)}">🔊</button>
-          </div>
-          <div class="kl-cell kl-cell--fr">
+          <div class="kl-cell kl-cell--drop">
             <div class="kl-drop" data-drop-for="${id}" data-correct="${escapeHtml(item.fr)}">
-              <span class="kl-drop-placeholder">Drop French translation here</span>
+              <span class="kl-drop-placeholder">Drag French here</span>
             </div>
+          </div>
+          <div class="kl-cell kl-cell--source">
+            <div class="kl-chip-slot" data-kl-chip-slot="${id}"></div>
           </div>
         </div>`
       })
@@ -198,18 +199,16 @@ export function mountPresentingServicesProductsKeyLanguage(root: HTMLElement): (
       <div class="kl-table">
         <div class="kl-table-head" aria-hidden="true">
           <span>English</span>
-          <span></span>
-          <span>French</span>
+          <span>Your answer</span>
+          <span>French — drag left →</span>
         </div>
         ${rows}
       </div>`
   }).join('')
 
   root.innerHTML = `
-    ${sectionsHtml}
-    <div class="kl-bank" aria-label="French translation bank">
-      <p class="kl-bank-title">French translations — drag into the column on the right</p>
-      <div class="kl-chip-grid" data-kl-chip-grid="true"></div>
+    <div class="kl-board">
+      ${sectionsHtml}
       <div class="kl-actions">
         <button type="button" class="kl-btn" data-kl-check="true">Check answers</button>
         <button type="button" class="kl-btn kl-btn--secondary" data-kl-reset="true">Reset</button>
@@ -219,11 +218,11 @@ export function mountPresentingServicesProductsKeyLanguage(root: HTMLElement): (
   `
 
   drops = Array.from(root.querySelectorAll('.kl-drop'))
-  chipGrid = root.querySelector('[data-kl-chip-grid="true"]')
+  chipSlots = Array.from(root.querySelectorAll('[data-kl-chip-slot]'))
   statusEl = root.querySelector('[data-kl-status="true"]')
   const checkBtn = root.querySelector('[data-kl-check="true"]') as HTMLButtonElement | null
   const resetBtn = root.querySelector('[data-kl-reset="true"]') as HTMLButtonElement | null
-  if (!chipGrid || !statusEl || !checkBtn || !resetBtn) {
+  if (!chipSlots.length || !statusEl || !checkBtn || !resetBtn) {
     return () => {}
   }
 
@@ -262,7 +261,7 @@ export function mountPresentingServicesProductsKeyLanguage(root: HTMLElement): (
           selectedChip = null
           return
         }
-        chipGrid!.querySelectorAll('.kl-chip').forEach((c) => c.classList.remove('is-selected'))
+        root.querySelectorAll('.kl-chip-slot .kl-chip').forEach((c) => c.classList.remove('is-selected'))
         chip.classList.add('is-selected')
         selectedChip = chip
       })
@@ -281,28 +280,36 @@ export function mountPresentingServicesProductsKeyLanguage(root: HTMLElement): (
     return chip
   }
 
-  const returnChipToBank = (chip: HTMLElement) => {
+  const dropPlaceholder = '<span class="kl-drop-placeholder">Drag French here</span>'
+
+  const returnChipToSlot = (chip: HTMLElement) => {
     chip.setAttribute('draggable', 'true')
     chip.style.cursor = 'grab'
     chip.classList.remove('is-selected')
-    chipGrid!.appendChild(chip)
+    const emptySlot = chipSlots.find((slot) => !slot.querySelector('.kl-chip'))
+    if (emptySlot) {
+      emptySlot.appendChild(chip)
+    }
+  }
+
+  const removeChipByText = (text: string, except?: HTMLElement) => {
+    root.querySelectorAll('.kl-chip').forEach((node) => {
+      const chip = node as HTMLElement
+      if (chip === except || chip.textContent !== text) return
+      const parent = chip.parentElement
+      chip.remove()
+      if (parent?.classList.contains('kl-drop')) {
+        parent.innerHTML = dropPlaceholder
+      }
+    })
   }
 
   const placeTextIntoDrop = (dropEl: HTMLElement, text: string) => {
     clearFeedback()
     const existingChip = dropEl.querySelector('.kl-chip')
-    if (existingChip) returnChipToBank(existingChip as HTMLElement)
+    if (existingChip) returnChipToSlot(existingChip as HTMLElement)
 
-    const bankChip = Array.from(chipGrid!.querySelectorAll('.kl-chip')).find((c) => c.textContent === text)
-    if (bankChip) bankChip.remove()
-
-    const otherDrop = drops.find((d) => {
-      const c = d.querySelector('.kl-chip')
-      return c && c.textContent === text && d !== dropEl
-    })
-    if (otherDrop) {
-      otherDrop.innerHTML = '<span class="kl-drop-placeholder">Drop French translation here</span>'
-    }
+    removeChipByText(text)
 
     const placed = makeChip(text, false)
     dropEl.innerHTML = ''
@@ -333,10 +340,16 @@ export function mountPresentingServicesProductsKeyLanguage(root: HTMLElement): (
   })
 
   const reset = () => {
-    chipGrid!.innerHTML = ''
-    shuffle(translations).forEach((t) => chipGrid!.appendChild(makeChip(t, true)))
+    chipSlots.forEach((slot) => {
+      slot.innerHTML = ''
+    })
     drops.forEach((d) => {
-      d.innerHTML = '<span class="kl-drop-placeholder">Drop French translation here</span>'
+      d.innerHTML = dropPlaceholder
+    })
+    const shuffled = shuffle(translations)
+    shuffled.forEach((t, index) => {
+      const slot = chipSlots[index]
+      if (slot) slot.appendChild(makeChip(t, true))
     })
     selectedChip = null
     clearFeedback()

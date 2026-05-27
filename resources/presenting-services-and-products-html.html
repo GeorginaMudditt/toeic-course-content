@@ -264,6 +264,10 @@
     color: #0f172a;
   }
 
+  .kl-board {
+    width: 100%;
+  }
+
   .kl-table {
     display: flex;
     flex-direction: column;
@@ -274,9 +278,9 @@
   .kl-table-head,
   .kl-table-row {
     display: grid;
-    grid-template-columns: minmax(0, 1fr) 44px minmax(0, 1fr);
-    gap: 10px 12px;
-    align-items: center;
+    grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr) minmax(0, 1.15fr);
+    gap: 12px 14px;
+    align-items: stretch;
   }
 
   .kl-table-head {
@@ -285,41 +289,62 @@
     text-transform: uppercase;
     letter-spacing: 0.05em;
     color: var(--exam-subtle-ink);
-    padding: 0 4px 4px;
+    padding: 0 6px 6px;
     border-bottom: 1px solid var(--exam-soft-border);
   }
 
-  .kl-table-head span:nth-child(2) {
-    visibility: hidden;
-  }
-
   .kl-table-row {
-    padding: 8px 10px;
+    padding: 10px 12px;
     background: #fff;
     border: 1px solid rgba(15, 23, 42, 0.1);
     border-radius: 10px;
     border-left: 4px solid #1d4ed8;
   }
 
-  @media (max-width: 720px) {
+  @media (max-width: 900px) {
     .kl-table-head,
     .kl-table-row {
-      grid-template-columns: minmax(0, 1fr) 40px minmax(0, 1fr);
+      grid-template-columns: 1fr;
       gap: 8px;
+    }
+
+    .kl-table-head {
+      display: none;
+    }
+
+    .kl-cell--source {
+      order: -1;
     }
   }
 
   .kl-cell--en {
     min-width: 0;
-  }
-
-  .kl-cell--audio {
     display: flex;
-    justify-content: center;
+    align-items: flex-start;
+    gap: 10px;
   }
 
-  .kl-cell--fr {
+  .kl-cell--drop,
+  .kl-cell--source {
     min-width: 0;
+    display: flex;
+    align-items: stretch;
+  }
+
+  .kl-chip-slot {
+    width: 100%;
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+    border: 1px dashed rgba(109, 40, 217, 0.35);
+    background: rgba(250, 245, 255, 0.5);
+    padding: 6px;
+  }
+
+  .kl-chip-slot:empty {
+    min-height: 44px;
   }
 
   .kl-en-text {
@@ -366,46 +391,20 @@
     font-weight: 600;
   }
 
-  .kl-bank {
-    border: 1px solid rgba(15, 23, 42, 0.08);
-    background: #fff;
-    border-radius: 12px;
-    padding: 12px 12px 10px;
-  }
-
-  .kl-bank-title {
-    font-size: 13px;
-    font-weight: 800;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-    margin: 0 0 10px;
-    color: #6d28d9;
-  }
-
-  .kl-chip-grid {
-    display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 8px;
-  }
-
-  @media (max-width: 720px) {
-    .kl-chip-grid {
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
-  }
-
   .kl-chip {
-    border-radius: 999px;
-    padding: 8px 12px;
+    width: 100%;
+    border-radius: 8px;
+    padding: 8px 10px;
     border: 1px solid rgba(15, 23, 42, 0.12);
     background: linear-gradient(135deg, #faf5ff 0%, #ffffff 100%);
-    font-size: 14px;
-    font-weight: 800;
+    font-size: 13px;
+    font-weight: 700;
+    line-height: 1.35;
     color: #0f172a;
     box-shadow: 0 1px 2px rgba(15, 23, 42, 0.05);
     cursor: grab;
     user-select: none;
-    text-align: center;
+    text-align: left;
   }
 
   .kl-chip:active {
@@ -422,7 +421,9 @@
     align-items: center;
     flex-wrap: wrap;
     gap: 10px;
-    margin-top: 12px;
+    margin-top: 4px;
+    padding-top: 12px;
+    border-top: 1px solid var(--exam-soft-border);
   }
 
   .kl-btn {
@@ -449,8 +450,8 @@
   }
 
   @media print {
-    .kl-bank,
-    .kl-actions {
+    .kl-actions,
+    .kl-chip-slot {
       display: none !important;
     }
     .kl-drop {
@@ -460,7 +461,7 @@
   }
 </style>
 
-<div class="resource-wrap" style="max-width: 900px; margin: 0 auto; padding: 20px; font-family: Arial, sans-serif; line-height: 1.45; color: #333;">
+<div class="resource-wrap" style="max-width: 100%; margin: 0 auto; padding: 20px; font-family: Arial, sans-serif; line-height: 1.45; color: #333;">
   <div class="exam-header" style="text-align: center; margin-bottom: 18px;">
     <div style="display: inline-block; margin-bottom: 6px;">
       <img src="/brizzle-logo.png" alt="Brizzle Logo" style="width: 45px; height: 45px; object-fit: contain;" />
@@ -471,7 +472,7 @@
 
   <div class="keep-together">
     <h2 style="font-size: 22px; font-weight: 700; margin-bottom: 8px;">Key Language</h2>
-    <p class="kl-instructions">Read the sentences in English on the left. Drag and drop the French translation.</p>
+    <p class="kl-instructions">Read each sentence in English. Drag the French phrase from the <strong>right</strong> into the <strong>middle</strong> column.</p>
 
     <!-- Activity UI is built by mountPresentingServicesProductsKeyLanguage (WorksheetViewer) -->
     <div id="kl-activity" data-kl-activity="true" aria-live="polite">
