@@ -253,14 +253,33 @@ export function mountPresentingServicesProductsKeyLanguage(root: HTMLElement): (
 
   const dropPlaceholder = '<span class="kl-drop-placeholder">Drag French here</span>'
 
+  const updateChipSlotEmptyStates = () => {
+    chipSlots.forEach((slot) => {
+      slot.classList.toggle('kl-chip-slot--empty', !slot.querySelector('.kl-chip'))
+    })
+  }
+
+  /** Keep remaining French chips stacked from the top; empty slots sit at the bottom. */
+  const compactChipSlots = () => {
+    const chips: HTMLElement[] = []
+    chipSlots.forEach((slot) => {
+      const chip = slot.querySelector('.kl-chip') as HTMLElement | null
+      if (chip) chips.push(chip)
+      slot.innerHTML = ''
+    })
+    chips.forEach((chip, index) => {
+      chipSlots[index]?.appendChild(chip)
+    })
+    updateChipSlotEmptyStates()
+  }
+
   const returnChipToSlot = (chip: HTMLElement) => {
     chip.setAttribute('draggable', 'true')
     chip.style.cursor = 'grab'
     chip.classList.remove('is-selected')
     const emptySlot = chipSlots.find((slot) => !slot.querySelector('.kl-chip'))
-    if (emptySlot) {
-      emptySlot.appendChild(chip)
-    }
+    if (emptySlot) emptySlot.appendChild(chip)
+    compactChipSlots()
   }
 
   const removeChipByText = (text: string, except?: HTMLElement) => {
@@ -281,6 +300,8 @@ export function mountPresentingServicesProductsKeyLanguage(root: HTMLElement): (
     if (existingChip) returnChipToSlot(existingChip as HTMLElement)
 
     removeChipByText(text)
+
+    compactChipSlots()
 
     const placed = makeChip(text, false)
     dropEl.innerHTML = ''
@@ -322,6 +343,7 @@ export function mountPresentingServicesProductsKeyLanguage(root: HTMLElement): (
       const slot = chipSlots[index]
       if (slot) slot.appendChild(makeChip(t, true))
     })
+    updateChipSlotEmptyStates()
     selectedChip = null
     clearFeedback()
   }

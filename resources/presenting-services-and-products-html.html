@@ -341,13 +341,21 @@
     align-items: center;
     justify-content: center;
     border-radius: 10px;
-    border: 1px dashed rgba(109, 40, 217, 0.35);
-    background: rgba(250, 245, 255, 0.5);
+    border: 1px dashed rgba(186, 54, 39, 0.28);
+    background: rgba(255, 251, 250, 0.85);
     padding: 6px;
   }
 
-  .kl-chip-slot:empty {
-    min-height: 44px;
+  .kl-chip-slot--empty {
+    background: rgba(241, 245, 249, 0.95);
+    border-color: rgba(148, 163, 184, 0.55);
+    border-style: dashed;
+  }
+
+  .kl-chip-slot:not(.kl-chip-slot--empty) {
+    background: rgba(254, 242, 240, 0.55);
+    border-color: rgba(186, 54, 39, 0.22);
+    border-style: solid;
   }
 
   .kl-en-text {
@@ -394,17 +402,23 @@
     font-weight: 600;
   }
 
-  .kl-chip {
+  .kl-drop .kl-chip {
+    cursor: default;
+  }
+
+  .kl-chip,
+  .kl-drop .kl-chip {
     width: 100%;
     border-radius: 8px;
     padding: 8px 10px;
-    border: 1px solid rgba(15, 23, 42, 0.12);
-    background: linear-gradient(135deg, #faf5ff 0%, #ffffff 100%);
+    border: 1px solid rgba(186, 54, 39, 0.28);
+    background: linear-gradient(135deg, #fff9f8 0%, #ffffff 100%);
     font-size: 13px;
     font-weight: 700;
+    font-style: italic;
     line-height: 1.35;
-    color: #0f172a;
-    box-shadow: 0 1px 2px rgba(15, 23, 42, 0.05);
+    color: #ba3627;
+    box-shadow: 0 1px 2px rgba(186, 54, 39, 0.08);
     cursor: grab;
     user-select: none;
     text-align: left;
@@ -415,8 +429,8 @@
   }
 
   .kl-chip.is-selected {
-    outline: 3px solid rgba(109, 40, 217, 0.25);
-    border-color: rgba(109, 40, 217, 0.6);
+    outline: 3px solid rgba(186, 54, 39, 0.22);
+    border-color: rgba(186, 54, 39, 0.55);
   }
 
   .kl-actions {
