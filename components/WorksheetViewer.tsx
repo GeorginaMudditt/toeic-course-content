@@ -2324,8 +2324,14 @@ export default function WorksheetViewer({ assignmentId, resource, initialProgres
     if (!hasGrammarInputs || !grammarInputsReady || !contentRef.current) return
     if (!resource.content.includes('data-grammar-save-section')) return
 
-    const tasks: WritingTaskType[] = ['email1', 'email2', 'essay']
-    for (const task of tasks) {
+    const tasks = Array.from(
+      contentRef.current.querySelectorAll('[data-grammar-save-section][data-grammar-ai-feedback]')
+    )
+      .map((el) => el.getAttribute('data-grammar-ai-feedback'))
+      .filter((attr): attr is WritingTaskType => !!attr && isWritingTaskType(attr))
+    const uniqueTasks = [...new Set(tasks)]
+
+    for (const task of uniqueTasks) {
       const section = contentRef.current.querySelector(
         `[data-grammar-save-section][data-grammar-ai-feedback="${task}"]`
       ) as HTMLElement | null

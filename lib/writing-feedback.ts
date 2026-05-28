@@ -1,4 +1,4 @@
-export type WritingTaskType = 'email1' | 'email2' | 'essay'
+export type WritingTaskType = 'email1' | 'email2' | 'essay' | 'writing1'
 
 export interface StructuralCheckItem {
   ok: boolean
@@ -13,6 +13,7 @@ const TASK_INPUT_IDS: Record<WritingTaskType, string> = {
   email1: 'writing-response-email1',
   email2: 'writing-response-email2',
   essay: 'writing-essay',
+  writing1: 'writing1-q1',
 }
 
 export function getInputIdForTask(task: WritingTaskType): string {
@@ -24,7 +25,32 @@ export function getFeedbackNotesKey(task: WritingTaskType): string {
 }
 
 export function isWritingTaskType(value: string): value is WritingTaskType {
-  return value === 'email1' || value === 'email2' || value === 'essay'
+  return value === 'email1' || value === 'email2' || value === 'essay' || value === 'writing1'
+}
+
+function countTenseSignals(text: string): {
+  presentSimple: boolean
+  pastSimple: boolean
+  presentPerfect: boolean
+  presentContinuous: boolean
+} {
+  const t = text
+  return {
+    presentSimple:
+      /\b(I|we|they)\s+(work|manage|lead|speciali[sz]e|focus|support|oversee)\b/i.test(t) ||
+      /\b(he|she|it)\s+(works|manages|leads|speciali[sz]es|focuses|supports|oversees)\b/i.test(t) ||
+      /\b(my|our)\s+(role|job|position|responsibilit)/i.test(t),
+    pastSimple:
+      /\b(worked|led|managed|studied|completed|joined|spent|achieved|gained|developed|started|began|moved|graduated)\b/i.test(
+        t
+      ) || /\b(in|since)\s+(19|20)\d{2}\b/i.test(t),
+    presentPerfect:
+      /\b(have|has)\s+(been|worked|led|managed|completed|achieved|gained|developed|spent|built|grown)\b/i.test(
+        t
+      ) || /\b(have|has)\s+\w+ed\b/i.test(t),
+    presentContinuous:
+      /\b(am|is|are)\s+\w+ing\b/i.test(t) || /\b(I'm|he's|she's|we're|they're)\s+\w+ing\b/i.test(t),
+  }
 }
 
 function wordCount(text: string): number {
@@ -127,6 +153,39 @@ function assessTaskRelevance(
       ok: true,
       message:
         'Topic: your essay appears to address the prompt (career / same company, advantages and disadvantages).',
+    }
+  }
+
+  if (task === 'writing1') {
+    const careerPatterns = [
+      /\b(career|job|role|position|profession|experience|achievement|responsibilit|company|employer|team|project|industry|skill)\b/i,
+      /\b(linkedin|profile|background)\b/i,
+      /\b(I am|I'm)\s+(a|an|currently|now)\b/i,
+    ]
+    const careerScore = countPatternMatches(t, careerPatterns)
+    const offTopicPatterns = [
+      /\b(recipe|cooking|football match|weather today)\b/i,
+      /\b(my (favourite|favorite) (film|movie|song))\b/i,
+    ]
+    const offTopicScore = countPatternMatches(t, offTopicPatterns)
+
+    if (offTopicScore >= 2 && careerScore < 2) {
+      return {
+        ok: false,
+        message:
+          'Topic: your text does not look like a professional profile — write about your career, role, and achievements (LinkedIn-style).',
+      }
+    }
+    if (careerScore < 1) {
+      return {
+        ok: false,
+        message:
+          'Topic: mention your professional background, current role, or career achievements.',
+      }
+    }
+    return {
+      ok: true,
+      message: 'Topic: your profile appears to focus on professional experience and achievements.',
     }
   }
 
@@ -267,6 +326,49 @@ export function runStructuralChecks(task: WritingTaskType, text: string): Struct
     })
   }
 
+  if (task === 'writing1') {
+    items.push({
+      ok: words >= 50,
+      message:
+        words >= 50
+          ? `Length: about ${words} words — reasonable for a short professional profile.`
+          : `Length: about ${words} words — try to write a fuller profile (aim for at least 50 words).`,
+    })
+    const tenses = countTenseSignals(trimmed)
+    const tenseCount = [
+      tenses.presentSimple,
+      tenses.pastSimple,
+      tenses.presentPerfect,
+      tenses.presentContinuous,
+    ].filter(Boolean).length
+    items.push({
+      ok: tenseCount >= 3,
+      message:
+        tenseCount >= 3
+          ? `Tenses: you appear to use several tenses (${tenseCount} of 4 detected) — good for this task.`
+          : `Tenses: try to use a wider variety — present simple, past simple, present perfect, and present continuous (about ${tenseCount} detected so far).`,
+    })
+    items.push({
+      ok: tenses.presentPerfect,
+      message: tenses.presentPerfect
+        ? 'Present perfect: you use present perfect forms (good for experience and achievements).'
+        : 'Present perfect: try present perfect for experience up to now (e.g. "I have worked…", "I have led…").',
+    })
+    items.push({
+      ok: tenses.pastSimple,
+      message: tenses.pastSimple
+        ? 'Past simple: you describe past roles or achievements with past forms.'
+        : 'Past simple: add past events or previous roles (e.g. "I worked…", "I completed…").',
+    })
+    items.push({
+      ok: /\b(currently|at present|now|today)\b/i.test(trimmed) || tenses.presentContinuous,
+      message:
+        /\b(currently|at present|now|today)\b/i.test(trimmed) || tenses.presentContinuous
+          ? 'Current role: you refer to your present situation or ongoing work.'
+          : 'Current role: describe what you do now (present simple or present continuous).',
+    })
+  }
+
   if (task === 'essay') {
     items.push({
       ok: words >= 300,
@@ -312,6 +414,8 @@ The Welcome Committee e-mailed new Dale City residents. The student writes AS a 
   essay: `ASSIGNED TASK (Essay) — the student's answer MUST match this exact prompt:
 "Some people work for the same company for their entire career. What are the advantages and disadvantages of staying at one company? Give reasons and examples."
 Minimum 300 words. The essay must be about careers / staying at one employer — NOT another topic (e.g. art, history, environment) even if well written.`,
+  writing1: `ASSIGNED TASK (Writing #1 — Mixed Tenses) — the student's answer MUST match this:
+Write a professional LinkedIn-style "About" profile summarising their career so far. They should use a variety of tenses (past simple, present simple, present perfect, present continuous, etc.) to describe background, current role, and achievements. This is grammar practice, not a TOEIC exam task.`,
 }
 
 const AI_FEEDBACK_RULES = `CRITICAL RULES:
@@ -334,6 +438,45 @@ export function buildGeminiPrompt(
   const topicHint = topicCheck
     ? `\nTopic check result: ${topicCheck.ok ? 'ON-TOPIC (heuristic)' : 'LIKELY OFF-TOPIC (heuristic) — ' + topicCheck.message}`
     : ''
+
+  if (task === 'writing1') {
+    return `You are a supportive English grammar tutor. This is practice feedback for a mixed-tenses writing task — not an official exam score.
+
+${TASK_PROMPTS[task]}
+
+${AI_FEEDBACK_RULES}
+
+Automated checks already ran:
+${structuralSummary}${topicHint}
+
+Student's writing:
+---
+${studentText.trim()}
+---
+
+Respond in English with this exact structure (use markdown headings):
+
+## Task relevance
+(State clearly: ON-TOPIC / PARTIALLY ON-TOPIC / OFF-TOPIC for a professional career profile. 2–3 sentences.)
+
+## Overall
+(1–2 sentences on profile quality and tense variety)
+
+## Task completion
+(1–2 sentences: LinkedIn-style profile, career achievements, variety of tenses)
+
+## Strengths
+- (bullet 1)
+- (bullet 2)
+
+## Areas to improve
+- (bullet 1)
+- (bullet 2)
+- (optional bullet 3)
+
+## Language notes
+- Comment on tense choice and accuracy; quote short phrases and suggest improvements (up to 4 bullets). Highlight where a different tense might work better.`
+  }
 
   return `You are a supportive TOEIC Writing tutor. This is practice feedback generated by AI — not an official TOEIC score.
 
@@ -547,6 +690,12 @@ export function generateTemplateFeedback(
       'State your opinion in the introduction and discuss **both** advantages and disadvantages.',
       'Support ideas with short examples from work life.',
       'Use clear paragraphs and end with *In conclusion,* or *To sum up,*.',
+    ],
+    writing1: [
+      'Use **past simple** for finished roles or achievements (e.g. *I worked…*, *I completed…*).',
+      'Use **present perfect** for experience up to now (e.g. *I have managed…*, *I have worked in…*).',
+      'Use **present simple** or **present continuous** for your current role.',
+      'Keep a professional LinkedIn tone — clear, positive, and focused on achievements.',
     ],
   }
 

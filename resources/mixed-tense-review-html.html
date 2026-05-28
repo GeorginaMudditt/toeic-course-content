@@ -65,6 +65,57 @@
       margin-top: 0;
       margin-bottom: 4px;
     }
+    .screen-only { display: none !important; }
+  }
+  .grammar-ai-feedback-scroll-hint {
+    display: none !important;
+  }
+  .grammar-ai-feedback-panel {
+    display: none;
+    box-sizing: border-box;
+    height: min(38vh, 300px);
+    max-height: min(38vh, 300px);
+    min-height: 200px;
+    overflow-x: hidden;
+    overflow-y: scroll;
+    overscroll-behavior: contain;
+    scrollbar-gutter: stable;
+    -webkit-overflow-scrolling: touch;
+    padding: 14px 16px 18px 16px;
+    border: 2px solid #818cf8 !important;
+    border-radius: 8px;
+    background: #f8fafc;
+    box-shadow: 0 4px 14px rgba(79, 70, 229, 0.15);
+    position: relative;
+    z-index: 2;
+  }
+  .grammar-ai-feedback-panel::-webkit-scrollbar {
+    width: 14px;
+  }
+  .grammar-ai-feedback-panel::-webkit-scrollbar-track {
+    background: #e0e7ff;
+    border-radius: 8px;
+  }
+  .grammar-ai-feedback-panel::-webkit-scrollbar-thumb {
+    background: #4f46e5;
+    border-radius: 8px;
+    border: 3px solid #e0e7ff;
+  }
+  .grammar-ai-feedback-mount {
+    margin-top: 14px;
+    overflow: visible;
+  }
+  .grammar-save-controls + .grammar-ai-feedback-panel {
+    margin-top: 16px;
+  }
+  [data-grammar-save-section],
+  [data-grammar-ai-feedback-host] {
+    overflow: visible;
+  }
+  .mtr-writing-host {
+    break-inside: auto;
+    page-break-inside: auto;
+    overflow: visible;
   }
 </style>
 <div style="max-width: 800px; margin: 0 auto; padding: 20px; font-family: Arial, sans-serif; line-height: 1.4; color: #333;">
@@ -143,13 +194,16 @@
     </ol>
   </div>
 
-  <div class="section">
+  <div class="section mtr-writing-host" data-grammar-ai-feedback-host="writing1">
     <h2 style="font-size: 22px; font-weight: bold; margin-bottom: 4px; color: #000;">Writing #1: Mixed Tenses</h2>
     <p style="font-size: 16px; margin-bottom: 6px;">Write a professional profile - similar to what you would post in the 'About' section on LinkedIn. Explain the main achievements of your career so far.</p>
-    <div style="margin-top: 6px;"><span data-grammar-input="writing1-q1" data-grammar-input-type="textarea" style="display: block; min-height: 120px;"></span></div>
-    <div style="margin-top: 6px; padding: 8px; background-color: #f9fafb; border-left: 3px solid #38438f; font-size: 16px;">
+    <div style="margin-top: 6px; padding: 8px; background-color: #f9fafb; border-left: 3px solid #38438f; font-size: 16px; margin-bottom: 10px;">
       <p style="margin: 0;"><strong>Guidelines:</strong> Use a variety of tenses (past, present perfect, present continuous, etc.) to describe your background, current role, and achievements.</p>
     </div>
+    <div data-grammar-save-section="true" data-grammar-ai-feedback="writing1">
+      <span data-grammar-input="writing1-q1" data-grammar-input-type="textarea" data-grammar-textarea-rows="10" style="display: block; min-height: 180px;"></span>
+    </div>
+    <div class="grammar-ai-feedback-mount" data-for="writing1"></div>
   </div>
 
 </div>
