@@ -19,6 +19,14 @@ interface Enrollment {
     name: string
     duration: number
   } | null
+  assignments?: Array<{
+    id: string
+    order: number
+    resource: {
+      id: string
+      title: string
+    } | null
+  }>
 }
 
 interface Props {
@@ -44,6 +52,14 @@ interface LessonRow {
 interface NotesDataV1 {
   version: 1
   rows: LessonRow[]
+}
+
+interface TopicMentionState {
+  rowIndex: number
+  start: number
+  end: number
+  query: string
+  activeIndex: number
 }
 
 /** Server-computed; teacher GET only — matches midpoint email logic */
@@ -238,8 +254,10 @@ export default function StudentNotesManager({ student, enrollments }: Props) {
 
   // Track which editor has focus — we never overwrite that div's DOM so cursor and content stay correct
   const [focusedEditor, setFocusedEditor] = useState<{ rowIndex: number; field: 'corrections' | 'notes' } | null>(null)
+  const [topicMention, setTopicMention] = useState<TopicMentionState | null>(null)
   // Refs for each contentEditable; we set innerHTML only when that editor does NOT have focus
   const editorRefs = useRef<Record<string, HTMLDivElement | null>>({})
+  const lessonTopicInputRefs = useRef<Record<number, HTMLInputElement | null>>({})
 
   // Refs used by auto-save so we don't restart intervals on every keystroke.
   const contentRef = useRef<string>(content)
@@ -494,6 +512,85 @@ export default function StudentNotesManager({ student, enrollments }: Props) {
 
   const activeEnrollment = enrollments.find((e) => e.id === selectedEnrollment)
   const courseDurationHours = parseCourseDurationHours(activeEnrollment?.course?.duration)
+  const assignedLessonTopicOptions = useMemo(() => {
+    const assignments = activeEnrollment?.assignments ?? []
+    const lessonAssignments = [...assignments]
+      .filter((assignment) => assignment.resource?.title)
+      .sort((a, b) => a.order - b.order)
+      .map((assignment) => assignment.resource?.title?.trim() ?? '')
+      .filter(Boolean)
+    return Array.from(new Set(lessonAssignments))
+  }, [activeEnrollment])
+
+  const filteredTopicOptions = useMemo(() => {
+    if (!topicMention) return []
+    const q = topicMention.query.trim().toLowerCase()
+    if (!q) return assignedLessonTopicOptions
+    return assignedLessonTopicOptions.filter((title) => title.toLowerCase().includes(q))
+  }, [assignedLessonTopicOptions, topicMention])
+
+  useEffect(() => {
+    if (!topicMention) return
+    if (filteredTopicOptions.length === 0) return
+    if (topicMention.activeIndex >= filteredTopicOptions.length) {
+      setTopicMention((prev) =>
+        prev ? { ...prev, activeIndex: filteredTopicOptions.length - 1 } : prev
+      )
+    }
+  }, [filteredTopicOptions.length, topicMention])
+
+  const updateRowsWithLessonTopic = (index: number, value: string) => {
+    setRows((prev) => {
+      const updated = [...prev]
+      updated[index] = { ...updated[index], lessonTopic: value }
+      const normalized = ensureLeadingEmptyRow(updated)
+      const payload: NotesDataV1 = { version: 1, rows: normalized }
+      setContent(JSON.stringify(payload))
+      return normalized
+    })
+  }
+
+  const openMentionIfNeeded = (index: number, value: string, caretPos: number) => {
+    const beforeCaret = value.slice(0, caretPos)
+    const atPos = beforeCaret.lastIndexOf('@')
+    if (atPos === -1) {
+      setTopicMention(null)
+      return
+    }
+    const mentionBody = beforeCaret.slice(atPos + 1)
+    // Stop mention mode if user types a separator after "@"
+    if (/\s/.test(mentionBody)) {
+      setTopicMention(null)
+      return
+    }
+    setTopicMention({
+      rowIndex: index,
+      start: atPos,
+      end: caretPos,
+      query: mentionBody,
+      activeIndex: 0,
+    })
+  }
+
+  const insertMentionAtCursor = (title: string) => {
+    if (!topicMention) return
+    const input = lessonTopicInputRefs.current[topicMention.rowIndex]
+    if (!input) return
+    const currentValue = rows[topicMention.rowIndex]?.lessonTopic ?? ''
+    const before = currentValue.slice(0, topicMention.start)
+    const after = currentValue.slice(topicMention.end)
+    const needsTrailingSpace = after.length > 0 && !after.startsWith(' ')
+    const inserted = `${before}${title}${needsTrailingSpace ? ' ' : ''}${after}`
+    const nextCaret = before.length + title.length + (needsTrailingSpace ? 1 : 0)
+
+    updateRowsWithLessonTopic(topicMention.rowIndex, inserted)
+    setTopicMention(null)
+
+    requestAnimationFrame(() => {
+      input.focus()
+      input.setSelectionRange(nextCaret, nextCaret)
+    })
+  }
 
   const { lessonNums, hoursLogged, hoursRemaining, showLowLessonsWarning, loggedOverPackage } =
     useMemo(
@@ -1116,25 +1213,115 @@ export default function StudentNotesManager({ student, enrollments }: Props) {
                       </td>
 
                       {/* Lesson topic */}
-                      <td className="px-3 py-2 border-b align-top">
+                      <td className="px-3 py-2 border-b align-top relative">
                       <input
+                        ref={(el) => {
+                          lessonTopicInputRefs.current[index] = el
+                        }}
                         type="text"
                         data-lesson-strip={dataStrip}
                         value={row.lessonTopic}
                         onChange={(e) => {
                           const value = e.target.value
-                          setRows((prev) => {
-                            const updated = [...prev]
-                            updated[index] = { ...updated[index], lessonTopic: value }
-                            const normalized = ensureLeadingEmptyRow(updated)
-                            const payload: NotesDataV1 = { version: 1, rows: normalized }
-                            setContent(JSON.stringify(payload))
-                            return normalized
-                          })
+                          const caretPos = e.target.selectionStart ?? value.length
+                          updateRowsWithLessonTopic(index, value)
+                          openMentionIfNeeded(index, value, caretPos)
+                        }}
+                        onClick={(e) => {
+                          const value = e.currentTarget.value
+                          const caretPos = e.currentTarget.selectionStart ?? value.length
+                          openMentionIfNeeded(index, value, caretPos)
+                        }}
+                        onKeyUp={(e) => {
+                          const value = e.currentTarget.value
+                          const caretPos = e.currentTarget.selectionStart ?? value.length
+                          if (
+                            e.key === 'ArrowUp' ||
+                            e.key === 'ArrowDown' ||
+                            e.key === 'Enter' ||
+                            e.key === 'Escape'
+                          ) {
+                            return
+                          }
+                          openMentionIfNeeded(index, value, caretPos)
+                        }}
+                        onBlur={() => {
+                          window.setTimeout(() => {
+                            setTopicMention((prev) => (prev?.rowIndex === index ? null : prev))
+                          }, 120)
+                        }}
+                        onKeyDown={(e) => {
+                          if (!topicMention || topicMention.rowIndex !== index) return
+                          if (filteredTopicOptions.length === 0) return
+
+                          if (e.key === 'ArrowDown') {
+                            e.preventDefault()
+                            setTopicMention((prev) => {
+                              if (!prev) return prev
+                              return {
+                                ...prev,
+                                activeIndex: (prev.activeIndex + 1) % filteredTopicOptions.length,
+                              }
+                            })
+                            return
+                          }
+                          if (e.key === 'ArrowUp') {
+                            e.preventDefault()
+                            setTopicMention((prev) => {
+                              if (!prev) return prev
+                              return {
+                                ...prev,
+                                activeIndex:
+                                  (prev.activeIndex - 1 + filteredTopicOptions.length) %
+                                  filteredTopicOptions.length,
+                              }
+                            })
+                            return
+                          }
+                          if (e.key === 'Enter' || e.key === 'Tab') {
+                            e.preventDefault()
+                            const chosen =
+                              filteredTopicOptions[
+                                Math.min(topicMention.activeIndex, filteredTopicOptions.length - 1)
+                              ]
+                            if (chosen) insertMentionAtCursor(chosen)
+                            return
+                          }
+                          if (e.key === 'Escape') {
+                            e.preventDefault()
+                            setTopicMention(null)
+                          }
                         }}
                         className={`w-full ${lessonStripFieldClass(lessonNum)}`}
-                        placeholder="e.g. Part 3 – Conversations in the workplace"
+                        placeholder="Type @ to pick an assigned resource"
                       />
+                      {topicMention?.rowIndex === index && (
+                        <div className="absolute z-20 mt-1 max-h-52 w-[calc(100%-1.5rem)] overflow-y-auto rounded-md border border-gray-200 bg-white shadow-lg">
+                          {filteredTopicOptions.length === 0 ? (
+                            <div className="px-3 py-2 text-xs text-gray-500">
+                              No matching assigned resources
+                            </div>
+                          ) : (
+                            filteredTopicOptions.map((title, optionIndex) => (
+                              <button
+                                key={`${title}-${optionIndex}`}
+                                type="button"
+                                className={`block w-full px-3 py-2 text-left text-sm ${
+                                  optionIndex === topicMention.activeIndex
+                                    ? 'bg-[#38438f] text-white'
+                                    : 'text-gray-800 hover:bg-gray-100'
+                                }`}
+                                onMouseDown={(event) => {
+                                  event.preventDefault()
+                                  insertMentionAtCursor(title)
+                                }}
+                              >
+                                {title}
+                              </button>
+                            ))
+                          )}
+                        </div>
+                      )}
                       </td>
                     </tr>
 
