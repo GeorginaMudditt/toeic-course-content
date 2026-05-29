@@ -268,14 +268,30 @@ export default function StudentNotesManager({ student, enrollments }: Props) {
   const noteLoadedRef = useRef<boolean>(noteLoaded)
   const savingRef = useRef<boolean>(false)
 
+  // Tabs keep all panels mounted; if the student was enrolled after this mounted, selectedEnrollment
+  // can stay empty while enrollments[0] already has a course — sync so the notes form appears.
+  const resolvedEnrollmentId = useMemo(() => {
+    if (selectedEnrollment && enrollments.some((e) => e.id === selectedEnrollment)) {
+      return selectedEnrollment
+    }
+    return enrollments[0]?.id ?? ''
+  }, [selectedEnrollment, enrollments])
+
+  useEffect(() => {
+    if (!resolvedEnrollmentId) return
+    if (selectedEnrollment !== resolvedEnrollmentId) {
+      setSelectedEnrollment(resolvedEnrollmentId)
+    }
+  }, [resolvedEnrollmentId, selectedEnrollment])
+
   // Load note when enrollment changes
   useEffect(() => {
-    if (selectedEnrollment) {
+    if (resolvedEnrollmentId) {
       setNoteLoaded(false)
       noteLoadedRef.current = false
       setCourseMidpointHint(null)
       setTrackHoursModalOpen(false)
-      loadNote(selectedEnrollment)
+      loadNote(resolvedEnrollmentId)
     } else {
       setContent('')
       setNoteUpdatedAt(null)
@@ -292,12 +308,12 @@ export default function StudentNotesManager({ student, enrollments }: Props) {
       setDetailsHydrateKey(0)
       setTrackHoursModalOpen(false)
     }
-  }, [selectedEnrollment])
+  }, [resolvedEnrollmentId])
 
   useEffect(() => {
     setCoursePackageSaveError(null)
     setCoursePackageHoursInput('10')
-  }, [selectedEnrollment])
+  }, [resolvedEnrollmentId])
 
   useEffect(() => {
     contentRef.current = content
@@ -393,7 +409,7 @@ export default function StudentNotesManager({ student, enrollments }: Props) {
   }
 
   const saveNote = async () => {
-    if (!selectedEnrollment) return
+    if (!resolvedEnrollmentId) return
     if (!noteLoadedRef.current) return
     if (savingRef.current) return
 
@@ -411,7 +427,7 @@ export default function StudentNotesManager({ student, enrollments }: Props) {
     try {
       const expectedUpdatedAt = noteUpdatedAtRef.current
 
-      const response = await fetch(`/api/course-notes/${selectedEnrollment}`, {
+      const response = await fetch(`/api/course-notes/${resolvedEnrollmentId}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -426,7 +442,7 @@ export default function StudentNotesManager({ student, enrollments }: Props) {
       if (response.status === 409) {
         // Another tab saved first; prevent overwriting and reload server truth.
         alert('This note was updated in another tab. Reloading the latest version.')
-        await loadNote(selectedEnrollment)
+        await loadNote(resolvedEnrollmentId)
         return
       }
 
@@ -445,7 +461,7 @@ export default function StudentNotesManager({ student, enrollments }: Props) {
       setLastSaved(new Date())
 
       try {
-        const hintRes = await fetch(`/api/course-notes/${selectedEnrollment}`)
+        const hintRes = await fetch(`/api/course-notes/${resolvedEnrollmentId}`)
         if (hintRes.ok) {
           const hintJson = await hintRes.json()
           if (hintJson.courseMidpointHint && typeof hintJson.courseMidpointHint === 'object') {
@@ -466,14 +482,14 @@ export default function StudentNotesManager({ student, enrollments }: Props) {
 
   // Auto-save every 30 seconds
   useEffect(() => {
-    if (!selectedEnrollment || !noteLoaded) return
+    if (!resolvedEnrollmentId || !noteLoaded) return
 
     const interval = setInterval(() => {
       void saveNote()
     }, 30000) // 30 seconds
 
     return () => clearInterval(interval)
-  }, [selectedEnrollment, noteLoaded])
+  }, [resolvedEnrollmentId, noteLoaded])
 
   const syncActiveEditor = () => {
     const selection = document.getSelection()
@@ -510,7 +526,7 @@ export default function StudentNotesManager({ student, enrollments }: Props) {
     })
   }
 
-  const activeEnrollment = enrollments.find((e) => e.id === selectedEnrollment)
+  const activeEnrollment = enrollments.find((e) => e.id === resolvedEnrollmentId)
   const courseDurationHours = parseCourseDurationHours(activeEnrollment?.course?.duration)
   const assignedLessonTopicOptions = useMemo(() => {
     const assignments = activeEnrollment?.assignments ?? []
@@ -702,7 +718,7 @@ export default function StudentNotesManager({ student, enrollments }: Props) {
         )}
       </header>
 
-      {selectedEnrollment && (
+      {resolvedEnrollmentId && (
         <>
           {/* Private notes first — otherwise this sits below a long lesson table and is easy to miss */}
           <div className="mb-8 rounded-lg border border-amber-200 bg-amber-50/60 p-4">
