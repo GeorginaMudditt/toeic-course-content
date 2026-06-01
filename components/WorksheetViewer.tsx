@@ -7,6 +7,7 @@ import { useRouter } from 'next/navigation'
 import { mountInstructionsDescriptionsArmyAdjectiveMatch } from '@/lib/worksheetInteractions/instructionsDescriptionsArmyAdjectivesMatch'
 import { mountInstructionsDescriptionsArmyVerbsMission } from '@/lib/worksheetInteractions/instructionsDescriptionsArmyVerbsMission'
 import { mountPastSimpleArmyEdPronunciation } from '@/lib/worksheetInteractions/pastSimpleArmyEdPronunciation'
+import { mountGivingInformationActivities } from '@/lib/worksheetInteractions/givingInformationAnsweringQuestions'
 import { mountPresentingServicesProductsActivities } from '@/lib/worksheetInteractions/presentingServicesProductsKeyLanguage'
 import {
   formatFeedbackForDisplay,
@@ -746,7 +747,10 @@ export default function WorksheetViewer({ assignmentId, resource, initialProgres
     typeof resource.content === 'string' && resource.content.includes('data-kl-activity')
   const hasListeningActivity =
     typeof resource.content === 'string' && resource.content.includes('data-listening-activity')
+  const hasGiaqActivities =
+    typeof resource.content === 'string' && resource.content.includes('data-giaq-match')
   const hasPspActivities = hasKlActivity || hasListeningActivity
+  const hasMountedWorksheetActivities = hasPspActivities || hasGiaqActivities
 
   /** Per-section Check Answers + live tick/cross (see resources using data-grammar-per-section-check). */
   const enablePerSectionGrammarCheck = useMemo(() => {
@@ -2526,9 +2530,9 @@ export default function WorksheetViewer({ assignmentId, resource, initialProgres
     }
   }, [resource.content])
 
-  // Presenting Services and Products: Key Language + Listening activities.
+  // Interactive worksheet activities (drag-and-drop, listening, etc.).
   useLayoutEffect(() => {
-    if (!hasPspActivities) return
+    if (!hasMountedWorksheetActivities) return
     let detach: (() => void) | undefined
     let cancelled = false
 
@@ -2536,6 +2540,17 @@ export default function WorksheetViewer({ assignmentId, resource, initialProgres
       if (cancelled) return
       const host = contentRef.current
       if (!host) return
+
+      if (hasGiaqActivities) {
+        const giaqEls = Array.from(host.querySelectorAll('[data-giaq-match]')) as HTMLElement[]
+        const giaqReady =
+          giaqEls.length > 0 && giaqEls.every((el) => el.getAttribute('data-giaq-mounted') === 'true')
+        if (giaqReady) return
+        detach?.()
+        detach = mountGivingInformationActivities(host)
+        return
+      }
+
       const klEl = host.querySelector('[data-kl-activity]') as HTMLElement | null
       const listeningEl = host.querySelector('[data-listening-activity]') as HTMLElement | null
       const klReady = !klEl || klEl.getAttribute('data-kl-mounted') === 'true'
@@ -2564,7 +2579,7 @@ export default function WorksheetViewer({ assignmentId, resource, initialProgres
       observer?.disconnect()
       detach?.()
     }
-  }, [resource.content, hasPspActivities])
+  }, [resource.content, hasMountedWorksheetActivities, hasGiaqActivities])
 
   // Past Simple Practice (Army): -ed pronunciation columns.
   useEffect(() => {
@@ -2923,9 +2938,9 @@ export default function WorksheetViewer({ assignmentId, resource, initialProgres
             } else {
               // Render normally for non-placement tests
               // Memoize HTML when it has injected inputs/activities (re-renders would reset the DOM).
-              if (hasGrammarInputs || hasPspActivities) {
+              if (hasGrammarInputs || hasMountedWorksheetActivities) {
                 return (
-                  <MemoizedContent html={resource.content} fullWidth={hasPspActivities} />
+                  <MemoizedContent html={resource.content} fullWidth={hasMountedWorksheetActivities} />
                 )
               }
               return (

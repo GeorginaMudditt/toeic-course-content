@@ -1,0 +1,333 @@
+<!-- Giving Information and Answering Questions -->
+<style>
+  :root {
+    --exam-ink: #1f2937;
+    --exam-subtle-ink: #4b5563;
+    --exam-border: #cfd6df;
+    --exam-soft-border: #e5e7eb;
+    --exam-header-bg: #f6f8fb;
+    --exam-panel-bg: #fbfcfe;
+    --exam-accent: #1e3a8a;
+  }
+
+  body {
+    color: var(--exam-ink);
+  }
+
+  .exam-header {
+    border: 1px solid var(--exam-border);
+    background: linear-gradient(to bottom, #ffffff, var(--exam-header-bg));
+    border-radius: 8px;
+    padding: 12px 14px;
+  }
+
+  .keep-together {
+    border: 1px solid var(--exam-soft-border);
+    border-radius: 8px;
+    background: var(--exam-panel-bg);
+    padding: 12px 14px;
+    margin-bottom: 18px;
+  }
+
+  .keep-together:last-child {
+    margin-bottom: 0;
+  }
+
+  h2 {
+    color: var(--exam-accent) !important;
+    margin-top: 0;
+  }
+
+  .kl-instructions {
+    font-size: 16px;
+    margin: 0 0 14px;
+    color: var(--exam-subtle-ink);
+  }
+
+  .kl-board {
+    width: 100%;
+    max-width: 100%;
+    container-type: inline-size;
+    container-name: kl-board;
+  }
+
+  .kl-table {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    margin: 0 0 12px;
+  }
+
+  .kl-table-head,
+  .kl-table-row {
+    display: grid;
+    grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr) minmax(0, 1.2fr);
+    gap: 10px 12px;
+    align-items: stretch;
+  }
+
+  .kl-table-head {
+    font-size: 11px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--exam-subtle-ink);
+    padding: 0 6px 6px;
+    border-bottom: 1px solid var(--exam-soft-border);
+  }
+
+  .kl-table-row {
+    padding: 8px 10px;
+    background: #fff;
+    border: 1px solid rgba(15, 23, 42, 0.1);
+    border-radius: 10px;
+    border-left: 4px solid #1d4ed8;
+  }
+
+  @container kl-board (max-width: 480px) {
+    .kl-table-head,
+    .kl-table-row {
+      grid-template-columns: 1fr;
+      gap: 8px;
+    }
+
+    .kl-table-head {
+      display: none;
+    }
+
+    .kl-cell--source {
+      order: -1;
+    }
+  }
+
+  .kl-cell--en {
+    min-width: 0;
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .kl-cell--drop,
+  .kl-cell--source {
+    min-width: 0;
+    display: flex;
+    align-items: stretch;
+  }
+
+  .kl-chip-slot {
+    width: 100%;
+    min-height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+    border: 1px dashed rgba(186, 54, 39, 0.28);
+    background: rgba(255, 251, 250, 0.85);
+    padding: 6px;
+  }
+
+  .kl-chip-slot--empty {
+    background: rgba(241, 245, 249, 0.95);
+    border-color: rgba(148, 163, 184, 0.55);
+    border-style: dashed;
+  }
+
+  .kl-chip-slot:not(.kl-chip-slot--empty) {
+    background: rgba(254, 242, 240, 0.55);
+    border-color: rgba(186, 54, 39, 0.22);
+    border-style: solid;
+  }
+
+  .kl-en-text {
+    display: block;
+    font-size: 14px;
+    font-weight: 700;
+    line-height: 1.3;
+    color: #0f172a;
+  }
+
+  .kl-drop {
+    width: 100%;
+    min-height: 38px;
+    border-radius: 10px;
+    border: 2px dashed rgba(109, 40, 217, 0.35);
+    background: rgba(245, 243, 255, 0.25);
+    padding: 8px 10px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 8px;
+  }
+
+  .kl-drop.is-over {
+    border-color: rgba(109, 40, 217, 0.7);
+    background: rgba(245, 243, 255, 0.45);
+  }
+
+  .kl-drop.is-correct {
+    border-style: solid;
+    border-color: #15803d;
+    background: #ecfdf5;
+  }
+
+  .kl-drop.is-wrong {
+    border-style: solid;
+    border-color: #b91c1c;
+    background: #fee2e2;
+  }
+
+  .kl-drop-placeholder {
+    font-size: 13px;
+    color: rgba(100, 116, 139, 0.9);
+    font-weight: 600;
+  }
+
+  .kl-drop .kl-chip {
+    cursor: default;
+  }
+
+  .kl-chip,
+  .kl-drop .kl-chip {
+    width: 100%;
+    border-radius: 8px;
+    padding: 8px 10px;
+    border: 1px solid rgba(186, 54, 39, 0.28);
+    background: linear-gradient(135deg, #fff9f8 0%, #ffffff 100%);
+    font-size: 13px;
+    font-weight: 700;
+    font-style: italic;
+    line-height: 1.35;
+    color: #ba3627;
+    box-shadow: 0 1px 2px rgba(186, 54, 39, 0.08);
+    cursor: grab;
+    user-select: none;
+    text-align: left;
+  }
+
+  .kl-chip:active {
+    cursor: grabbing;
+  }
+
+  .kl-chip.is-selected {
+    outline: 3px solid rgba(186, 54, 39, 0.22);
+    border-color: rgba(186, 54, 39, 0.55);
+  }
+
+  .kl-actions {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 4px;
+    padding-top: 12px;
+    border-top: 1px solid var(--exam-soft-border);
+  }
+
+  .kl-btn {
+    appearance: none;
+    border: 1px solid rgba(15, 23, 42, 0.14);
+    border-radius: 10px;
+    padding: 9px 12px;
+    background: #0f172a;
+    color: #fff;
+    font-size: 14px;
+    font-weight: 800;
+    cursor: pointer;
+  }
+
+  .kl-btn--secondary {
+    background: #fff;
+    color: #0f172a;
+  }
+
+  .kl-status {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--exam-subtle-ink);
+  }
+
+  @media print {
+    @page {
+      margin: 1.5cm;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+    }
+
+    .resource-wrap {
+      max-width: 100% !important;
+      padding: 5mm 6mm !important;
+      box-sizing: border-box !important;
+      line-height: 1.25 !important;
+      font-size: 14px !important;
+    }
+
+    h1 {
+      font-size: 24px !important;
+      margin-bottom: 2px !important;
+    }
+
+    h2 {
+      font-size: 18px !important;
+      margin-bottom: 6px !important;
+    }
+
+    p,
+    li,
+    .kl-en-text {
+      font-size: 14px !important;
+    }
+
+    .keep-together {
+      break-inside: auto;
+      page-break-inside: auto;
+      background: #fff;
+      border-color: #d1d5db;
+      padding: 8px 10px;
+      margin-bottom: 10px;
+    }
+
+    h2 {
+      break-after: avoid;
+      page-break-after: avoid;
+    }
+
+    .kl-actions,
+    .kl-chip-slot {
+      display: none !important;
+    }
+
+    .kl-drop {
+      border-color: #d1d5db !important;
+      background: #fff !important;
+    }
+  }
+</style>
+
+<div class="resource-wrap" style="width: 100%; max-width: 100%; margin: 0 auto; padding: 16px 12px; font-family: Arial, sans-serif; line-height: 1.45; color: #333; box-sizing: border-box;">
+  <div class="exam-header" style="text-align: center; margin-bottom: 18px;">
+    <div style="display: inline-block; margin-bottom: 6px;">
+      <img src="/brizzle-logo.png" alt="Brizzle Logo" style="width: 45px; height: 45px; object-fit: contain;" />
+    </div>
+    <h1 style="font-size: 30px; line-height: 1.2; margin: 0 0 4px; color: #0f172a;">Giving Information and Answering Questions</h1>
+    <h2 style="font-size: 22px; margin: 0; font-weight: 700;">Everyday English</h2>
+  </div>
+
+  <div class="keep-together">
+    <h2 style="font-size: 22px; font-weight: 700; margin-bottom: 8px;">Directions</h2>
+    <p class="kl-instructions">Match each English phrase with the correct French translation. Drag from the <strong>right</strong> into the <strong>middle</strong> column.</p>
+    <div data-giaq-match="directions" aria-live="polite">
+      <p style="margin: 0; font-size: 14px; color: #64748b;">Loading activity&hellip;</p>
+    </div>
+  </div>
+
+  <div class="keep-together">
+    <h2 style="font-size: 22px; font-weight: 700; margin-bottom: 8px;">Questions and Answers</h2>
+    <p class="kl-instructions">Match each question with the correct answer. The answers on the right are in a mixed order &mdash; drag them into the middle column.</p>
+    <div data-giaq-match="questions-answers" aria-live="polite">
+      <p style="margin: 0; font-size: 14px; color: #64748b;">Loading activity&hellip;</p>
+    </div>
+  </div>
+</div>

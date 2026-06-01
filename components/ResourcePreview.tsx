@@ -5,6 +5,7 @@ import { createRoot } from 'react-dom/client'
 import { mountInstructionsDescriptionsArmyAdjectiveMatch } from '@/lib/worksheetInteractions/instructionsDescriptionsArmyAdjectivesMatch'
 import { mountInstructionsDescriptionsArmyVerbsMission } from '@/lib/worksheetInteractions/instructionsDescriptionsArmyVerbsMission'
 import { mountPastSimpleArmyEdPronunciation } from '@/lib/worksheetInteractions/pastSimpleArmyEdPronunciation'
+import { mountGivingInformationActivities } from '@/lib/worksheetInteractions/givingInformationAnsweringQuestions'
 import { mountPresentingServicesProductsActivities } from '@/lib/worksheetInteractions/presentingServicesProductsKeyLanguage'
 
 interface Resource {
@@ -168,7 +169,10 @@ export default function ResourcePreview({ resource, showActions = true }: Resour
     typeof resource.content === 'string' && resource.content.includes('data-kl-activity')
   const hasListeningActivity =
     typeof resource.content === 'string' && resource.content.includes('data-listening-activity')
+  const hasGiaqActivities =
+    typeof resource.content === 'string' && resource.content.includes('data-giaq-match')
   const hasPspActivities = hasKlActivity || hasListeningActivity
+  const hasMountedWorksheetActivities = hasPspActivities || hasGiaqActivities
   const [grammarInputsReady, setGrammarInputsReady] = useState(false)
 
   // Defer grammar injection until after mount/hydration timing is settled
@@ -322,7 +326,7 @@ export default function ResourcePreview({ resource, showActions = true }: Resour
   }, [resource.content])
 
   useLayoutEffect(() => {
-    if (!hasPspActivities) return
+    if (!hasMountedWorksheetActivities) return
     let detach: (() => void) | undefined
     let cancelled = false
 
@@ -330,6 +334,17 @@ export default function ResourcePreview({ resource, showActions = true }: Resour
       if (cancelled) return
       const host = contentRef.current
       if (!host) return
+
+      if (hasGiaqActivities) {
+        const giaqEls = Array.from(host.querySelectorAll('[data-giaq-match]')) as HTMLElement[]
+        const giaqReady =
+          giaqEls.length > 0 && giaqEls.every((el) => el.getAttribute('data-giaq-mounted') === 'true')
+        if (giaqReady) return
+        detach?.()
+        detach = mountGivingInformationActivities(host)
+        return
+      }
+
       const klEl = host.querySelector('[data-kl-activity]') as HTMLElement | null
       const listeningEl = host.querySelector('[data-listening-activity]') as HTMLElement | null
       const klReady = !klEl || klEl.getAttribute('data-kl-mounted') === 'true'
@@ -358,7 +373,7 @@ export default function ResourcePreview({ resource, showActions = true }: Resour
       observer?.disconnect()
       detach?.()
     }
-  }, [resource.content, hasPspActivities])
+  }, [resource.content, hasMountedWorksheetActivities, hasGiaqActivities])
 
   useEffect(() => {
     if (typeof resource.content !== 'string' || !resource.content.includes('data-pspa-ed-pronunciation')) return
@@ -747,7 +762,7 @@ export default function ResourcePreview({ resource, showActions = true }: Resour
                   />
                 )
               }
-            } else if (hasPspActivities) {
+            } else if (hasMountedWorksheetActivities) {
               return (
                 <div
                   className="prose max-w-none w-full"
