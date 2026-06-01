@@ -6,9 +6,10 @@
 type MatchItem = { prompt: string; answer: string; audio?: string }
 
 const DIRECTIONS_AUDIO_BASE = '/images/everyday-english/directions-audio/'
+const QUESTIONS_AUDIO_BASE = '/images/everyday-english/questions-audio/'
 
-function directionsAudioUrl(filename: string): string {
-  return DIRECTIONS_AUDIO_BASE + encodeURIComponent(filename)
+function matchAudioUrl(base: string, filename: string): string {
+  return base + encodeURIComponent(filename)
 }
 
 type MatchLabels = {
@@ -66,38 +67,46 @@ const QA_ITEMS: MatchItem[] = [
   {
     prompt: 'Is there a restaurant?',
     answer: 'Yes, there is. It is open every day in summer.',
+    audio: 'Is there a restaurant?.mp3',
   },
   {
     prompt: 'Where is the nearest bank?',
     answer: 'Turn left, then it\u2019s opposite the town hall.',
+    audio: 'Where is the nearest bank?.mp3',
   },
   {
     prompt: 'How long does it take to walk to the beach?',
     answer: 'About ten minutes.',
+    audio: 'How long does it take to walk to the beach?.mp3',
   },
   {
     prompt: 'Is there public transport available?',
     answer: 'I\u2019m afraid not. You have to drive.',
+    audio: 'Is there public transport available?.mp3',
   },
   {
     prompt: 'Is the activity suitable for beginners?',
     answer: 'Yes \u2013 no previous experience is necessary.',
+    audio: 'Is the activity suitable for beginners?.mp3',
   },
   {
     prompt: 'Can I pay by credit card?',
     answer: 'Yes, you can.',
+    audio: 'Can I pay by credit card?.mp3',
   },
   {
     prompt: 'What time does the activity start?',
     answer: 'Half past ten.',
+    audio: 'What time does the activity start?.mp3',
   },
   {
     prompt: 'Where can I buy tickets?',
     answer: 'Online or at reception.',
+    audio: 'Where can I buy tickets?.mp3',
   },
 ]
 
-const CONFIG: Record<string, { items: MatchItem[]; labels: MatchLabels }> = {
+const CONFIG: Record<string, { items: MatchItem[]; labels: MatchLabels; audioBase?: string }> = {
   directions: {
     items: DIRECTIONS_ITEMS,
     labels: {
@@ -105,6 +114,7 @@ const CONFIG: Record<string, { items: MatchItem[]; labels: MatchLabels }> = {
       answerColumn: 'French \u2014 drag left \u2192',
       dropPlaceholder: 'Drag French here',
     },
+    audioBase: DIRECTIONS_AUDIO_BASE,
   },
   'questions-answers': {
     items: QA_ITEMS,
@@ -113,6 +123,7 @@ const CONFIG: Record<string, { items: MatchItem[]; labels: MatchLabels }> = {
       answerColumn: 'Answer \u2014 drag left \u2192',
       dropPlaceholder: 'Drag answer here',
     },
+    audioBase: QUESTIONS_AUDIO_BASE,
   },
 }
 
@@ -137,6 +148,7 @@ function mountKlDragDropMatch(
   root: HTMLElement,
   items: MatchItem[],
   labels: MatchLabels,
+  audioBase?: string,
 ): () => void {
   let selectedChip: HTMLElement | null = null
   let drops: HTMLElement[] = []
@@ -156,9 +168,10 @@ function mountKlDragDropMatch(
     .map((item) => {
       rowIndex += 1
       const id = `giaq-${rowIndex}`
-      const audioBtn = item.audio
-        ? `<button type="button" class="phrase-audio-btn" data-audio-src="${escapeHtml(directionsAudioUrl(item.audio))}" aria-label="Listen: ${escapeHtml(item.prompt)}">🔊</button>`
-        : ''
+      const audioBtn =
+        item.audio && audioBase
+          ? `<button type="button" class="phrase-audio-btn" data-audio-src="${escapeHtml(matchAudioUrl(audioBase, item.audio))}" aria-label="Listen: ${escapeHtml(item.prompt)}">🔊</button>`
+          : ''
       return `
         <div class="kl-table-row">
           <div class="kl-cell kl-cell--en">
@@ -491,7 +504,7 @@ export function mountGivingInformationMatchActivity(root: HTMLElement): () => vo
     }
   }
 
-  const cleanup = mountKlDragDropMatch(root, config.items, config.labels)
+  const cleanup = mountKlDragDropMatch(root, config.items, config.labels, config.audioBase)
   root.setAttribute('data-giaq-mounted', 'true')
 
   return () => {
