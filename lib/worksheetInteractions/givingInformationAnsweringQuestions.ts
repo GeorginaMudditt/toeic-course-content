@@ -174,51 +174,25 @@ function mountKlDragDropMatch(
 
   const clearFeedback = () => {
     drops.forEach((d) => d.classList.remove('is-correct', 'is-wrong', 'is-over'))
+    chipSlots.forEach((s) => s.classList.remove('is-over'))
     setStatus('')
   }
 
-  const makeChip = (text: string, inBank: boolean): HTMLElement => {
-    const chip = document.createElement('div')
-    chip.className = 'kl-chip'
-    chip.textContent = text
-    chip.setAttribute('role', 'button')
-    chip.setAttribute('tabindex', '0')
-    chip.setAttribute('aria-label', text)
+  const dropPlaceholder = `<span class="kl-drop-placeholder">${escapeHtml(labels.dropPlaceholder)}</span>`
 
-    if (inBank) {
-      chip.setAttribute('draggable', 'true')
-      on(chip, 'dragstart', (e) => {
-        const ev = e as DragEvent
-        ev.dataTransfer?.setData('text/plain', text)
-        if (ev.dataTransfer) ev.dataTransfer.effectAllowed = 'move'
-      })
-      on(chip, 'click', () => {
-        clearFeedback()
-        if (selectedChip === chip) {
-          chip.classList.remove('is-selected')
-          selectedChip = null
-          return
-        }
-        root.querySelectorAll('.kl-chip-slot .kl-chip').forEach((c) => c.classList.remove('is-selected'))
-        chip.classList.add('is-selected')
-        selectedChip = chip
-      })
-      on(chip, 'keydown', (e) => {
-        const ev = e as KeyboardEvent
-        if (ev.key === 'Enter' || ev.key === ' ') {
-          ev.preventDefault()
-          chip.click()
-        }
-      })
-    } else {
-      chip.setAttribute('draggable', 'false')
-      chip.style.cursor = 'default'
-    }
-
-    return chip
+  const clearChipSelection = () => {
+    root.querySelectorAll('.kl-chip').forEach((c) => c.classList.remove('is-selected'))
+    selectedChip = null
   }
 
-  const dropPlaceholder = `<span class="kl-drop-placeholder">${escapeHtml(labels.dropPlaceholder)}</span>`
+  const findChipByText = (text: string): HTMLElement | null => {
+    const trimmed = text.trim()
+    return (
+      (Array.from(root.querySelectorAll('.kl-chip')).find(
+        (c) => (c.textContent || '').trim() === trimmed,
+      ) as HTMLElement | undefined) ?? null
+    )
+  }
 
   const updateChipSlotEmptyStates = () => {
     chipSlots.forEach((slot) => {
@@ -239,19 +213,22 @@ function mountKlDragDropMatch(
     updateChipSlotEmptyStates()
   }
 
-  const returnChipToSlot = (chip: HTMLElement) => {
-    chip.setAttribute('draggable', 'true')
-    chip.style.cursor = 'grab'
-    chip.classList.remove('is-selected')
+  const moveChipToBank = (chip: HTMLElement) => {
+    const parent = chip.parentElement
+    chip.remove()
+    if (parent?.classList.contains('kl-drop')) {
+      parent.innerHTML = dropPlaceholder
+    }
     const emptySlot = chipSlots.find((slot) => !slot.querySelector('.kl-chip'))
     if (emptySlot) emptySlot.appendChild(chip)
     compactChipSlots()
   }
 
   const removeChipByText = (text: string, except?: HTMLElement) => {
+    const trimmed = text.trim()
     root.querySelectorAll('.kl-chip').forEach((node) => {
       const chip = node as HTMLElement
-      if (chip === except || chip.textContent !== text) return
+      if (chip === except || (chip.textContent || '').trim() !== trimmed) return
       const parent = chip.parentElement
       chip.remove()
       if (parent?.classList.contains('kl-drop')) {
@@ -260,17 +237,95 @@ function mountKlDragDropMatch(
     })
   }
 
-  const placeTextIntoDrop = (dropEl: HTMLElement, text: string) => {
+  const attachChipInteractions = (chip: HTMLElement) => {
+    if (chip.dataset.klBound === 'true') return
+    chip.dataset.klBound = 'true'
+    chip.setAttribute('draggable', 'true')
+    chip.style.cursor = 'grab'
+
+    on(chip, 'dragstart', (e) => {
+      const ev = e as DragEvent
+      const text = chip.textContent?.trim() || ''
+      ev.dataTransfer?.setData('text/plain', text)
+      if (ev.dataTransfer) ev.dataTransfer.effectAllowed = 'move'
+      clearFeedback()
+    })
+
+    on(chip, 'click', (e) => {
+      e.stopPropagation()
+      clearFeedback()
+      if (selectedChip === chip) {
+        const inDrop = chip.parentElement?.classList.contains('kl-drop')
+        clearChipSelection()
+        if (inDrop) moveChipToBank(chip)
+        return
+      }
+      clearChipSelection()
+      chip.classList.add('is-selected')
+      selectedChip = chip
+    })
+
+    on(chip, 'keydown', (e) => {
+      const ev = e as KeyboardEvent
+      if (ev.key === 'Enter' || ev.key === ' ') {
+        ev.preventDefault()
+        chip.click()
+      }
+    })
+  }
+
+  const createChip = (text: string): HTMLElement => {
+    const chip = document.createElement('div')
+    chip.className = 'kl-chip'
+    chip.textContent = text
+    chip.setAttribute('role', 'button')
+    chip.setAttribute('tabindex', '0')
+    chip.setAttribute('aria-label', text)
+    attachChipInteractions(chip)
+    return chip
+  }
+
+  const placeTextIntoDrop = (dropEl: HTMLElement, text: string, movingChip?: HTMLElement) => {
     clearFeedback()
-    const existingChip = dropEl.querySelector('.kl-chip')
-    if (existingChip) returnChipToSlot(existingChip as HTMLElement)
 
-    removeChipByText(text)
-    compactChipSlots()
+    const existingInDrop = dropEl.querySelector('.kl-chip') as HTMLElement | null
+    if (existingInDrop && existingInDrop !== movingChip) {
+      moveChipToBank(existingInDrop)
+    }
 
-    const placed = makeChip(text, false)
+    removeChipByText(text, movingChip)
+
+    let chipToPlace: HTMLElement
+    if (movingChip) {
+      const parent = movingChip.parentElement
+      if (parent?.classList.contains('kl-drop') && parent !== dropEl) {
+        parent.innerHTML = dropPlaceholder
+      }
+      movingChip.remove()
+      chipToPlace = movingChip
+    } else {
+      compactChipSlots()
+      chipToPlace = createChip(text)
+    }
+
     dropEl.innerHTML = ''
-    dropEl.appendChild(placed)
+    dropEl.appendChild(chipToPlace)
+    attachChipInteractions(chipToPlace)
+    compactChipSlots()
+    clearChipSelection()
+  }
+
+  const returnTextToBank = (text: string) => {
+    clearFeedback()
+    const chip = findChipByText(text)
+    if (chip) {
+      moveChipToBank(chip)
+    } else {
+      const emptySlot = chipSlots.find((slot) => !slot.querySelector('.kl-chip'))
+      if (emptySlot) emptySlot.appendChild(createChip(text))
+      compactChipSlots()
+    }
+    clearChipSelection()
   }
 
   drops.forEach((dropEl) => {
@@ -284,15 +339,36 @@ function mountKlDragDropMatch(
       dropEl.classList.remove('is-over')
       const text = (e as DragEvent).dataTransfer?.getData('text/plain') || ''
       if (!text) return
-      placeTextIntoDrop(dropEl, text)
+      const movingChip = findChipByText(text)
+      placeTextIntoDrop(dropEl, text, movingChip ?? undefined)
     })
-    on(dropEl, 'click', () => {
+    on(dropEl, 'click', (e) => {
+      if ((e.target as HTMLElement).closest('.kl-chip')) return
       if (!selectedChip) return
-      const text = selectedChip.textContent || ''
+      const text = selectedChip.textContent?.trim() || ''
       if (!text) return
-      selectedChip.remove()
-      selectedChip = null
-      placeTextIntoDrop(dropEl, text)
+      placeTextIntoDrop(dropEl, text, selectedChip)
+    })
+  })
+
+  chipSlots.forEach((slot) => {
+    on(slot, 'dragover', (e) => {
+      e.preventDefault()
+      slot.classList.add('is-over')
+    })
+    on(slot, 'dragleave', () => slot.classList.remove('is-over'))
+    on(slot, 'drop', (e) => {
+      e.preventDefault()
+      slot.classList.remove('is-over')
+      const text = (e as DragEvent).dataTransfer?.getData('text/plain') || ''
+      if (!text) return
+      returnTextToBank(text)
+    })
+    on(slot, 'click', (e) => {
+      if ((e.target as HTMLElement).closest('.kl-chip')) return
+      if (selectedChip?.parentElement?.classList.contains('kl-drop')) {
+        returnTextToBank(selectedChip.textContent?.trim() || '')
+      }
     })
   })
 
@@ -306,7 +382,7 @@ function mountKlDragDropMatch(
     const shuffled = shuffle(translations)
     shuffled.forEach((t, index) => {
       const slot = chipSlots[index]
-      if (slot) slot.appendChild(makeChip(t, true))
+      if (slot) slot.appendChild(createChip(t))
     })
     updateChipSlotEmptyStates()
     selectedChip = null
