@@ -38,6 +38,129 @@
     margin-top: 0;
   }
 
+  h3 {
+    margin-top: 0;
+    color: #0f172a;
+  }
+
+  .giaq-role-play {
+    padding: 0 0 18px;
+    margin: 0 0 18px;
+    border-bottom: 1px solid var(--exam-soft-border);
+  }
+
+  .giaq-role-play:last-child {
+    padding-bottom: 0;
+    margin-bottom: 0;
+    border-bottom: none;
+  }
+
+  .giaq-role-play h3 {
+    font-size: 18px;
+    font-weight: 800;
+    margin: 0 0 10px;
+    color: var(--exam-accent);
+  }
+
+  .giaq-role-play-intro {
+    font-size: 16px;
+    margin: 0 0 12px;
+    line-height: 1.45;
+  }
+
+  .giaq-activity-card {
+    border: 1px solid var(--exam-border);
+    border-radius: 10px;
+    background: #fff;
+    padding: 12px 14px;
+    margin: 0 0 12px;
+    font-size: 15px;
+    line-height: 1.45;
+  }
+
+  .giaq-activity-title {
+    font-size: 18px;
+    font-weight: 800;
+    margin: 0 0 8px;
+    color: #0f172a;
+  }
+
+  .giaq-activity-details {
+    margin: 0;
+    padding: 0;
+    list-style: none !important;
+  }
+
+  .giaq-activity-details li {
+    margin: 0 0 4px;
+    padding-left: 0;
+    font-size: 15px;
+  }
+
+  .giaq-example-reveal {
+    margin-top: 4px;
+    border: 1px solid rgba(30, 58, 138, 0.2);
+    border-radius: 10px;
+    background: #fff;
+    overflow: hidden;
+  }
+
+  .giaq-example-reveal summary {
+    list-style: none;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    cursor: pointer;
+    font-size: 15px;
+    font-weight: 700;
+    color: #1e3a8a;
+    padding: 10px 12px;
+    background: linear-gradient(to bottom, #f8fafc, #fff);
+    user-select: none;
+  }
+
+  .giaq-example-reveal summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .giaq-example-reveal summary::after {
+    content: "▸";
+    font-size: 14px;
+    line-height: 1;
+    color: #1e3a8a;
+    flex-shrink: 0;
+    transition: transform 0.15s ease;
+  }
+
+  .giaq-example-reveal[open] summary {
+    background: #eff6ff;
+    border-bottom: 1px solid rgba(30, 58, 138, 0.12);
+  }
+
+  .giaq-example-reveal[open] summary::after {
+    content: "▾";
+  }
+
+  .giaq-example-reveal-body {
+    padding: 10px 12px 12px;
+  }
+
+  .giaq-example-questions {
+    margin: 0;
+    padding-left: 22px !important;
+    font-size: 15px;
+  }
+
+  .giaq-example-questions li {
+    margin-bottom: 6px;
+    line-height: 1.4;
+  }
+
+  .giaq-example-questions li:last-child {
+    margin-bottom: 0;
+  }
+
   .kl-instructions {
     font-size: 16px;
     margin: 0 0 14px;
@@ -303,6 +426,16 @@
       border-color: #d1d5db !important;
       background: #fff !important;
     }
+
+    .giaq-activity-card,
+    .giaq-example-reveal {
+      background: #fff;
+      border-color: #d1d5db;
+    }
+
+    .giaq-example-reveal summary {
+      background: #fff;
+    }
   }
 </style>
 
@@ -328,6 +461,61 @@
     <p class="kl-instructions">Match each question with the correct answer. The answers on the right are in a mixed order &mdash; drag them into the middle column.</p>
     <div data-giaq-match="questions-answers" aria-live="polite">
       <p style="margin: 0; font-size: 14px; color: #64748b;">Loading activity&hellip;</p>
+    </div>
+  </div>
+
+  <div class="keep-together">
+    <h2 style="font-size: 22px; font-weight: 700; margin-bottom: 14px;">Speaking</h2>
+
+    <div class="giaq-role-play">
+      <h3>Role Play #1</h3>
+      <p class="giaq-role-play-intro">You are a tourist. Ask in the tourist information centre for some information about this boat trip:</p>
+
+      <article class="giaq-activity-card" aria-label="Sunset Boat Cruise">
+        <h4 class="giaq-activity-title">Sunset Boat Cruise</h4>
+        <ul class="giaq-activity-details">
+          <li>📍 <strong>Departure Point:</strong> Harbour Marina</li>
+          <li>🕒 <strong>Departure Time:</strong> 7:30 p.m.</li>
+          <li>⏰ <strong>Duration:</strong> 2 hours</li>
+          <li>💵 <strong>Price:</strong> &euro;35 per adult / &euro;20 per child</li>
+          <li>✔ Includes drinks and snacks</li>
+          <li>✔ Suitable for all ages</li>
+          <li>⚠️ <strong>Booking required</strong></li>
+        </ul>
+      </article>
+
+      <details class="giaq-example-reveal">
+        <summary>Example questions</summary>
+        <div class="giaq-example-reveal-body">
+          <ul class="giaq-example-questions">
+            <li>Where does the boat leave from?</li>
+            <li>What time does the cruise start?</li>
+            <li>How long does it last?</li>
+            <li>How much does it cost for two adults?</li>
+            <li>Is the activity suitable for children?</li>
+            <li>Are drinks included?</li>
+            <li>Do we need to book in advance?</li>
+          </ul>
+        </div>
+      </details>
+    </div>
+
+    <div class="giaq-role-play">
+      <h3>Role Play #2</h3>
+      <p class="giaq-role-play-intro">You work in the tourist information centre. Answer a tourist&rsquo;s questions about this kayaking trip:</p>
+
+      <article class="giaq-activity-card" aria-label="Coastal Kayaking Experience">
+        <h4 class="giaq-activity-title">Coastal Kayaking Experience</h4>
+        <ul class="giaq-activity-details">
+          <li>📍 Blue Bay Beach Centre</li>
+          <li>🕒 <strong>Starts:</strong> 2:00 p.m.</li>
+          <li>⏰ <strong>Duration:</strong> 3 hours</li>
+          <li>💵 &euro;30 per person</li>
+          <li>✔ Equipment included</li>
+          <li>✔ Suitable for beginners</li>
+          <li>✔ Minimum age: 10</li>
+        </ul>
+      </article>
     </div>
   </div>
 </div>
