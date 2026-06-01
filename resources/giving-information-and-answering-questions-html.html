@@ -230,6 +230,33 @@
     gap: 10px;
   }
 
+  .phrase-audio-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    flex-shrink: 0;
+    padding: 0;
+    border: 1px solid var(--exam-border);
+    border-radius: 6px;
+    background: #fff;
+    color: #1e3a8a;
+    font-size: 14px;
+    line-height: 1;
+    cursor: pointer;
+  }
+
+  .phrase-audio-btn:hover {
+    background: #eff6ff;
+    border-color: #93c5fd;
+  }
+
+  .phrase-audio-btn:disabled {
+    cursor: not-allowed;
+    opacity: 0.45;
+  }
+
   .kl-cell--drop,
   .kl-cell--source {
     min-width: 0;
@@ -423,7 +450,8 @@
     }
 
     .kl-actions,
-    .kl-chip-slot {
+    .kl-chip-slot,
+    .phrase-audio-btn {
       display: none !important;
     }
 

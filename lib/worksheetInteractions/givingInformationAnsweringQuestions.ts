@@ -3,7 +3,13 @@
  * Mounted from WorksheetViewer / ResourcePreview (inline <script> in resource HTML does not run).
  */
 
-type MatchItem = { prompt: string; answer: string }
+type MatchItem = { prompt: string; answer: string; audio?: string }
+
+const DIRECTIONS_AUDIO_BASE = '/images/everyday-english/directions-audio/'
+
+function directionsAudioUrl(filename: string): string {
+  return DIRECTIONS_AUDIO_BASE + encodeURIComponent(filename)
+}
 
 type MatchLabels = {
   promptColumn: string
@@ -12,20 +18,48 @@ type MatchLabels = {
 }
 
 const DIRECTIONS_ITEMS: MatchItem[] = [
-  { prompt: 'Turn left.', answer: 'Tournez à gauche.' },
-  { prompt: 'Turn right.', answer: 'Tournez à droite.' },
-  { prompt: 'Go straight ahead.', answer: 'Continuez tout droit.' },
-  { prompt: 'Go around the corner.', answer: 'Tournez au coin de la rue.' },
-  { prompt: 'Continue for about a kilometre.', answer: 'Continuez pendant environ un kilomètre.' },
-  { prompt: 'Go past the school.', answer: 'Passez devant l\'école.' },
-  { prompt: 'At the roundabout, take the second exit.', answer: 'Au rond-point, prenez la deuxième sortie.' },
-  { prompt: 'It\u2019s next to the museum.', answer: 'C\u2019est à côté du musée.' },
-  { prompt: 'It\u2019s behind the museum.', answer: 'C\u2019est derrière le musée.' },
-  { prompt: 'It\u2019s opposite the museum.', answer: 'C\u2019est en face du musée.' },
-  { prompt: 'It\u2019s between the museum and the café.', answer: 'C\u2019est entre le musée et le café.' },
-  { prompt: 'It\u2019s on the left.', answer: 'C\u2019est à gauche.' },
-  { prompt: 'It\u2019s on the right.', answer: 'C\u2019est à droite.' },
-  { prompt: 'It\u2019s at the end of the street.', answer: 'C\u2019est au bout de la rue.' },
+  { prompt: 'Turn left.', answer: 'Tournez à gauche.', audio: 'Turn left..mp3' },
+  { prompt: 'Turn right.', answer: 'Tournez à droite.', audio: 'Turn right..mp3' },
+  { prompt: 'Go straight ahead.', answer: 'Continuez tout droit.', audio: 'Go straight ahead..mp3' },
+  { prompt: 'Go around the corner.', answer: 'Tournez au coin de la rue.', audio: 'Go around the corner..mp3' },
+  {
+    prompt: 'Continue for about a kilometre.',
+    answer: 'Continuez pendant environ un kilomètre.',
+    audio: 'Continue for about a kilometre..mp3',
+  },
+  { prompt: 'Go past the school.', answer: 'Passez devant l\'école.', audio: 'Go past the school..mp3' },
+  {
+    prompt: 'At the roundabout, take the second exit.',
+    answer: 'Au rond-point, prenez la deuxième sortie.',
+    audio: 'At the roundabout, take the second exit. .mp3',
+  },
+  {
+    prompt: 'It\u2019s next to the museum.',
+    answer: 'C\u2019est à côté du musée.',
+    audio: "It's next to the museum..mp3",
+  },
+  {
+    prompt: 'It\u2019s behind the museum.',
+    answer: 'C\u2019est derrière le musée.',
+    audio: "It's behind the museum..mp3",
+  },
+  {
+    prompt: 'It\u2019s opposite the museum.',
+    answer: 'C\u2019est en face du musée.',
+    audio: "It's opposite the museum. .mp3",
+  },
+  {
+    prompt: 'It\u2019s between the museum and the café.',
+    answer: 'C\u2019est entre le musée et le café.',
+    audio: "It's between the museum and the café. .mp3",
+  },
+  { prompt: 'It\u2019s on the left.', answer: 'C\u2019est à gauche.', audio: "It's on the left..mp3" },
+  { prompt: 'It\u2019s on the right.', answer: 'C\u2019est à droite.', audio: "It's on the right. .mp3" },
+  {
+    prompt: 'It\u2019s at the end of the street.',
+    answer: 'C\u2019est au bout de la rue.',
+    audio: "It's at the end of the street. .mp3",
+  },
 ]
 
 const QA_ITEMS: MatchItem[] = [
@@ -115,14 +149,20 @@ function mountKlDragDropMatch(
     cleanups.push(() => el.removeEventListener(type, fn))
   }
 
+  const audioCache = new Map<string, HTMLAudioElement>()
+
   let rowIndex = 0
   const allRows = items
     .map((item) => {
       rowIndex += 1
       const id = `giaq-${rowIndex}`
+      const audioBtn = item.audio
+        ? `<button type="button" class="phrase-audio-btn" data-audio-src="${escapeHtml(directionsAudioUrl(item.audio))}" aria-label="Listen: ${escapeHtml(item.prompt)}">🔊</button>`
+        : ''
       return `
         <div class="kl-table-row">
           <div class="kl-cell kl-cell--en">
+            ${audioBtn}
             <span class="kl-en-text">${escapeHtml(item.prompt)}</span>
           </div>
           <div class="kl-cell kl-cell--drop">
@@ -415,6 +455,23 @@ function mountKlDragDropMatch(
 
   on(checkBtn, 'click', checkAnswers)
   on(resetBtn, 'click', reset)
+
+  root.querySelectorAll('button.phrase-audio-btn').forEach((btn) => {
+    const el = btn as HTMLButtonElement
+    const src = el.getAttribute('data-audio-src') || ''
+    if (!src) return
+    el.disabled = false
+    on(el, 'click', () => {
+      let a = audioCache.get(src)
+      if (!a) {
+        a = new Audio(src)
+        audioCache.set(src, a)
+      }
+      a.currentTime = 0
+      void a.play().catch(() => {})
+    })
+  })
+
   reset()
 
   return () => {
