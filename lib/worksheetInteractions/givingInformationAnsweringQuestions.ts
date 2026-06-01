@@ -3,10 +3,11 @@
  * Mounted from WorksheetViewer / ResourcePreview (inline <script> in resource HTML does not run).
  */
 
-type MatchItem = { prompt: string; answer: string; audio?: string }
+type MatchItem = { prompt: string; answer: string; audio?: string; answerAudio?: string }
 
 const DIRECTIONS_AUDIO_BASE = '/images/everyday-english/directions-audio/'
 const QUESTIONS_AUDIO_BASE = '/images/everyday-english/questions-audio/'
+const ANSWERS_AUDIO_BASE = '/images/everyday-english/answers-audio/'
 
 function matchAudioUrl(base: string, filename: string): string {
   return base + encodeURIComponent(filename)
@@ -68,45 +69,56 @@ const QA_ITEMS: MatchItem[] = [
     prompt: 'Is there a restaurant?',
     answer: 'Yes, there is. It is open every day in summer.',
     audio: 'Is there a restaurant?.mp3',
+    answerAudio: 'Yes, there is. It is open every day in summer. .mp3',
   },
   {
     prompt: 'Where is the nearest bank?',
     answer: 'Turn left, then it\u2019s opposite the town hall.',
     audio: 'Where is the nearest bank?.mp3',
+    answerAudio: "Turn left, then it's opposite the town hall..mp3",
   },
   {
     prompt: 'How long does it take to walk to the beach?',
     answer: 'About ten minutes.',
     audio: 'How long does it take to walk to the beach?.mp3',
+    answerAudio: 'About ten minutes. .mp3',
   },
   {
     prompt: 'Is there public transport available?',
     answer: 'I\u2019m afraid not. You have to drive.',
     audio: 'Is there public transport available?.mp3',
+    answerAudio: "I'm afraid not. You have to drive..mp3",
   },
   {
     prompt: 'Is the activity suitable for beginners?',
     answer: 'Yes \u2013 no previous experience is necessary.',
     audio: 'Is the activity suitable for beginners?.mp3',
+    answerAudio: 'Yes - no previous experience is necessary..mp3',
   },
   {
     prompt: 'Can I pay by credit card?',
     answer: 'Yes, you can.',
     audio: 'Can I pay by credit card?.mp3',
+    answerAudio: 'Yes, you can. .mp3',
   },
   {
     prompt: 'What time does the activity start?',
     answer: 'Half past ten.',
     audio: 'What time does the activity start?.mp3',
+    answerAudio: 'Half past ten..mp3',
   },
   {
     prompt: 'Where can I buy tickets?',
     answer: 'Online or at reception.',
     audio: 'Where can I buy tickets?.mp3',
+    answerAudio: 'Online or at reception..mp3',
   },
 ]
 
-const CONFIG: Record<string, { items: MatchItem[]; labels: MatchLabels; audioBase?: string }> = {
+const CONFIG: Record<
+  string,
+  { items: MatchItem[]; labels: MatchLabels; audioBase?: string; chipAudioBase?: string }
+> = {
   directions: {
     items: DIRECTIONS_ITEMS,
     labels: {
@@ -124,6 +136,7 @@ const CONFIG: Record<string, { items: MatchItem[]; labels: MatchLabels; audioBas
       dropPlaceholder: 'Drag answer here',
     },
     audioBase: QUESTIONS_AUDIO_BASE,
+    chipAudioBase: ANSWERS_AUDIO_BASE,
   },
 }
 
@@ -149,6 +162,7 @@ function mountKlDragDropMatch(
   items: MatchItem[],
   labels: MatchLabels,
   audioBase?: string,
+  chipAudioBase?: string,
 ): () => void {
   let selectedChip: HTMLElement | null = null
   let drops: HTMLElement[] = []
@@ -221,6 +235,16 @@ function mountKlDragDropMatch(
     .map((d) => d.getAttribute('data-correct') || '')
     .filter(Boolean)
 
+  const answerAudioByText = new Map<string, string>()
+  if (chipAudioBase) {
+    items.forEach((item) => {
+      if (item.answerAudio) answerAudioByText.set(item.answer.trim(), item.answerAudio)
+    })
+  }
+
+  const getChipText = (chip: HTMLElement): string =>
+    (chip.dataset.klText || chip.querySelector('.kl-chip-text')?.textContent || chip.textContent || '').trim()
+
   const setStatus = (text: string) => {
     statusEl!.textContent = text
   }
@@ -242,7 +266,7 @@ function mountKlDragDropMatch(
     const trimmed = text.trim()
     return (
       (Array.from(root.querySelectorAll('.kl-chip')).find(
-        (c) => (c.textContent || '').trim() === trimmed,
+        (c) => getChipText(c as HTMLElement) === trimmed,
       ) as HTMLElement | undefined) ?? null
     )
   }
@@ -281,7 +305,7 @@ function mountKlDragDropMatch(
     const trimmed = text.trim()
     root.querySelectorAll('.kl-chip').forEach((node) => {
       const chip = node as HTMLElement
-      if (chip === except || (chip.textContent || '').trim() !== trimmed) return
+      if (chip === except || getChipText(chip) !== trimmed) return
       const parent = chip.parentElement
       chip.remove()
       if (parent?.classList.contains('kl-drop')) {
@@ -298,13 +322,14 @@ function mountKlDragDropMatch(
 
     on(chip, 'dragstart', (e) => {
       const ev = e as DragEvent
-      const text = chip.textContent?.trim() || ''
+      const text = getChipText(chip)
       ev.dataTransfer?.setData('text/plain', text)
       if (ev.dataTransfer) ev.dataTransfer.effectAllowed = 'move'
       clearFeedback()
     })
 
     on(chip, 'click', (e) => {
+      if ((e.target as HTMLElement).closest('.phrase-audio-btn')) return
       e.stopPropagation()
       clearFeedback()
       if (selectedChip === chip) {
@@ -330,10 +355,29 @@ function mountKlDragDropMatch(
   const createChip = (text: string): HTMLElement => {
     const chip = document.createElement('div')
     chip.className = 'kl-chip'
-    chip.textContent = text
+    chip.dataset.klText = text
     chip.setAttribute('role', 'button')
     chip.setAttribute('tabindex', '0')
     chip.setAttribute('aria-label', text)
+
+    const answerAudio = answerAudioByText.get(text.trim())
+    if (answerAudio && chipAudioBase) {
+      chip.classList.add('kl-chip--with-audio')
+      const btn = document.createElement('button')
+      btn.type = 'button'
+      btn.className = 'phrase-audio-btn phrase-audio-btn--chip'
+      btn.setAttribute('data-audio-src', matchAudioUrl(chipAudioBase, answerAudio))
+      btn.setAttribute('aria-label', `Listen: ${text}`)
+      btn.textContent = '🔊'
+      const span = document.createElement('span')
+      span.className = 'kl-chip-text'
+      span.textContent = text
+      chip.appendChild(btn)
+      chip.appendChild(span)
+    } else {
+      chip.textContent = text
+    }
+
     attachChipInteractions(chip)
     return chip
   }
@@ -398,7 +442,7 @@ function mountKlDragDropMatch(
     on(dropEl, 'click', (e) => {
       if ((e.target as HTMLElement).closest('.kl-chip')) return
       if (!selectedChip) return
-      const text = selectedChip.textContent?.trim() || ''
+      const text = getChipText(selectedChip)
       if (!text) return
       placeTextIntoDrop(dropEl, text, selectedChip)
     })
@@ -420,7 +464,7 @@ function mountKlDragDropMatch(
     on(slot, 'click', (e) => {
       if ((e.target as HTMLElement).closest('.kl-chip')) return
       if (selectedChip?.parentElement?.classList.contains('kl-drop')) {
-        returnTextToBank(selectedChip.textContent?.trim() || '')
+        returnTextToBank(getChipText(selectedChip))
       }
     })
   })
@@ -448,7 +492,7 @@ function mountKlDragDropMatch(
     drops.forEach((dropEl) => {
       const expected = (dropEl.getAttribute('data-correct') || '').trim()
       const chip = dropEl.querySelector('.kl-chip')
-      const got = (chip?.textContent || '').trim()
+      const got = chip ? getChipText(chip as HTMLElement) : ''
       dropEl.classList.remove('is-correct', 'is-wrong')
       if (!got) return
       answered += 1
@@ -469,21 +513,20 @@ function mountKlDragDropMatch(
   on(checkBtn, 'click', checkAnswers)
   on(resetBtn, 'click', reset)
 
-  root.querySelectorAll('button.phrase-audio-btn').forEach((btn) => {
-    const el = btn as HTMLButtonElement
-    const src = el.getAttribute('data-audio-src') || ''
+  on(root, 'click', ((e: Event) => {
+    const btn = (e.target as HTMLElement).closest('button.phrase-audio-btn')
+    if (!btn || !root.contains(btn)) return
+    e.stopPropagation()
+    const src = btn.getAttribute('data-audio-src') || ''
     if (!src) return
-    el.disabled = false
-    on(el, 'click', () => {
-      let a = audioCache.get(src)
-      if (!a) {
-        a = new Audio(src)
-        audioCache.set(src, a)
-      }
-      a.currentTime = 0
-      void a.play().catch(() => {})
-    })
-  })
+    let a = audioCache.get(src)
+    if (!a) {
+      a = new Audio(src)
+      audioCache.set(src, a)
+    }
+    a.currentTime = 0
+    void a.play().catch(() => {})
+  }) as EventListener)
 
   reset()
 
@@ -504,7 +547,13 @@ export function mountGivingInformationMatchActivity(root: HTMLElement): () => vo
     }
   }
 
-  const cleanup = mountKlDragDropMatch(root, config.items, config.labels, config.audioBase)
+  const cleanup = mountKlDragDropMatch(
+    root,
+    config.items,
+    config.labels,
+    config.audioBase,
+    config.chipAudioBase,
+  )
   root.setAttribute('data-giaq-mounted', 'true')
 
   return () => {
