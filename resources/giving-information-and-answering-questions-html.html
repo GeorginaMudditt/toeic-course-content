@@ -498,6 +498,134 @@
       background: #fff;
     }
   }
+
+  /* Listening */
+  .psp-listening-intro {
+    margin: 0 0 10px;
+    font-size: 16px;
+    color: var(--exam-subtle-ink);
+  }
+
+  .psp-audio-wrap {
+    margin: 10px 0 14px;
+    padding: 10px 12px;
+    border: 1px solid var(--exam-soft-border);
+    border-radius: 10px;
+    background: #fff;
+  }
+
+  .psp-audio-wrap audio {
+    width: 100%;
+    max-width: 760px;
+  }
+
+  .psp-listening-board {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .psp-listening-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .psp-listening-row {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 12px;
+    align-items: center;
+    border: 1px solid var(--exam-soft-border);
+    border-radius: 10px;
+    background: #fff;
+    padding: 9px 10px;
+  }
+
+  .psp-listening-row.is-correct {
+    border-color: #15803d;
+    background: #ecfdf5;
+  }
+
+  .psp-listening-row.is-wrong {
+    border-color: #b91c1c;
+    background: #fee2e2;
+  }
+
+  .psp-listening-statement {
+    font-size: 15px;
+    line-height: 1.4;
+  }
+
+  .psp-listening-choices {
+    display: inline-flex;
+    gap: 12px;
+    align-items: center;
+    white-space: nowrap;
+    font-size: 14px;
+    font-weight: 600;
+  }
+
+  .psp-listening-choices label {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    cursor: pointer;
+  }
+
+  .psp-listening-actions {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 2px;
+    padding-top: 10px;
+    border-top: 1px solid var(--exam-soft-border);
+  }
+
+  .psp-answer-key,
+  .psp-audioscript {
+    margin-top: 12px;
+    border-top: 1px solid var(--exam-soft-border);
+    padding-top: 10px;
+  }
+
+  .psp-answer-key summary,
+  .psp-audioscript summary {
+    cursor: pointer;
+    font-size: 16px;
+    color: var(--exam-accent);
+    margin-bottom: 8px;
+  }
+
+  .psp-answer-key ol {
+    margin: 0;
+  }
+
+  .psp-audioscript-body {
+    border: 1px solid var(--exam-border);
+    border-radius: 10px;
+    background: #fff;
+    padding: 12px 14px;
+    margin-top: 8px;
+  }
+
+  .psp-audioscript-body p {
+    margin: 0 0 10px;
+    font-size: 15px;
+    line-height: 1.45;
+  }
+
+  .psp-audioscript-body p:last-child {
+    margin-bottom: 0;
+  }
+
+  @media (max-width: 760px) {
+    .psp-listening-row {
+      grid-template-columns: 1fr;
+      gap: 8px;
+    }
+  }
 </style>
 
 <div class="resource-wrap" style="width: 100%; max-width: 100%; margin: 0 auto; padding: 16px 12px; font-family: Arial, sans-serif; line-height: 1.45; color: #333; box-sizing: border-box;">
@@ -578,5 +706,59 @@
         </ul>
       </article>
     </div>
+  </div>
+
+  <div class="keep-together">
+    <h2 style="font-size: 22px; font-weight: 700; margin-bottom: 8px;">Listening</h2>
+    <p class="psp-listening-intro">Listen to a conversation between a tourist and an employee at the tourist office.</p>
+
+    <div class="psp-audio-wrap">
+      <audio controls preload="metadata" src="/images/everyday-english/listening-20260601.mp3">
+        Your browser does not support the audio element.
+      </audio>
+    </div>
+
+    <p class="psp-listening-intro">Are these statements <strong>True</strong> or <strong>False</strong>?</p>
+
+    <div data-giaq-listening="true" aria-live="polite">
+      <p style="margin: 0; font-size: 14px; color: #64748b;">Loading activity&hellip;</p>
+    </div>
+  </div>
+
+  <div class="keep-together">
+    <h2 style="font-size: 22px; font-weight: 700; margin-bottom: 8px;">Answer Key</h2>
+
+    <details class="psp-answer-key">
+      <summary><strong>Listening Answers</strong></summary>
+      <ol>
+        <li>False</li>
+        <li>False</li>
+        <li>True</li>
+        <li>False</li>
+        <li>True</li>
+        <li>False</li>
+        <li>True</li>
+      </ol>
+    </details>
+
+    <details class="psp-audioscript">
+      <summary><strong>Audioscript</strong></summary>
+      <div class="psp-audioscript-body">
+        <p><strong>Tourist:</strong> Excuse me, could you tell me where the Maritime Museum is?</p>
+        <p><strong>Employee:</strong> Of course. Go straight ahead for about two hundred metres and you&rsquo;ll see it on your right, opposite the old lighthouse.</p>
+        <p><strong>Tourist:</strong> Great. What time does it open?</p>
+        <p><strong>Employee:</strong> It opens at 10 a.m. every day except Monday.</p>
+        <p><strong>Tourist:</strong> And how much is the entrance fee?</p>
+        <p><strong>Employee:</strong> It&rsquo;s &euro;12 for adults and &euro;6 for children.</p>
+        <p><strong>Tourist:</strong> Is there a guided tour?</p>
+        <p><strong>Employee:</strong> Yes. There&rsquo;s a guided tour at 11 a.m. and another one at 3 p.m.</p>
+        <p><strong>Tourist:</strong> Perfect. Is there somewhere to eat nearby?</p>
+        <p><strong>Employee:</strong> Yes. There&rsquo;s a caf&eacute; next to the museum entrance.</p>
+        <p><strong>Tourist:</strong> Can I buy tickets online?</p>
+        <p><strong>Employee:</strong> Yes, you can buy them online or directly at the ticket office.</p>
+        <p><strong>Tourist:</strong> Thank you very much.</p>
+        <p><strong>Employee:</strong> You&rsquo;re welcome. Enjoy your visit.</p>
+      </div>
+    </details>
   </div>
 </div>

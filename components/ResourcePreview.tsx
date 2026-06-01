@@ -170,7 +170,8 @@ export default function ResourcePreview({ resource, showActions = true }: Resour
   const hasListeningActivity =
     typeof resource.content === 'string' && resource.content.includes('data-listening-activity')
   const hasGiaqActivities =
-    typeof resource.content === 'string' && resource.content.includes('data-giaq-match')
+    typeof resource.content === 'string' &&
+    (resource.content.includes('data-giaq-match') || resource.content.includes('data-giaq-listening'))
   const hasPspActivities = hasKlActivity || hasListeningActivity
   const hasMountedWorksheetActivities = hasPspActivities || hasGiaqActivities
   const [grammarInputsReady, setGrammarInputsReady] = useState(false)
@@ -345,9 +346,12 @@ export default function ResourcePreview({ resource, showActions = true }: Resour
 
       if (hasGiaqActivities) {
         const giaqEls = Array.from(host.querySelectorAll('[data-giaq-match]')) as HTMLElement[]
-        const giaqReady =
-          giaqEls.length > 0 && giaqEls.every((el) => el.getAttribute('data-giaq-mounted') === 'true')
-        if (!giaqReady) mountGiaqPanels()
+        const listeningEl = host.querySelector('[data-giaq-listening]') as HTMLElement | null
+        const matchesReady =
+          giaqEls.length === 0 || giaqEls.every((el) => el.getAttribute('data-giaq-mounted') === 'true')
+        const listeningReady =
+          !listeningEl || listeningEl.getAttribute('data-giaq-listening-mounted') === 'true'
+        if (!matchesReady || !listeningReady) mountGiaqPanels()
         return
       }
 

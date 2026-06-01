@@ -573,6 +573,116 @@ export function mountGivingInformationMatchActivity(root: HTMLElement): () => vo
   }
 }
 
+type GiaqListeningItem = { statement: string; answer: 'T' | 'F' }
+
+const GIAQ_LISTENING_ITEMS: GiaqListeningItem[] = [
+  { statement: 'The museum is opposite the tourist office.', answer: 'F' },
+  { statement: 'The museum opens at 9 a.m.', answer: 'F' },
+  { statement: 'Admission costs €12.', answer: 'T' },
+  { statement: 'Children enter free of charge.', answer: 'F' },
+  { statement: 'The guided tour starts at 11 a.m.', answer: 'T' },
+  { statement: 'The café is inside the museum.', answer: 'F' },
+  { statement: 'The visitor can buy tickets online.', answer: 'T' },
+]
+
+export function mountGivingInformationListening(root: HTMLElement): () => void {
+  if (root.getAttribute('data-giaq-listening-mounted') === 'true') {
+    return () => {}
+  }
+  root.setAttribute('data-giaq-listening-mounting', 'true')
+
+  const cleanups: (() => void)[] = []
+  const on = (el: HTMLElement, type: string, fn: EventListener) => {
+    el.addEventListener(type, fn)
+    cleanups.push(() => el.removeEventListener(type, fn))
+  }
+
+  if (!root.querySelector('.psp-listening-board')) {
+    const rows = GIAQ_LISTENING_ITEMS.map((item, index) => {
+      const qNum = index + 1
+      return `
+        <div class="psp-listening-row" data-lq-row="${qNum}">
+          <div class="psp-listening-statement"><strong>${qNum}.</strong> ${escapeHtml(item.statement)}</div>
+          <div class="psp-listening-choices" role="radiogroup" aria-label="Question ${qNum}">
+            <label><input type="radio" name="giaq-tf-${qNum}" value="T" /> True</label>
+            <label><input type="radio" name="giaq-tf-${qNum}" value="F" /> False</label>
+          </div>
+        </div>
+      `
+    }).join('')
+
+    root.innerHTML = `
+      <div class="psp-listening-board">
+        <div class="psp-listening-list">${rows}</div>
+        <div class="psp-listening-actions">
+          <button type="button" class="kl-btn" data-giaq-listening-check="true">Check answers</button>
+          <button type="button" class="kl-btn kl-btn--secondary" data-giaq-listening-reset="true">Reset</button>
+          <span class="kl-status" data-giaq-listening-status="true"></span>
+        </div>
+      </div>
+    `
+  }
+
+  const statusEl = root.querySelector('[data-giaq-listening-status="true"]') as HTMLElement | null
+  const checkBtn = root.querySelector('[data-giaq-listening-check="true"]') as HTMLButtonElement | null
+  const resetBtn = root.querySelector('[data-giaq-listening-reset="true"]') as HTMLButtonElement | null
+  if (!statusEl || !checkBtn || !resetBtn) {
+    root.removeAttribute('data-giaq-listening-mounting')
+    return () => {}
+  }
+
+  const clearFeedback = () => {
+    root.querySelectorAll('.psp-listening-row').forEach((row) => {
+      row.classList.remove('is-correct', 'is-wrong')
+    })
+    statusEl.textContent = ''
+  }
+
+  const checkAnswers = () => {
+    let answered = 0
+    let correct = 0
+    GIAQ_LISTENING_ITEMS.forEach((item, index) => {
+      const qNum = index + 1
+      const row = root.querySelector(`[data-lq-row="${qNum}"]`) as HTMLElement | null
+      const selected = root.querySelector(`input[name="giaq-tf-${qNum}"]:checked`) as HTMLInputElement | null
+      if (!row) return
+      row.classList.remove('is-correct', 'is-wrong')
+      if (!selected) return
+      answered += 1
+      if (selected.value === item.answer) {
+        correct += 1
+        row.classList.add('is-correct')
+      } else {
+        row.classList.add('is-wrong')
+      }
+    })
+    statusEl.textContent =
+      answered === 0
+        ? 'Select True or False first, then check.'
+        : `Score: ${correct} / ${GIAQ_LISTENING_ITEMS.length}`
+  }
+
+  const reset = () => {
+    root.querySelectorAll('input[type="radio"]').forEach((input) => {
+      ;(input as HTMLInputElement).checked = false
+    })
+    clearFeedback()
+  }
+
+  on(checkBtn, 'click', checkAnswers)
+  on(resetBtn, 'click', reset)
+
+  root.setAttribute('data-giaq-listening-mounted', 'true')
+  root.removeAttribute('data-giaq-listening-mounting')
+
+  return () => {
+    cleanups.forEach((fn) => fn())
+    root.removeAttribute('data-giaq-listening-mounted')
+    root.removeAttribute('data-giaq-listening-mounting')
+    root.innerHTML = ''
+  }
+}
+
 /** Mount each activity panel that is not already mounted; does not unmount existing panels. */
 export function mountUnmountedGivingInformationActivities(host: HTMLElement): (() => void)[] {
   const cleanups: (() => void)[] = []
@@ -582,6 +692,16 @@ export function mountUnmountedGivingInformationActivities(host: HTMLElement): ((
     if (el.getAttribute('data-giaq-mounting') === 'true') return
     cleanups.push(mountGivingInformationMatchActivity(el))
   })
+
+  const listeningEl = host.querySelector('[data-giaq-listening]') as HTMLElement | null
+  if (
+    listeningEl &&
+    listeningEl.getAttribute('data-giaq-listening-mounted') !== 'true' &&
+    listeningEl.getAttribute('data-giaq-listening-mounting') !== 'true'
+  ) {
+    cleanups.push(mountGivingInformationListening(listeningEl))
+  }
+
   return cleanups
 }
 
