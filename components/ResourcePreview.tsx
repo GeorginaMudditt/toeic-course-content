@@ -5,7 +5,7 @@ import { createRoot } from 'react-dom/client'
 import { mountInstructionsDescriptionsArmyAdjectiveMatch } from '@/lib/worksheetInteractions/instructionsDescriptionsArmyAdjectivesMatch'
 import { mountInstructionsDescriptionsArmyVerbsMission } from '@/lib/worksheetInteractions/instructionsDescriptionsArmyVerbsMission'
 import { mountPastSimpleArmyEdPronunciation } from '@/lib/worksheetInteractions/pastSimpleArmyEdPronunciation'
-import { mountGivingInformationActivities } from '@/lib/worksheetInteractions/givingInformationAnsweringQuestions'
+import { mountUnmountedGivingInformationActivities } from '@/lib/worksheetInteractions/givingInformationAnsweringQuestions'
 import { mountPresentingServicesProductsActivities } from '@/lib/worksheetInteractions/presentingServicesProductsKeyLanguage'
 
 interface Resource {
@@ -328,7 +328,15 @@ export default function ResourcePreview({ resource, showActions = true }: Resour
   useLayoutEffect(() => {
     if (!hasMountedWorksheetActivities) return
     let detach: (() => void) | undefined
+    const giaqCleanups: (() => void)[] = []
     let cancelled = false
+
+    const mountGiaqPanels = () => {
+      const host = contentRef.current
+      if (!host || !hasGiaqActivities) return
+      const added = mountUnmountedGivingInformationActivities(host)
+      giaqCleanups.push(...added)
+    }
 
     const tryMount = () => {
       if (cancelled) return
@@ -339,9 +347,7 @@ export default function ResourcePreview({ resource, showActions = true }: Resour
         const giaqEls = Array.from(host.querySelectorAll('[data-giaq-match]')) as HTMLElement[]
         const giaqReady =
           giaqEls.length > 0 && giaqEls.every((el) => el.getAttribute('data-giaq-mounted') === 'true')
-        if (giaqReady) return
-        detach?.()
-        detach = mountGivingInformationActivities(host)
+        if (!giaqReady) mountGiaqPanels()
         return
       }
 
@@ -371,6 +377,7 @@ export default function ResourcePreview({ resource, showActions = true }: Resour
       cancelled = true
       cancelAnimationFrame(rafId)
       observer?.disconnect()
+      giaqCleanups.forEach((fn) => fn())
       detach?.()
     }
   }, [resource.content, hasMountedWorksheetActivities, hasGiaqActivities])

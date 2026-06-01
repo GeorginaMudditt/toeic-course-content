@@ -205,7 +205,7 @@ function mountKlDragDropMatch(
     .join('')
 
   root.innerHTML = `
-    <div class="kl-board">
+    <div class="kl-board not-prose">
       <div class="kl-table">
         <div class="kl-table-head" aria-hidden="true">
           <span>${escapeHtml(labels.promptColumn)}</span>
@@ -537,9 +537,18 @@ function mountKlDragDropMatch(
 }
 
 export function mountGivingInformationMatchActivity(root: HTMLElement): () => void {
+  if (root.getAttribute('data-giaq-mounted') === 'true') {
+    return () => {}
+  }
+  if (root.getAttribute('data-giaq-mounting') === 'true') {
+    return () => {}
+  }
+  root.setAttribute('data-giaq-mounting', 'true')
+
   const matchType = root.getAttribute('data-giaq-match') || ''
   const config = CONFIG[matchType]
   if (!config) {
+    root.removeAttribute('data-giaq-mounting')
     root.innerHTML =
       '<p style="margin:0;color:#b91c1c;">Activity could not load. Please refresh the page.</p>'
     return () => {
@@ -555,22 +564,30 @@ export function mountGivingInformationMatchActivity(root: HTMLElement): () => vo
     config.chipAudioBase,
   )
   root.setAttribute('data-giaq-mounted', 'true')
+  root.removeAttribute('data-giaq-mounting')
 
   return () => {
     cleanup()
     root.removeAttribute('data-giaq-mounted')
+    root.removeAttribute('data-giaq-mounting')
   }
 }
 
-export function mountGivingInformationActivities(host: HTMLElement): () => void {
+/** Mount each activity panel that is not already mounted; does not unmount existing panels. */
+export function mountUnmountedGivingInformationActivities(host: HTMLElement): (() => void)[] {
   const cleanups: (() => void)[] = []
-
   host.querySelectorAll('[data-giaq-match]').forEach((node) => {
     const el = node as HTMLElement
     if (el.getAttribute('data-giaq-mounted') === 'true') return
+    if (el.getAttribute('data-giaq-mounting') === 'true') return
     cleanups.push(mountGivingInformationMatchActivity(el))
   })
+  return cleanups
+}
 
+/** @deprecated Prefer mountUnmountedGivingInformationActivities to avoid tearing down mounted panels. */
+export function mountGivingInformationActivities(host: HTMLElement): () => void {
+  const cleanups = mountUnmountedGivingInformationActivities(host)
   return () => {
     cleanups.forEach((fn) => fn())
   }
