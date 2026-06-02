@@ -149,6 +149,48 @@ function shuffle<T>(arr: T[]): T[] {
   return a
 }
 
+export type GiaqActivityPersistence = {
+  getMatchPlacements: (matchKey: string) => Record<string, string>
+  setMatchPlacements: (matchKey: string, placements: Record<string, string>) => void
+}
+
+export function parseGiaqMatchPlacementsFromNotes(
+  notes: string,
+  matchKey: string,
+): Record<string, string> {
+  try {
+    const parsed = JSON.parse(notes || '{}') as {
+      giaq?: { match?: Record<string, Record<string, string>> }
+    }
+    return parsed.giaq?.match?.[matchKey] ?? {}
+  } catch {
+    return {}
+  }
+}
+
+export function mergeGiaqMatchPlacementsIntoNotes(
+  notes: string,
+  matchKey: string,
+  placements: Record<string, string>,
+): string {
+  let parsed: Record<string, unknown> = {}
+  try {
+    if (notes.trim()) parsed = JSON.parse(notes) as Record<string, unknown>
+  } catch {
+    parsed = {}
+  }
+  const giaq = (
+    parsed.giaq && typeof parsed.giaq === 'object' ? parsed.giaq : {}
+  ) as Record<string, unknown>
+  const match = (
+    giaq.match && typeof giaq.match === 'object' ? giaq.match : {}
+  ) as Record<string, Record<string, string>>
+  match[matchKey] = placements
+  giaq.match = match
+  parsed.giaq = giaq
+  return JSON.stringify(parsed)
+}
+
 function escapeHtml(s: string): string {
   return s
     .replace(/&/g, '&amp;')
@@ -163,6 +205,7 @@ function mountKlDragDropMatch(
   labels: MatchLabels,
   audioBase?: string,
   chipAudioBase?: string,
+  options?: { matchKey?: string; persistence?: GiaqActivityPersistence },
 ): () => void {
   let selectedChip: HTMLElement | null = null
   let drops: HTMLElement[] = []
@@ -382,6 +425,24 @@ function mountKlDragDropMatch(
     return chip
   }
 
+  const collectPlacements = (): Record<string, string> => {
+    const placements: Record<string, string> = {}
+    drops.forEach((dropEl) => {
+      const id = dropEl.getAttribute('data-drop-for') || ''
+      const chip = dropEl.querySelector('.kl-chip')
+      const text = chip ? getChipText(chip as HTMLElement) : ''
+      if (id && text) placements[id] = text
+    })
+    return placements
+  }
+
+  const persistState = () => {
+    const matchKey = options?.matchKey
+    const persistence = options?.persistence
+    if (!matchKey || !persistence) return
+    persistence.setMatchPlacements(matchKey, collectPlacements())
+  }
+
   const placeTextIntoDrop = (dropEl: HTMLElement, text: string, movingChip?: HTMLElement) => {
     clearFeedback()
 
@@ -410,6 +471,7 @@ function mountKlDragDropMatch(
     attachChipInteractions(chipToPlace)
     compactChipSlots()
     clearChipSelection()
+    persistState()
   }
 
   const returnTextToBank = (text: string) => {
@@ -423,6 +485,7 @@ function mountKlDragDropMatch(
       compactChipSlots()
     }
     clearChipSelection()
+    persistState()
   }
 
   drops.forEach((dropEl) => {
@@ -469,7 +532,7 @@ function mountKlDragDropMatch(
     })
   })
 
-  const reset = () => {
+  const reset = (shouldPersist = true) => {
     chipSlots.forEach((slot) => {
       slot.innerHTML = ''
     })
@@ -483,6 +546,18 @@ function mountKlDragDropMatch(
     })
     updateChipSlotEmptyStates()
     selectedChip = null
+    clearFeedback()
+    if (shouldPersist) persistState()
+  }
+
+  const restoreSavedPlacements = (saved: Record<string, string>) => {
+    if (!saved || Object.keys(saved).length === 0) return
+    for (const [dropId, text] of Object.entries(saved)) {
+      const trimmed = text.trim()
+      if (!trimmed) continue
+      const dropEl = drops.find((d) => d.getAttribute('data-drop-for') === dropId)
+      if (dropEl) placeTextIntoDrop(dropEl, trimmed)
+    }
     clearFeedback()
   }
 
@@ -511,7 +586,7 @@ function mountKlDragDropMatch(
   }
 
   on(checkBtn, 'click', checkAnswers)
-  on(resetBtn, 'click', reset)
+  on(resetBtn, 'click', () => reset(true))
 
   on(root, 'click', ((e: Event) => {
     const btn = (e.target as HTMLElement).closest('button.phrase-audio-btn')
@@ -528,7 +603,12 @@ function mountKlDragDropMatch(
     void a.play().catch(() => {})
   }) as EventListener)
 
-  reset()
+  const savedPlacements =
+    options?.matchKey && options?.persistence
+      ? options.persistence.getMatchPlacements(options.matchKey)
+      : {}
+  reset(false)
+  restoreSavedPlacements(savedPlacements)
 
   return () => {
     cleanups.forEach((fn) => fn())
@@ -536,7 +616,10 @@ function mountKlDragDropMatch(
   }
 }
 
-export function mountGivingInformationMatchActivity(root: HTMLElement): () => void {
+export function mountGivingInformationMatchActivity(
+  root: HTMLElement,
+  persistence?: GiaqActivityPersistence,
+): () => void {
   if (root.getAttribute('data-giaq-mounted') === 'true') {
     return () => {}
   }
@@ -562,6 +645,7 @@ export function mountGivingInformationMatchActivity(root: HTMLElement): () => vo
     config.labels,
     config.audioBase,
     config.chipAudioBase,
+    { matchKey: matchType, persistence },
   )
   root.setAttribute('data-giaq-mounted', 'true')
   root.removeAttribute('data-giaq-mounting')
@@ -578,9 +662,9 @@ type GiaqListeningItem = { statement: string; answer: 'T' | 'F' }
 const GIAQ_LISTENING_ITEMS: GiaqListeningItem[] = [
   { statement: 'The museum is opposite the tourist office.', answer: 'F' },
   { statement: 'The museum opens at 9 a.m.', answer: 'F' },
-  { statement: 'Admission costs €12.', answer: 'T' },
+  { statement: 'Admission for adults costs €12.', answer: 'T' },
   { statement: 'Children enter free of charge.', answer: 'F' },
-  { statement: 'The guided tour starts at 11 a.m.', answer: 'T' },
+  { statement: "A guided tour starts at 11 o'clock.", answer: 'T' },
   { statement: 'The café is inside the museum.', answer: 'F' },
   { statement: 'The visitor can buy tickets online.', answer: 'T' },
 ]
@@ -684,13 +768,16 @@ export function mountGivingInformationListening(root: HTMLElement): () => void {
 }
 
 /** Mount each activity panel that is not already mounted; does not unmount existing panels. */
-export function mountUnmountedGivingInformationActivities(host: HTMLElement): (() => void)[] {
+export function mountUnmountedGivingInformationActivities(
+  host: HTMLElement,
+  persistence?: GiaqActivityPersistence,
+): (() => void)[] {
   const cleanups: (() => void)[] = []
   host.querySelectorAll('[data-giaq-match]').forEach((node) => {
     const el = node as HTMLElement
     if (el.getAttribute('data-giaq-mounted') === 'true') return
     if (el.getAttribute('data-giaq-mounting') === 'true') return
-    cleanups.push(mountGivingInformationMatchActivity(el))
+    cleanups.push(mountGivingInformationMatchActivity(el, persistence))
   })
 
   const listeningEl = host.querySelector('[data-giaq-listening]') as HTMLElement | null
@@ -706,8 +793,11 @@ export function mountUnmountedGivingInformationActivities(host: HTMLElement): ((
 }
 
 /** @deprecated Prefer mountUnmountedGivingInformationActivities to avoid tearing down mounted panels. */
-export function mountGivingInformationActivities(host: HTMLElement): () => void {
-  const cleanups = mountUnmountedGivingInformationActivities(host)
+export function mountGivingInformationActivities(
+  host: HTMLElement,
+  persistence?: GiaqActivityPersistence,
+): () => void {
+  const cleanups = mountUnmountedGivingInformationActivities(host, persistence)
   return () => {
     cleanups.forEach((fn) => fn())
   }

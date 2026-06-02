@@ -7,7 +7,12 @@ import { useRouter } from 'next/navigation'
 import { mountInstructionsDescriptionsArmyAdjectiveMatch } from '@/lib/worksheetInteractions/instructionsDescriptionsArmyAdjectivesMatch'
 import { mountInstructionsDescriptionsArmyVerbsMission } from '@/lib/worksheetInteractions/instructionsDescriptionsArmyVerbsMission'
 import { mountPastSimpleArmyEdPronunciation } from '@/lib/worksheetInteractions/pastSimpleArmyEdPronunciation'
-import { mountUnmountedGivingInformationActivities } from '@/lib/worksheetInteractions/givingInformationAnsweringQuestions'
+import {
+  mergeGiaqMatchPlacementsIntoNotes,
+  mountUnmountedGivingInformationActivities,
+  parseGiaqMatchPlacementsFromNotes,
+  type GiaqActivityPersistence,
+} from '@/lib/worksheetInteractions/givingInformationAnsweringQuestions'
 import { mountPresentingServicesProductsActivities } from '@/lib/worksheetInteractions/presentingServicesProductsKeyLanguage'
 import {
   formatFeedbackForDisplay,
@@ -732,6 +737,15 @@ export default function WorksheetViewer({ assignmentId, resource, initialProgres
   const notesRef = useRef(notes)
   notesRef.current = notes
   const latestSaveIdRef = useRef(0)
+  const giaqPersistenceRef = useRef<GiaqActivityPersistence | null>(null)
+  giaqPersistenceRef.current = {
+    getMatchPlacements: (matchKey) => parseGiaqMatchPlacementsFromNotes(notesRef.current, matchKey),
+    setMatchPlacements: (matchKey, placements) => {
+      const newNotes = mergeGiaqMatchPlacementsIntoNotes(notesRef.current, matchKey, placements)
+      notesRef.current = newNotes
+      setNotes(newNotes)
+    },
+  }
 
   // Check if this is a Placement Test
   const isPlacementTest = resource.title.toLowerCase().includes('placement test')
@@ -1302,6 +1316,13 @@ export default function WorksheetViewer({ assignmentId, resource, initialProgres
       return () => clearTimeout(timeoutId)
     }
   }, [notes, hasGrammarInputs, isPlacementTest, saveProgress])
+
+  // Auto-save GIAQ drag-and-drop placements when notes change
+  useEffect(() => {
+    if (!hasGiaqActivities || isPlacementTest || !notes) return
+    const timeoutId = setTimeout(() => saveProgress(), 800)
+    return () => clearTimeout(timeoutId)
+  }, [notes, hasGiaqActivities, isPlacementTest, saveProgress])
   
   // Helper function to get current value for an answer path
   const getAnswerValue = useCallback((answerPath: string, answers: any) => {
@@ -2541,7 +2562,7 @@ export default function WorksheetViewer({ assignmentId, resource, initialProgres
     const mountGiaqPanels = () => {
       const host = contentRef.current
       if (!host || !hasGiaqActivities) return
-      const added = mountUnmountedGivingInformationActivities(host)
+      const added = mountUnmountedGivingInformationActivities(host, giaqPersistenceRef.current ?? undefined)
       giaqCleanups.push(...added)
     }
 
@@ -2652,7 +2673,7 @@ export default function WorksheetViewer({ assignmentId, resource, initialProgres
 
   // Flush and persist when the student leaves the tab or closes the page.
   useEffect(() => {
-    if (!hasGrammarInputs && !isPlacementTest) return
+    if (!hasGrammarInputs && !hasGiaqActivities && !isPlacementTest) return
 
     const persistOnLeave = () => {
       const notesValue = hasGrammarInputs
@@ -2685,6 +2706,7 @@ export default function WorksheetViewer({ assignmentId, resource, initialProgres
   }, [
     assignmentId,
     flushGrammarInputsToNotes,
+    hasGiaqActivities,
     hasGrammarInputs,
     isPlacementTest,
     notes,
