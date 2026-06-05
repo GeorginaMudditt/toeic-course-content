@@ -13,6 +13,7 @@ import {
   parseGiaqMatchPlacementsFromNotes,
   type GiaqActivityPersistence,
 } from '@/lib/worksheetInteractions/givingInformationAnsweringQuestions'
+import { mountPhraseAudioButtons } from '@/lib/worksheetInteractions/phraseAudioButtons'
 import { mountPresentingServicesProductsActivities } from '@/lib/worksheetInteractions/presentingServicesProductsKeyLanguage'
 import {
   formatFeedbackForDisplay,
@@ -766,6 +767,8 @@ export default function WorksheetViewer({ assignmentId, resource, initialProgres
     (resource.content.includes('data-giaq-match') || resource.content.includes('data-giaq-listening'))
   const hasPspActivities = hasKlActivity || hasListeningActivity
   const hasMountedWorksheetActivities = hasPspActivities || hasGiaqActivities
+  const hasPhraseAudioRoot =
+    typeof resource.content === 'string' && resource.content.includes('data-phrase-audio-root')
 
   /** Per-section Check Answers + live tick/cross (see resources using data-grammar-per-section-check). */
   const enablePerSectionGrammarCheck = useMemo(() => {
@@ -2612,6 +2615,24 @@ export default function WorksheetViewer({ assignmentId, resource, initialProgres
       detach?.()
     }
   }, [resource.content, hasMountedWorksheetActivities, hasGiaqActivities])
+
+  // Static phrase lists with 🔊 buttons (e.g. Natur'Evasion Vocabulary).
+  useLayoutEffect(() => {
+    if (!hasPhraseAudioRoot) return
+    let detach: (() => void) | undefined
+    const rafId = requestAnimationFrame(() => {
+      const host = contentRef.current
+      if (!host) return
+      const el = host.querySelector('[data-phrase-audio-root]') as HTMLElement | null
+      if (el && el.getAttribute('data-phrase-audio-mounted') !== 'true') {
+        detach = mountPhraseAudioButtons(el)
+      }
+    })
+    return () => {
+      cancelAnimationFrame(rafId)
+      detach?.()
+    }
+  }, [resource.content, hasPhraseAudioRoot])
 
   // Past Simple Practice (Army): -ed pronunciation columns.
   useEffect(() => {

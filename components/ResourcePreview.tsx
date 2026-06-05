@@ -6,6 +6,7 @@ import { mountInstructionsDescriptionsArmyAdjectiveMatch } from '@/lib/worksheet
 import { mountInstructionsDescriptionsArmyVerbsMission } from '@/lib/worksheetInteractions/instructionsDescriptionsArmyVerbsMission'
 import { mountPastSimpleArmyEdPronunciation } from '@/lib/worksheetInteractions/pastSimpleArmyEdPronunciation'
 import { mountUnmountedGivingInformationActivities } from '@/lib/worksheetInteractions/givingInformationAnsweringQuestions'
+import { mountPhraseAudioButtons } from '@/lib/worksheetInteractions/phraseAudioButtons'
 import { mountPresentingServicesProductsActivities } from '@/lib/worksheetInteractions/presentingServicesProductsKeyLanguage'
 
 interface Resource {
@@ -174,6 +175,8 @@ export default function ResourcePreview({ resource, showActions = true }: Resour
     (resource.content.includes('data-giaq-match') || resource.content.includes('data-giaq-listening'))
   const hasPspActivities = hasKlActivity || hasListeningActivity
   const hasMountedWorksheetActivities = hasPspActivities || hasGiaqActivities
+  const hasPhraseAudioRoot =
+    typeof resource.content === 'string' && resource.content.includes('data-phrase-audio-root')
   const [grammarInputsReady, setGrammarInputsReady] = useState(false)
 
   // Defer grammar injection until after mount/hydration timing is settled
@@ -385,6 +388,23 @@ export default function ResourcePreview({ resource, showActions = true }: Resour
       detach?.()
     }
   }, [resource.content, hasMountedWorksheetActivities, hasGiaqActivities])
+
+  useLayoutEffect(() => {
+    if (!hasPhraseAudioRoot) return
+    let detach: (() => void) | undefined
+    const rafId = requestAnimationFrame(() => {
+      const host = contentRef.current
+      if (!host) return
+      const el = host.querySelector('[data-phrase-audio-root]') as HTMLElement | null
+      if (el && el.getAttribute('data-phrase-audio-mounted') !== 'true') {
+        detach = mountPhraseAudioButtons(el)
+      }
+    })
+    return () => {
+      cancelAnimationFrame(rafId)
+      detach?.()
+    }
+  }, [resource.content, hasPhraseAudioRoot])
 
   useEffect(() => {
     if (typeof resource.content !== 'string' || !resource.content.includes('data-pspa-ed-pronunciation')) return

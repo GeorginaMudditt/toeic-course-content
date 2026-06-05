@@ -1,0 +1,1013 @@
+<!-- Natur'Evasion Vocabulary — French/English phrase lists with English audio.
+     Upload MP3s to: public/vocab-audio/naturevasion-vocab-audio/
+     Use the exact slug in each data-audio-src (lowercase, hyphens, no spaces or ?). -->
+<style>
+  :root {
+    --nev-ink: #1f2937;
+    --nev-subtle-ink: #4b5563;
+    --nev-border: #1f2937;
+    --nev-soft-border: #d1d5db;
+    --nev-header-bg: #f6f8fb;
+    --nev-panel-bg: #fbfcfe;
+    --nev-accent: #1e3a8a;
+  }
+
+  body {
+    color: var(--nev-ink);
+  }
+
+  .nev-header {
+    border: 1px solid var(--nev-soft-border);
+    background: linear-gradient(to bottom, #ffffff, var(--nev-header-bg));
+    border-radius: 8px;
+    padding: 12px 14px;
+    text-align: center;
+    margin-bottom: 18px;
+  }
+
+  .nev-section {
+    border: 1px solid var(--nev-soft-border);
+    border-radius: 8px;
+    background: var(--nev-panel-bg);
+    padding: 12px 14px;
+    margin-bottom: 18px;
+  }
+
+  .nev-section:last-child {
+    margin-bottom: 0;
+  }
+
+  .nev-section-title {
+    font-size: 20px;
+    font-weight: 800;
+    margin: 0 0 12px;
+    color: var(--nev-accent);
+    line-height: 1.3;
+  }
+
+  .nev-phrase-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 15px;
+    line-height: 1.45;
+    background: #fff;
+  }
+
+  .nev-phrase-table th,
+  .nev-phrase-table td {
+    border: 1px solid var(--nev-border);
+    padding: 10px 12px;
+    vertical-align: top;
+    text-align: left;
+  }
+
+  .nev-phrase-table thead th {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--nev-accent);
+    background: #f8fafc;
+  }
+
+  .nev-phrase-table tbody tr:nth-child(even) {
+    background: #f9fafb;
+  }
+
+  .nev-en-cell {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .phrase-audio-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    flex-shrink: 0;
+    padding: 0;
+    border: 1px solid var(--nev-soft-border);
+    border-radius: 6px;
+    background: #fff;
+    color: var(--nev-accent);
+    font-size: 14px;
+    line-height: 1;
+    cursor: pointer;
+  }
+
+  .phrase-audio-btn:hover {
+    background: #eff6ff;
+    border-color: #93c5fd;
+  }
+
+  .phrase-audio-btn:disabled {
+    cursor: not-allowed;
+    opacity: 0.45;
+  }
+
+  .nev-en-text {
+    font-weight: 700;
+    color: #0f172a;
+  }
+
+  @media print {
+    .phrase-audio-btn {
+      display: none !important;
+    }
+  }
+
+  @media (max-width: 640px) {
+    .nev-phrase-table thead {
+      display: none;
+    }
+
+    .nev-phrase-table,
+    .nev-phrase-table tbody,
+    .nev-phrase-table tr,
+    .nev-phrase-table td {
+      display: block;
+      width: 100%;
+    }
+
+    .nev-phrase-table tr {
+      margin-bottom: 10px;
+      border: 1px solid var(--nev-border);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+
+    .nev-phrase-table td {
+      border: none;
+      border-bottom: 1px solid var(--nev-soft-border);
+    }
+
+    .nev-phrase-table td:last-child {
+      border-bottom: none;
+    }
+
+    .nev-phrase-table td::before {
+      display: block;
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--nev-accent);
+      margin-bottom: 4px;
+    }
+
+    .nev-phrase-table td.nev-fr-cell::before {
+      content: "🇫🇷 French";
+    }
+
+    .nev-phrase-table td.nev-en-cell-wrap::before {
+      content: "🇬🇧 English";
+    }
+  }
+</style>
+
+<div class="resource-wrap" data-phrase-audio-root="true" style="width: 100%; max-width: 100%; margin: 0 auto; padding: 16px 12px; font-family: Arial, sans-serif; line-height: 1.45; color: #333; box-sizing: border-box;">
+  <div class="nev-header">
+    <div style="display: inline-block; margin-bottom: 6px;">
+      <img src="/brizzle-logo.png" alt="Brizzle Logo" style="width: 45px; height: 45px; object-fit: contain;" />
+    </div>
+    <h1 style="font-size: 30px; line-height: 1.2; margin: 0 0 4px; color: #0f172a;">Natur&rsquo;Evasion Vocabulary</h1>
+    <p style="margin: 0; font-size: 16px; color: #64748b;">French phrases with English translations and pronunciation</p>
+  </div>
+
+  <section class="nev-section keep-together">
+    <h2 class="nev-section-title">👋 Greetings &amp; Offers to Help</h2>
+    <table class="nev-phrase-table" aria-label="Greetings and offers to help">
+      <thead>
+        <tr>
+          <th scope="col" style="width: 50%;">🇫🇷 French</th>
+          <th scope="col" style="width: 50%;">🇬🇧 English</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="nev-fr-cell">Bonjour, comment puis-je vous aider ?</td>
+          <td class="nev-en-cell-wrap">
+            <div class="nev-en-cell">
+              <button type="button" class="phrase-audio-btn" data-audio-src="/vocab-audio/naturevasion-vocab-audio/hello-how-can-i-help-you.mp3" aria-label="Listen: Hello, how can I help you?">🔊</button>
+              <span class="nev-en-text">Hello, how can I help you?</span>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td class="nev-fr-cell">Vous voulez r&eacute;server / faire une r&eacute;servation pour une activit&eacute; ?</td>
+          <td class="nev-en-cell-wrap">
+            <div class="nev-en-cell">
+              <button type="button" class="phrase-audio-btn" data-audio-src="/vocab-audio/naturevasion-vocab-audio/would-you-like-to-book-make-a-reservation-for-an-activity.mp3" aria-label="Listen: Would you like to book / make a reservation for an activity?">🔊</button>
+              <span class="nev-en-text">Would you like to book / make a reservation for an activity?</span>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td class="nev-fr-cell">Si vous avez besoin d&rsquo;aide, je suis l&agrave;.</td>
+          <td class="nev-en-cell-wrap">
+            <div class="nev-en-cell">
+              <button type="button" class="phrase-audio-btn" data-audio-src="/vocab-audio/naturevasion-vocab-audio/if-you-need-any-help-im-here.mp3" aria-label="Listen: If you need any help, I'm here.">🔊</button>
+              <span class="nev-en-text">If you need any help, I&rsquo;m here.</span>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section class="nev-section keep-together">
+    <h2 class="nev-section-title">🛶 Activities Available</h2>
+    <table class="nev-phrase-table" aria-label="Activities available">
+      <thead>
+        <tr>
+          <th scope="col" style="width: 50%;">🇫🇷 French</th>
+          <th scope="col" style="width: 50%;">🇬🇧 English</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="nev-fr-cell">Nous avons diff&eacute;rentes activit&eacute;s : kayak, paddle et v&eacute;lo.</td>
+          <td class="nev-en-cell-wrap">
+            <div class="nev-en-cell">
+              <button type="button" class="phrase-audio-btn" data-audio-src="/vocab-audio/naturevasion-vocab-audio/we-have-various-activities-kayaking-paddleboarding-and-cycling.mp3" aria-label="Listen: We have various activities: kayaking, paddleboarding and cycling.">🔊</button>
+              <span class="nev-en-text">We have various activities: kayaking, paddleboarding and cycling.</span>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td class="nev-fr-cell">Laquelle voulez-vous r&eacute;server ?</td>
+          <td class="nev-en-cell-wrap">
+            <div class="nev-en-cell">
+              <button type="button" class="phrase-audio-btn" data-audio-src="/vocab-audio/naturevasion-vocab-audio/which-one-would-you-like-to-book.mp3" aria-label="Listen: Which one would you like to book?">🔊</button>
+              <span class="nev-en-text">Which one would you like to book?</span>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td class="nev-fr-cell">Nous avons aussi des packs de plusieurs activit&eacute;s.</td>
+          <td class="nev-en-cell-wrap">
+            <div class="nev-en-cell">
+              <button type="button" class="phrase-audio-btn" data-audio-src="/vocab-audio/naturevasion-vocab-audio/we-also-have-multi-activity-packages.mp3" aria-label="Listen: We also have multi-activity packages.">🔊</button>
+              <span class="nev-en-text">We also have multi-activity packages.</span>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td class="nev-fr-cell">Nous avons un bike parc accessible aux adultes et aux enfants.</td>
+          <td class="nev-en-cell-wrap">
+            <div class="nev-en-cell">
+              <button type="button" class="phrase-audio-btn" data-audio-src="/vocab-audio/naturevasion-vocab-audio/we-have-a-bike-park-open-to-adults-and-children.mp3" aria-label="Listen: We have a bike park open to adults and children.">🔊</button>
+              <span class="nev-en-text">We have a bike park open to adults and children.</span>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td class="nev-fr-cell">Nous avons des VTTs et v&eacute;los &eacute;lectriques.</td>
+          <td class="nev-en-cell-wrap">
+            <div class="nev-en-cell">
+              <button type="button" class="phrase-audio-btn" data-audio-src="/vocab-audio/naturevasion-vocab-audio/we-have-mountain-bikes-and-electric-bikes.mp3" aria-label="Listen: We have mountain bikes and electric bikes.">🔊</button>
+              <span class="nev-en-text">We have mountain bikes and electric bikes.</span>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td class="nev-fr-cell">Il y a trois parcours de paddle.</td>
+          <td class="nev-en-cell-wrap">
+            <div class="nev-en-cell">
+              <button type="button" class="phrase-audio-btn" data-audio-src="/vocab-audio/naturevasion-vocab-audio/there-are-three-paddleboarding-routes.mp3" aria-label="Listen: There are three paddleboarding routes.">🔊</button>
+              <span class="nev-en-text">There are three paddleboarding routes.</span>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td class="nev-fr-cell">Il y a dix parcours de cano&euml;.</td>
+          <td class="nev-en-cell-wrap">
+            <div class="nev-en-cell">
+              <button type="button" class="phrase-audio-btn" data-audio-src="/vocab-audio/naturevasion-vocab-audio/there-are-ten-canoe-routes.mp3" aria-label="Listen: There are ten canoe routes.">🔊</button>
+              <span class="nev-en-text">There are ten canoe routes.</span>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td class="nev-fr-cell">Nous avons des kayaks monoplace et bi-place.</td>
+          <td class="nev-en-cell-wrap">
+            <div class="nev-en-cell">
+              <button type="button" class="phrase-audio-btn" data-audio-src="/vocab-audio/naturevasion-vocab-audio/we-have-single-and-double-kayaks.mp3" aria-label="Listen: We have single and double kayaks.">🔊</button>
+              <span class="nev-en-text">We have single and double kayaks.</span>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section class="nev-section keep-together">
+    <h2 class="nev-section-title">👶 Age &amp; Eligibility Requirements</h2>
+    <table class="nev-phrase-table" aria-label="Age and eligibility requirements">
+      <thead>
+        <tr>
+          <th scope="col" style="width: 50%;">🇫🇷 French</th>
+          <th scope="col" style="width: 50%;">🇬🇧 English</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="nev-fr-cell">L&rsquo;&acirc;ge minimum est 5 ans.</td>
+          <td class="nev-en-cell-wrap">
+            <div class="nev-en-cell">
+              <button type="button" class="phrase-audio-btn" data-audio-src="/vocab-audio/naturevasion-vocab-audio/the-minimum-age-is-5-years-old.mp3" aria-label="Listen: The minimum age is 5 years old.">🔊</button>
+              <span class="nev-en-text">The minimum age is 5 years old.</span>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td class="nev-fr-cell">Les enfants doivent avoir 5 ans.</td>
+          <td class="nev-en-cell-wrap">
+            <div class="nev-en-cell">
+              <button type="button" class="phrase-audio-btn" data-audio-src="/vocab-audio/naturevasion-vocab-audio/children-must-be-5-years-old.mp3" aria-label="Listen: Children must be 5 years old.">🔊</button>
+              <span class="nev-en-text">Children must be 5 years old.</span>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td class="nev-fr-cell">Le paddle est &agrave; partir de 8 ans.</td>
+          <td class="nev-en-cell-wrap">
+            <div class="nev-en-cell">
+              <button type="button" class="phrase-audio-btn" data-audio-src="/vocab-audio/naturevasion-vocab-audio/paddleboarding-is-from-8-years-old.mp3" aria-label="Listen: Paddleboarding is from 8 years old.">🔊</button>
+              <span class="nev-en-text">Paddleboarding is from 8 years old.</span>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td class="nev-fr-cell">L&rsquo;enfant peut prendre un cano&euml; monoplace &agrave; partir de 10 ans.</td>
+          <td class="nev-en-cell-wrap">
+            <div class="nev-en-cell">
+              <button type="button" class="phrase-audio-btn" data-audio-src="/vocab-audio/naturevasion-vocab-audio/children-can-take-a-single-canoe-from-the-age-of-10.mp3" aria-label="Listen: Children can take a single canoe from the age of 10.">🔊</button>
+              <span class="nev-en-text">Children can take a single canoe from the age of 10.</span>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td class="nev-fr-cell">Quel &acirc;ge a l&rsquo;enfant ?</td>
+          <td class="nev-en-cell-wrap">
+            <div class="nev-en-cell">
+              <button type="button" class="phrase-audio-btn" data-audio-src="/vocab-audio/naturevasion-vocab-audio/how-old-is-the-child.mp3" aria-label="Listen: How old is the child?">🔊</button>
+              <span class="nev-en-text">How old is the child?</span>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td class="nev-fr-cell">Les adolescents doivent &ecirc;tre accompagn&eacute;s d&rsquo;un adulte OU signer une d&eacute;charge et photocopier les cartes d&rsquo;identit&eacute; de l&rsquo;adolescent et des parents.</td>
+          <td class="nev-en-cell-wrap">
+            <div class="nev-en-cell">
+              <button type="button" class="phrase-audio-btn" data-audio-src="/vocab-audio/naturevasion-vocab-audio/teenagers-must-be-accompanied-by-an-adult-or-sign-a-waiver-and-provide-photocopies-of-id-cards.mp3" aria-label="Listen: Teenagers must be accompanied by an adult OR sign a waiver and provide photocopies of the teenager's and parents' ID cards.">🔊</button>
+              <span class="nev-en-text">Teenagers must be accompanied by an adult OR sign a waiver and provide photocopies of the teenager&rsquo;s and parents&rsquo; ID cards.</span>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td class="nev-fr-cell">Il faut savoir nager, avec ou sans brassards.</td>
+          <td class="nev-en-cell-wrap">
+            <div class="nev-en-cell">
+              <button type="button" class="phrase-audio-btn" data-audio-src="/vocab-audio/naturevasion-vocab-audio/you-must-be-able-to-swim-with-or-without-armbands.mp3" aria-label="Listen: You must be able to swim, with or without armbands.">🔊</button>
+              <span class="nev-en-text">You must be able to swim, with or without armbands.</span>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td class="nev-fr-cell">Si vous &ecirc;tes enceinte, vous pouvez faire le parcours de 4 km en cano&euml;. Il est calme.</td>
+          <td class="nev-en-cell-wrap">
+            <div class="nev-en-cell">
+              <button type="button" class="phrase-audio-btn" data-audio-src="/vocab-audio/naturevasion-vocab-audio/if-you-are-pregnant-you-can-do-the-4-km-canoe-route-it-is-calm.mp3" aria-label="Listen: If you are pregnant, you can do the 4 km canoe route. It is calm.">🔊</button>
+              <span class="nev-en-text">If you are pregnant, you can do the 4 km canoe route. It is calm.</span>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section class="nev-section keep-together">
+    <h2 class="nev-section-title">👥 Group Size &amp; Availability</h2>
+    <table class="nev-phrase-table" aria-label="Group size and availability">
+      <thead>
+        <tr>
+          <th scope="col" style="width: 50%;">🇫🇷 French</th>
+          <th scope="col" style="width: 50%;">🇬🇧 English</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="nev-fr-cell">Vous &ecirc;tes combien ?</td>
+          <td class="nev-en-cell-wrap">
+            <div class="nev-en-cell">
+              <button type="button" class="phrase-audio-btn" data-audio-src="/vocab-audio/naturevasion-vocab-audio/how-many-of-you-are-there.mp3" aria-label="Listen: How many of you are there?">🔊</button>
+              <span class="nev-en-text">How many of you are there?</span>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td class="nev-fr-cell">Combien d&rsquo;enfants, combien d&rsquo;adultes ?</td>
+          <td class="nev-en-cell-wrap">
+            <div class="nev-en-cell">
+              <button type="button" class="phrase-audio-btn" data-audio-src="/vocab-audio/naturevasion-vocab-audio/how-many-children-how-many-adults.mp3" aria-label="Listen: How many children, how many adults?">🔊</button>
+              <span class="nev-en-text">How many children, how many adults?</span>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td class="nev-fr-cell">Nous avons de la place cet apr&egrave;s-midi &agrave; 14h.</td>
+          <td class="nev-en-cell-wrap">
+            <div class="nev-en-cell">
+              <button type="button" class="phrase-audio-btn" data-audio-src="/vocab-audio/naturevasion-vocab-audio/we-have-availability-this-afternoon-at-2pm.mp3" aria-label="Listen: We have availability this afternoon at 2pm.">🔊</button>
+              <span class="nev-en-text">We have availability this afternoon at 2pm.</span>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td class="nev-fr-cell">C&rsquo;est possible de monter &agrave; 3 si vous &ecirc;tes 2 adultes et 1 enfant.</td>
+          <td class="nev-en-cell-wrap">
+            <div class="nev-en-cell">
+              <button type="button" class="phrase-audio-btn" data-audio-src="/vocab-audio/naturevasion-vocab-audio/it-is-possible-to-have-3-people-if-there-are-2-adults-and-1-child.mp3" aria-label="Listen: It is possible to have 3 people if there are 2 adults and 1 child.">🔊</button>
+              <span class="nev-en-text">It is possible to have 3 people if there are 2 adults and 1 child.</span>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section class="nev-section keep-together">
+    <h2 class="nev-section-title">💻 Reservations &amp; Booking</h2>
+    <table class="nev-phrase-table" aria-label="Reservations and booking">
+      <thead>
+        <tr>
+          <th scope="col" style="width: 50%;">🇫🇷 French</th>
+          <th scope="col" style="width: 50%;">🇬🇧 English</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="nev-fr-cell">Pour r&eacute;server, vous tapez &laquo;&nbsp;NatureEvasion&nbsp;&raquo; sur Google.</td>
+          <td class="nev-en-cell-wrap">
+            <div class="nev-en-cell">
+              <button type="button" class="phrase-audio-btn" data-audio-src="/vocab-audio/naturevasion-vocab-audio/to-book-type-naturevasion-into-google.mp3" aria-label="Listen: To book, type NatureEvasion into Google.">🔊</button>
+              <span class="nev-en-text">To book, type &ldquo;NatureEvasion&rdquo; into Google.</span>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td class="nev-fr-cell">Pour le cano&euml;, les r&eacute;servations se font prioritairement en ligne ou sur place apr&egrave;s 16h.</td>
+          <td class="nev-en-cell-wrap">
+            <div class="nev-en-cell">
+              <button type="button" class="phrase-audio-btn" data-audio-src="/vocab-audio/naturevasion-vocab-audio/for-canoeing-reservations-are-made-online-as-a-priority-or-on-site-after-4pm.mp3" aria-label="Listen: For canoeing, reservations are made online as a priority, or on-site after 4pm.">🔊</button>
+              <span class="nev-en-text">For canoeing, reservations are made online as a priority, or on-site after 4pm.</span>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td class="nev-fr-cell">Aucune r&eacute;servation n&rsquo;est prise par t&eacute;l&eacute;phone.</td>
+          <td class="nev-en-cell-wrap">
+            <div class="nev-en-cell">
+              <button type="button" class="phrase-audio-btn" data-audio-src="/vocab-audio/naturevasion-vocab-audio/no-reservations-are-taken-by-phone.mp3" aria-label="Listen: No reservations are taken by phone.">🔊</button>
+              <span class="nev-en-text">No reservations are taken by phone.</span>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td class="nev-fr-cell">Avec la r&eacute;servation en ligne, une fois sur place, vous serez prioritaire et obtiendrez le &laquo;&nbsp;pass &Eacute;vasion&nbsp;&raquo; pour les navettes.</td>
+          <td class="nev-en-cell-wrap">
+            <div class="nev-en-cell">
+              <button type="button" class="phrase-audio-btn" data-audio-src="/vocab-audio/naturevasion-vocab-audio/with-an-online-reservation-once-on-site-you-will-have-priority-and-receive-the-evasion-pass-for-the-shuttles.mp3" aria-label="Listen: With an online reservation, once on site, you will have priority and will receive the Évasion pass for the shuttles.">🔊</button>
+              <span class="nev-en-text">With an online reservation, once on site, you will have priority and will receive the &Eacute;vasion pass for the shuttles.</span>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td class="nev-fr-cell">Si vous ne pouvez pas r&eacute;server en ligne, venez entre 15h et 18h.</td>
+          <td class="nev-en-cell-wrap">
+            <div class="nev-en-cell">
+              <button type="button" class="phrase-audio-btn" data-audio-src="/vocab-audio/naturevasion-vocab-audio/if-you-cannot-book-online-come-between-3pm-and-6pm.mp3" aria-label="Listen: If you cannot book online, come between 3pm and 6pm.">🔊</button>
+              <span class="nev-en-text">If you cannot book online, come between 3pm and 6pm.</span>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td class="nev-fr-cell">Vous pouvez r&eacute;server juste ici sur la borne.</td>
+          <td class="nev-en-cell-wrap">
+            <div class="nev-en-cell">
+              <button type="button" class="phrase-audio-btn" data-audio-src="/vocab-audio/naturevasion-vocab-audio/you-can-book-right-here-at-the-terminal.mp3" aria-label="Listen: You can book right here at the terminal.">🔊</button>
+              <span class="nev-en-text">You can book right here at the terminal.</span>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td class="nev-fr-cell">C&rsquo;est mieux de r&eacute;server &agrave; l&rsquo;avance.</td>
+          <td class="nev-en-cell-wrap">
+            <div class="nev-en-cell">
+              <button type="button" class="phrase-audio-btn" data-audio-src="/vocab-audio/naturevasion-vocab-audio/it-is-better-to-book-in-advance.mp3" aria-label="Listen: It is better to book in advance.">🔊</button>
+              <span class="nev-en-text">It is better to book in advance.</span>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td class="nev-fr-cell">Vous pouvez directement r&eacute;server vos activit&eacute;s sur notre site. C&rsquo;est tr&egrave;s simple / facile.</td>
+          <td class="nev-en-cell-wrap">
+            <div class="nev-en-cell">
+              <button type="button" class="phrase-audio-btn" data-audio-src="/vocab-audio/naturevasion-vocab-audio/you-can-book-your-activities-directly-on-our-website-its-very-straightforward-easy.mp3" aria-label="Listen: You can book your activities directly on our website. It's very straightforward / easy.">🔊</button>
+              <span class="nev-en-text">You can book your activities directly on our website. It&rsquo;s very straightforward / easy.</span>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td class="nev-fr-cell">Pas besoin d&rsquo;&ecirc;tre trop en avance.</td>
+          <td class="nev-en-cell-wrap">
+            <div class="nev-en-cell">
+              <button type="button" class="phrase-audio-btn" data-audio-src="/vocab-audio/naturevasion-vocab-audio/no-need-to-arrive-too-early.mp3" aria-label="Listen: No need to arrive too early.">🔊</button>
+              <span class="nev-en-text">No need to arrive too early.</span>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section class="nev-section keep-together">
+    <h2 class="nev-section-title">💰 Pricing &amp; Payment</h2>
+    <table class="nev-phrase-table" aria-label="Pricing and payment">
+      <thead>
+        <tr>
+          <th scope="col" style="width: 50%;">🇫🇷 French</th>
+          <th scope="col" style="width: 50%;">🇬🇧 English</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="nev-fr-cell">Vous pouvez payer par carte, ch&egrave;ques vacances ou en esp&egrave;ces.</td>
+          <td class="nev-en-cell-wrap">
+            <div class="nev-en-cell">
+              <button type="button" class="phrase-audio-btn" data-audio-src="/vocab-audio/naturevasion-vocab-audio/you-can-pay-by-card-holiday-vouchers-or-cash.mp3" aria-label="Listen: You can pay by card, holiday vouchers or cash.">🔊</button>
+              <span class="nev-en-text">You can pay by card, holiday vouchers or cash.</span>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td class="nev-fr-cell">L&rsquo;&eacute;quipement est compris dans le tarif.</td>
+          <td class="nev-en-cell-wrap">
+            <div class="nev-en-cell">
+              <button type="button" class="phrase-audio-btn" data-audio-src="/vocab-audio/naturevasion-vocab-audio/equipment-is-included-in-the-price.mp3" aria-label="Listen: Equipment is included in the price.">🔊</button>
+              <span class="nev-en-text">Equipment is included in the price.</span>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td class="nev-fr-cell">Il n&rsquo;y a pas de tarif de groupe.</td>
+          <td class="nev-en-cell-wrap">
+            <div class="nev-en-cell">
+              <button type="button" class="phrase-audio-btn" data-audio-src="/vocab-audio/naturevasion-vocab-audio/there-is-no-group-rate.mp3" aria-label="Listen: There is no group rate.">🔊</button>
+              <span class="nev-en-text">There is no group rate.</span>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td class="nev-fr-cell">Vous payerez sur le site.</td>
+          <td class="nev-en-cell-wrap">
+            <div class="nev-en-cell">
+              <button type="button" class="phrase-audio-btn" data-audio-src="/vocab-audio/naturevasion-vocab-audio/you-pay-on-the-website.mp3" aria-label="Listen: You pay on the website.">🔊</button>
+              <span class="nev-en-text">You pay on the website.</span>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td class="nev-fr-cell">Si il fait mauvais temps, on annule et on vous rembourse.</td>
+          <td class="nev-en-cell-wrap">
+            <div class="nev-en-cell">
+              <button type="button" class="phrase-audio-btn" data-audio-src="/vocab-audio/naturevasion-vocab-audio/if-the-weather-is-bad-we-will-cancel-and-refund-you.mp3" aria-label="Listen: If the weather is bad, we will cancel and refund you.">🔊</button>
+              <span class="nev-en-text">If the weather is bad, we will cancel and refund you.</span>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section class="nev-section keep-together">
+    <h2 class="nev-section-title">📍 Location &amp; Getting There</h2>
+    <table class="nev-phrase-table" aria-label="Location and getting there">
+      <thead>
+        <tr>
+          <th scope="col" style="width: 50%;">🇫🇷 French</th>
+          <th scope="col" style="width: 50%;">🇬🇧 English</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="nev-fr-cell">La base se trouve &agrave; St Antonin du Var.</td>
+          <td class="nev-en-cell-wrap">
+            <div class="nev-en-cell">
+              <button type="button" class="phrase-audio-btn" data-audio-src="/vocab-audio/naturevasion-vocab-audio/the-base-is-located-in-st-antonin-du-var.mp3" aria-label="Listen: The base is located in St Antonin du Var.">🔊</button>
+              <span class="nev-en-text">The base is located in St Antonin du Var.</span>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td class="nev-fr-cell">C&rsquo;est le point de RDV.</td>
+          <td class="nev-en-cell-wrap">
+            <div class="nev-en-cell">
+              <button type="button" class="phrase-audio-btn" data-audio-src="/vocab-audio/naturevasion-vocab-audio/this-is-the-meeting-point.mp3" aria-label="Listen: This is the meeting point.">🔊</button>
+              <span class="nev-en-text">This is the meeting point.</span>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td class="nev-fr-cell">L&rsquo;adresse est 93 Route de Carc&egrave;s, 83510 Saint-Antonin-du-Var.</td>
+          <td class="nev-en-cell-wrap">
+            <div class="nev-en-cell">
+              <button type="button" class="phrase-audio-btn" data-audio-src="/vocab-audio/naturevasion-vocab-audio/the-address-is-93-route-de-carces-83510-saint-antonin-du-var.mp3" aria-label="Listen: The address is 93 Route de Carcès, 83510 Saint-Antonin-du-Var.">🔊</button>
+              <span class="nev-en-text">The address is 93 Route de Carc&egrave;s, 83510 Saint-Antonin-du-Var.</span>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td class="nev-fr-cell">Il y a un parking.</td>
+          <td class="nev-en-cell-wrap">
+            <div class="nev-en-cell">
+              <button type="button" class="phrase-audio-btn" data-audio-src="/vocab-audio/naturevasion-vocab-audio/there-is-a-car-park.mp3" aria-label="Listen: There is a car park.">🔊</button>
+              <span class="nev-en-text">There is a car park.</span>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td class="nev-fr-cell">Vous avez des supermarch&eacute;s &agrave; Lorgues.</td>
+          <td class="nev-en-cell-wrap">
+            <div class="nev-en-cell">
+              <button type="button" class="phrase-audio-btn" data-audio-src="/vocab-audio/naturevasion-vocab-audio/there-are-supermarkets-in-lorgues.mp3" aria-label="Listen: There are supermarkets in Lorgues.">🔊</button>
+              <span class="nev-en-text">There are supermarkets in Lorgues.</span>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section class="nev-section keep-together">
+    <h2 class="nev-section-title">🧭 Directions On-Site</h2>
+    <table class="nev-phrase-table" aria-label="Directions on site">
+      <thead>
+        <tr>
+          <th scope="col" style="width: 50%;">🇫🇷 French</th>
+          <th scope="col" style="width: 50%;">🇬🇧 English</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="nev-fr-cell">Venez avec moi &mdash; je vous montre.</td>
+          <td class="nev-en-cell-wrap">
+            <div class="nev-en-cell">
+              <button type="button" class="phrase-audio-btn" data-audio-src="/vocab-audio/naturevasion-vocab-audio/come-with-me-ill-show-you.mp3" aria-label="Listen: Come with me - I'll show you.">🔊</button>
+              <span class="nev-en-text">Come with me &mdash; I&rsquo;ll show you.</span>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td class="nev-fr-cell">Suivez-moi.</td>
+          <td class="nev-en-cell-wrap">
+            <div class="nev-en-cell">
+              <button type="button" class="phrase-audio-btn" data-audio-src="/vocab-audio/naturevasion-vocab-audio/follow-me.mp3" aria-label="Listen: Follow me.">🔊</button>
+              <span class="nev-en-text">Follow me.</span>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td class="nev-fr-cell">Vous avez juste &agrave; aller ici et en bas pour le mat&eacute;riel / l&rsquo;&eacute;quipement.</td>
+          <td class="nev-en-cell-wrap">
+            <div class="nev-en-cell">
+              <button type="button" class="phrase-audio-btn" data-audio-src="/vocab-audio/naturevasion-vocab-audio/you-just-need-to-go-here-and-down-below-for-the-equipment.mp3" aria-label="Listen: You just need to go here and down below for the equipment.">🔊</button>
+              <span class="nev-en-text">You just need to go here and down below for the equipment.</span>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td class="nev-fr-cell">Il y a des pots herm&eacute;tiques pour mettre vos affaires (bidons &eacute;tanches).</td>
+          <td class="nev-en-cell-wrap">
+            <div class="nev-en-cell">
+              <button type="button" class="phrase-audio-btn" data-audio-src="/vocab-audio/naturevasion-vocab-audio/there-are-airtight-containers-for-your-belongings-waterproof-canisters.mp3" aria-label="Listen: There are airtight containers for your belongings (waterproof canisters).">🔊</button>
+              <span class="nev-en-text">There are airtight containers for your belongings (waterproof canisters).</span>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td class="nev-fr-cell">L&agrave;-bas, vers le hangar / la cabane rouge, vous avez des casques et des gilets.</td>
+          <td class="nev-en-cell-wrap">
+            <div class="nev-en-cell">
+              <button type="button" class="phrase-audio-btn" data-audio-src="/vocab-audio/naturevasion-vocab-audio/over-there-near-the-shed-red-hut-there-are-helmets-and-life-jackets.mp3" aria-label="Listen: Over there, near the shed / red hut, there are helmets and life jackets.">🔊</button>
+              <span class="nev-en-text">Over there, near the shed / red hut, there are helmets and life jackets.</span>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td class="nev-fr-cell">L&rsquo;arriv&eacute;e est ici.</td>
+          <td class="nev-en-cell-wrap">
+            <div class="nev-en-cell">
+              <button type="button" class="phrase-audio-btn" data-audio-src="/vocab-audio/naturevasion-vocab-audio/the-finish-point-is-here.mp3" aria-label="Listen: The finish point is here.">🔊</button>
+              <span class="nev-en-text">The finish point is here.</span>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td class="nev-fr-cell">Les toilettes sont l&agrave;.</td>
+          <td class="nev-en-cell-wrap">
+            <div class="nev-en-cell">
+              <button type="button" class="phrase-audio-btn" data-audio-src="/vocab-audio/naturevasion-vocab-audio/the-toilets-are-over-there.mp3" aria-label="Listen: The toilets are over there.">🔊</button>
+              <span class="nev-en-text">The toilets are over there.</span>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section class="nev-section keep-together">
+    <h2 class="nev-section-title">🪖 Equipment &amp; Getting Ready</h2>
+    <table class="nev-phrase-table" aria-label="Equipment and getting ready">
+      <thead>
+        <tr>
+          <th scope="col" style="width: 50%;">🇫🇷 French</th>
+          <th scope="col" style="width: 50%;">🇬🇧 English</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="nev-fr-cell">Vous pouvez aller vous &eacute;quiper.</td>
+          <td class="nev-en-cell-wrap">
+            <div class="nev-en-cell">
+              <button type="button" class="phrase-audio-btn" data-audio-src="/vocab-audio/naturevasion-vocab-audio/you-can-go-and-get-your-equipment.mp3" aria-label="Listen: You can go and get your equipment.">🔊</button>
+              <span class="nev-en-text">You can go and get your equipment.</span>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td class="nev-fr-cell">Vous pouvez vous &eacute;quiper seul.</td>
+          <td class="nev-en-cell-wrap">
+            <div class="nev-en-cell">
+              <button type="button" class="phrase-audio-btn" data-audio-src="/vocab-audio/naturevasion-vocab-audio/you-can-kit-yourself-out-on-your-own.mp3" aria-label="Listen: You can kit yourself out on your own.">🔊</button>
+              <span class="nev-en-text">You can kit yourself out on your own.</span>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td class="nev-fr-cell">Il y a des tailles en fonction des couleurs.</td>
+          <td class="nev-en-cell-wrap">
+            <div class="nev-en-cell">
+              <button type="button" class="phrase-audio-btn" data-audio-src="/vocab-audio/naturevasion-vocab-audio/sizes-are-indicated-by-colour.mp3" aria-label="Listen: Sizes are indicated by colour.">🔊</button>
+              <span class="nev-en-text">Sizes are indicated by colour.</span>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td class="nev-fr-cell">Vous avez des panneaux / pancartes pour vous aider &agrave; choisir vos pagaies.</td>
+          <td class="nev-en-cell-wrap">
+            <div class="nev-en-cell">
+              <button type="button" class="phrase-audio-btn" data-audio-src="/vocab-audio/naturevasion-vocab-audio/there-are-signs-boards-to-help-you-choose-your-paddles.mp3" aria-label="Listen: There are signs / boards to help you choose your paddles.">🔊</button>
+              <span class="nev-en-text">There are signs / boards to help you choose your paddles.</span>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td class="nev-fr-cell">Vous devez mettre des chaussures ferm&eacute;es.</td>
+          <td class="nev-en-cell-wrap">
+            <div class="nev-en-cell">
+              <button type="button" class="phrase-audio-btn" data-audio-src="/vocab-audio/naturevasion-vocab-audio/you-must-wear-closed-toe-shoes.mp3" aria-label="Listen: You must wear closed-toe shoes.">🔊</button>
+              <span class="nev-en-text">You must wear closed-toe shoes.</span>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td class="nev-fr-cell">Il n&rsquo;y a pas de vestiaires, donc prenez le minimum.</td>
+          <td class="nev-en-cell-wrap">
+            <div class="nev-en-cell">
+              <button type="button" class="phrase-audio-btn" data-audio-src="/vocab-audio/naturevasion-vocab-audio/there-are-no-changing-rooms-so-bring-the-bare-minimum.mp3" aria-label="Listen: There are no changing rooms, so bring the bare minimum.">🔊</button>
+              <span class="nev-en-text">There are no changing rooms, so bring the bare minimum.</span>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td class="nev-fr-cell">Le poids maximum pour cano&euml; une place est 150 kg et bi-place 270 kg.</td>
+          <td class="nev-en-cell-wrap">
+            <div class="nev-en-cell">
+              <button type="button" class="phrase-audio-btn" data-audio-src="/vocab-audio/naturevasion-vocab-audio/the-maximum-weight-for-a-single-canoe-is-150-kg-and-for-a-double-270-kg.mp3" aria-label="Listen: The maximum weight for a single canoe is 150 kg and for a double 270 kg.">🔊</button>
+              <span class="nev-en-text">The maximum weight for a single canoe is 150 kg and for a double 270 kg.</span>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section class="nev-section keep-together">
+    <h2 class="nev-section-title">🗺️ Routes &amp; Timings</h2>
+    <table class="nev-phrase-table" aria-label="Routes and timings">
+      <thead>
+        <tr>
+          <th scope="col" style="width: 50%;">🇫🇷 French</th>
+          <th scope="col" style="width: 50%;">🇬🇧 English</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="nev-fr-cell">Le parcours le plus calme, c&rsquo;est celui-l&agrave;.</td>
+          <td class="nev-en-cell-wrap">
+            <div class="nev-en-cell">
+              <button type="button" class="phrase-audio-btn" data-audio-src="/vocab-audio/naturevasion-vocab-audio/the-calmest-route-is-that-one.mp3" aria-label="Listen: The calmest route is that one.">🔊</button>
+              <span class="nev-en-text">The calmest route is that one.</span>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td class="nev-fr-cell">Vous avez maximum 2h pour faire le parcours.</td>
+          <td class="nev-en-cell-wrap">
+            <div class="nev-en-cell">
+              <button type="button" class="phrase-audio-btn" data-audio-src="/vocab-audio/naturevasion-vocab-audio/you-have-a-maximum-of-2-hours-to-complete-the-route.mp3" aria-label="Listen: You have a maximum of 2 hours to complete the route.">🔊</button>
+              <span class="nev-en-text">You have a maximum of 2 hours to complete the route.</span>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td class="nev-fr-cell">Ce parcours dure 2 heures.</td>
+          <td class="nev-en-cell-wrap">
+            <div class="nev-en-cell">
+              <button type="button" class="phrase-audio-btn" data-audio-src="/vocab-audio/naturevasion-vocab-audio/this-route-takes-2-hours.mp3" aria-label="Listen: This route takes 2 hours.">🔊</button>
+              <span class="nev-en-text">This route takes 2 hours.</span>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td class="nev-fr-cell">Combien de temps voulez-vous faire du cano&euml; ?</td>
+          <td class="nev-en-cell-wrap">
+            <div class="nev-en-cell">
+              <button type="button" class="phrase-audio-btn" data-audio-src="/vocab-audio/naturevasion-vocab-audio/how-long-would-you-like-to-go-canoeing-for.mp3" aria-label="Listen: How long would you like to go canoeing for?">🔊</button>
+              <span class="nev-en-text">How long would you like to go canoeing for?</span>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td class="nev-fr-cell">N&rsquo;allez pas plus loin que ce panneau.</td>
+          <td class="nev-en-cell-wrap">
+            <div class="nev-en-cell">
+              <button type="button" class="phrase-audio-btn" data-audio-src="/vocab-audio/naturevasion-vocab-audio/do-not-go-beyond-this-sign.mp3" aria-label="Listen: Do not go beyond this sign.">🔊</button>
+              <span class="nev-en-text">Do not go beyond this sign.</span>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td class="nev-fr-cell">Il y a des navettes &agrave; disposition selon le parcours.</td>
+          <td class="nev-en-cell-wrap">
+            <div class="nev-en-cell">
+              <button type="button" class="phrase-audio-btn" data-audio-src="/vocab-audio/naturevasion-vocab-audio/shuttles-are-available-depending-on-the-route.mp3" aria-label="Listen: Shuttles are available depending on the route.">🔊</button>
+              <span class="nev-en-text">Shuttles are available depending on the route.</span>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section class="nev-section keep-together">
+    <h2 class="nev-section-title">⏰ Opening Hours</h2>
+    <table class="nev-phrase-table" aria-label="Opening hours">
+      <thead>
+        <tr>
+          <th scope="col" style="width: 50%;">🇫🇷 French</th>
+          <th scope="col" style="width: 50%;">🇬🇧 English</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="nev-fr-cell">Nous sommes ouverts tous les jours de 8h30 &agrave; 18h, sauf le lundi.</td>
+          <td class="nev-en-cell-wrap">
+            <div class="nev-en-cell">
+              <button type="button" class="phrase-audio-btn" data-audio-src="/vocab-audio/naturevasion-vocab-audio/we-are-open-every-day-from-830am-to-6pm-except-mondays.mp3" aria-label="Listen: We are open every day from 8:30am to 6pm, except Mondays.">🔊</button>
+              <span class="nev-en-text">We are open every day from 8:30am to 6pm, except Mondays.</span>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section class="nev-section keep-together">
+    <h2 class="nev-section-title">🍔 Facilities &amp; Amenities</h2>
+    <table class="nev-phrase-table" aria-label="Facilities and amenities">
+      <thead>
+        <tr>
+          <th scope="col" style="width: 50%;">🇫🇷 French</th>
+          <th scope="col" style="width: 50%;">🇬🇧 English</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="nev-fr-cell">Oui, il y a un acc&egrave;s pour les personnes handicap&eacute;es.</td>
+          <td class="nev-en-cell-wrap">
+            <div class="nev-en-cell">
+              <button type="button" class="phrase-audio-btn" data-audio-src="/vocab-audio/naturevasion-vocab-audio/yes-there-is-access-for-people-with-disabilities.mp3" aria-label="Listen: Yes, there is access for people with disabilities.">🔊</button>
+              <span class="nev-en-text">Yes, there is access for people with disabilities.</span>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td class="nev-fr-cell">Vous avez besoin de boissons et de snacks ?</td>
+          <td class="nev-en-cell-wrap">
+            <div class="nev-en-cell">
+              <button type="button" class="phrase-audio-btn" data-audio-src="/vocab-audio/naturevasion-vocab-audio/do-you-need-drinks-and-snacks.mp3" aria-label="Listen: Do you need drinks and snacks?">🔊</button>
+              <span class="nev-en-text">Do you need drinks and snacks?</span>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td class="nev-fr-cell">Oui, nous avons quelques snacks et boissons sur place.</td>
+          <td class="nev-en-cell-wrap">
+            <div class="nev-en-cell">
+              <button type="button" class="phrase-audio-btn" data-audio-src="/vocab-audio/naturevasion-vocab-audio/yes-we-have-some-snacks-and-drinks-on-site.mp3" aria-label="Listen: Yes, we have some snacks and drinks on site.">🔊</button>
+              <span class="nev-en-text">Yes, we have some snacks and drinks on site.</span>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td class="nev-fr-cell">Vous pouvez amener votre pique-nique.</td>
+          <td class="nev-en-cell-wrap">
+            <div class="nev-en-cell">
+              <button type="button" class="phrase-audio-btn" data-audio-src="/vocab-audio/naturevasion-vocab-audio/you-can-bring-your-own-picnic.mp3" aria-label="Listen: You can bring your own picnic.">🔊</button>
+              <span class="nev-en-text">You can bring your own picnic.</span>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td class="nev-fr-cell">Il y a des tables de pique-nique derri&egrave;re la cabane.</td>
+          <td class="nev-en-cell-wrap">
+            <div class="nev-en-cell">
+              <button type="button" class="phrase-audio-btn" data-audio-src="/vocab-audio/naturevasion-vocab-audio/there-are-picnic-tables-behind-the-hut.mp3" aria-label="Listen: There are picnic tables behind the hut.">🔊</button>
+              <span class="nev-en-text">There are picnic tables behind the hut.</span>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td class="nev-fr-cell">Il y en a aussi en bas, proche de la rivi&egrave;re.</td>
+          <td class="nev-en-cell-wrap">
+            <div class="nev-en-cell">
+              <button type="button" class="phrase-audio-btn" data-audio-src="/vocab-audio/naturevasion-vocab-audio/there-are-also-some-down-below-near-the-river.mp3" aria-label="Listen: There are also some down below, near the river.">🔊</button>
+              <span class="nev-en-text">There are also some down below, near the river.</span>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td class="nev-fr-cell">Les chiens sont autoris&eacute;s en laisse.</td>
+          <td class="nev-en-cell-wrap">
+            <div class="nev-en-cell">
+              <button type="button" class="phrase-audio-btn" data-audio-src="/vocab-audio/naturevasion-vocab-audio/dogs-are-allowed-on-a-lead.mp3" aria-label="Listen: Dogs are allowed on a lead.">🔊</button>
+              <span class="nev-en-text">Dogs are allowed on a lead.</span>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section class="nev-section keep-together">
+    <h2 class="nev-section-title">🤙 Before You Set Off</h2>
+    <table class="nev-phrase-table" aria-label="Before you set off">
+      <thead>
+        <tr>
+          <th scope="col" style="width: 50%;">🇫🇷 French</th>
+          <th scope="col" style="width: 50%;">🇬🇧 English</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="nev-fr-cell">Nous allons faire un briefing avant le d&eacute;part.</td>
+          <td class="nev-en-cell-wrap">
+            <div class="nev-en-cell">
+              <button type="button" class="phrase-audio-btn" data-audio-src="/vocab-audio/naturevasion-vocab-audio/we-will-do-a-briefing-before-you-set-off.mp3" aria-label="Listen: We will do a briefing before you set off.">🔊</button>
+              <span class="nev-en-text">We will do a briefing before you set off.</span>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td class="nev-fr-cell">Vous pouvez attendre ici.</td>
+          <td class="nev-en-cell-wrap">
+            <div class="nev-en-cell">
+              <button type="button" class="phrase-audio-btn" data-audio-src="/vocab-audio/naturevasion-vocab-audio/you-can-wait-here.mp3" aria-label="Listen: You can wait here.">🔊</button>
+              <span class="nev-en-text">You can wait here.</span>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td class="nev-fr-cell">Profitez et amusez-vous !</td>
+          <td class="nev-en-cell-wrap">
+            <div class="nev-en-cell">
+              <button type="button" class="phrase-audio-btn" data-audio-src="/vocab-audio/naturevasion-vocab-audio/enjoy-yourselves-and-have-fun.mp3" aria-label="Listen: Enjoy yourselves and have fun!">🔊</button>
+              <span class="nev-en-text">Enjoy yourselves and have fun!</span>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+</div>
