@@ -36,6 +36,21 @@ type SortOption = 'date' | 'level' | 'alphabetical'
 
 type ProgressStatusKey = 'NOT_STARTED' | 'IN_PROGRESS' | 'COMPLETED'
 
+const SKILL_FILTER_OPTIONS: { value: string; label: string }[] = [
+  { value: 'All', label: 'All categories' },
+  { value: 'GRAMMAR', label: 'Grammar' },
+  { value: 'VOCABULARY', label: 'Vocabulary' },
+  { value: 'READING', label: 'Reading' },
+  { value: 'WRITING', label: 'Writing' },
+  { value: 'SPEAKING', label: 'Speaking' },
+  { value: 'LISTENING', label: 'Listening' },
+  { value: 'TESTS', label: 'Tests' },
+  { value: 'REFERENCE', label: 'Reference' },
+  { value: 'TRAVEL_ENGLISH', label: 'Travel English' },
+  { value: 'BUSINESS_ENGLISH', label: 'Business English' },
+  { value: 'EVERYDAY_ENGLISH', label: 'Everyday English' },
+]
+
 function getAssignmentStatus(assignment: Assignment): ProgressStatusKey {
   const progress = Array.isArray(assignment.progress) ? assignment.progress[0] : null
   const raw = progress?.status as string | undefined
@@ -47,23 +62,56 @@ function getAssignmentStatus(assignment: Assignment): ProgressStatusKey {
 
 export default function AssignmentsList({ assignments, viewAs }: Props) {
   const [sortBy, setSortBy] = useState<SortOption>('date')
+  const [searchQuery, setSearchQuery] = useState('')
+  const [selectedSkill, setSelectedSkill] = useState('All')
   const [showStatuses, setShowStatuses] = useState<Record<ProgressStatusKey, boolean>>({
     NOT_STARTED: true,
     IN_PROGRESS: true,
     COMPLETED: true,
   })
 
+  const skillsInAssignments = useMemo(() => {
+    const skills = new Set<string>()
+    assignments.forEach((assignment) => {
+      if (assignment.resource?.skill) skills.add(assignment.resource.skill)
+    })
+    return skills
+  }, [assignments])
+
+  const categoryOptions = useMemo(
+    () =>
+      SKILL_FILTER_OPTIONS.filter(
+        (option) => option.value === 'All' || skillsInAssignments.has(option.value),
+      ),
+    [skillsInAssignments],
+  )
+
   // Check if assignment has been viewed (has progress record)
   const hasBeenViewed = (assignment: Assignment) => {
     return assignment.progress && assignment.progress.length > 0
   }
 
-  // Filter by selected statuses, then sort
+  const matchesSearch = (assignment: Assignment, query: string) => {
+    const trimmed = query.trim().toLowerCase()
+    if (!trimmed) return true
+
+    const title = (assignment.resource?.title || '').toLowerCase()
+    const skillLabel = formatSkill(assignment.resource?.skill).toLowerCase()
+    const level = (assignment.resource?.level || '').toLowerCase()
+
+    return title.includes(trimmed) || skillLabel.includes(trimmed) || level.includes(trimmed)
+  }
+
+  // Filter by status, search, and category; then sort
   const sortedAssignments = useMemo(() => {
     const anyStatusSelected =
       showStatuses.NOT_STARTED || showStatuses.IN_PROGRESS || showStatuses.COMPLETED
     const filtered = anyStatusSelected
-      ? assignments.filter((a) => showStatuses[getAssignmentStatus(a)])
+      ? assignments.filter((assignment) => {
+          if (!showStatuses[getAssignmentStatus(assignment)]) return false
+          if (selectedSkill !== 'All' && assignment.resource?.skill !== selectedSkill) return false
+          return matchesSearch(assignment, searchQuery)
+        })
       : []
 
     return [...filtered].sort((a, b) => {
@@ -97,7 +145,7 @@ export default function AssignmentsList({ assignments, viewAs }: Props) {
         }
       }
     })
-  }, [assignments, sortBy, showStatuses])
+  }, [assignments, sortBy, showStatuses, searchQuery, selectedSkill])
 
   const toggleStatus = (key: ProgressStatusKey) => {
     setShowStatuses((prev) => ({ ...prev, [key]: !prev[key] }))
@@ -105,6 +153,8 @@ export default function AssignmentsList({ assignments, viewAs }: Props) {
 
   const anyStatusSelected =
     showStatuses.NOT_STARTED || showStatuses.IN_PROGRESS || showStatuses.COMPLETED
+
+  const hasActiveFilters = searchQuery.trim() !== '' || selectedSkill !== 'All'
 
   const emptyMessage = (() => {
     if (assignments.length === 0) {
@@ -114,6 +164,9 @@ export default function AssignmentsList({ assignments, viewAs }: Props) {
       return 'Tick at least one status under Show to see assignments.'
     }
     if (sortedAssignments.length === 0) {
+      if (hasActiveFilters) {
+        return 'No assignments match your search or category filter. Try different keywords or choose All categories.'
+      }
       return 'No assignments match the statuses you selected. Try ticking another box.'
     }
     return null
@@ -124,6 +177,77 @@ export default function AssignmentsList({ assignments, viewAs }: Props) {
       <div className="flex flex-col gap-4 mb-4 sm:flex-row sm:justify-between sm:items-start">
         <h3 className="text-sm font-medium text-gray-700 shrink-0">Assignments</h3>
         <div className="flex flex-col gap-4 w-full sm:w-auto sm:items-end">
+          <div className="w-full sm:w-80">
+            <label htmlFor="assignment-search" className="block text-sm font-medium text-gray-700 mb-2">
+              Search
+            </label>
+            <div className="relative">
+              <input
+                id="assignment-search"
+                type="search"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder="Search by title, category, or level…"
+                className="w-full border border-gray-300 rounded-md pl-3 pr-9 py-2 text-sm focus:outline-none bg-white"
+                onFocus={(e) => (e.currentTarget.style.borderColor = '#38438f')}
+                onBlur={(e) => (e.currentTarget.style.borderColor = '#d1d5db')}
+                autoComplete="off"
+              />
+              {searchQuery.trim() !== '' && (
+                <button
+                  type="button"
+                  onClick={() => setSearchQuery('')}
+                  className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 p-1"
+                  aria-label="Clear search"
+                  title="Clear search"
+                >
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
+              )}
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 w-full sm:w-[36rem]">
+            <div>
+              <label htmlFor="category-filter" className="block text-sm font-medium text-gray-700 mb-2">
+                Category
+              </label>
+              <select
+                id="category-filter"
+                value={selectedSkill}
+                onChange={(e) => setSelectedSkill(e.target.value)}
+                className="border border-gray-300 rounded-md px-3 py-2 focus:outline-none w-full text-sm"
+                onFocus={(e) => (e.currentTarget.style.borderColor = '#38438f')}
+                onBlur={(e) => (e.currentTarget.style.borderColor = '#d1d5db')}
+              >
+                {categoryOptions.map((option) => (
+                  <option key={option.value} value={option.value}>
+                    {option.label}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div>
+              <label htmlFor="sort-by" className="block text-sm font-medium text-gray-700 mb-2">
+                Sort by
+              </label>
+              <select
+                id="sort-by"
+                value={sortBy}
+                onChange={(e) => setSortBy(e.target.value as SortOption)}
+                className="border border-gray-300 rounded-md px-3 py-2 focus:outline-none w-full text-sm"
+                onFocus={(e) => (e.currentTarget.style.borderColor = '#38438f')}
+                onBlur={(e) => (e.currentTarget.style.borderColor = '#d1d5db')}
+              >
+                <option value="date">Date Added (Newest First)</option>
+                <option value="level">Level</option>
+                <option value="alphabetical">Alphabetically</option>
+              </select>
+            </div>
+          </div>
+
           <fieldset className="w-full sm:min-w-[280px] border border-gray-200 rounded-md p-3 bg-gray-50/50">
             <legend className="text-sm font-medium text-gray-700 px-1">Show</legend>
             <div className="flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:gap-x-4 sm:gap-y-2">
@@ -156,25 +280,14 @@ export default function AssignmentsList({ assignments, viewAs }: Props) {
               </label>
             </div>
           </fieldset>
-          <div className="w-full sm:w-72">
-            <label htmlFor="sort-by" className="block text-sm font-medium text-gray-700 mb-2">
-              Sort by
-            </label>
-            <select
-              id="sort-by"
-              value={sortBy}
-              onChange={(e) => setSortBy(e.target.value as SortOption)}
-              className="border border-gray-300 rounded-md px-3 py-2 focus:outline-none w-full text-sm"
-              onFocus={(e) => (e.currentTarget.style.borderColor = '#38438f')}
-              onBlur={(e) => (e.currentTarget.style.borderColor = '#d1d5db')}
-            >
-              <option value="date">Date Added (Newest First)</option>
-              <option value="level">Level</option>
-              <option value="alphabetical">Alphabetically</option>
-            </select>
-          </div>
         </div>
       </div>
+      {hasActiveFilters && sortedAssignments.length > 0 && (
+        <p className="text-sm text-gray-500 mb-3">
+          Showing {sortedAssignments.length} of {assignments.length} assignment
+          {assignments.length === 1 ? '' : 's'}
+        </p>
+      )}
       <div className="space-y-2">
         {sortedAssignments.length === 0 ? (
           <p className="text-sm text-gray-500">{emptyMessage}</p>
