@@ -100,6 +100,57 @@
     page-break-inside: auto;
     overflow: visible;
   }
+  .itw-writing-timer-host {
+    margin-bottom: 12px;
+  }
+  .itw-writing-timer {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  .itw-writing-timer-start {
+    padding: 10px 16px;
+    font-size: 14px;
+    font-weight: 600;
+    color: #ffffff;
+    background: linear-gradient(135deg, #4338ca 0%, #6366f1 100%);
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    box-shadow: 0 2px 6px rgba(67, 56, 202, 0.35);
+  }
+  .itw-writing-timer-start:hover {
+    filter: brightness(1.05);
+  }
+  .itw-writing-timer-display {
+    font-size: 28px;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+    color: #1e3a8a;
+    padding: 8px 16px;
+    background: #eef2ff;
+    border: 2px solid #818cf8;
+    border-radius: 8px;
+    min-width: 110px;
+    text-align: center;
+  }
+  .itw-writing-timer-display.itw-writing-timer-expired {
+    color: #b91c1c;
+    background: #fef2f2;
+    border-color: #f87171;
+  }
+  @keyframes itw-timer-shake {
+    0%, 100% { transform: translateX(0); }
+    10%, 30%, 50%, 70%, 90% { transform: translateX(-6px); }
+    20%, 40%, 60%, 80% { transform: translateX(6px); }
+  }
+  .itw-writing-timer-shake {
+    animation: itw-timer-shake 0.6s ease-in-out;
+  }
+  @media print {
+    .itw-writing-timer-host { display: none !important; }
+  }
 </style>
 
 <div style="max-width: 820px; margin: 0 auto; padding: 24px; font-family: Arial, sans-serif; line-height: 1.6; color: #1e293b; background: linear-gradient(to bottom, #eef2ff, #ffffff);">
@@ -196,6 +247,7 @@
       <p style="margin: 0;">Francine</p>
     </div>
     <p style="font-size: 14px; margin: 0 0 14px 0; color: #334155;"><strong>Directions:</strong> Respond to the e-mail as if you attended the conference last year. In your e-mail, give <strong>THREE</strong> reasons.</p>
+    <div class="itw-writing-timer-host" data-writing-timer-minutes="10" data-writing-timer-label="Start the ten minute timer"></div>
     <div data-grammar-save-section="true" data-grammar-ai-feedback="email1">
       <span data-grammar-input="writing-response-email1" data-grammar-input-type="textarea" data-grammar-textarea-rows="12" style="display: block; min-height: 220px;"></span>
     </div>
@@ -213,6 +265,7 @@
       <p style="margin: 0;">Welcome! We would like to be the first to welcome you to Dale City. We know that there are many things to do when you move, from finding your way around town to setting up your utilities. Please contact us if you need any help at all.</p>
     </div>
     <p style="font-size: 14px; margin: 0 0 14px 0; color: #334155;"><strong>Directions:</strong> Respond to the e-mail. Respond as if you have recently moved to a new city. In your e-mail to the committee, make at least <strong>TWO</strong> requests for information.</p>
+    <div class="itw-writing-timer-host" data-writing-timer-minutes="10" data-writing-timer-label="Start the ten minute timer"></div>
     <div data-grammar-save-section="true" data-grammar-ai-feedback="email2">
       <span data-grammar-input="writing-response-email2" data-grammar-input-type="textarea" data-grammar-textarea-rows="12" style="display: block; min-height: 220px;"></span>
     </div>
@@ -233,6 +286,7 @@
     </div>
 
     <div class="itw-essay-task-host" data-grammar-ai-feedback-host="essay">
+      <div class="itw-writing-timer-host" data-writing-timer-minutes="30" data-writing-timer-label="Start the thirty minute timer"></div>
       <div data-grammar-save-section="true" data-grammar-ai-feedback="essay">
         <span data-grammar-input="writing-essay" data-grammar-input-type="textarea" data-grammar-textarea-rows="18" style="display: block; min-height: 360px;"></span>
       </div>

@@ -15,6 +15,7 @@ import {
 } from '@/lib/worksheetInteractions/givingInformationAnsweringQuestions'
 import { mountPhraseAudioButtons } from '@/lib/worksheetInteractions/phraseAudioButtons'
 import { mountPresentingServicesProductsActivities } from '@/lib/worksheetInteractions/presentingServicesProductsKeyLanguage'
+import { mountWritingPracticeTimers } from '@/lib/worksheetInteractions/writingPracticeTimers'
 import {
   formatFeedbackForDisplay,
   getFeedbackNotesKey,
@@ -769,6 +770,8 @@ export default function WorksheetViewer({ assignmentId, resource, initialProgres
   const hasMountedWorksheetActivities = hasPspActivities || hasGiaqActivities
   const hasPhraseAudioRoot =
     typeof resource.content === 'string' && resource.content.includes('data-phrase-audio-root')
+  const hasWritingTimers =
+    typeof resource.content === 'string' && resource.content.includes('data-writing-timer-minutes')
 
   /** Per-section Check Answers + live tick/cross (see resources using data-grammar-per-section-check). */
   const enablePerSectionGrammarCheck = useMemo(() => {
@@ -2633,6 +2636,21 @@ export default function WorksheetViewer({ assignmentId, resource, initialProgres
       detach?.()
     }
   }, [resource.content, hasPhraseAudioRoot])
+
+  // TOEIC writing practice countdown timers (emails + essay).
+  useLayoutEffect(() => {
+    if (!hasWritingTimers) return
+    let detach: (() => void) | undefined
+    const rafId = requestAnimationFrame(() => {
+      const host = contentRef.current
+      if (!host) return
+      detach = mountWritingPracticeTimers(host)
+    })
+    return () => {
+      cancelAnimationFrame(rafId)
+      detach?.()
+    }
+  }, [resource.content, hasWritingTimers])
 
   // Past Simple Practice (Army): -ed pronunciation columns.
   useEffect(() => {

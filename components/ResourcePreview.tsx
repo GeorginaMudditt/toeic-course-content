@@ -8,6 +8,7 @@ import { mountPastSimpleArmyEdPronunciation } from '@/lib/worksheetInteractions/
 import { mountUnmountedGivingInformationActivities } from '@/lib/worksheetInteractions/givingInformationAnsweringQuestions'
 import { mountPhraseAudioButtons } from '@/lib/worksheetInteractions/phraseAudioButtons'
 import { mountPresentingServicesProductsActivities } from '@/lib/worksheetInteractions/presentingServicesProductsKeyLanguage'
+import { mountWritingPracticeTimers } from '@/lib/worksheetInteractions/writingPracticeTimers'
 
 interface Resource {
   id: string
@@ -177,6 +178,8 @@ export default function ResourcePreview({ resource, showActions = true }: Resour
   const hasMountedWorksheetActivities = hasPspActivities || hasGiaqActivities
   const hasPhraseAudioRoot =
     typeof resource.content === 'string' && resource.content.includes('data-phrase-audio-root')
+  const hasWritingTimers =
+    typeof resource.content === 'string' && resource.content.includes('data-writing-timer-minutes')
   const [grammarInputsReady, setGrammarInputsReady] = useState(false)
 
   // Defer grammar injection until after mount/hydration timing is settled
@@ -405,6 +408,20 @@ export default function ResourcePreview({ resource, showActions = true }: Resour
       detach?.()
     }
   }, [resource.content, hasPhraseAudioRoot])
+
+  useLayoutEffect(() => {
+    if (!hasWritingTimers) return
+    let detach: (() => void) | undefined
+    const rafId = requestAnimationFrame(() => {
+      const host = contentRef.current
+      if (!host) return
+      detach = mountWritingPracticeTimers(host)
+    })
+    return () => {
+      cancelAnimationFrame(rafId)
+      detach?.()
+    }
+  }, [resource.content, hasWritingTimers])
 
   useEffect(() => {
     if (typeof resource.content !== 'string' || !resource.content.includes('data-pspa-ed-pronunciation')) return
