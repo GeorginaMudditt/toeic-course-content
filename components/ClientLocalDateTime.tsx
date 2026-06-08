@@ -56,17 +56,19 @@ export function ClientLocalDateTime({ iso, preset, placeholder = '…', classNam
 /** One line: “Last seen at HH:mm on …” in the user’s locale and timezone. */
 export function ClientLocalLastSeenLine({
   iso,
+  prefix = 'Last seen at',
   className = 'text-sm text-gray-500 mt-1',
 }: {
   iso: string | null | undefined
+  prefix?: string
   className?: string
 }) {
-  const [line, setLine] = useState('Last seen at …')
+  const [line, setLine] = useState(`${prefix} …`)
 
   useEffect(() => {
     const d = parseDbTimestamp(iso)
     if (!d) {
-      setLine('Last seen at …')
+      setLine(`${prefix} …`)
       return
     }
     const time = d.toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' })
@@ -75,8 +77,19 @@ export function ClientLocalLastSeenLine({
       month: 'short',
       year: 'numeric',
     })
-    setLine(`Last seen at ${time} on ${date}`)
-  }, [iso])
+    setLine(`${prefix} ${time} on ${date}`)
+  }, [iso, prefix])
 
   return <p className={className}>{line}</p>
+}
+
+/** One line: “Last opened at HH:mm on …” in the user’s locale and timezone. */
+export function ClientLocalLastOpenedLine({
+  iso,
+  className = 'text-sm text-gray-500 mt-1',
+}: {
+  iso: string | null | undefined
+  className?: string
+}) {
+  return <ClientLocalLastSeenLine iso={iso} prefix="Last opened at" className={className} />
 }

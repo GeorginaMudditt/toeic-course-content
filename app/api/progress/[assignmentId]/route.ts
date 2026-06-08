@@ -64,10 +64,22 @@ export async function POST(
 
     const now = new Date().toISOString()
 
-    // First visit: create row for "viewed" badge only — do not touch existing saved work.
+    // Record a visit — create on first open, or bump updatedAt on return visits without touching saved work.
     if (markViewedOnly) {
       if (existingProgress && !checkError) {
-        return NextResponse.json(existingProgress)
+        const { data: updatedProgress, error: touchError } = await supabaseServer
+          .from('Progress')
+          .update({ updatedAt: now })
+          .eq('id', existingProgress.id)
+          .select()
+          .single()
+
+        if (touchError) {
+          console.error('Error updating visit timestamp:', touchError)
+          return NextResponse.json(existingProgress)
+        }
+
+        return NextResponse.json(updatedProgress)
       }
 
       const { data: newProgress, error: insertError } = await supabaseServer

@@ -8,12 +8,24 @@ import Navbar from '@/components/Navbar'
 import WorksheetViewer from '@/components/WorksheetViewer'
 import MarkAsViewed from './MarkAsViewed'
 
-export default async function AssignmentPage({ params }: { params: { id: string } }) {
+export default async function AssignmentPage({
+  params,
+  searchParams,
+}: {
+  params: { id: string }
+  searchParams: { viewAs?: string }
+}) {
   const session = await getServerSession(authOptions)
-  
-  if (!session || session.user.role !== 'STUDENT') {
+  const viewAs = searchParams?.viewAs
+  const isTeacherView = !!(viewAs && session?.user.role === 'TEACHER')
+
+  if (isTeacherView) {
+    // Teacher viewing a student's assignment — allowed via viewAs
+  } else if (!session || session.user.role !== 'STUDENT') {
     redirect('/login')
   }
+
+  const studentId = isTeacherView ? viewAs! : session!.user.id
 
   // Use Supabase REST API instead of Prisma for serverless compatibility
   let assignment: any = null
@@ -45,9 +57,9 @@ export default async function AssignmentPage({ params }: { params: { id: string 
       redirect('/student/dashboard')
     }
 
-    // Verify the assignment belongs to the logged-in student
-    if (enrollmentData.studentId !== session.user.id) {
-      redirect('/student/dashboard')
+    // Verify the assignment belongs to the target student
+    if (enrollmentData.studentId !== studentId) {
+      redirect(isTeacherView ? `/teacher/students/${viewAs}` : '/student/dashboard')
     }
 
     // Fetch the resource
@@ -67,7 +79,7 @@ export default async function AssignmentPage({ params }: { params: { id: string 
       .from('Progress')
       .select('*')
       .eq('assignmentId', params.id)
-      .eq('studentId', session.user.id)
+      .eq('studentId', studentId)
       .limit(1)
 
     if (progressError) {
@@ -98,11 +110,21 @@ export default async function AssignmentPage({ params }: { params: { id: string 
             )}
           </div>
 
-          <MarkAsViewed assignmentId={assignment.id} hasProgress={!!progress} />
+          {isTeacherView && (
+            <div className="mb-4 rounded-lg border border-blue-200 bg-blue-50 px-4 py-3 text-sm text-blue-900">
+              Viewing this resource exactly as the student sees it, including their saved answers. Changes you make here will not be saved to the student&apos;s account.
+            </div>
+          )}
+
+          {!isTeacherView && <MarkAsViewed assignmentId={assignment.id} />}
           <WorksheetViewer
             assignmentId={assignment.id}
             resource={resource}
             initialProgress={progress}
+            preventSave={isTeacherView}
+            backHref={isTeacherView ? `/teacher/students/${viewAs}` : '/student/course'}
+            backLabel={isTeacherView ? 'Back to Student' : 'Return to My Course'}
+            showStudentNotice={!isTeacherView}
           />
         </div>
       </div>

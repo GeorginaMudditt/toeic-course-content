@@ -125,7 +125,9 @@ export default async function StudentDetailPage({ params }: { params: { id: stri
         .map(assignment => ({
           ...assignment,
           resource: resourceData.find(r => r.id === assignment.resourceId) || null,
-          progress: progressData.filter(p => p.assignmentId === assignment.id)
+          progress: progressData.filter(
+            (p) => p.assignmentId === assignment.id && p.studentId === params.id
+          )
         }))
     }))
 

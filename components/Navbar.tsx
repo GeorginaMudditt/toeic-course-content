@@ -9,10 +9,15 @@ import AvatarSelector from './AvatarSelector'
 export default function Navbar() {
   const { data: session, update: updateSession } = useSession()
   const pathname = usePathname()
-  const isTeacher = session?.user?.role === 'TEACHER'
+  const [mounted, setMounted] = useState(false)
+  const isTeacher = mounted && session?.user?.role === 'TEACHER'
   const [isDropdownOpen, setIsDropdownOpen] = useState(false)
   const [showAvatarSelector, setShowAvatarSelector] = useState(false)
   const dropdownRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    setMounted(true)
+  }, [])
 
   const isActive = (path: string) => {
     if (path === '/teacher/dashboard' || path === '/student/dashboard') {
@@ -58,7 +63,13 @@ export default function Navbar() {
               </Link>
             </div>
             <div className="hidden sm:ml-6 sm:flex sm:space-x-8">
-              {isTeacher ? (
+              {!mounted ? (
+                <>
+                  <div className="h-10 w-24 animate-pulse rounded bg-gray-100" />
+                  <div className="h-10 w-24 animate-pulse rounded bg-gray-100" />
+                  <div className="h-10 w-24 animate-pulse rounded bg-gray-100" />
+                </>
+              ) : isTeacher ? (
                 <>
                   <Link
                     href="/teacher/dashboard"
@@ -178,7 +189,9 @@ export default function Navbar() {
             </div>
           </div>
           <div className="flex items-center">
-            {session?.user?.name && (
+            {!mounted ? (
+              <div className="h-10 w-32 animate-pulse rounded-md bg-gray-100" />
+            ) : session?.user?.name && (
               <div className="relative" ref={dropdownRef}>
                 {(() => {
                   const name = session.user.name

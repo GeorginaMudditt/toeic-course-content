@@ -16,6 +16,7 @@ import {
 import { mountPhraseAudioButtons } from '@/lib/worksheetInteractions/phraseAudioButtons'
 import { mountPresentingServicesProductsActivities } from '@/lib/worksheetInteractions/presentingServicesProductsKeyLanguage'
 import { mountWritingPracticeTimers } from '@/lib/worksheetInteractions/writingPracticeTimers'
+import { mountPlacementTestCheckAnswers } from '@/lib/worksheetInteractions/placementTestCheckAnswers'
 import {
   formatFeedbackForDisplay,
   getFeedbackNotesKey,
@@ -44,6 +45,13 @@ interface WorksheetViewerProps {
   assignmentId: string
   resource: Resource
   initialProgress?: Progress | null
+  /** When true, the full student UI is shown but progress is not saved to the server. */
+  preventSave?: boolean
+  backHref?: string
+  backLabel?: string
+  /** Hide toolbars and action buttons — for embedded previews only. */
+  compact?: boolean
+  showStudentNotice?: boolean
 }
 
 type GrammarCheckStatus = 'correct' | 'incorrect' | 'review'
@@ -726,7 +734,16 @@ function InlineAnswerInput({
   return null
 }
 
-export default function WorksheetViewer({ assignmentId, resource, initialProgress }: WorksheetViewerProps) {
+export default function WorksheetViewer({
+  assignmentId,
+  resource,
+  initialProgress,
+  preventSave = false,
+  backHref = '/student/course',
+  backLabel = 'Return to My Course',
+  compact = false,
+  showStudentNotice = true,
+}: WorksheetViewerProps) {
   const router = useRouter()
   const [notes, setNotes] = useState(initialProgress?.notes || '')
   const [status, setStatus] = useState(initialProgress?.status || 'NOT_STARTED')
@@ -734,6 +751,7 @@ export default function WorksheetViewer({ assignmentId, resource, initialProgres
   const [saved, setSaved] = useState(false)
   const [showCompletionModal, setShowCompletionModal] = useState(false)
   const [grammarInputsReady, setGrammarInputsReady] = useState(false)
+  const [isClientMounted, setIsClientMounted] = useState(false)
   const contentRef = useRef<HTMLDivElement>(null)
   // Ref to hold latest notes for save - avoids stale state when Save clicked right after typing
   const notesRef = useRef(notes)
@@ -781,6 +799,11 @@ export default function WorksheetViewer({ assignmentId, resource, initialProgres
       (typeof resource.content === 'string' && resource.content.includes('data-grammar-per-section-check'))
     )
   }, [resource.title, resource.content])
+
+  // Defer interactive worksheet render until after hydration (HTML worksheets use dangerouslySetInnerHTML).
+  useEffect(() => {
+    setIsClientMounted(true)
+  }, [])
 
   // Defer grammar input injection until after mount/hydration (avoids timing issues)
   useEffect(() => {
@@ -1256,6 +1279,8 @@ export default function WorksheetViewer({ assignmentId, resource, initialProgres
 
   const saveProgress = useCallback(
     async (notesToSave?: string): Promise<boolean> => {
+      if (preventSave) return true
+
       const saveId = ++latestSaveIdRef.current
 
       let notesValue: string
@@ -1304,31 +1329,34 @@ export default function WorksheetViewer({ assignmentId, resource, initialProgres
         }
       }
     },
-    [assignmentId, flushGrammarInputsToNotes, hasGrammarInputs, notes, status]
+    [assignmentId, flushGrammarInputsToNotes, hasGrammarInputs, notes, preventSave, status]
   )
   
   // Auto-save placement test answers when notes change
   useEffect(() => {
+    if (preventSave) return
     if (isPlacementTest && notes) {
       const timeoutId = setTimeout(() => saveProgress(), 500)
       return () => clearTimeout(timeoutId)
     }
-  }, [notes, isPlacementTest, saveProgress])
+  }, [notes, isPlacementTest, preventSave, saveProgress])
   
   // Auto-save grammar worksheet answers when notes change
   useEffect(() => {
+    if (preventSave) return
     if (hasGrammarInputs && !isPlacementTest && notes) {
       const timeoutId = setTimeout(() => saveProgress(), 1000)
       return () => clearTimeout(timeoutId)
     }
-  }, [notes, hasGrammarInputs, isPlacementTest, saveProgress])
+  }, [notes, hasGrammarInputs, isPlacementTest, preventSave, saveProgress])
 
   // Auto-save GIAQ drag-and-drop placements when notes change
   useEffect(() => {
+    if (preventSave) return
     if (!hasGiaqActivities || isPlacementTest || !notes) return
     const timeoutId = setTimeout(() => saveProgress(), 800)
     return () => clearTimeout(timeoutId)
-  }, [notes, hasGiaqActivities, isPlacementTest, saveProgress])
+  }, [notes, hasGiaqActivities, isPlacementTest, preventSave, saveProgress])
   
   // Helper function to get current value for an answer path
   const getAnswerValue = useCallback((answerPath: string, answers: any) => {
@@ -1565,6 +1593,37 @@ export default function WorksheetViewer({ assignmentId, resource, initialProgres
       }
     })
   }, [notes, isPlacementTest, getAnswerValue, getInputType, updatePlacementTestAnswer, assignmentId, placementTestAnswers]) // Update values when notes change
+
+  // Placement test section "Check Answers" buttons (listening + reading).
+  useEffect(() => {
+    if (!isPlacementTest || !isClientMounted || !contentRef.current) return
+    if (!resource.content.includes('data-placement-check')) return
+
+    const host = contentRef.current
+    const getAnswer = (path: string) => {
+      let answers: Record<string, unknown> = {}
+      try {
+        if (notesRef.current) {
+          answers = JSON.parse(notesRef.current)
+        }
+      } catch {
+        // ignore invalid notes JSON
+      }
+      return getAnswerValue(path, answers)
+    }
+
+    let detach = mountPlacementTestCheckAnswers(host, getAnswer)
+
+    const retryId = window.setTimeout(() => {
+      detach()
+      detach = mountPlacementTestCheckAnswers(host, getAnswer)
+    }, 600)
+
+    return () => {
+      window.clearTimeout(retryId)
+      detach()
+    }
+  }, [isPlacementTest, isClientMounted, resource.content, getAnswerValue])
 
   // Grammar worksheet input component - supports text input, textarea and select
   const GrammarInput = React.memo(function GrammarInput({
@@ -2701,6 +2760,8 @@ export default function WorksheetViewer({ assignmentId, resource, initialProgres
   }, [resource.content])
 
   useEffect(() => {
+    if (preventSave) return
+
     const autoSave = setInterval(() => {
       if (notesRef.current && status !== 'NOT_STARTED') {
         saveProgress()
@@ -2708,10 +2769,11 @@ export default function WorksheetViewer({ assignmentId, resource, initialProgres
     }, 30000)
 
     return () => clearInterval(autoSave)
-  }, [status, saveProgress])
+  }, [preventSave, status, saveProgress])
 
   // Flush and persist when the student leaves the tab or closes the page.
   useEffect(() => {
+    if (preventSave) return
     if (!hasGrammarInputs && !hasGiaqActivities && !isPlacementTest) return
 
     const persistOnLeave = () => {
@@ -2749,10 +2811,12 @@ export default function WorksheetViewer({ assignmentId, resource, initialProgres
     hasGrammarInputs,
     isPlacementTest,
     notes,
+    preventSave,
     status,
   ])
 
   const markComplete = async () => {
+    if (preventSave) return
     setSaving(true)
     try {
       const notesValue = hasGrammarInputs ? flushGrammarInputsToNotes(true) : notesRef.current || notes
@@ -2853,15 +2917,34 @@ export default function WorksheetViewer({ assignmentId, resource, initialProgres
     }, 250)
   }
 
+  if (!isClientMounted) {
+    return (
+      <div className="bg-white shadow rounded-lg p-6">
+        {!compact && (
+          <div className="mb-4 flex items-center gap-4">
+            <div className="h-10 w-44 animate-pulse rounded-md bg-gray-100" />
+            <div className="h-10 w-24 animate-pulse rounded-md bg-gray-100" />
+          </div>
+        )}
+        <div className="mb-4 min-h-[320px] rounded-lg border bg-white p-6">
+          <div className="mb-3 h-4 w-2/3 max-w-md animate-pulse rounded bg-gray-100" />
+          <div className="mb-3 h-4 w-full animate-pulse rounded bg-gray-100" />
+          <div className="h-4 w-5/6 max-w-lg animate-pulse rounded bg-gray-100" />
+        </div>
+      </div>
+    )
+  }
+
   return (
     <div className="bg-white shadow rounded-lg p-6">
+      {!compact && (
       <div className="flex justify-between items-center mb-4">
         <div className="flex items-center space-x-4">
           <Link
-            href="/student/course"
+            href={backHref}
             className="inline-flex items-center gap-2 px-4 py-2 text-gray-700 bg-gray-100 rounded-md hover:bg-gray-200 transition-colors"
           >
-            <span aria-hidden>←</span> Return to My Course
+            <span aria-hidden>←</span> {backLabel}
           </Link>
           <button
             onClick={handlePrint}
@@ -2886,6 +2969,7 @@ export default function WorksheetViewer({ assignmentId, resource, initialProgres
           <span className="text-green-600 font-medium">✓ Completed</span>
         )}
       </div>
+      )}
 
       <div id="worksheet-content" ref={contentRef} className="border rounded-lg p-6 bg-white mb-4">
         {(() => {
@@ -3026,7 +3110,7 @@ export default function WorksheetViewer({ assignmentId, resource, initialProgres
         })()}
       </div>
 
-      {status !== 'COMPLETED' && (
+      {!compact && status !== 'COMPLETED' && (
         <div className="mt-4">
           <button
             onClick={markComplete}
@@ -3040,9 +3124,11 @@ export default function WorksheetViewer({ assignmentId, resource, initialProgres
         </div>
       )}
 
-      <div className="mt-4 text-sm text-gray-500">
-        <p>⚠️ This worksheet is unique to you. Do not share the link with anyone.</p>
-      </div>
+      {showStudentNotice && !compact && (
+        <div className="mt-4 text-sm text-gray-500">
+          <p>⚠️ This worksheet is unique to you. Do not share the link with anyone.</p>
+        </div>
+      )}
 
       {/* Resource Timestamps */}
       {(resource.createdAt || resource.updatedAt) && (

@@ -2,9 +2,11 @@
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
+import Link from 'next/link'
 import { formatUKDate, formatCourseName as formatCourseNameUtil } from '@/lib/date-utils'
-import { brizzleRed, brizzleRedHover } from '@/lib/brand-colors'
+import { brizzleBlue, brizzleBlueHover, brizzleRed, brizzleRedHover } from '@/lib/brand-colors'
 import { parseCourseDurationHours } from '@/lib/course-notes-lessons'
+import { ClientLocalLastOpenedLine } from '@/components/ClientLocalDateTime'
 
 interface Resource {
   id: string
@@ -25,7 +27,7 @@ interface Assignment {
   id: string
   resource: Resource
   order: number
-  progress: Array<{ status: string }>
+  progress: Array<{ status: string; updatedAt?: string | null }>
 }
 
 interface Enrollment {
@@ -66,6 +68,32 @@ const PRESET_COURSE_OPTIONS: PresetCourseOption[] = [
 ]
 
 const OTHER_OPTION_VALUE = '__OTHER__'
+
+function AssignmentProgressMeta({ progress }: { progress?: { status: string; updatedAt?: string | null } }) {
+  if (!progress) {
+    return <p className="text-sm text-gray-400 mt-1">Not yet opened</p>
+  }
+
+  return (
+    <>
+      <div className="text-sm mt-1">
+        Status:{' '}
+        <span
+          className={
+            progress.status === 'COMPLETED'
+              ? 'text-green-600'
+              : progress.status === 'IN_PROGRESS'
+                ? 'text-blue-600'
+                : 'text-gray-500'
+          }
+        >
+          {progress.status}
+        </span>
+      </div>
+      {progress.updatedAt && <ClientLocalLastOpenedLine iso={progress.updatedAt} />}
+    </>
+  )
+}
 
 export default function StudentAssignmentManager({ student, resources, courses }: Props) {
   const router = useRouter()
@@ -615,27 +643,28 @@ export default function StudentAssignmentManager({ student, resources, courses }
                               <div className="font-medium text-gray-900">
                                 Lesson {lessonNumber} : {assignment.resource.title}
                               </div>
-                              {progress && (
-                                <div className="text-sm mt-1">
-                                  Status: <span className={
-                                    progress.status === 'COMPLETED' ? 'text-green-600' :
-                                    progress.status === 'IN_PROGRESS' ? 'text-blue-600' :
-                                    'text-gray-500'
-                                  }>
-                                    {progress.status}
-                                  </span>
-                                </div>
-                              )}
+                              <AssignmentProgressMeta progress={progress} />
                             </div>
-                            <button
-                              onClick={() => handleRemoveAssignment(assignment.id)}
-                              className="text-sm ml-4 flex-shrink-0 transition-colors"
-                              style={{ color: brizzleRed }}
-                              onMouseEnter={(e) => e.currentTarget.style.color = brizzleRedHover}
-                              onMouseLeave={(e) => e.currentTarget.style.color = brizzleRed}
-                            >
-                              Remove
-                            </button>
+                            <div className="flex items-center gap-4 ml-4 flex-shrink-0">
+                              <Link
+                                href={`/student/assignment/${assignment.id}?viewAs=${student.id}`}
+                                className="text-sm transition-colors"
+                                style={{ color: brizzleBlue }}
+                                onMouseEnter={(e) => (e.currentTarget.style.color = brizzleBlueHover)}
+                                onMouseLeave={(e) => (e.currentTarget.style.color = brizzleBlue)}
+                              >
+                                View
+                              </Link>
+                              <button
+                                onClick={() => handleRemoveAssignment(assignment.id)}
+                                className="text-sm transition-colors"
+                                style={{ color: brizzleRed }}
+                                onMouseEnter={(e) => (e.currentTarget.style.color = brizzleRedHover)}
+                                onMouseLeave={(e) => (e.currentTarget.style.color = brizzleRed)}
+                              >
+                                Remove
+                              </button>
+                            </div>
                           </div>
                         )
                       })}
@@ -652,27 +681,28 @@ export default function StudentAssignmentManager({ student, resources, courses }
                               <div className="font-medium text-gray-900">
                                 Reference : {assignment.resource.title}
                               </div>
-                              {progress && (
-                                <div className="text-sm mt-1">
-                                  Status: <span className={
-                                    progress.status === 'COMPLETED' ? 'text-green-600' :
-                                    progress.status === 'IN_PROGRESS' ? 'text-blue-600' :
-                                    'text-gray-500'
-                                  }>
-                                    {progress.status}
-                                  </span>
-                                </div>
-                              )}
+                              <AssignmentProgressMeta progress={progress} />
                             </div>
-                            <button
-                              onClick={() => handleRemoveAssignment(assignment.id)}
-                              className="text-sm ml-4 flex-shrink-0 transition-colors"
-                              style={{ color: brizzleRed }}
-                              onMouseEnter={(e) => e.currentTarget.style.color = brizzleRedHover}
-                              onMouseLeave={(e) => e.currentTarget.style.color = brizzleRed}
-                            >
-                              Remove
-                            </button>
+                            <div className="flex items-center gap-4 ml-4 flex-shrink-0">
+                              <Link
+                                href={`/student/assignment/${assignment.id}?viewAs=${student.id}`}
+                                className="text-sm transition-colors"
+                                style={{ color: brizzleBlue }}
+                                onMouseEnter={(e) => (e.currentTarget.style.color = brizzleBlueHover)}
+                                onMouseLeave={(e) => (e.currentTarget.style.color = brizzleBlue)}
+                              >
+                                View
+                              </Link>
+                              <button
+                                onClick={() => handleRemoveAssignment(assignment.id)}
+                                className="text-sm transition-colors"
+                                style={{ color: brizzleRed }}
+                                onMouseEnter={(e) => (e.currentTarget.style.color = brizzleRedHover)}
+                                onMouseLeave={(e) => (e.currentTarget.style.color = brizzleRed)}
+                              >
+                                Remove
+                              </button>
+                            </div>
                           </div>
                         )
                       })}
