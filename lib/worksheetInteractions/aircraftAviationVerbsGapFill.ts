@@ -1,9 +1,9 @@
 /**
  * Aviation verbs gap-fill for "Vocabulary: Aircraft and Aviation" (#4).
- * Mount on an element with [data-ava-verbs-mount]. Audio: /vocab-audio/aircraft-aviation/verbs/{verb}.mp3
+ * Mount on an element with [data-ava-verbs-mount]. Audio: /vocab-audio/aircraft-aviation/aircraft-aviation/{verb}.mp3
  */
 
-const AUDIO_DIR = '/vocab-audio/aircraft-aviation/verbs/'
+const AUDIO_DIR = '/vocab-audio/aircraft-aviation/aircraft-aviation/'
 
 const SCENARIOS: ReadonlyArray<{ answer: string; before: string; after: string }> = [
   { answer: 'take off', before: 'The pilot started the engines and prepared to ', after: ' from the runway.' },
@@ -52,8 +52,8 @@ function norm(s: string | undefined | null): string {
     .toLowerCase()
 }
 
-function slug(w: string): string {
-  return norm(w).replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '')
+function audioFilename(w: string): string {
+  return `${norm(w)}.mp3`
 }
 
 function slotStyleForAnswer(answer: string): string {
@@ -82,7 +82,7 @@ export function mountAircraftAviationVerbsGapFill(root: HTMLElement): () => void
   }
 
   function makeListenBtn(verb: string): HTMLElement {
-    const id = `ava-v-audio-${slug(verb)}`
+    const id = `ava-v-audio-${norm(verb).replace(/\s+/g, '-')}`
     const holder = document.createElement('span')
     holder.className = 'ava-no-print'
     holder.style.cssText = 'display: inline-flex; align-items: center; flex-shrink: 0;'
@@ -106,7 +106,7 @@ export function mountAircraftAviationVerbsGapFill(root: HTMLElement): () => void
     audio.id = id
     audio.preload = 'auto'
     const source = document.createElement('source')
-    source.src = `${AUDIO_DIR}${slug(verb)}.mp3`
+    source.src = `${AUDIO_DIR}${audioFilename(verb)}`
     source.type = 'audio/mpeg'
     audio.appendChild(source)
 

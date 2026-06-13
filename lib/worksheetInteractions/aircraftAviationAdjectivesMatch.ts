@@ -1,6 +1,6 @@
 /**
  * Opposite-adjective matching for "Vocabulary: Aircraft and Aviation" (#3).
- * Mounted from WorksheetViewer. Audio: /vocab-audio/aircraft-aviation/adjectives/{word}.mp3
+ * Mounted from WorksheetViewer. Audio: /vocab-audio/aircraft-aviation/aircraft-aviation/{word}.mp3
  */
 
 const PAIRS: ReadonlyArray<readonly [string, string]> = [
@@ -14,7 +14,7 @@ const PAIRS: ReadonlyArray<readonly [string, string]> = [
   ['Manned', 'Unmanned'],
 ]
 
-const AUDIO_DIR = '/vocab-audio/aircraft-aviation/adjectives/'
+const AUDIO_DIR = '/vocab-audio/aircraft-aviation/aircraft-aviation/'
 
 const ADJ = {
   chipBorder: '#1e3a5f',
@@ -61,8 +61,8 @@ function norm(s: string | undefined | null): string {
     .toLowerCase()
 }
 
-function slug(w: string): string {
-  return norm(w).replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '')
+function audioFilename(w: string): string {
+  return `${norm(w)}.mp3`
 }
 
 export function mountAircraftAviationAdjectiveMatch(root: HTMLElement): () => void {
@@ -81,7 +81,7 @@ export function mountAircraftAviationAdjectiveMatch(root: HTMLElement): () => vo
   }
 
   function makeListenBtn(word: string): HTMLElement {
-    const id = `ava-audio-${slug(word)}`
+    const id = `ava-audio-${norm(word).replace(/\s+/g, '-')}`
     const holder = document.createElement('span')
     holder.className = 'ava-no-print'
     holder.style.cssText = 'display: inline-flex; align-items: center; flex-shrink: 0;'
@@ -105,7 +105,7 @@ export function mountAircraftAviationAdjectiveMatch(root: HTMLElement): () => vo
     audio.id = id
     audio.preload = 'auto'
     const source = document.createElement('source')
-    source.src = `${AUDIO_DIR}${slug(word)}.mp3`
+    source.src = `${AUDIO_DIR}${audioFilename(word)}`
     source.type = 'audio/mpeg'
     audio.appendChild(source)
 
