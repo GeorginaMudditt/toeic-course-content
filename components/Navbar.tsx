@@ -115,6 +115,17 @@ export default function Navbar() {
                   >
                     Progress
                   </Link>
+                  <Link
+                    href="/teacher/qualiopi"
+                    className={`inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium transition-colors ${
+                      isActive('/teacher/qualiopi')
+                        ? 'text-gray-900'
+                        : 'border-transparent text-gray-500 hover:text-[#38438f] hover:border-[#38438f]'
+                    }`}
+                    style={isActive('/teacher/qualiopi') ? { borderColor: '#38438f' } : {}}
+                  >
+                    Qualiopi
+                  </Link>
                 </>
               ) : (
                 <>

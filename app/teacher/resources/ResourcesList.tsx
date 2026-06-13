@@ -27,21 +27,50 @@ interface Props {
 
 type SortOption = 'level' | 'alphabetical' | 'date'
 
+function formatSkill(skill?: string) {
+  if (!skill) return ''
+  return skill
+    .split('_')
+    .map((part) => part.charAt(0) + part.slice(1).toLowerCase())
+    .join(' ')
+}
+
+function matchesSearch(resource: Resource, query: string) {
+  const trimmed = query.trim().toLowerCase()
+  if (!trimmed) return true
+
+  const title = (resource.title || '').toLowerCase()
+  const description = (resource.description || '').toLowerCase()
+  const skillLabel = formatSkill(resource.skill).toLowerCase()
+  const level = (resource.level || '').toLowerCase()
+
+  return (
+    title.includes(trimmed) ||
+    description.includes(trimmed) ||
+    skillLabel.includes(trimmed) ||
+    level.includes(trimmed)
+  )
+}
+
 export default function ResourcesList({ resources }: Props) {
   const router = useRouter()
   const [selectedLevel, setSelectedLevel] = useState<string>('All')
   const [selectedSkill, setSelectedSkill] = useState<string>('All')
+  const [searchQuery, setSearchQuery] = useState('')
   const [sortBy, setSortBy] = useState<SortOption>('date')
   const [deleteModalOpen, setDeleteModalOpen] = useState(false)
   const [resourceToDelete, setResourceToDelete] = useState<Resource | null>(null)
   const [fullResourceData, setFullResourceData] = useState<FullResource | null>(null)
   const [deleting, setDeleting] = useState(false)
 
+  const hasActiveFilters =
+    searchQuery.trim() !== '' || selectedLevel !== 'All' || selectedSkill !== 'All'
+
   // Filter resources
   const filteredResources = resources.filter(resource => {
     const levelMatch = selectedLevel === 'All' || resource.level === selectedLevel
     const skillMatch = selectedSkill === 'All' || resource.skill === selectedSkill
-    return levelMatch && skillMatch
+    return levelMatch && skillMatch && matchesSearch(resource, searchQuery)
   })
 
   // Sort filtered resources
@@ -140,6 +169,38 @@ export default function ResourcesList({ resources }: Props) {
         </Link>
       </div>
 
+      <div className="mb-4">
+        <label htmlFor="resource-search" className="block text-sm font-medium text-gray-700 mb-2">
+          Search
+        </label>
+        <div className="relative max-w-md">
+          <input
+            id="resource-search"
+            type="search"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            placeholder="Search by title, description, skill, or level…"
+            className="w-full border border-gray-300 rounded-md pl-3 pr-9 py-2 text-sm focus:outline-none bg-white"
+            onFocus={(e) => (e.currentTarget.style.borderColor = '#38438f')}
+            onBlur={(e) => (e.currentTarget.style.borderColor = '#d1d5db')}
+            autoComplete="off"
+          />
+          {searchQuery.trim() !== '' && (
+            <button
+              type="button"
+              onClick={() => setSearchQuery('')}
+              className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 p-1"
+              aria-label="Clear search"
+              title="Clear search"
+            >
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+          )}
+        </div>
+      </div>
+
       <div className="mb-4 grid grid-cols-1 md:grid-cols-3 gap-4">
         <div>
           <label htmlFor="level-filter" className="block text-sm font-medium text-gray-700 mb-2">
@@ -231,10 +292,11 @@ export default function ResourcesList({ resources }: Props) {
             {sortedResources.length === 0 ? (
               <tr>
                 <td colSpan={4} className="px-6 py-4 text-center text-gray-500">
-                  {resources.length === 0 
+                  {resources.length === 0
                     ? 'No resources yet. Create your first resource!'
-                    : `No resources found for the selected filters.`
-                  }
+                    : hasActiveFilters
+                      ? 'No resources match your search or filters. Try different keywords or reset the filters.'
+                      : 'No resources found for the selected filters.'}
                 </td>
               </tr>
             ) : (
@@ -250,12 +312,7 @@ export default function ResourcesList({ resources }: Props) {
                     {resource.level || '-'}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                    {resource.skill
-                      ? resource.skill
-                          .split('_')
-                          .map((part) => part.charAt(0) + part.slice(1).toLowerCase())
-                          .join(' ')
-                      : '-'}
+                    {resource.skill ? formatSkill(resource.skill) : '-'}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                     <Link

@@ -193,3 +193,20 @@ model StudentDocument {
   
   @@index([studentId])
 }
+
+model QualiopiFile {
+  id            String   @id @default(cuid())
+  indicatorSlug String
+  folderSlug    String
+  title         String
+  fileName      String
+  filePath      String
+  fileUrl       String
+  fileSize      Int?
+  mimeType      String?
+  uploadedBy    String
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@index([indicatorSlug, folderSlug])
+}
