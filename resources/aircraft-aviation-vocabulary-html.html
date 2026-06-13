@@ -1,0 +1,392 @@
+<!-- Vocabulary: Aircraft and Aviation — modular worksheet. Audio: /vocab-audio/aircraft-aviation/{section}/{word}.mp3 -->
+<style>
+  @media print {
+    @page { margin: 1.5cm; }
+    body { margin: 0; padding: 0; }
+    .page-break { page-break-before: always; }
+    .no-break { page-break-inside: avoid; break-inside: avoid; }
+    .keep-together { page-break-inside: avoid; break-inside: avoid; }
+    h2, h3 { page-break-after: avoid; break-after: avoid; }
+    table { page-break-inside: avoid; break-inside: avoid; }
+    ul, ol { page-break-inside: avoid; break-inside: avoid; }
+    .ava-no-print { display: none !important; }
+    .ava-slot, .ava-verb-slot { border: 1px dashed #333 !important; background: #fff !important; }
+  }
+  @keyframes ava-shake {
+    0%, 100% { transform: translateX(0); }
+    20%, 60% { transform: translateX(-6px); }
+    40%, 80% { transform: translateX(6px); }
+  }
+  .ava-shake { animation: ava-shake 0.45s ease; }
+  .ava-slot-correct {
+    border: 3px solid #15803d !important;
+    background: #ecfdf5 !important;
+    box-shadow: inset 0 0 0 1px rgba(21, 128, 61, 0.15);
+  }
+  .ava-slot-wrong { border-color: #b91c1c !important; background: #fee2e2 !important; }
+  .ava-match-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px 14px;
+    margin-bottom: 14px;
+    align-items: stretch;
+  }
+  @media (max-width: 680px) {
+    .ava-match-grid { grid-template-columns: 1fr; }
+  }
+  .ava-bank-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 6px;
+    align-items: start;
+  }
+  @media (max-width: 560px) {
+    .ava-bank-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  }
+  .ava-verb-board {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 14px;
+  }
+  .ava-verb-bank-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 6px;
+    align-items: start;
+  }
+  @media (max-width: 720px) {
+    .ava-verb-bank-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  }
+  @media (max-width: 480px) {
+    .ava-verb-bank-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  }
+  @keyframes ava-spin {
+    to { transform: rotate(360deg); }
+  }
+  .ava-loader-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    min-height: 100px;
+    padding: 24px 16px;
+    background: rgba(255, 255, 255, 0.85);
+    border-radius: 10px;
+    border: 1px dashed #cbd5e1;
+  }
+  .ava-loader-ring {
+    width: 36px;
+    height: 36px;
+    border: 3px solid #e5e7eb;
+    border-top-color: #1e3a5f;
+    border-radius: 50%;
+    animation: ava-spin 0.7s linear infinite;
+    flex-shrink: 0;
+  }
+</style>
+<div data-grammar-per-section-check="true" style="max-width: 800px; margin: 0 auto; padding: 20px; font-family: Arial, sans-serif; line-height: 1.5; color: #333; background: linear-gradient(to bottom, #e8eaf6, #ffffff);">
+
+  <div style="text-align: center; margin-bottom: 25px; padding: 20px; background: linear-gradient(135deg, #1e3a5f 0%, #0f2744 100%); border-radius: 12px; box-shadow: 0 4px 6px rgba(15,39,68,0.35);" class="no-break">
+    <div style="display: inline-block; margin-bottom: 8px;">
+      <img src="/brizzle-logo.png" alt="Brizzle Logo" style="width: 50px; height: 50px; object-fit: contain; background: white; padding: 5px; border-radius: 50%;" />
+    </div>
+    <h1 style="font-size: 28px; font-weight: bold; margin: 0; color: #ffffff; text-shadow: 0 2px 4px rgba(0,0,0,0.2);">Vocabulary: Aircraft and Aviation</h1>
+  </div>
+
+  <!-- Vocabulary #1: Parts of an aircraft -->
+  <div style="margin-bottom: 24px; padding: 20px; background: white; border-radius: 10px; box-shadow: 0 2px 4px rgba(0,0,0,0.05);" class="keep-together">
+    <h2 style="font-size: 20px; font-weight: bold; margin-bottom: 12px; color: #1e3a5f; border-bottom: 3px solid #1e3a5f; padding-bottom: 8px;">Vocabulary #1: Parts of an aircraft</h2>
+
+    <table style="width: 100%; border-collapse: collapse; margin-top: 8px; font-size: 16px; border: 1px solid #e5e7eb; box-shadow: 0 1px 3px rgba(0,0,0,0.05);" class="no-break">
+      <thead>
+        <tr style="background: linear-gradient(135deg, #1e3a5f 0%, #0f2744 100%);">
+          <th style="border: 1px solid #e5e7eb; padding: 10px; text-align: left; font-weight: bold; font-size: 16px; width: 28%; color: white;">Word</th>
+          <th style="border: 1px solid #e5e7eb; padding: 10px; text-align: left; font-weight: bold; font-size: 16px; width: 22%; color: white;">Pronunciation</th>
+          <th style="border: 1px solid #e5e7eb; padding: 10px; text-align: left; font-weight: bold; font-size: 16px; width: 50%; color: white;">French translation</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px; font-weight: bold; color: #1e293b;">cockpit</td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px;"><div onclick="document.getElementById('audio-ava-cockpit').play()" style="display: inline-block; background: linear-gradient(135deg, #ba3627 0%, #9a2d21 100%); color: white; padding: 4px 12px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; box-shadow: 0 2px 4px rgba(186,54,39,0.3); transition: transform 0.1s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">🔊 Listen</div><audio id="audio-ava-cockpit" preload="auto"><source src="/vocab-audio/aircraft-aviation/parts/cockpit.mp3" type="audio/mpeg"></audio></td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px; font-style: italic; color: #64748b;">cockpit / poste de pilotage</td>
+        </tr>
+        <tr style="background: #e8eaf6;">
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px; font-weight: bold; color: #1e293b;">wing</td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px;"><div onclick="document.getElementById('audio-ava-wing').play()" style="display: inline-block; background: linear-gradient(135deg, #ba3627 0%, #9a2d21 100%); color: white; padding: 4px 12px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; box-shadow: 0 2px 4px rgba(186,54,39,0.3); transition: transform 0.1s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">🔊 Listen</div><audio id="audio-ava-wing" preload="auto"><source src="/vocab-audio/aircraft-aviation/parts/wing.mp3" type="audio/mpeg"></audio></td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px; font-style: italic; color: #64748b;">aile</td>
+        </tr>
+        <tr>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px; font-weight: bold; color: #1e293b;">tail</td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px;"><div onclick="document.getElementById('audio-ava-tail').play()" style="display: inline-block; background: linear-gradient(135deg, #ba3627 0%, #9a2d21 100%); color: white; padding: 4px 12px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; box-shadow: 0 2px 4px rgba(186,54,39,0.3); transition: transform 0.1s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">🔊 Listen</div><audio id="audio-ava-tail" preload="auto"><source src="/vocab-audio/aircraft-aviation/parts/tail.mp3" type="audio/mpeg"></audio></td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px; font-style: italic; color: #64748b;">queue</td>
+        </tr>
+        <tr style="background: #e8eaf6;">
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px; font-weight: bold; color: #1e293b;">propeller</td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px;"><div onclick="document.getElementById('audio-ava-propeller').play()" style="display: inline-block; background: linear-gradient(135deg, #ba3627 0%, #9a2d21 100%); color: white; padding: 4px 12px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; box-shadow: 0 2px 4px rgba(186,54,39,0.3); transition: transform 0.1s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">🔊 Listen</div><audio id="audio-ava-propeller" preload="auto"><source src="/vocab-audio/aircraft-aviation/parts/propeller.mp3" type="audio/mpeg"></audio></td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px; font-style: italic; color: #64748b;">hélice</td>
+        </tr>
+        <tr>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px; font-weight: bold; color: #1e293b;">rotor blade</td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px;"><div onclick="document.getElementById('audio-ava-rotor-blade').play()" style="display: inline-block; background: linear-gradient(135deg, #ba3627 0%, #9a2d21 100%); color: white; padding: 4px 12px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; box-shadow: 0 2px 4px rgba(186,54,39,0.3); transition: transform 0.1s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">🔊 Listen</div><audio id="audio-ava-rotor-blade" preload="auto"><source src="/vocab-audio/aircraft-aviation/parts/rotor blade.mp3" type="audio/mpeg"></audio></td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px; font-style: italic; color: #64748b;">pale de rotor</td>
+        </tr>
+        <tr style="background: #e8eaf6;">
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px; font-weight: bold; color: #1e293b;">engine</td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px;"><div onclick="document.getElementById('audio-ava-engine').play()" style="display: inline-block; background: linear-gradient(135deg, #ba3627 0%, #9a2d21 100%); color: white; padding: 4px 12px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; box-shadow: 0 2px 4px rgba(186,54,39,0.3); transition: transform 0.1s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">🔊 Listen</div><audio id="audio-ava-engine" preload="auto"><source src="/vocab-audio/aircraft-aviation/parts/engine.mp3" type="audio/mpeg"></audio></td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px; font-style: italic; color: #64748b;">moteur</td>
+        </tr>
+        <tr>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px; font-weight: bold; color: #1e293b;">fuselage</td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px;"><div onclick="document.getElementById('audio-ava-fuselage').play()" style="display: inline-block; background: linear-gradient(135deg, #ba3627 0%, #9a2d21 100%); color: white; padding: 4px 12px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; box-shadow: 0 2px 4px rgba(186,54,39,0.3); transition: transform 0.1s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">🔊 Listen</div><audio id="audio-ava-fuselage" preload="auto"><source src="/vocab-audio/aircraft-aviation/parts/fuselage.mp3" type="audio/mpeg"></audio></td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px; font-style: italic; color: #64748b;">fuselage</td>
+        </tr>
+        <tr style="background: #e8eaf6;">
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px; font-weight: bold; color: #1e293b;">landing gear</td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px;"><div onclick="document.getElementById('audio-ava-landing-gear').play()" style="display: inline-block; background: linear-gradient(135deg, #ba3627 0%, #9a2d21 100%); color: white; padding: 4px 12px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; box-shadow: 0 2px 4px rgba(186,54,39,0.3); transition: transform 0.1s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">🔊 Listen</div><audio id="audio-ava-landing-gear" preload="auto"><source src="/vocab-audio/aircraft-aviation/parts/landing gear.mp3" type="audio/mpeg"></audio></td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px; font-style: italic; color: #64748b;">train d'atterrissage</td>
+        </tr>
+        <tr>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px; font-weight: bold; color: #1e293b;">runway</td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px;"><div onclick="document.getElementById('audio-ava-runway').play()" style="display: inline-block; background: linear-gradient(135deg, #ba3627 0%, #9a2d21 100%); color: white; padding: 4px 12px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; box-shadow: 0 2px 4px rgba(186,54,39,0.3); transition: transform 0.1s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">🔊 Listen</div><audio id="audio-ava-runway" preload="auto"><source src="/vocab-audio/aircraft-aviation/parts/runway.mp3" type="audio/mpeg"></audio></td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px; font-style: italic; color: #64748b;">piste</td>
+        </tr>
+        <tr style="background: #e8eaf6;">
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px; font-weight: bold; color: #1e293b;">hangar</td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px;"><div onclick="document.getElementById('audio-ava-hangar').play()" style="display: inline-block; background: linear-gradient(135deg, #ba3627 0%, #9a2d21 100%); color: white; padding: 4px 12px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; box-shadow: 0 2px 4px rgba(186,54,39,0.3); transition: transform 0.1s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">🔊 Listen</div><audio id="audio-ava-hangar" preload="auto"><source src="/vocab-audio/aircraft-aviation/parts/hangar.mp3" type="audio/mpeg"></audio></td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px; font-style: italic; color: #64748b;">hangar</td>
+        </tr>
+        <tr>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px; font-weight: bold; color: #1e293b;">parachute</td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px;"><div onclick="document.getElementById('audio-ava-parachute').play()" style="display: inline-block; background: linear-gradient(135deg, #ba3627 0%, #9a2d21 100%); color: white; padding: 4px 12px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; box-shadow: 0 2px 4px rgba(186,54,39,0.3); transition: transform 0.1s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">🔊 Listen</div><audio id="audio-ava-parachute" preload="auto"><source src="/vocab-audio/aircraft-aviation/parts/parachute.mp3" type="audio/mpeg"></audio></td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px; font-style: italic; color: #64748b;">parachute</td>
+        </tr>
+        <tr style="background: #e8eaf6;">
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px; font-weight: bold; color: #1e293b;">cargo hold</td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px;"><div onclick="document.getElementById('audio-ava-cargo-hold').play()" style="display: inline-block; background: linear-gradient(135deg, #ba3627 0%, #9a2d21 100%); color: white; padding: 4px 12px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; box-shadow: 0 2px 4px rgba(186,54,39,0.3); transition: transform 0.1s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">🔊 Listen</div><audio id="audio-ava-cargo-hold" preload="auto"><source src="/vocab-audio/aircraft-aviation/parts/cargo hold.mp3" type="audio/mpeg"></audio></td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px; font-style: italic; color: #64748b;">soute</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Practice #1: Parts of an aircraft — gap fill -->
+  <div style="margin-bottom: 30px; padding: 20px; background: white; border-radius: 10px; box-shadow: 0 2px 4px rgba(0,0,0,0.05);" class="keep-together">
+    <h2 style="font-size: 20px; font-weight: bold; margin-bottom: 15px; color: #ba3627; border-bottom: 3px solid #ba3627; padding-bottom: 8px;">Practice #1: Parts of an aircraft — Gap Fill</h2>
+    <p style="font-size: 16px; margin-bottom: 15px; color: #475569;">Complete each sentence with the correct word from the vocabulary list.</p>
+
+    <ol style="padding-left: 25px; font-size: 16px; list-style-type: decimal;">
+      <li style="margin-bottom: 14px; padding: 8px; background: #f5e6e4; border-radius: 6px; border-left: 3px solid #ba3627;">The pilot sits in the <strong><span data-grammar-input="practice1-q1" style="display: inline-block; min-width: 120px;"></span></strong> and controls the aircraft.</li>
+      <li style="margin-bottom: 14px; padding: 8px; background: #f5e6e4; border-radius: 6px; border-left: 3px solid #ba3627;">The <strong><span data-grammar-input="practice1-q2" style="display: inline-block; min-width: 120px;"></span></strong> on each side helps the plane stay in the air.</li>
+      <li style="margin-bottom: 14px; padding: 8px; background: #f5e6e4; border-radius: 6px; border-left: 3px solid #ba3627;">The <strong><span data-grammar-input="practice1-q3" style="display: inline-block; min-width: 120px;"></span></strong> at the rear keeps the aircraft stable during flight.</li>
+      <li style="margin-bottom: 14px; padding: 8px; background: #f5e6e4; border-radius: 6px; border-left: 3px solid #ba3627;">A small plane has a <strong><span data-grammar-input="practice1-q4" style="display: inline-block; min-width: 120px;"></span></strong> at the front that pushes it forward.</li>
+      <li style="margin-bottom: 14px; padding: 8px; background: #f5e6e4; border-radius: 6px; border-left: 3px solid #ba3627;">Each <strong><span data-grammar-input="practice1-q5" style="display: inline-block; min-width: 120px;"></span></strong> on the helicopter spins very fast.</li>
+      <li style="margin-bottom: 14px; padding: 8px; background: #f5e6e4; border-radius: 6px; border-left: 3px solid #ba3627;">Mechanics checked the <strong><span data-grammar-input="practice1-q6" style="display: inline-block; min-width: 120px;"></span></strong> before take-off.</li>
+      <li style="margin-bottom: 14px; padding: 8px; background: #f5e6e4; border-radius: 6px; border-left: 3px solid #ba3627;">Passengers and luggage are carried inside the <strong><span data-grammar-input="practice1-q7" style="display: inline-block; min-width: 120px;"></span></strong>.</li>
+      <li style="margin-bottom: 14px; padding: 8px; background: #f5e6e4; border-radius: 6px; border-left: 3px solid #ba3627;">The pilot lowered the <strong><span data-grammar-input="practice1-q8" style="display: inline-block; min-width: 120px;"></span></strong> just before the plane touched down.</li>
+      <li style="margin-bottom: 14px; padding: 8px; background: #f5e6e4; border-radius: 6px; border-left: 3px solid #ba3627;">The aircraft accelerated along the <strong><span data-grammar-input="practice1-q9" style="display: inline-block; min-width: 120px;"></span></strong> and lifted into the air.</li>
+      <li style="margin-bottom: 14px; padding: 8px; background: #f5e6e4; border-radius: 6px; border-left: 3px solid #ba3627;">After landing, the plane was parked inside the <strong><span data-grammar-input="practice1-q10" style="display: inline-block; min-width: 120px;"></span></strong>.</li>
+    </ol>
+  </div>
+
+  <!-- Vocabulary #2: Aviation people & cockpit instruments -->
+  <div style="margin-bottom: 24px; padding: 20px; background: white; border-radius: 10px; box-shadow: 0 2px 4px rgba(0,0,0,0.05);" class="keep-together">
+    <h2 style="font-size: 20px; font-weight: bold; margin-bottom: 12px; color: #1e3a5f; border-bottom: 3px solid #1e3a5f; padding-bottom: 8px;">Vocabulary #2: Aviation people &amp; cockpit instruments</h2>
+
+    <table style="width: 100%; border-collapse: collapse; margin-top: 8px; font-size: 16px; border: 1px solid #e5e7eb; box-shadow: 0 1px 3px rgba(0,0,0,0.05);" class="no-break">
+      <thead>
+        <tr style="background: linear-gradient(135deg, #1e3a5f 0%, #0f2744 100%);">
+          <th style="border: 1px solid #e5e7eb; padding: 10px; text-align: left; font-weight: bold; font-size: 16px; width: 28%; color: white;">Word</th>
+          <th style="border: 1px solid #e5e7eb; padding: 10px; text-align: left; font-weight: bold; font-size: 16px; width: 22%; color: white;">Pronunciation</th>
+          <th style="border: 1px solid #e5e7eb; padding: 10px; text-align: left; font-weight: bold; font-size: 16px; width: 50%; color: white;">French translation</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px; font-weight: bold; color: #1e293b;">pilot</td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px;"><div onclick="document.getElementById('audio-ava-pilot').play()" style="display: inline-block; background: linear-gradient(135deg, #ba3627 0%, #9a2d21 100%); color: white; padding: 4px 12px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; box-shadow: 0 2px 4px rgba(186,54,39,0.3); transition: transform 0.1s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">🔊 Listen</div><audio id="audio-ava-pilot" preload="auto"><source src="/vocab-audio/aircraft-aviation/people/pilot.mp3" type="audio/mpeg"></audio></td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px; font-style: italic; color: #64748b;">pilote</td>
+        </tr>
+        <tr style="background: #e8eaf6;">
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px; font-weight: bold; color: #1e293b;">co-pilot</td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px;"><div onclick="document.getElementById('audio-ava-co-pilot').play()" style="display: inline-block; background: linear-gradient(135deg, #ba3627 0%, #9a2d21 100%); color: white; padding: 4px 12px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; box-shadow: 0 2px 4px rgba(186,54,39,0.3); transition: transform 0.1s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">🔊 Listen</div><audio id="audio-ava-co-pilot" preload="auto"><source src="/vocab-audio/aircraft-aviation/people/co-pilot.mp3" type="audio/mpeg"></audio></td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px; font-style: italic; color: #64748b;">copilote</td>
+        </tr>
+        <tr>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px; font-weight: bold; color: #1e293b;">navigator</td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px;"><div onclick="document.getElementById('audio-ava-navigator').play()" style="display: inline-block; background: linear-gradient(135deg, #ba3627 0%, #9a2d21 100%); color: white; padding: 4px 12px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; box-shadow: 0 2px 4px rgba(186,54,39,0.3); transition: transform 0.1s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">🔊 Listen</div><audio id="audio-ava-navigator" preload="auto"><source src="/vocab-audio/aircraft-aviation/people/navigator.mp3" type="audio/mpeg"></audio></td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px; font-style: italic; color: #64748b;">navigateur</td>
+        </tr>
+        <tr style="background: #e8eaf6;">
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px; font-weight: bold; color: #1e293b;">air traffic controller</td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px;"><div onclick="document.getElementById('audio-ava-air-traffic-controller').play()" style="display: inline-block; background: linear-gradient(135deg, #ba3627 0%, #9a2d21 100%); color: white; padding: 4px 12px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; box-shadow: 0 2px 4px rgba(186,54,39,0.3); transition: transform 0.1s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">🔊 Listen</div><audio id="audio-ava-air-traffic-controller" preload="auto"><source src="/vocab-audio/aircraft-aviation/people/air traffic controller.mp3" type="audio/mpeg"></audio></td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px; font-style: italic; color: #64748b;">contrôleur aérien</td>
+        </tr>
+        <tr>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px; font-weight: bold; color: #1e293b;">ground crew</td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px;"><div onclick="document.getElementById('audio-ava-ground-crew').play()" style="display: inline-block; background: linear-gradient(135deg, #ba3627 0%, #9a2d21 100%); color: white; padding: 4px 12px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; box-shadow: 0 2px 4px rgba(186,54,39,0.3); transition: transform 0.1s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">🔊 Listen</div><audio id="audio-ava-ground-crew" preload="auto"><source src="/vocab-audio/aircraft-aviation/people/ground crew.mp3" type="audio/mpeg"></audio></td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px; font-style: italic; color: #64748b;">personnel au sol</td>
+        </tr>
+        <tr style="background: #e8eaf6;">
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px; font-weight: bold; color: #1e293b;">paratrooper</td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px;"><div onclick="document.getElementById('audio-ava-paratrooper').play()" style="display: inline-block; background: linear-gradient(135deg, #ba3627 0%, #9a2d21 100%); color: white; padding: 4px 12px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; box-shadow: 0 2px 4px rgba(186,54,39,0.3); transition: transform 0.1s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">🔊 Listen</div><audio id="audio-ava-paratrooper" preload="auto"><source src="/vocab-audio/aircraft-aviation/people/paratrooper.mp3" type="audio/mpeg"></audio></td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px; font-style: italic; color: #64748b;">parachutiste</td>
+        </tr>
+        <tr>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px; font-weight: bold; color: #1e293b;">control stick / yoke</td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px;"><div onclick="document.getElementById('audio-ava-control-stick').play()" style="display: inline-block; background: linear-gradient(135deg, #ba3627 0%, #9a2d21 100%); color: white; padding: 4px 12px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; box-shadow: 0 2px 4px rgba(186,54,39,0.3); transition: transform 0.1s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">🔊 Listen</div><audio id="audio-ava-control-stick" preload="auto"><source src="/vocab-audio/aircraft-aviation/people/control stick - yoke.mp3" type="audio/mpeg"></audio></td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px; font-style: italic; color: #64748b;">manche à balai</td>
+        </tr>
+        <tr style="background: #e8eaf6;">
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px; font-weight: bold; color: #1e293b;">throttle</td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px;"><div onclick="document.getElementById('audio-ava-throttle').play()" style="display: inline-block; background: linear-gradient(135deg, #ba3627 0%, #9a2d21 100%); color: white; padding: 4px 12px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; box-shadow: 0 2px 4px rgba(186,54,39,0.3); transition: transform 0.1s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">🔊 Listen</div><audio id="audio-ava-throttle" preload="auto"><source src="/vocab-audio/aircraft-aviation/people/throttle.mp3" type="audio/mpeg"></audio></td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px; font-style: italic; color: #64748b;">manette des gaz</td>
+        </tr>
+        <tr>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px; font-weight: bold; color: #1e293b;">altimeter</td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px;"><div onclick="document.getElementById('audio-ava-altimeter').play()" style="display: inline-block; background: linear-gradient(135deg, #ba3627 0%, #9a2d21 100%); color: white; padding: 4px 12px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; box-shadow: 0 2px 4px rgba(186,54,39,0.3); transition: transform 0.1s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">🔊 Listen</div><audio id="audio-ava-altimeter" preload="auto"><source src="/vocab-audio/aircraft-aviation/people/altimeter.mp3" type="audio/mpeg"></audio></td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px; font-style: italic; color: #64748b;">altimètre</td>
+        </tr>
+        <tr style="background: #e8eaf6;">
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px; font-weight: bold; color: #1e293b;">fuel gauge</td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px;"><div onclick="document.getElementById('audio-ava-fuel-gauge').play()" style="display: inline-block; background: linear-gradient(135deg, #ba3627 0%, #9a2d21 100%); color: white; padding: 4px 12px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; box-shadow: 0 2px 4px rgba(186,54,39,0.3); transition: transform 0.1s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">🔊 Listen</div><audio id="audio-ava-fuel-gauge" preload="auto"><source src="/vocab-audio/aircraft-aviation/people/fuel gauge.mp3" type="audio/mpeg"></audio></td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px; font-style: italic; color: #64748b;">jauge à carburant</td>
+        </tr>
+        <tr>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px; font-weight: bold; color: #1e293b;">headset</td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px;"><div onclick="document.getElementById('audio-ava-headset').play()" style="display: inline-block; background: linear-gradient(135deg, #ba3627 0%, #9a2d21 100%); color: white; padding: 4px 12px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; box-shadow: 0 2px 4px rgba(186,54,39,0.3); transition: transform 0.1s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">🔊 Listen</div><audio id="audio-ava-headset" preload="auto"><source src="/vocab-audio/aircraft-aviation/people/headset.mp3" type="audio/mpeg"></audio></td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px; font-style: italic; color: #64748b;">casque audio</td>
+        </tr>
+        <tr style="background: #e8eaf6;">
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px; font-weight: bold; color: #1e293b;">control tower</td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px;"><div onclick="document.getElementById('audio-ava-control-tower').play()" style="display: inline-block; background: linear-gradient(135deg, #ba3627 0%, #9a2d21 100%); color: white; padding: 4px 12px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; box-shadow: 0 2px 4px rgba(186,54,39,0.3); transition: transform 0.1s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">🔊 Listen</div><audio id="audio-ava-control-tower" preload="auto"><source src="/vocab-audio/aircraft-aviation/people/control tower.mp3" type="audio/mpeg"></audio></td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px; font-style: italic; color: #64748b;">tour de contrôle</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Practice #2: Aviation people & cockpit instruments — gap fill -->
+  <div style="margin-bottom: 30px; padding: 20px; background: white; border-radius: 10px; box-shadow: 0 2px 4px rgba(0,0,0,0.05);" class="keep-together">
+    <h2 style="font-size: 20px; font-weight: bold; margin-bottom: 15px; color: #ba3627; border-bottom: 3px solid #ba3627; padding-bottom: 8px;">Practice #2: Aviation people &amp; cockpit instruments — Gap Fill</h2>
+    <p style="font-size: 16px; margin-bottom: 15px; color: #475569;">Complete each sentence with the correct word from the vocabulary list.</p>
+
+    <ol style="padding-left: 25px; font-size: 16px; list-style-type: decimal;">
+      <li style="margin-bottom: 14px; padding: 8px; background: #f5e6e4; border-radius: 6px; border-left: 3px solid #ba3627;">The <strong><span data-grammar-input="practice2-q1" style="display: inline-block; min-width: 120px;"></span></strong> radioed the tower before take-off.</li>
+      <li style="margin-bottom: 14px; padding: 8px; background: #f5e6e4; border-radius: 6px; border-left: 3px solid #ba3627;">The <strong><span data-grammar-input="practice2-q2" style="display: inline-block; min-width: 120px;"></span></strong> monitored the instruments during the long flight.</li>
+      <li style="margin-bottom: 14px; padding: 8px; background: #f5e6e4; border-radius: 6px; border-left: 3px solid #ba3627;">The <strong><span data-grammar-input="practice2-q3" style="display: inline-block; min-width: 120px;"></span></strong> planned the safest route across the mountains.</li>
+      <li style="margin-bottom: 14px; padding: 8px; background: #f5e6e4; border-radius: 6px; border-left: 3px solid #ba3627;">The <strong><span data-grammar-input="practice2-q4" style="display: inline-block; min-width: 120px;"></span></strong> told the pilot to wait on the runway.</li>
+      <li style="margin-bottom: 14px; padding: 8px; background: #f5e6e4; border-radius: 6px; border-left: 3px solid #ba3627;">The <strong><span data-grammar-input="practice2-q5" style="display: inline-block; min-width: 120px;"></span></strong> refuelled the aircraft after it landed.</li>
+      <li style="margin-bottom: 14px; padding: 8px; background: #f5e6e4; border-radius: 6px; border-left: 3px solid #ba3627;">Each <strong><span data-grammar-input="practice2-q6" style="display: inline-block; min-width: 120px;"></span></strong> jumped from the open door of the transport plane.</li>
+      <li style="margin-bottom: 14px; padding: 8px; background: #f5e6e4; border-radius: 6px; border-left: 3px solid #ba3627;">The pilot moved the <strong><span data-grammar-input="practice2-q7" data-grammar-acceptable="control stick|yoke|control stick / yoke" style="display: inline-block; min-width: 120px;"></span></strong> to turn the aircraft left.</li>
+      <li style="margin-bottom: 14px; padding: 8px; background: #f5e6e4; border-radius: 6px; border-left: 3px solid #ba3627;">Push the <strong><span data-grammar-input="practice2-q8" style="display: inline-block; min-width: 120px;"></span></strong> forward to increase speed.</li>
+      <li style="margin-bottom: 14px; padding: 8px; background: #f5e6e4; border-radius: 6px; border-left: 3px solid #ba3627;">The <strong><span data-grammar-input="practice2-q9" style="display: inline-block; min-width: 120px;"></span></strong> shows how high the aircraft is flying.</li>
+      <li style="margin-bottom: 14px; padding: 8px; background: #f5e6e4; border-radius: 6px; border-left: 3px solid #ba3627;">All flights at the airport are coordinated from the <strong><span data-grammar-input="practice2-q10" style="display: inline-block; min-width: 120px;"></span></strong>.</li>
+    </ol>
+  </div>
+
+  <!-- Vocabulary #3: Aviation adjectives — opposites -->
+  <div style="margin-bottom: 30px; padding: 20px; background: white; border-radius: 10px; box-shadow: 0 2px 4px rgba(0,0,0,0.05);" class="keep-together">
+    <h2 style="font-size: 20px; font-weight: bold; margin-bottom: 15px; color: #ba3627; border-bottom: 3px solid #ba3627; padding-bottom: 8px;">Vocabulary #3: Aviation adjectives — opposites</h2>
+    <p style="font-size: 16px; margin-bottom: 15px; color: #475569;">Each word in the list has one opposite in the set. Write the matching word in the slot next to its partner. You can drag tiles into slots or tap a tile, then tap a slot.</p>
+
+    <div id="ava-adjective-match" data-ava-adjective-match="true" style="margin-top: 8px;">
+      <div class="ava-interactive-placeholder ava-no-print" role="status" aria-live="polite">
+        <div class="ava-loader-row">
+          <div class="ava-loader-ring" aria-hidden="true"></div>
+          <span style="font-size: 14px; color: #475569;">Loading activity…</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Vocabulary #4: Aviation verbs — gap-fill -->
+  <div style="margin-bottom: 30px; padding: 20px; background: white; border-radius: 10px; box-shadow: 0 2px 4px rgba(0,0,0,0.05);" class="keep-together">
+    <h2 style="font-size: 20px; font-weight: bold; margin-bottom: 15px; color: #ba3627; border-bottom: 3px solid #ba3627; padding-bottom: 8px;">Vocabulary #4: Aviation verbs — gap-fill</h2>
+    <p style="font-size: 16px; margin-bottom: 15px; color: #475569;">Read each sentence. Only one verb from the bank fits the gap. Write the correct verb in the box. You can drag verbs into gaps or tap a verb, then tap the gap.</p>
+
+    <div id="ava-verbs-gap-fill" data-ava-verbs-mount="true" style="margin-top: 8px;">
+      <div class="ava-interactive-placeholder ava-no-print" role="status" aria-live="polite">
+        <div class="ava-loader-row">
+          <div class="ava-loader-ring" aria-hidden="true"></div>
+          <span style="font-size: 14px; color: #475569;">Loading activity…</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- Answer key -->
+<div style="max-width: 800px; margin: 0 auto; padding: 20px; font-family: Arial, sans-serif; line-height: 1.5; color: #333; background: linear-gradient(to bottom, #e8eaf6, #ffffff);" class="page-break">
+
+  <div style="margin-top: 10px; padding-top: 20px; border-top: 3px solid #1e3a5f;" class="no-break">
+    <h2 style="font-size: 22px; font-weight: bold; margin-bottom: 20px; color: white; text-align: center; padding: 15px; background: linear-gradient(135deg, #1e3a5f 0%, #0f2744 100%); border-radius: 10px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">Answer Key</h2>
+
+    <div style="margin-bottom: 20px; padding: 20px; background: white; border-radius: 10px; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
+      <h3 style="font-size: 18px; font-weight: bold; margin-bottom: 12px; color: #ba3627; border-bottom: 2px solid #ba3627; padding-bottom: 6px;">Practice #1: Parts of an aircraft</h3>
+      <ol style="padding-left: 25px; font-size: 16px; list-style-type: decimal;">
+        <li style="margin-bottom: 10px; padding: 8px; background: #f5e6e4; border-radius: 4px;">The pilot sits in the <strong style="color: #1e3a5f;">cockpit</strong> and controls the aircraft.</li>
+        <li style="margin-bottom: 10px; padding: 8px; background: #f5e6e4; border-radius: 4px;">The <strong style="color: #1e3a5f;">wing</strong> on each side helps the plane stay in the air.</li>
+        <li style="margin-bottom: 10px; padding: 8px; background: #f5e6e4; border-radius: 4px;">The <strong style="color: #1e3a5f;">tail</strong> at the rear keeps the aircraft stable during flight.</li>
+        <li style="margin-bottom: 10px; padding: 8px; background: #f5e6e4; border-radius: 4px;">A small plane has a <strong style="color: #1e3a5f;">propeller</strong> at the front that pushes it forward.</li>
+        <li style="margin-bottom: 10px; padding: 8px; background: #f5e6e4; border-radius: 4px;">Each <strong style="color: #1e3a5f;">rotor blade</strong> on the helicopter spins very fast.</li>
+        <li style="margin-bottom: 10px; padding: 8px; background: #f5e6e4; border-radius: 4px;">Mechanics checked the <strong style="color: #1e3a5f;">engine</strong> before take-off.</li>
+        <li style="margin-bottom: 10px; padding: 8px; background: #f5e6e4; border-radius: 4px;">Passengers and luggage are carried inside the <strong style="color: #1e3a5f;">fuselage</strong>.</li>
+        <li style="margin-bottom: 10px; padding: 8px; background: #f5e6e4; border-radius: 4px;">The pilot lowered the <strong style="color: #1e3a5f;">landing gear</strong> just before the plane touched down.</li>
+        <li style="margin-bottom: 10px; padding: 8px; background: #f5e6e4; border-radius: 4px;">The aircraft accelerated along the <strong style="color: #1e3a5f;">runway</strong> and lifted into the air.</li>
+        <li style="margin-bottom: 10px; padding: 8px; background: #f5e6e4; border-radius: 4px;">After landing, the plane was parked inside the <strong style="color: #1e3a5f;">hangar</strong>.</li>
+      </ol>
+    </div>
+
+    <div style="margin-bottom: 20px; padding: 20px; background: white; border-radius: 10px; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
+      <h3 style="font-size: 18px; font-weight: bold; margin-bottom: 12px; color: #ba3627; border-bottom: 2px solid #ba3627; padding-bottom: 6px;">Practice #2: Aviation people &amp; cockpit instruments</h3>
+      <ol style="padding-left: 25px; font-size: 16px; list-style-type: decimal;">
+        <li style="margin-bottom: 10px; padding: 8px; background: #f5e6e4; border-radius: 4px;">The <strong style="color: #1e3a5f;">pilot</strong> radioed the tower before take-off.</li>
+        <li style="margin-bottom: 10px; padding: 8px; background: #f5e6e4; border-radius: 4px;">The <strong style="color: #1e3a5f;">co-pilot</strong> monitored the instruments during the long flight.</li>
+        <li style="margin-bottom: 10px; padding: 8px; background: #f5e6e4; border-radius: 4px;">The <strong style="color: #1e3a5f;">navigator</strong> planned the safest route across the mountains.</li>
+        <li style="margin-bottom: 10px; padding: 8px; background: #f5e6e4; border-radius: 4px;">The <strong style="color: #1e3a5f;">air traffic controller</strong> told the pilot to wait on the runway.</li>
+        <li style="margin-bottom: 10px; padding: 8px; background: #f5e6e4; border-radius: 4px;">The <strong style="color: #1e3a5f;">ground crew</strong> refuelled the aircraft after it landed.</li>
+        <li style="margin-bottom: 10px; padding: 8px; background: #f5e6e4; border-radius: 4px;">Each <strong style="color: #1e3a5f;">paratrooper</strong> jumped from the open door of the transport plane.</li>
+        <li style="margin-bottom: 10px; padding: 8px; background: #f5e6e4; border-radius: 4px;">The pilot moved the <strong style="color: #1e3a5f;">control stick / yoke</strong> to turn the aircraft left.</li>
+        <li style="margin-bottom: 10px; padding: 8px; background: #f5e6e4; border-radius: 4px;">Push the <strong style="color: #1e3a5f;">throttle</strong> forward to increase speed.</li>
+        <li style="margin-bottom: 10px; padding: 8px; background: #f5e6e4; border-radius: 4px;">The <strong style="color: #1e3a5f;">altimeter</strong> shows how high the aircraft is flying.</li>
+        <li style="margin-bottom: 10px; padding: 8px; background: #f5e6e4; border-radius: 4px;">All flights at the airport are coordinated from the <strong style="color: #1e3a5f;">control tower</strong>.</li>
+      </ol>
+    </div>
+
+    <div style="margin-bottom: 20px; padding: 20px; background: white; border-radius: 10px; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
+      <h3 style="font-size: 18px; font-weight: bold; margin-bottom: 12px; color: #ba3627; border-bottom: 2px solid #ba3627; padding-bottom: 6px;">Vocabulary #3: Aviation adjectives — opposites</h3>
+      <ul style="padding-left: 25px; font-size: 16px; list-style-type: disc;">
+        <li style="margin-bottom: 8px; padding: 8px; background: #f5e6e4; border-radius: 4px;"><strong style="color: #1e3a5f;">Smooth</strong> — Turbulent</li>
+        <li style="margin-bottom: 8px; padding: 8px; background: #f5e6e4; border-radius: 4px;"><strong style="color: #1e3a5f;">Heavy</strong> — Light</li>
+        <li style="margin-bottom: 8px; padding: 8px; background: #f5e6e4; border-radius: 4px;"><strong style="color: #1e3a5f;">Clear</strong> — Cloudy</li>
+        <li style="margin-bottom: 8px; padding: 8px; background: #f5e6e4; border-radius: 4px;"><strong style="color: #1e3a5f;">Airborne</strong> — Grounded</li>
+        <li style="margin-bottom: 8px; padding: 8px; background: #f5e6e4; border-radius: 4px;"><strong style="color: #1e3a5f;">High</strong> — Low</li>
+        <li style="margin-bottom: 8px; padding: 8px; background: #f5e6e4; border-radius: 4px;"><strong style="color: #1e3a5f;">Steady</strong> — Unstable</li>
+        <li style="margin-bottom: 8px; padding: 8px; background: #f5e6e4; border-radius: 4px;"><strong style="color: #1e3a5f;">Fast</strong> — Slow</li>
+        <li style="margin-bottom: 8px; padding: 8px; background: #f5e6e4; border-radius: 4px;"><strong style="color: #1e3a5f;">Manned</strong> — Unmanned</li>
+      </ul>
+    </div>
+
+    <div style="margin-bottom: 20px; padding: 20px; background: white; border-radius: 10px; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
+      <h3 style="font-size: 18px; font-weight: bold; margin-bottom: 12px; color: #ba3627; border-bottom: 2px solid #ba3627; padding-bottom: 6px;">Vocabulary #4: Aviation verbs — gap-fill</h3>
+      <ol style="padding-left: 25px; font-size: 16px; list-style-type: decimal;">
+        <li style="margin-bottom: 10px; padding: 8px; background: #f5e6e4; border-radius: 4px;">The pilot started the engines and prepared to <strong style="color: #1e3a5f;">take off</strong> from the runway.</li>
+        <li style="margin-bottom: 10px; padding: 8px; background: #f5e6e4; border-radius: 4px;">Before landing, the aircraft must <strong style="color: #1e3a5f;">descend</strong> altitude slowly.</li>
+        <li style="margin-bottom: 10px; padding: 8px; background: #f5e6e4; border-radius: 4px;">The plane will <strong style="color: #1e3a5f;">land</strong> at the military base in twenty minutes.</li>
+        <li style="margin-bottom: 10px; padding: 8px; background: #f5e6e4; border-radius: 4px;">The pilot had to <strong style="color: #1e3a5f;">turn</strong> the helicopter sharply to avoid the storm.</li>
+        <li style="margin-bottom: 10px; padding: 8px; background: #f5e6e4; border-radius: 4px;">Paratroopers <strong style="color: #1e3a5f;">jump</strong> from the aircraft over the drop zone.</li>
+        <li style="margin-bottom: 10px; padding: 8px; background: #f5e6e4; border-radius: 4px;">The control tower asked the pilot to <strong style="color: #1e3a5f;">abort</strong> the runway and circle again.</li>
+        <li style="margin-bottom: 10px; padding: 8px; background: #f5e6e4; border-radius: 4px;">Engineers <strong style="color: #1e3a5f;">inspect</strong> the aircraft carefully before every flight.</li>
+        <li style="margin-bottom: 10px; padding: 8px; background: #f5e6e4; border-radius: 4px;">The crew must <strong style="color: #1e3a5f;">secure</strong> the cargo securely before take-off.</li>
+        <li style="margin-bottom: 10px; padding: 8px; background: #f5e6e4; border-radius: 4px;">The helicopter began to <strong style="color: #1e3a5f;">hover</strong> slowly above the landing zone before touching down.</li>
+        <li style="margin-bottom: 10px; padding: 8px; background: #f5e6e4; border-radius: 4px;">Air traffic control will <strong style="color: #1e3a5f;">guide</strong> the pilot through restricted airspace.</li>
+        <li style="margin-bottom: 10px; padding: 8px; background: #f5e6e4; border-radius: 4px;">If an engine fails, the pilot must know how to <strong style="color: #1e3a5f;">land</strong> the aircraft safely.</li>
+        <li style="margin-bottom: 10px; padding: 8px; background: #f5e6e4; border-radius: 4px;">The pilot radioed the tower to <strong style="color: #1e3a5f;">request</strong> clearance for take-off.</li>
+      </ol>
+      <p style="font-size: 14px; margin: 12px 0 0 0; color: #64748b;"><em>Distractor in the verb bank: climb (not used in any sentence).</em></p>
+    </div>
+  </div>
+</div>

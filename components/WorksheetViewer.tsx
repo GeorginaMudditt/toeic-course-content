@@ -4,6 +4,8 @@ import React, { useState, useEffect, useLayoutEffect, useRef, useCallback, useMe
 import { createRoot } from 'react-dom/client'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
+import { mountAircraftAviationAdjectiveMatch } from '@/lib/worksheetInteractions/aircraftAviationAdjectivesMatch'
+import { mountAircraftAviationVerbsGapFill } from '@/lib/worksheetInteractions/aircraftAviationVerbsGapFill'
 import { mountInstructionsDescriptionsArmyAdjectiveMatch } from '@/lib/worksheetInteractions/instructionsDescriptionsArmyAdjectivesMatch'
 import { mountInstructionsDescriptionsArmyVerbsMission } from '@/lib/worksheetInteractions/instructionsDescriptionsArmyVerbsMission'
 import { mountPastSimpleArmyEdPronunciation } from '@/lib/worksheetInteractions/pastSimpleArmyEdPronunciation'
@@ -2577,6 +2579,40 @@ export default function WorksheetViewer({
       }
     })
 
+    return () => {
+      cancelAnimationFrame(rafId)
+      detach?.()
+    }
+  }, [resource.content])
+
+  // Aircraft and Aviation opposite-adjective match.
+  useEffect(() => {
+    const html = resource.content
+    if (typeof html !== 'string' || !html.includes('data-ava-adjective-match')) return
+    let detach: (() => void) | undefined
+    const rafId = requestAnimationFrame(() => {
+      const host = contentRef.current
+      if (!host) return
+      const el = host.querySelector('[data-ava-adjective-match]') as HTMLElement | null
+      if (el) detach = mountAircraftAviationAdjectiveMatch(el)
+    })
+    return () => {
+      cancelAnimationFrame(rafId)
+      detach?.()
+    }
+  }, [resource.content])
+
+  // Aircraft and Aviation verb gap-fill.
+  useEffect(() => {
+    const html = resource.content
+    if (typeof html !== 'string' || !html.includes('data-ava-verbs-mount')) return
+    let detach: (() => void) | undefined
+    const rafId = requestAnimationFrame(() => {
+      const host = contentRef.current
+      if (!host) return
+      const el = host.querySelector('[data-ava-verbs-mount]') as HTMLElement | null
+      if (el) detach = mountAircraftAviationVerbsGapFill(el)
+    })
     return () => {
       cancelAnimationFrame(rafId)
       detach?.()
