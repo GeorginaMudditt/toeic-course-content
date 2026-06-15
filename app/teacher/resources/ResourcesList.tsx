@@ -159,7 +159,7 @@ export default function ResourcesList({ resources }: Props) {
   return (
     <>
       <div className="flex justify-between items-center mb-6">
-        <h1 className="text-3xl font-bold text-gray-900">Resource Bank</h1>
+        <h1 className="text-3xl font-bold text-gray-900">Resource Bank ({resources.length})</h1>
         <Link
           href="/teacher/resources/new"
           className="text-white px-4 py-2 rounded-md transition-colors hover:bg-[#2d3569]"

@@ -99,6 +99,11 @@ export default async function StudentDocsPage({ searchParams }: { searchParams: 
                             year: 'numeric'
                           })}
                         </p>
+                        {document.studentNote && (
+                          <p className="mt-2 text-sm text-gray-700 whitespace-pre-wrap">
+                            {document.studentNote}
+                          </p>
+                        )}
                       </div>
                     </div>
                     <StudentDocumentActions fileUrl={document.fileUrl} fileName={document.fileName} />

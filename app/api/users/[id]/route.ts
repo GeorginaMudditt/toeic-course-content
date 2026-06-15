@@ -4,7 +4,6 @@ import { authOptions } from '@/lib/auth'
 import { supabaseServer } from '@/lib/supabase'
 import {
   isValidStudentLifecycleStatus,
-  type StudentLifecycleStatus,
 } from '@/lib/student-lifecycle-status'
 
 export async function PATCH(
@@ -20,16 +19,38 @@ export async function PATCH(
 
     const body = await request.json()
     const rawStatus = body.studentLifecycleStatus
+    const rawDashboardFolderArchived = body.dashboardFolderArchived
 
-    if (rawStatus === undefined || typeof rawStatus !== 'string') {
-      return NextResponse.json({ error: 'studentLifecycleStatus is required' }, { status: 400 })
+    const hasStatusUpdate = rawStatus !== undefined
+    const hasDashboardArchiveUpdate = rawDashboardFolderArchived !== undefined
+
+    if (!hasStatusUpdate && !hasDashboardArchiveUpdate) {
+      return NextResponse.json(
+        { error: 'studentLifecycleStatus or dashboardFolderArchived is required' },
+        { status: 400 }
+      )
     }
 
-    if (!isValidStudentLifecycleStatus(rawStatus)) {
-      return NextResponse.json({ error: 'Invalid studentLifecycleStatus' }, { status: 400 })
+    const updatePayload: Record<string, unknown> = {
+      updatedAt: new Date().toISOString(),
     }
 
-    const studentLifecycleStatus: StudentLifecycleStatus = rawStatus
+    if (hasStatusUpdate) {
+      if (typeof rawStatus !== 'string') {
+        return NextResponse.json({ error: 'Invalid studentLifecycleStatus' }, { status: 400 })
+      }
+      if (!isValidStudentLifecycleStatus(rawStatus)) {
+        return NextResponse.json({ error: 'Invalid studentLifecycleStatus' }, { status: 400 })
+      }
+      updatePayload.studentLifecycleStatus = rawStatus
+    }
+
+    if (hasDashboardArchiveUpdate) {
+      if (typeof rawDashboardFolderArchived !== 'boolean') {
+        return NextResponse.json({ error: 'Invalid dashboardFolderArchived' }, { status: 400 })
+      }
+      updatePayload.dashboardFolderArchived = rawDashboardFolderArchived
+    }
 
     const { data: userData, error: userError } = await supabaseServer
       .from('User')
@@ -42,19 +63,17 @@ export async function PATCH(
       return NextResponse.json({ error: 'Student not found' }, { status: 404 })
     }
 
-    const now = new Date().toISOString()
-
     const { data: updatedUser, error: updateError } = await supabaseServer
       .from('User')
-      .update({ studentLifecycleStatus, updatedAt: now })
+      .update(updatePayload)
       .eq('id', params.id)
-      .select('id, email, name, studentLifecycleStatus')
+      .select('id, email, name, studentLifecycleStatus, dashboardFolderArchived')
       .single()
 
     if (updateError) {
-      console.error('Error updating student status:', updateError)
+      console.error('Error updating student:', updateError)
       return NextResponse.json(
-        { error: updateError.message || 'Failed to update status' },
+        { error: updateError.message || 'Failed to update student' },
         { status: 500 }
       )
     }
@@ -62,7 +81,7 @@ export async function PATCH(
     return NextResponse.json({ success: true, user: updatedUser })
   } catch (error) {
     console.error('Error in PATCH /api/users/[id]:', error)
-    return NextResponse.json({ error: 'Failed to update status' }, { status: 500 })
+    return NextResponse.json({ error: 'Failed to update student' }, { status: 500 })
   }
 }
 
