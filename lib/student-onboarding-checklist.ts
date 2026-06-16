@@ -205,11 +205,14 @@ export const STUDENT_ONBOARDING_CHECKLIST_ITEMS: OnboardingChecklistItemDefiniti
     slug: 'issue-lesson-booking-code',
     label: 'Issue code to book lessons',
     type: 'complete-or-na',
+    allowNotApplicable: false,
+    completeNoteOnly: true,
   },
   {
     slug: 'toeic-elearning-mobile-app',
     label: 'Access to TOEIC E-Learning and mobile app',
     type: 'complete-or-na',
+    completeNoteOnly: true,
   },
   {
     slug: 'midpoint-review',

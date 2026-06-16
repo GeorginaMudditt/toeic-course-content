@@ -337,19 +337,19 @@ export default function StudentOnboardingChecklist({
     index: number,
     isUploaded: boolean,
     isNotApplicable: boolean
-  ) => (
-    <span
-      className={`mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-xs font-semibold ${
-        isUploaded
-          ? 'bg-emerald-100 text-emerald-800'
-          : isNotApplicable
-            ? 'bg-slate-200 text-slate-600'
-            : 'bg-gray-100 text-gray-600'
-      }`}
-    >
-      {isUploaded ? '✓' : index + 1}
-    </span>
-  )
+  ) => {
+    const isResolved = isUploaded || isNotApplicable
+
+    return (
+      <span
+        className={`mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-xs font-semibold ${
+          isResolved ? 'bg-emerald-100 text-emerald-800' : 'bg-gray-100 text-gray-600'
+        }`}
+      >
+        {isResolved ? '✓' : index + 1}
+      </span>
+    )
+  }
 
   return (
     <div>
@@ -476,6 +476,22 @@ export default function StudentOnboardingChecklist({
                       >
                         {item.label}
                       </p>
+
+                      {item.slug === 'setup-e-learning-platform' && !isNotApplicable && (
+                        <p className="mt-2 rounded-md border border-amber-200 bg-amber-50 px-3 py-2 text-xs text-amber-900">
+                          <span className="font-medium">Reminder:</span> don&apos;t forget to link to
+                          the{' '}
+                          <a
+                            href="https://www.loom.com/share/0946ac5a9c3c42389b23414d242653bb"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="font-medium underline hover:text-amber-950"
+                          >
+                            Loom video
+                          </a>
+                          .
+                        </p>
+                      )}
 
                       {isStudentDocument && isUploaded && item.completedAt && (
                         <p className="mt-2 text-sm text-emerald-700">
