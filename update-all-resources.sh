@@ -70,15 +70,15 @@ npm run update:resource:supabase "Instructions and Descriptions (Army)" "instruc
 npm run update:resource:supabase "Past Simple Practice (Army)" "past-simple-practice-army-html.html"
 
 # Speaking
-npm run update:resource:supabase "Speaking AI" "speaking-ai-html.html"
-npm run update:resource:supabase "Speaking Remote Work" "speaking-remote-work-html.html"
-npm run update:resource:supabase "Speaking The Workplace" "speaking-the-workplace-html.html"
-npm run update:resource:supabase "Speaking Work Life Balance" "speaking-work-life-balance-html.html"
+npm run update:resource:supabase "Speaking: AI in the Workplace" "speaking-ai-html.html"
+npm run update:resource:supabase "Speaking: Remote Work" "speaking-remote-work-html.html"
+npm run update:resource:supabase "Speaking: The Workplace" "speaking-the-workplace-html.html"
+npm run update:resource:supabase "Speaking: Work-Life Balance" "speaking-work-life-balance-html.html"
 npm run update:resource:supabase "Speaking Workplace" "speaking-workplace-html.html"
 npm run update:resource:supabase "Meetings" "speaking-meetings-html.html"
 npm run update:resource:supabase "Presentations" "speaking-presentations-html.html"
 npm run update:resource:supabase "Argumentation" "speaking-argumentation-html.html"
-npm run update:resource:supabase "TOEICⓇ Speaking: Your Future Career" "speaking-your-future-career-html.html"
+npm run update:resource:supabase "Speaking: Your Future Career" "speaking-your-future-career-html.html"
 
 # Tests / TOEIC Reading & Writing
 npm run update:resource:supabase "Introduction to TOEICⓇ Reading" "introduction-toeic-reading-html.html"
