@@ -29,6 +29,29 @@ export const qualiopiDocuments: QualiopiDocument[] = [
     category: 'key',
   },
   {
+    slug: 'indicator-1',
+    title: 'Qualiopi Indicator 1',
+    description: 'Public-Facing Information',
+    spreadsheetId: '1g94591Z0TM3pQJ1kFxC4F0I_w6ltf4a2SL5t7Llq2AY',
+    category: 'indicator',
+    indicatorOrder: 1,
+    layout: 'hub',
+    folders: [
+      {
+        slug: 'course-descriptions',
+        title: 'Course descriptions',
+        description: 'Upload and manage course description documents.',
+        type: 'pdf-folder',
+      },
+      {
+        slug: 'website-modification-spreadsheet',
+        title: 'Go to website modification spreadsheet',
+        description: 'View and update the website modification tracking spreadsheet.',
+        type: 'spreadsheet',
+      },
+    ],
+  },
+  {
     slug: 'indicator-12',
     title: 'Qualiopi Indicator 12',
     description: 'Student engagement',
