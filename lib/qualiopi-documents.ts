@@ -29,6 +29,14 @@ export const qualiopiDocuments: QualiopiDocument[] = [
     category: 'key',
   },
   {
+    slug: 'indicator-12',
+    title: 'Qualiopi Indicator 12',
+    description: 'Student engagement',
+    spreadsheetId: '1G8F2JfVmA8gBwkzVxHED9gKgNaRQCGSG1Q0cY29VPLU',
+    category: 'indicator',
+    indicatorOrder: 12,
+  },
+  {
     slug: 'indicator-22',
     title: 'Qualiopi Indicator 22',
     description: 'Continuing Professional Development',
