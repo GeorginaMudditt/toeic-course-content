@@ -2,8 +2,13 @@
 
 import { useState, useEffect, useLayoutEffect, useRef, useMemo, Fragment } from 'react'
 import { useRouter } from 'next/navigation'
+import Link from 'next/link'
 import { formatCourseName } from '@/lib/date-utils'
 import { ClientLocalDateTime } from '@/components/ClientLocalDateTime'
+import {
+  getGoogleSheetEditUrl,
+  getQualiopiDocument,
+} from '@/lib/qualiopi-documents'
 import {
   computePackageProgress,
   normalizeLessonDurationHours,
@@ -225,6 +230,7 @@ export default function StudentNotesManager({ student, enrollments }: Props) {
   const [savingCoursePackage, setSavingCoursePackage] = useState(false)
   const [coursePackageSaveError, setCoursePackageSaveError] = useState<string | null>(null)
   const [trackHoursModalOpen, setTrackHoursModalOpen] = useState(false)
+  const [engagementReminderOpen, setEngagementReminderOpen] = useState(false)
   /**
    * Incremented after each successful load from the API so we can imperatively open <details>
    * for rows that already have corrections/notes. Native <details> is left uncontrolled to avoid
@@ -336,6 +342,24 @@ export default function StudentNotesManager({ student, enrollments }: Props) {
     }
   }, [trackHoursModalOpen])
 
+  useEffect(() => {
+    if (!engagementReminderOpen) return
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setEngagementReminderOpen(false)
+    }
+    document.body.style.overflow = 'hidden'
+    window.addEventListener('keydown', onKey)
+    return () => {
+      document.body.style.overflow = ''
+      window.removeEventListener('keydown', onKey)
+    }
+  }, [engagementReminderOpen])
+
+  const studentEngagementDoc = getQualiopiDocument('indicator-12')
+  const studentEngagementSpreadsheetUrl = studentEngagementDoc
+    ? getGoogleSheetEditUrl(studentEngagementDoc.spreadsheetId)
+    : null
+
   const loadNote = async (enrollmentId: string) => {
     setLoading(true)
     try {
@@ -408,17 +432,21 @@ export default function StudentNotesManager({ student, enrollments }: Props) {
     }
   }
 
-  const saveNote = async () => {
+  const saveNote = async (options?: { manual?: boolean }) => {
     if (!resolvedEnrollmentId) return
     if (!noteLoadedRef.current) return
     if (savingRef.current) return
 
     const contentToSave = contentRef.current || ''
     const teacherToSave = teacherPrivateContentRef.current ?? ''
-    if (
+    const isUnchanged =
       contentToSave === lastSavedStudentContentRef.current &&
       teacherToSave === lastSavedTeacherContentRef.current
-    ) {
+
+    if (isUnchanged) {
+      if (options?.manual) {
+        setEngagementReminderOpen(true)
+      }
       return
     }
 
@@ -470,6 +498,10 @@ export default function StudentNotesManager({ student, enrollments }: Props) {
         }
       } catch {
         /* non-fatal */
+      }
+
+      if (options?.manual) {
+        setEngagementReminderOpen(true)
       }
     } catch (error) {
       console.error('Error saving note:', error)
@@ -1128,7 +1160,7 @@ export default function StudentNotesManager({ student, enrollments }: Props) {
               )}
               <button
                 type="button"
-                onClick={saveNote}
+                onClick={() => void saveNote({ manual: true })}
                 disabled={saving}
                 className="px-4 py-1 bg-[#38438f] text-white rounded hover:bg-[#2d3569] disabled:opacity-50"
               >
@@ -1473,6 +1505,68 @@ export default function StudentNotesManager({ student, enrollments }: Props) {
         </>
       )}
 
+      {engagementReminderOpen && (
+        <div
+          className="fixed inset-0 z-[100] flex items-center justify-center p-4"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="engagement-reminder-title"
+        >
+          <button
+            type="button"
+            className="absolute inset-0 bg-black/40"
+            aria-label="Close dialog"
+            onClick={() => setEngagementReminderOpen(false)}
+          />
+          <div className="relative z-10 w-full max-w-md rounded-lg border border-gray-200 bg-white p-6 shadow-xl">
+            <div className="mb-4 flex items-start justify-between gap-3">
+              <h2 id="engagement-reminder-title" className="text-lg font-semibold text-gray-900">
+                Lesson saved
+              </h2>
+              <button
+                type="button"
+                onClick={() => setEngagementReminderOpen(false)}
+                className="shrink-0 rounded-md px-2 py-1 text-sm text-gray-600 hover:bg-gray-100 hover:text-gray-900"
+                aria-label="Close"
+              >
+                ✕
+              </button>
+            </div>
+            <p className="text-sm text-gray-700">
+              Don&apos;t forget to enter a log on the student engagement spreadsheet.
+            </p>
+            <div className="mt-5 flex flex-wrap gap-2">
+              {studentEngagementSpreadsheetUrl && (
+                <a
+                  href={studentEngagementSpreadsheetUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center justify-center rounded-md px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-[#2d3569]"
+                  style={{ backgroundColor: '#38438f' }}
+                >
+                  Open student engagement spreadsheet
+                </a>
+              )}
+              {studentEngagementDoc && (
+                <Link
+                  href={`/teacher/qualiopi/${studentEngagementDoc.slug}`}
+                  className="inline-flex items-center justify-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-50"
+                  onClick={() => setEngagementReminderOpen(false)}
+                >
+                  Open in Qualiopi
+                </Link>
+              )}
+              <button
+                type="button"
+                onClick={() => setEngagementReminderOpen(false)}
+                className="inline-flex items-center justify-center rounded-md px-4 py-2 text-sm font-medium text-gray-600 transition-colors hover:bg-gray-100"
+              >
+                Got it
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }
