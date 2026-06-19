@@ -80,25 +80,10 @@ export const qualiopiDocuments: QualiopiDocument[] = [
   {
     slug: 'indicator-22',
     title: 'Qualiopi Indicator 22',
-    description: 'Continuing Professional Development',
+    description: 'Continual Professional Development',
     spreadsheetId: '1Dr9b-rJdlhtX5DoeGleq6mTtPWGup6G9_2o_BfPq3j4',
     category: 'indicator',
     indicatorOrder: 22,
-    layout: 'hub',
-    folders: [
-      {
-        slug: 'spreadsheet',
-        title: 'Spreadsheet',
-        description: 'View and update the Indicator 22 tracking spreadsheet.',
-        type: 'spreadsheet',
-      },
-      {
-        slug: 'completion-certificates',
-        title: 'Completion Certificates',
-        description: 'Upload and manage CPD completion certificate PDFs.',
-        type: 'pdf-folder',
-      },
-    ],
   },
   {
     slug: 'indicators-23-24-25',
