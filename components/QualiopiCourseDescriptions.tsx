@@ -6,6 +6,23 @@ interface Props {
   courses: AdultCourseDescription[]
 }
 
+const categoryStyles = {
+  pro: {
+    card: 'bg-blue-50 border-blue-200',
+    badge: 'bg-blue-100 text-[#38438f]',
+    title: '#38438f',
+    button: '#38438f',
+    buttonHover: '#2d3569',
+  },
+  toeic: {
+    card: 'bg-green-50 border-green-200',
+    badge: 'bg-green-100 text-green-800',
+    title: '#166534',
+    button: '#166534',
+    buttonHover: '#14532d',
+  },
+} as const
+
 export default function QualiopiCourseDescriptions({ courses }: Props) {
   const handleDownload = (course: AdultCourseDescription) => {
     const link = document.createElement('a')
@@ -28,38 +45,51 @@ export default function QualiopiCourseDescriptions({ courses }: Props) {
 
   return (
     <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-      {courses.map((course) => (
-        <article
-          key={course.slug}
-          className="bg-white shadow rounded-lg border border-gray-100 p-4 flex flex-col"
-        >
-          <h3 className="text-base font-semibold text-gray-900" style={{ color: '#38438f' }}>
-            {course.title}
-          </h3>
-          <p className="text-sm text-gray-600 mt-1">{course.hours}</p>
-          <p className="text-sm font-semibold text-gray-900 mt-0.5">{course.price}</p>
+      {courses.map((course) => {
+        const styles =
+          course.category === 'toeic' ? categoryStyles.toeic : categoryStyles.pro
+        const badgeLabel = course.category === 'toeic' ? 'TOEIC' : 'PRO'
 
-          <div className="mt-4 flex flex-wrap gap-2">
-            <a
-              href={course.pdfUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center justify-center px-3 py-1.5 text-sm font-medium text-white rounded-md transition-colors hover:bg-[#2d3569]"
-              style={{ backgroundColor: '#38438f' }}
+        return (
+          <article
+            key={course.slug}
+            className={`shadow rounded-lg border p-4 flex flex-col ${styles.card}`}
+          >
+            <span
+              className={`inline-flex self-start rounded px-2 py-0.5 text-xs font-semibold uppercase tracking-wide ${styles.badge}`}
             >
-              View PDF
-            </a>
-            <button
-              type="button"
-              onClick={() => handleDownload(course)}
-              className="inline-flex items-center justify-center px-3 py-1.5 text-sm font-medium rounded-md border transition-colors hover:bg-gray-50"
-              style={{ borderColor: '#38438f', color: '#38438f' }}
-            >
-              Download
-            </button>
-          </div>
-        </article>
-      ))}
+              {badgeLabel}
+            </span>
+            <h3 className="text-base font-semibold text-gray-900 mt-2" style={{ color: styles.title }}>
+              {course.title}
+            </h3>
+            <p className="text-sm text-gray-600 mt-1">{course.hours}</p>
+            <p className="text-sm font-semibold text-gray-900 mt-0.5">{course.price}</p>
+
+            <div className="mt-4 flex flex-wrap gap-2">
+              <a
+                href={course.pdfUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className={`inline-flex items-center justify-center px-3 py-1.5 text-sm font-medium text-white rounded-md transition-colors ${
+                  course.category === 'toeic' ? 'bg-green-800 hover:bg-green-900' : 'hover:bg-[#2d3569]'
+                }`}
+                style={course.category === 'pro' ? { backgroundColor: styles.button } : undefined}
+              >
+                View PDF
+              </a>
+              <button
+                type="button"
+                onClick={() => handleDownload(course)}
+                className="inline-flex items-center justify-center px-3 py-1.5 text-sm font-medium rounded-md border transition-colors hover:bg-white/60"
+                style={{ borderColor: styles.button, color: styles.button }}
+              >
+                Download
+              </button>
+            </div>
+          </article>
+        )
+      })}
     </div>
   )
 }

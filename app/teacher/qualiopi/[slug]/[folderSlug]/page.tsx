@@ -7,7 +7,7 @@ import QualiopiSpreadsheetEmbed from '@/components/QualiopiSpreadsheetEmbed'
 import QualiopiFileManager from '@/components/QualiopiFileManager'
 import QualiopiCourseDescriptions from '@/components/QualiopiCourseDescriptions'
 import { supabaseServer } from '@/lib/supabase'
-import { getAdultCourseDescriptionsByCategory } from '@/lib/adult-course-descriptions'
+import { getQualiopiCourseDescriptions } from '@/lib/adult-course-descriptions'
 import { getQualiopiDocument, getQualiopiFolder } from '@/lib/qualiopi-documents'
 
 export default async function QualiopiFolderPage({
@@ -49,9 +49,7 @@ export default async function QualiopiFolderPage({
   }
 
   if (folder.type === 'course-catalog') {
-    const courses = folder.catalogCategory
-      ? getAdultCourseDescriptionsByCategory(folder.catalogCategory)
-      : []
+    const courses = getQualiopiCourseDescriptions()
 
     return (
       <div className="min-h-screen bg-gray-50">

@@ -43,9 +43,8 @@ export const qualiopiDocuments: QualiopiDocument[] = [
       {
         slug: 'course-descriptions',
         title: 'Course descriptions',
-        description: 'Download current course descriptions',
+        description: 'Download current PRO Pack and TOEIC Pack course descriptions',
         type: 'course-catalog',
-        catalogCategory: 'pro',
       },
       {
         slug: 'website-modification-spreadsheet',
