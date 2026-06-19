@@ -27,48 +27,36 @@ export default function QualiopiCourseDescriptions({ courses }: Props) {
   }
 
   return (
-    <div className="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3">
+    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
       {courses.map((course) => (
         <article
           key={course.slug}
-          className="bg-white shadow rounded-lg overflow-hidden border border-gray-100 flex flex-col"
+          className="bg-white shadow rounded-lg border border-gray-100 p-4 flex flex-col"
         >
-          <div className="relative bg-gray-100 aspect-[3/4] border-b border-gray-200">
-            <iframe
-              src={`${course.pdfUrl}#page=1&view=FitH&toolbar=0&navpanes=0`}
-              title={`${course.title} preview`}
-              className="absolute inset-0 h-full w-full pointer-events-none"
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/10 to-transparent" />
-          </div>
+          <h3 className="text-base font-semibold text-gray-900" style={{ color: '#38438f' }}>
+            {course.title}
+          </h3>
+          <p className="text-sm text-gray-600 mt-1">{course.hours}</p>
+          <p className="text-sm font-semibold text-gray-900 mt-0.5">{course.price}</p>
 
-          <div className="p-5 flex flex-col flex-1">
-            <h3 className="text-lg font-semibold text-gray-900" style={{ color: '#38438f' }}>
-              {course.title}
-            </h3>
-            <p className="text-sm text-gray-600 mt-1">
-              {course.hours} · {course.price}
-            </p>
-
-            <div className="mt-5 flex flex-wrap gap-3">
-              <a
-                href={course.pdfUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center justify-center px-4 py-2 text-sm font-medium text-white rounded-md transition-colors hover:bg-[#2d3569]"
-                style={{ backgroundColor: '#38438f' }}
-              >
-                View PDF
-              </a>
-              <button
-                type="button"
-                onClick={() => handleDownload(course)}
-                className="inline-flex items-center justify-center px-4 py-2 text-sm font-medium rounded-md border transition-colors hover:bg-gray-50"
-                style={{ borderColor: '#38438f', color: '#38438f' }}
-              >
-                Download PDF
-              </button>
-            </div>
+          <div className="mt-4 flex flex-wrap gap-2">
+            <a
+              href={course.pdfUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center justify-center px-3 py-1.5 text-sm font-medium text-white rounded-md transition-colors hover:bg-[#2d3569]"
+              style={{ backgroundColor: '#38438f' }}
+            >
+              View PDF
+            </a>
+            <button
+              type="button"
+              onClick={() => handleDownload(course)}
+              className="inline-flex items-center justify-center px-3 py-1.5 text-sm font-medium rounded-md border transition-colors hover:bg-gray-50"
+              style={{ borderColor: '#38438f', color: '#38438f' }}
+            >
+              Download
+            </button>
           </div>
         </article>
       ))}
