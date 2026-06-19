@@ -5,7 +5,9 @@ import Navbar from '@/components/Navbar'
 import Link from 'next/link'
 import QualiopiSpreadsheetEmbed from '@/components/QualiopiSpreadsheetEmbed'
 import QualiopiFileManager from '@/components/QualiopiFileManager'
+import QualiopiCourseDescriptions from '@/components/QualiopiCourseDescriptions'
 import { supabaseServer } from '@/lib/supabase'
+import { getAdultCourseDescriptionsByCategory } from '@/lib/adult-course-descriptions'
 import { getQualiopiDocument, getQualiopiFolder } from '@/lib/qualiopi-documents'
 
 export default async function QualiopiFolderPage({
@@ -40,6 +42,36 @@ export default async function QualiopiFolderPage({
               backHref={backHref}
               backLabel={backLabel}
             />
+          </div>
+        </div>
+      </div>
+    )
+  }
+
+  if (folder.type === 'course-catalog') {
+    const courses = folder.catalogCategory
+      ? getAdultCourseDescriptionsByCategory(folder.catalogCategory)
+      : []
+
+    return (
+      <div className="min-h-screen bg-gray-50">
+        <Navbar />
+        <div className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
+          <div className="px-4 py-6 sm:px-0">
+            <div className="mb-4">
+              <Link
+                href={backHref}
+                className="text-sm transition-colors hover:text-[#2d3569]"
+                style={{ color: '#38438f' }}
+              >
+                {backLabel}
+              </Link>
+            </div>
+
+            <h1 className="text-3xl font-bold text-gray-900 mb-2">{folder.title}</h1>
+            <p className="text-gray-600 mb-8">{folder.description}</p>
+
+            <QualiopiCourseDescriptions courses={courses} />
           </div>
         </div>
       </div>

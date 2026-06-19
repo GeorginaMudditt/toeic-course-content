@@ -24,6 +24,7 @@
     "update:resource": "tsx scripts/update-resource.ts",
     "update:resource:supabase": "tsx scripts/update-resource-supabase.ts",
     "sync:resources": "tsx scripts/sync-resources-from-db.ts",
+    "sync:course-descriptions": "tsx scripts/sync-course-descriptions-from-website.ts",
     "update:placement-test": "tsx scripts/update-placement-test-with-answer-inputs.ts",
     "migrate:add-skill": "tsx scripts/migrate-add-skill.ts"
   },

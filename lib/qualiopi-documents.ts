@@ -1,12 +1,15 @@
 export type QualiopiDocumentCategory = 'key' | 'indicator'
 export type QualiopiDocumentLayout = 'spreadsheet' | 'hub'
-export type QualiopiFolderType = 'spreadsheet' | 'pdf-folder'
+export type QualiopiFolderType = 'spreadsheet' | 'pdf-folder' | 'course-catalog'
+
+export type CourseCatalogCategory = 'pro' | 'toeic' | 'daily'
 
 export interface QualiopiFolder {
   slug: string
   title: string
   description: string
   type: QualiopiFolderType
+  catalogCategory?: CourseCatalogCategory
 }
 
 export interface QualiopiDocument {
@@ -40,8 +43,9 @@ export const qualiopiDocuments: QualiopiDocument[] = [
       {
         slug: 'course-descriptions',
         title: 'Course descriptions',
-        description: 'Upload and manage course description documents.',
-        type: 'pdf-folder',
+        description: 'Download current course descriptions',
+        type: 'course-catalog',
+        catalogCategory: 'pro',
       },
       {
         slug: 'website-modification-spreadsheet',
