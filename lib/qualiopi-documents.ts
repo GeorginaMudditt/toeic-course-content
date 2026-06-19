@@ -32,6 +32,13 @@ export const qualiopiDocuments: QualiopiDocument[] = [
     category: 'key',
   },
   {
+    slug: 'course-content',
+    title: 'Course Content',
+    description: 'Resource tracking',
+    spreadsheetId: '142HnXGXVHpww_JmYHcK-9nVdtH0Olv21RM5MRmqHefY',
+    category: 'key',
+  },
+  {
     slug: 'indicator-1',
     title: 'Qualiopi Indicator 1',
     description: 'Public-Facing Information',
@@ -53,6 +60,14 @@ export const qualiopiDocuments: QualiopiDocument[] = [
         type: 'spreadsheet',
       },
     ],
+  },
+  {
+    slug: 'indicator-2',
+    title: 'Qualiopi Indicator 2',
+    description: 'Student satisfaction on website',
+    spreadsheetId: '1ZSdt_O73sw0iDfyQdJTBeJx0ktiaRMfCO2PBht2V8k0',
+    category: 'indicator',
+    indicatorOrder: 2,
   },
   {
     slug: 'indicator-12',
