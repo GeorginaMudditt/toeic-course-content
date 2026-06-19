@@ -53,6 +53,32 @@ function StepIndicator({ done, label }: { done: boolean; label: string }) {
   )
 }
 
+function getWorkflowSectionCopy(item: OnboardingChecklistItemView) {
+  if (item.type === 'language-assessment') {
+    return {
+      title: 'Option B — Pre-enrollment assessment',
+      description:
+        'Follow these steps in order. You can still upload a certificate above at any time instead.',
+      showConventionReminder: false,
+    }
+  }
+
+  if (item.slug === 'end-of-course-certificate') {
+    return {
+      title: 'End-of-course certificate',
+      description:
+        "Make a copy of the template, complete it with the student's details, then send for signature and upload the signed PDF.",
+      showConventionReminder: false,
+    }
+  }
+
+  return {
+    title: 'Convention or Contract',
+    description: 'Choose the correct template, then complete and upload the signed PDF.',
+    showConventionReminder: true,
+  }
+}
+
 export default function LanguageAssessmentChecklistCard({
   item,
   studentId,
@@ -70,6 +96,7 @@ export default function LanguageAssessmentChecklistCard({
   const isUploaded = item.linkedDocument !== null
   const workflow = item.workflowState ?? {}
   const templateVariants = listOnboardingTemplateVariants(item.slug)
+  const workflowSection = getWorkflowSectionCopy(item)
   const showCertificateOption = item.type === 'language-assessment'
   const signedUploadLabel =
     item.type === 'convention-contract' ? 'Upload signed document' : 'Upload signed form'
@@ -367,18 +394,10 @@ export default function LanguageAssessmentChecklistCard({
                   )}
 
                   <div className="rounded-md border border-gray-200 p-3">
-                    <p className="text-sm font-medium text-gray-900">
-                      {showCertificateOption
-                        ? 'Option B — Pre-enrollment assessment'
-                        : 'Convention or Contract'}
-                    </p>
-                    <p className="mt-1 text-xs text-gray-600">
-                      {showCertificateOption
-                        ? 'Follow these steps in order. You can still upload a certificate above at any time instead.'
-                        : 'Choose the correct template, then complete and upload the signed PDF.'}
-                    </p>
+                    <p className="text-sm font-medium text-gray-900">{workflowSection.title}</p>
+                    <p className="mt-1 text-xs text-gray-600">{workflowSection.description}</p>
 
-                    {!showCertificateOption && (
+                    {workflowSection.showConventionReminder && (
                       <p className="mt-2 rounded-md border border-amber-200 bg-amber-50 px-3 py-2 text-xs text-amber-900">
                         <span className="font-medium">Reminder:</span> use{' '}
                         <span className="font-medium">Convention</span> for financed training; use{' '}

@@ -133,7 +133,7 @@ export const STUDENT_ONBOARDING_CHECKLIST_ITEMS: OnboardingChecklistItemDefiniti
   },
   {
     slug: 'student-needs-analysis-form',
-    label: 'Student Needs Analysis Form (PDF)',
+    label: 'Student Needs Analysis Form (Tally Forms)',
     type: 'student-document',
     documentTitle: 'Student Needs Analysis Form',
     allowedMimeTypes: ['application/pdf'],
@@ -217,7 +217,9 @@ export const STUDENT_ONBOARDING_CHECKLIST_ITEMS: OnboardingChecklistItemDefiniti
   {
     slug: 'midpoint-review',
     label: 'Midpoint Review (Tally Forms)',
-    type: 'complete-or-na',
+    type: 'student-document',
+    documentTitle: 'Midpoint Review',
+    allowedMimeTypes: ['application/pdf'],
   },
   {
     slug: 'end-of-course-assessment',
@@ -227,7 +229,9 @@ export const STUDENT_ONBOARDING_CHECKLIST_ITEMS: OnboardingChecklistItemDefiniti
   {
     slug: 'end-of-course-certificate',
     label: 'End-of-course certificate',
-    type: 'complete-or-na',
+    type: 'convention-contract',
+    documentTitle: 'End-of-course certificate',
+    allowedMimeTypes: ['application/pdf'],
   },
   {
     slug: 'student-satisfaction-survey',

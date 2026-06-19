@@ -32,6 +32,16 @@ export const ONBOARDING_TEMPLATE_SETS: Record<string, { variants: OnboardingTemp
       },
     ],
   },
+  'end-of-course-certificate': {
+    variants: [
+      {
+        key: 'default',
+        label: 'End-of-course certificate',
+        googleDocumentId: '19hhYXTJ8r-G8KRNahZ5RUMKBl4wHg3AK',
+        downloadFileName: 'End-of-course certificate.docx',
+      },
+    ],
+  },
 }
 
 export type OnboardingTemplateSlug = keyof typeof ONBOARDING_TEMPLATE_SETS
