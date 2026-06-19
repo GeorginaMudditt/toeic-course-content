@@ -224,7 +224,9 @@ export const STUDENT_ONBOARDING_CHECKLIST_ITEMS: OnboardingChecklistItemDefiniti
   {
     slug: 'end-of-course-assessment',
     label: 'End-of-course assessment against objectives',
-    type: 'complete-or-na',
+    type: 'convention-contract',
+    documentTitle: 'End-of-course assessment against objectives',
+    allowedMimeTypes: ['application/pdf'],
   },
   {
     slug: 'end-of-course-certificate',

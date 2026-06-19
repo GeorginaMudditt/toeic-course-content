@@ -42,6 +42,16 @@ export const ONBOARDING_TEMPLATE_SETS: Record<string, { variants: OnboardingTemp
       },
     ],
   },
+  'end-of-course-assessment': {
+    variants: [
+      {
+        key: 'default',
+        label: 'End-of-course assessment against objectives',
+        googleDocumentId: '14zZ5p38qJ9UidRnqsYeY-Qh3YEAnfDF26siiCDSitTw',
+        downloadFileName: 'End-of-course assessment against objectives.docx',
+      },
+    ],
+  },
 }
 
 export type OnboardingTemplateSlug = keyof typeof ONBOARDING_TEMPLATE_SETS

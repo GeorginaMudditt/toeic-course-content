@@ -63,9 +63,9 @@ function getWorkflowSectionCopy(item: OnboardingChecklistItemView) {
     }
   }
 
-  if (item.slug === 'end-of-course-certificate') {
+  if (item.slug === 'end-of-course-certificate' || item.slug === 'end-of-course-assessment') {
     return {
-      title: 'End-of-course certificate',
+      title: item.label,
       description:
         "Make a copy of the template, complete it with the student's details, then send for signature and upload the signed PDF.",
       showConventionReminder: false,
