@@ -1,6 +1,6 @@
 export type QualiopiDocumentCategory = 'key' | 'indicator'
 export type QualiopiDocumentLayout = 'spreadsheet' | 'hub'
-export type QualiopiFolderType = 'spreadsheet' | 'pdf-folder' | 'course-catalog'
+export type QualiopiFolderType = 'spreadsheet' | 'pdf-folder' | 'course-catalog' | 'external-link'
 
 export type CourseCatalogCategory = 'pro' | 'toeic' | 'daily'
 
@@ -10,6 +10,10 @@ export interface QualiopiFolder {
   description: string
   type: QualiopiFolderType
   catalogCategory?: CourseCatalogCategory
+  /** Hub spreadsheet folders can use their own sheet instead of the parent document. */
+  spreadsheetId?: string
+  /** Google Drive folder or other external resource URL. */
+  externalUrl?: string
 }
 
 export interface QualiopiDocument {
@@ -94,6 +98,32 @@ export const qualiopiDocuments: QualiopiDocument[] = [
     indicatorOrder: 23,
   },
   {
+    slug: 'indicator-26',
+    title: 'Qualiopi Indicator 26',
+    description: 'Disability and Inclusion',
+    spreadsheetId: '1nZCqD0qJNq6EpQUqbRpt3njbeiGC4uFcEuMJD6LINFo',
+    category: 'indicator',
+    indicatorOrder: 26,
+    layout: 'hub',
+    folders: [
+      {
+        slug: 'training-tracker',
+        title: 'Disability and Inclusion Training Tracker',
+        description: 'View and update the disability and inclusion training tracker.',
+        type: 'spreadsheet',
+        spreadsheetId: '1nZCqD0qJNq6EpQUqbRpt3njbeiGC4uFcEuMJD6LINFo',
+      },
+      {
+        slug: 'training-resources',
+        title: 'Resources from Disability and Inclusion Training',
+        description: 'Browse training resources stored in Google Drive.',
+        type: 'external-link',
+        externalUrl:
+          'https://drive.google.com/drive/folders/1yTNdAXYaghacRklNs4JXND8nVuM8Q1AG',
+      },
+    ],
+  },
+  {
     slug: 'indicator-32',
     title: 'Qualiopi Indicator 32',
     description: 'Continuous improvement based on feedback',
@@ -134,4 +164,13 @@ export function getGoogleSheetEmbedUrl(spreadsheetId: string) {
 
 export function getGoogleSheetEditUrl(spreadsheetId: string) {
   return `https://docs.google.com/spreadsheets/d/${spreadsheetId}/edit?usp=sharing`
+}
+
+export function getGoogleDriveFolderId(url: string) {
+  const match = url.match(/\/folders\/([a-zA-Z0-9_-]+)/)
+  return match?.[1] ?? null
+}
+
+export function getGoogleDriveFolderEmbedUrl(folderId: string) {
+  return `https://drive.google.com/embeddedfolderview?id=${folderId}#grid`
 }

@@ -4,6 +4,7 @@ import { redirect, notFound } from 'next/navigation'
 import Navbar from '@/components/Navbar'
 import Link from 'next/link'
 import QualiopiSpreadsheetEmbed from '@/components/QualiopiSpreadsheetEmbed'
+import QualiopiExternalLinkEmbed from '@/components/QualiopiExternalLinkEmbed'
 import QualiopiFileManager from '@/components/QualiopiFileManager'
 import QualiopiCourseDescriptions from '@/components/QualiopiCourseDescriptions'
 import { supabaseServer } from '@/lib/supabase'
@@ -38,7 +39,29 @@ export default async function QualiopiFolderPage({
         <div className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
           <div className="px-4 py-6 sm:px-0">
             <QualiopiSpreadsheetEmbed
-              document={document}
+              title={folder.title}
+              description={folder.description}
+              spreadsheetId={folder.spreadsheetId ?? document.spreadsheetId}
+              backHref={backHref}
+              backLabel={backLabel}
+            />
+          </div>
+        </div>
+      </div>
+    )
+  }
+
+  if (folder.type === 'external-link' && folder.externalUrl) {
+    return (
+      <div className="min-h-screen bg-gray-50">
+        <Navbar />
+        <div className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
+          <div className="px-4 py-6 sm:px-0">
+            <QualiopiExternalLinkEmbed
+              title={folder.title}
+              description={folder.description}
+              externalUrl={folder.externalUrl}
+              openLabel="Open in Google Drive"
               backHref={backHref}
               backLabel={backLabel}
             />

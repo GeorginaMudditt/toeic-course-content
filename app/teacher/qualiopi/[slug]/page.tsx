@@ -58,7 +58,9 @@ export default async function QualiopiDocumentPage({ params }: { params: { slug:
             </>
           ) : (
             <QualiopiSpreadsheetEmbed
-              document={document}
+              title={document.title}
+              description={document.description}
+              spreadsheetId={document.spreadsheetId}
               backHref="/teacher/qualiopi"
               backLabel="← Back to Qualiopi"
             />
