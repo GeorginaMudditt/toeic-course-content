@@ -1,0 +1,165 @@
+<style>
+  @media print {
+    @page {
+      margin: 1.5cm;
+    }
+    body {
+      margin: 0;
+      padding: 0;
+    }
+    .page-break {
+      page-break-before: always;
+    }
+    .no-break {
+      page-break-inside: avoid;
+      break-inside: avoid;
+    }
+    .keep-together {
+      page-break-inside: avoid;
+      break-inside: avoid;
+    }
+    h2, h3 {
+      page-break-after: avoid;
+      break-after: avoid;
+    }
+    ul, ol {
+      page-break-inside: avoid;
+      break-inside: avoid;
+    }
+  }
+
+  ol {
+    list-style-type: decimal !important;
+    list-style-position: outside !important;
+    padding-left: 24px !important;
+  }
+
+  ul {
+    list-style-type: disc !important;
+    list-style-position: outside !important;
+    padding-left: 22px !important;
+  }
+
+  li {
+    display: list-item !important;
+  }
+
+  .comparisons-intro .comparison-answer {
+    display: none;
+    margin: 8px 0 0 0;
+    font-size: 17px;
+    font-weight: 600;
+    color: #166534;
+  }
+
+  .comparisons-intro:has(#comparisons-reveal:checked) .comparison-answer {
+    display: block;
+  }
+
+  .comparisons-reveal-toggle {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .comparisons-reveal-btn {
+    display: inline-block;
+    margin-top: 18px;
+    padding: 10px 16px;
+    border: none;
+    border-radius: 6px;
+    background: #38438f;
+    color: #ffffff;
+    font-size: 15px;
+    font-weight: 600;
+    font-family: Arial, sans-serif;
+    cursor: pointer;
+    transition: background-color 0.2s;
+  }
+
+  .comparisons-reveal-btn:hover {
+    background: #2d3569;
+  }
+
+  @media print {
+    .comparisons-reveal-btn,
+    .comparisons-reveal-toggle {
+      display: none !important;
+    }
+
+    .comparisons-intro .comparison-answer {
+      display: none !important;
+    }
+  }
+</style>
+
+<div style="width: 90%; max-width: 100%; margin: 0 auto; padding: 25px; box-sizing: border-box; font-family: Arial, sans-serif; line-height: 1.6; color: #333;">
+
+  <!-- Title -->
+  <div style="text-align: center; margin-bottom: 20px; padding: 15px; background: linear-gradient(135deg, #f59e0b 0%, #b45309 100%); border-radius: 10px;" class="no-break">
+    <div style="display: inline-block; margin-bottom: 8px;">
+      <img src="/brizzle-logo.png" alt="Brizzle Logo" style="width: 50px; height: 50px; object-fit: contain; background: white; padding: 5px; border-radius: 50%;" />
+    </div>
+    <h1 style="font-size: 28px; font-weight: bold; margin: 0; color: #ffffff;">Making Comparisons</h1>
+    <p style="margin: 8px 0 0 0; font-size: 16px; color: #fef3c7; font-weight: 600;">Speaking</p>
+  </div>
+
+  <!-- Introduction -->
+  <div id="comparisons-intro" class="comparisons-intro keep-together" style="margin-bottom: 25px; padding: 20px; background: linear-gradient(to bottom, #fef3c7, #ffffff); border-radius: 8px; border-left: 5px solid #f59e0b;">
+    <input type="checkbox" id="comparisons-reveal" class="comparisons-reveal-toggle" aria-hidden="true" tabindex="-1" />
+    <h2 style="font-size: 22px; font-weight: bold; margin-bottom: 12px; color: #92400e;">Introduction</h2>
+
+    <p style="font-size: 17px; margin: 0 0 14px 0;">
+      <strong>&ldquo;Writing in English is more difficult</strong>
+      <span data-grammar-input="comparisons-gap-1" data-grammar-input-type="input" style="display: inline-block; min-width: 72px; vertical-align: middle;"></span>
+      <strong>Reading in English, but Speaking is</strong>
+      <span data-grammar-input="comparisons-gap-2" data-grammar-input-type="input" style="display: inline-block; min-width: 52px; vertical-align: middle;"></span>
+      <span data-grammar-input="comparisons-gap-3" data-grammar-input-type="input" style="display: inline-block; min-width: 72px; vertical-align: middle;"></span>
+      <strong>difficult skill to master.&rdquo;</strong>
+    </p>
+    <p class="comparison-answer">
+      &ldquo;Writing in English is more difficult than Reading in English, but Speaking is the most difficult skill to master.&rdquo;
+    </p>
+    <p style="font-size: 17px; margin: 0 0 18px 0;">What are the missing words? Do you agree with the statement?</p>
+
+    <p style="font-size: 17px; font-weight: 600; margin: 0 0 10px 0; color: #92400e;">Have a look at these two sentences in French and translate them to English:</p>
+    <ol style="margin: 0 0 18px 0; padding-left: 28px; font-size: 17px; list-style-type: decimal; list-style-position: outside;">
+      <li style="margin-bottom: 16px;">
+        <p style="margin: 0 0 8px 0; font-style: italic;">&ldquo;La soci&eacute;t&eacute; pour laquelle je travaille maintenant est plus petite que celle pour laquelle je travaillais avant.&rdquo;</p>
+        <span data-grammar-input="comparisons-translate-1" data-grammar-input-type="textarea" style="display: block; min-height: 72px;"></span>
+        <p class="comparison-answer">The company I work for now is smaller than the one I worked for before.</p>
+      </li>
+      <li style="margin-bottom: 0;">
+        <p style="margin: 0 0 8px 0; font-style: italic;">&ldquo;Mon poste actuel est plus int&eacute;ressant que mon poste pr&eacute;c&eacute;dent.&rdquo;</p>
+        <span data-grammar-input="comparisons-translate-2" data-grammar-input-type="textarea" style="display: block; min-height: 72px;"></span>
+        <p class="comparison-answer">My current position is more interesting than my previous position.</p>
+      </li>
+    </ol>
+
+    <ul style="margin: 0; padding-left: 24px; font-size: 17px;">
+      <li style="margin-bottom: 12px;">What difference do you notice concerning how we compare things in French and English?</li>
+      <li style="margin-bottom: 0;">Are there irregular adjectives in both languages?</li>
+    </ul>
+
+    <label for="comparisons-reveal" class="comparisons-reveal-btn">Reveal Answers</label>
+  </div>
+
+</div>
+
+<!-- PAGE 2 -->
+<div style="width: 90%; max-width: 100%; margin: 0 auto; padding: 25px; box-sizing: border-box; font-family: Arial, sans-serif; line-height: 1.6; color: #333;" class="page-break">
+
+  <!-- Speaking -->
+  <div style="margin-bottom: 25px; padding: 20px; background: linear-gradient(to bottom, #dbeafe, #ffffff); border-radius: 8px; border-left: 5px solid #3b82f6;" class="keep-together">
+    <h2 style="font-size: 22px; font-weight: bold; margin-bottom: 12px; color: #1e40af;">Speaking</h2>
+    <p style="font-size: 17px; margin: 0 0 16px 0;">Compare the following things. Give examples, explain your reasons, and use comparative and superlative structures where appropriate.</p>
+    <ul style="margin: 0; padding-left: 24px; font-size: 17px;">
+      <li style="margin-bottom: 12px;">Your current job vs your previous job</li>
+      <li style="margin-bottom: 12px;">Working for a startup vs working for a large company</li>
+      <li style="margin-bottom: 12px;">A good manager vs a bad manager</li>
+      <li style="margin-bottom: 12px;">Being an employee vs being self-employed</li>
+      <li style="margin-bottom: 0;">Job security vs job satisfaction</li>
+    </ul>
+  </div>
+
+</div>
