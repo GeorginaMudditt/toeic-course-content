@@ -14,26 +14,28 @@ config({ path: resolve(process.cwd(), '.env.local') })
 config({ path: resolve(process.cwd(), '.env') })
 
 const BUCKET = 'travel-english'
-const FILES = ['car-rental-problem.png']
+const FILES = [
+  { name: 'confused-man-car-rental.jpg', contentType: 'image/jpeg' },
+]
 
 async function main() {
   const { supabaseServer } = await import('../lib/supabase')
 
-  for (const name of FILES) {
-    const localPath = join(process.cwd(), 'public', 'images', 'travel-english', name)
+  for (const file of FILES) {
+    const localPath = join(process.cwd(), 'public', 'images', 'travel-english', file.name)
     const buffer = readFileSync(localPath)
 
-    const { error } = await supabaseServer.storage.from(BUCKET).upload(name, buffer, {
-      contentType: 'image/png',
+    const { error } = await supabaseServer.storage.from(BUCKET).upload(file.name, buffer, {
+      contentType: file.contentType,
       upsert: true,
     })
 
     if (error) {
-      console.error(`Upload failed for ${name}:`, error.message)
+      console.error(`Upload failed for ${file.name}:`, error.message)
       process.exit(1)
     }
 
-    console.log(`Uploaded ${BUCKET}/${name}`)
+    console.log(`Uploaded ${BUCKET}/${file.name}`)
   }
 
   console.log('Done.')
