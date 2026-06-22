@@ -40,6 +40,9 @@ export default function Navbar() {
         pathname.startsWith('/teacher/vocabulary-progress')
       )
     }
+    if (path === '/teacher/whats-next') {
+      return pathname === path || pathname.startsWith('/teacher/whats-next/')
+    }
     if (path === '/student/dashboard') {
       return pathname === path
     }
@@ -123,6 +126,17 @@ export default function Navbar() {
                     style={isActive('/teacher/students') ? { borderColor: '#38438f' } : {}}
                   >
                     Manage Students
+                  </Link>
+                  <Link
+                    href="/teacher/whats-next"
+                    className={`inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium transition-colors ${
+                      isActive('/teacher/whats-next')
+                        ? 'text-gray-900'
+                        : 'border-transparent text-gray-500 hover:text-[#38438f] hover:border-[#38438f]'
+                    }`}
+                    style={isActive('/teacher/whats-next') ? { borderColor: '#38438f' } : {}}
+                  >
+                    What&apos;s Next?
                   </Link>
                   <Link
                     href="/teacher/qualiopi"

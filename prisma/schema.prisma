@@ -68,6 +68,7 @@ model User {
   progress        Progress[]
   documents       StudentDocument[]
   onboardingChecklistItems StudentOnboardingChecklistItem[]
+  teacherTasks           TeacherTask[]
 }
 
 model Resource {
@@ -238,4 +239,20 @@ model StudentOnboardingChecklistItem {
 
   @@unique([studentId, itemSlug])
   @@index([studentId])
+}
+
+model TeacherTask {
+  id          String    @id @default(cuid())
+  teacherId   String
+  title       String
+  status      String    @default("OPEN") // OPEN | DONE
+  sortOrder   Int       @default(0)
+  completedAt DateTime?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  teacher     User      @relation(fields: [teacherId], references: [id], onDelete: Cascade)
+
+  @@index([teacherId, status])
+  @@index([teacherId, status, sortOrder])
 }
