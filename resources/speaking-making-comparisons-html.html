@@ -81,6 +81,28 @@
     background: #2d3569;
   }
 
+  .error-correction-item .error-revealed {
+    display: none;
+  }
+
+  .error-correction-item:has(.error-reveal-toggle:checked) .error-student {
+    display: none;
+  }
+
+  .error-correction-item:has(.error-reveal-toggle:checked) .error-revealed {
+    display: block;
+  }
+
+  .err-strike {
+    text-decoration: line-through;
+    color: #b91c1c;
+  }
+
+  .err-fix {
+    color: #166534;
+    font-weight: 600;
+  }
+
   @media print {
     .comparisons-reveal-btn,
     .comparisons-reveal-toggle {
@@ -88,6 +110,10 @@
     }
 
     .comparisons-intro .comparison-answer {
+      display: none !important;
+    }
+
+    .error-correction-item .error-revealed {
       display: none !important;
     }
   }
@@ -160,6 +186,24 @@
       <li style="margin-bottom: 12px;">Being an employee vs being self-employed</li>
       <li style="margin-bottom: 0;">Job security vs job satisfaction</li>
     </ul>
+  </div>
+
+  <!-- Error Correction -->
+  <div style="margin-bottom: 25px; padding: 20px; background: linear-gradient(to bottom, #fce7f3, #ffffff); border-radius: 8px; border-left: 5px solid #db2777;" class="keep-together">
+    <h2 style="font-size: 22px; font-weight: bold; margin-bottom: 12px; color: #9d174d;">Error Correction</h2>
+    <p style="font-size: 17px; margin: 0 0 20px 0;">Read the responses to each of the tasks in the Speaking exercise. Find three errors in each response.</p>
+
+    <div class="error-correction-item" style="margin-bottom: 0;">
+      <input type="checkbox" id="error-reveal-1" class="comparisons-reveal-toggle error-reveal-toggle" aria-hidden="true" tabindex="-1" />
+      <h3 style="font-size: 18px; font-weight: bold; margin: 0 0 10px 0; color: #9d174d;">Your current job vs your previous job</h3>
+      <p class="error-student" style="font-size: 17px; margin: 0;">
+        My current job is far more demanding that my previous one, but it&rsquo;s also considerably more rewarding. In my last role, the responsibilities were fairly limited and the work became repetitive quite quickly. Now, I have much more great autonomy and the targets I&rsquo;m expected to meet are more challenging. The salary is better too, although the work-life balance is more bad than it used to be. Overall, I feel more engaged and motivated than I ever did before.
+      </p>
+      <p class="error-revealed" style="font-size: 17px; margin: 0;">
+        My current job is far more demanding <span class="err-strike">that</span><span class="err-fix">[than]</span> my previous one, but it&rsquo;s also considerably more rewarding. In my last role, the responsibilities were fairly limited and the work became repetitive quite quickly. Now, I have much more <span class="err-strike">great</span><span class="err-fix">[greater]</span> autonomy and the targets I&rsquo;m expected to meet are more challenging. The salary is better too, although the work-life balance is <span class="err-strike">more bad</span><span class="err-fix">[worse]</span> than it used to be. Overall, I feel more engaged and motivated than I ever did before.
+      </p>
+      <label for="error-reveal-1" class="comparisons-reveal-btn" style="margin-top: 14px;">Reveal Errors</label>
+    </div>
   </div>
 
 </div>
