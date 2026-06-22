@@ -147,7 +147,7 @@ export default function StudentFolders({
       <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6">
         {!isArchiveView && (
           <Link
-            href="/teacher/dashboard/archive"
+            href="/teacher/onboarding/archive"
             className="group flex flex-col items-center rounded-lg border border-slate-300 bg-slate-100 p-4 shadow-sm transition-colors hover:border-slate-500 hover:bg-slate-200"
           >
             <FolderIcon className="mb-2 h-12 w-12 text-slate-600 transition-transform group-hover:scale-105" />

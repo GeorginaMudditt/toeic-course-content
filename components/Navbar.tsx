@@ -19,8 +19,28 @@ export default function Navbar() {
     setMounted(true)
   }, [])
 
+  const isStudent = mounted && session?.user?.role === 'STUDENT'
+
+  const homeHref = !mounted
+    ? '/dashboard-redirect'
+    : isTeacher
+      ? '/teacher/dashboard'
+      : isStudent
+        ? '/student/dashboard'
+        : '/dashboard-redirect'
+
   const isActive = (path: string) => {
-    if (path === '/teacher/dashboard' || path === '/student/dashboard') {
+    if (path === '/teacher/onboarding') {
+      return pathname === path || pathname.startsWith('/teacher/onboarding/') || pathname.startsWith('/teacher/dashboard/students/')
+    }
+    if (path === '/teacher/students') {
+      return (
+        pathname.startsWith('/teacher/students') ||
+        pathname.startsWith('/teacher/progress') ||
+        pathname.startsWith('/teacher/vocabulary-progress')
+      )
+    }
+    if (path === '/student/dashboard') {
       return pathname === path
     }
     if (path === '/student/toeic-info' || path === '/student/vocabulary' || path === '/student/course' || path === '/student/notes' || path === '/student/docs') {
@@ -49,7 +69,7 @@ export default function Navbar() {
         <div className="flex justify-between h-16">
           <div className="flex">
             <div className="flex-shrink-0 flex items-center">
-              <Link href="/" className="flex items-center space-x-3">
+              <Link href={homeHref} className="flex items-center space-x-3">
                 <img
                   src="/brizzle-logo.png"
                   alt="Brizzle Logo"
@@ -72,15 +92,15 @@ export default function Navbar() {
               ) : isTeacher ? (
                 <>
                   <Link
-                    href="/teacher/dashboard"
+                    href="/teacher/onboarding"
                     className={`inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium transition-colors ${
-                      isActive('/teacher/dashboard')
+                      isActive('/teacher/onboarding')
                         ? 'text-gray-900'
                         : 'border-transparent text-gray-500 hover:text-[#38438f] hover:border-[#38438f]'
                     }`}
-                    style={isActive('/teacher/dashboard') ? { borderColor: '#38438f' } : {}}
+                    style={isActive('/teacher/onboarding') ? { borderColor: '#38438f' } : {}}
                   >
-                    Dashboard
+                    Onboarding
                   </Link>
                   <Link
                     href="/teacher/resources"
@@ -102,18 +122,7 @@ export default function Navbar() {
                     }`}
                     style={isActive('/teacher/students') ? { borderColor: '#38438f' } : {}}
                   >
-                    Students
-                  </Link>
-                  <Link
-                    href="/teacher/progress"
-                    className={`inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium transition-colors ${
-                      isActive('/teacher/progress')
-                        ? 'text-gray-900'
-                        : 'border-transparent text-gray-500 hover:text-[#38438f] hover:border-[#38438f]'
-                    }`}
-                    style={isActive('/teacher/progress') ? { borderColor: '#38438f' } : {}}
-                  >
-                    Progress
+                    Manage Students
                   </Link>
                   <Link
                     href="/teacher/qualiopi"

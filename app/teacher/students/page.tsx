@@ -39,7 +39,7 @@ export default async function StudentsPage() {
       <div className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
         <div className="px-4 py-6 sm:px-0">
           <div className="flex justify-between items-center mb-6">
-            <h1 className="text-3xl font-bold text-gray-900">Students</h1>
+            <h1 className="text-3xl font-bold text-gray-900">Manage Students</h1>
             <Link
               href="/teacher/students/new"
               className="text-white px-4 py-2 rounded-md transition-colors hover:bg-[#2d3569]"
@@ -50,6 +50,32 @@ export default async function StudentsPage() {
           </div>
 
           <TeacherStudentsTable students={students} />
+
+          <div className="mt-10">
+            <h2 className="text-xl font-semibold text-gray-900 mb-4">Student Progress</h2>
+            <div className="bg-white shadow rounded-lg p-6">
+              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 max-w-2xl">
+                <Link
+                  href="/teacher/progress"
+                  className="block p-4 border-2 border-dashed border-gray-300 rounded-lg transition-colors hover:border-[#38438f] hover:bg-[#e8eaf6]"
+                >
+                  <div className="text-center">
+                    <div className="text-2xl mb-2">📊</div>
+                    <div className="font-medium text-gray-900">View Progress</div>
+                  </div>
+                </Link>
+                <Link
+                  href="/teacher/vocabulary-progress"
+                  className="block p-4 border-2 border-dashed border-gray-300 rounded-lg transition-colors hover:border-[#38438f] hover:bg-[#e8eaf6]"
+                >
+                  <div className="text-center">
+                    <div className="text-2xl mb-2">📚</div>
+                    <div className="font-medium text-gray-900">Vocabulary Progress</div>
+                  </div>
+                </Link>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>

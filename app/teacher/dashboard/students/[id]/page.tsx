@@ -39,10 +39,10 @@ export default async function StudentOnboardingPage({
         <div className="px-4 py-6 sm:px-0">
           <div className="mb-6">
             <Link
-              href="/teacher/dashboard"
+              href="/teacher/onboarding"
               className="text-sm font-medium text-[#38438f] hover:text-[#2d3569]"
             >
-              ← Back to Dashboard
+              ← Back to Onboarding
             </Link>
             <h1 className="mt-2 text-3xl font-bold text-gray-900">{student.name}</h1>
             <p className="mt-1 text-gray-600">Onboarding &amp; administration checklist</p>
