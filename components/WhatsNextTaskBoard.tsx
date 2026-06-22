@@ -38,6 +38,7 @@ export default function WhatsNextTaskBoard() {
   const [editingTaskId, setEditingTaskId] = useState<string | null>(null)
   const [editingTitle, setEditingTitle] = useState('')
   const [savingEdit, setSavingEdit] = useState(false)
+  const [deletingId, setDeletingId] = useState<string | null>(null)
   const dragSourceRef = useRef<string | null>(null)
   const dragOverRef = useRef<string | null>(null)
   const dragStartOrderRef = useRef<TeacherTask[]>([])
@@ -282,6 +283,43 @@ export default function WhatsNextTaskBoard() {
     }
   }
 
+  const handleDelete = async (task: TeacherTask) => {
+    const confirmed = window.confirm(`Delete "${task.title}"? This cannot be undone.`)
+    if (!confirmed) return
+
+    if (editingTaskId === task.id) cancelEditing()
+
+    setError(null)
+    setDeletingId(task.id)
+
+    const previousOpen = openTasks
+    const previousDone = doneTasks
+
+    if (task.status === 'OPEN') {
+      setOpenTasks((current) => current.filter((item) => item.id !== task.id))
+    } else {
+      setDoneTasks((current) => current.filter((item) => item.id !== task.id))
+    }
+
+    try {
+      const response = await fetch(`/api/teacher-tasks/${task.id}`, { method: 'DELETE' })
+      const data = await response.json().catch(() => ({}))
+
+      if (!response.ok) {
+        const message = typeof data.error === 'string' ? data.error : 'Failed to delete task'
+        setError(message)
+        setOpenTasks(previousOpen)
+        setDoneTasks(previousDone)
+      }
+    } catch {
+      setError('Failed to delete task. Check your connection and try again.')
+      setOpenTasks(previousOpen)
+      setDoneTasks(previousDone)
+    } finally {
+      setDeletingId(null)
+    }
+  }
+
   if (loading) {
     return <p className="text-sm text-gray-500">Loading tasks…</p>
   }
@@ -409,16 +447,33 @@ export default function WhatsNextTaskBoard() {
                   </span>
 
                   {editingTaskId !== task.id && (
-                    <button
-                      type="button"
-                      onClick={() => startEditing(task)}
-                      className="rounded p-1.5 text-red-500 hover:bg-red-100"
-                      aria-label={`Edit ${task.title}`}
-                    >
-                      <svg className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                        <path d="m2.695 14.363 1.222-1.222a1 1 0 0 1 1.414 0l1.222 1.222a1 1 0 0 1 0 1.414l-1.222 1.222a1 1 0 0 1-1.414 0l-1.222-1.222a1 1 0 0 1 0-1.414ZM5.05 13.05l6.364-6.364 1.222 1.222-6.364 6.364-1.222-1.222ZM13.636 4.464l1.06-1.06a1.5 1.5 0 0 1 2.122 0l1.414 1.414a1.5 1.5 0 0 1 0 2.122l-1.06 1.06-2.476-2.476Z" />
-                      </svg>
-                    </button>
+                    <div className="flex items-center gap-1">
+                      <button
+                        type="button"
+                        onClick={() => startEditing(task)}
+                        className="rounded p-1.5 text-red-500 hover:bg-red-100"
+                        aria-label={`Edit ${task.title}`}
+                      >
+                        <svg className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                          <path d="m2.695 14.363 1.222-1.222a1 1 0 0 1 1.414 0l1.222 1.222a1 1 0 0 1 0 1.414l-1.222 1.222a1 1 0 0 1-1.414 0l-1.222-1.222a1 1 0 0 1 0-1.414ZM5.05 13.05l6.364-6.364 1.222 1.222-6.364 6.364-1.222-1.222ZM13.636 4.464l1.06-1.06a1.5 1.5 0 0 1 2.122 0l1.414 1.414a1.5 1.5 0 0 1 0 2.122l-1.06 1.06-2.476-2.476Z" />
+                        </svg>
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => void handleDelete(task)}
+                        disabled={deletingId === task.id}
+                        className="rounded p-1.5 text-red-500 hover:bg-red-100 disabled:opacity-50"
+                        aria-label={`Delete ${task.title}`}
+                      >
+                        <svg className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                          <path
+                            fillRule="evenodd"
+                            d="M8.75 2A2.75 2.75 0 0 0 6 4.75V5H3.75a.75.75 0 0 0 0 1.5h.375l.83 11.084A2.75 2.75 0 0 0 7.348 20h5.304a2.75 2.75 0 0 0 2.743-2.416l.83-11.084h.375a.75.75 0 0 0 0-1.5H14v-.25A2.75 2.75 0 0 0 11.25 2h-2.5ZM7.5 5v-.25c0-.69.56-1.25 1.25-1.25h2.5c.69 0 1.25.56 1.25 1.25V5h-5Zm1.25 4.25a.75.75 0 0 0-1.5 0v5.5a.75.75 0 0 0 1.5 0v-5.5ZM13 9.25a.75.75 0 0 0-1.5 0v5.5a.75.75 0 0 0 1.5 0v-5.5Z"
+                            clipRule="evenodd"
+                          />
+                        </svg>
+                      </button>
+                    </div>
                   )}
                 </li>
               )
@@ -501,16 +556,33 @@ export default function WhatsNextTaskBoard() {
                     <td className="px-4 py-3 text-sm text-green-800">{formatDate(task.completedAt)}</td>
                     <td className="px-4 py-3 text-right">
                       {editingTaskId !== task.id && (
-                        <button
-                          type="button"
-                          onClick={() => startEditing(task)}
-                          className="rounded p-1.5 text-green-700 hover:bg-green-100"
-                          aria-label={`Edit ${task.title}`}
-                        >
-                          <svg className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                            <path d="m2.695 14.363 1.222-1.222a1 1 0 0 1 1.414 0l1.222 1.222a1 1 0 0 1 0 1.414l-1.222 1.222a1 1 0 0 1-1.414 0l-1.222-1.222a1 1 0 0 1 0-1.414ZM5.05 13.05l6.364-6.364 1.222 1.222-6.364 6.364-1.222-1.222ZM13.636 4.464l1.06-1.06a1.5 1.5 0 0 1 2.122 0l1.414 1.414a1.5 1.5 0 0 1 0 2.122l-1.06 1.06-2.476-2.476Z" />
-                          </svg>
-                        </button>
+                        <div className="flex items-center justify-end gap-1">
+                          <button
+                            type="button"
+                            onClick={() => startEditing(task)}
+                            className="rounded p-1.5 text-green-700 hover:bg-green-100"
+                            aria-label={`Edit ${task.title}`}
+                          >
+                            <svg className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                              <path d="m2.695 14.363 1.222-1.222a1 1 0 0 1 1.414 0l1.222 1.222a1 1 0 0 1 0 1.414l-1.222 1.222a1 1 0 0 1-1.414 0l-1.222-1.222a1 1 0 0 1 0-1.414ZM5.05 13.05l6.364-6.364 1.222 1.222-6.364 6.364-1.222-1.222ZM13.636 4.464l1.06-1.06a1.5 1.5 0 0 1 2.122 0l1.414 1.414a1.5 1.5 0 0 1 0 2.122l-1.06 1.06-2.476-2.476Z" />
+                            </svg>
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => void handleDelete(task)}
+                            disabled={deletingId === task.id}
+                            className="rounded p-1.5 text-green-700 hover:bg-green-100 disabled:opacity-50"
+                            aria-label={`Delete ${task.title}`}
+                          >
+                            <svg className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                              <path
+                                fillRule="evenodd"
+                                d="M8.75 2A2.75 2.75 0 0 0 6 4.75V5H3.75a.75.75 0 0 0 0 1.5h.375l.83 11.084A2.75 2.75 0 0 0 7.348 20h5.304a2.75 2.75 0 0 0 2.743-2.416l.83-11.084h.375a.75.75 0 0 0 0-1.5H14v-.25A2.75 2.75 0 0 0 11.25 2h-2.5ZM7.5 5v-.25c0-.69.56-1.25 1.25-1.25h2.5c.69 0 1.25.56 1.25 1.25V5h-5Zm1.25 4.25a.75.75 0 0 0-1.5 0v5.5a.75.75 0 0 0 1.5 0v-5.5ZM13 9.25a.75.75 0 0 0-1.5 0v5.5a.75.75 0 0 0 1.5 0v-5.5Z"
+                                clipRule="evenodd"
+                              />
+                            </svg>
+                          </button>
+                        </div>
                       )}
                     </td>
                   </tr>
