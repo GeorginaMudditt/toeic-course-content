@@ -1,0 +1,385 @@
+<!-- Travel English Lesson 6 -->
+<style>
+  :root {
+    --exam-ink: #1f2937;
+    --exam-subtle-ink: #4b5563;
+    --exam-border: #cfd6df;
+    --exam-soft-border: #e5e7eb;
+    --exam-header-bg: #f6f8fb;
+    --exam-panel-bg: #fbfcfe;
+    --exam-accent: #1e3a8a;
+  }
+
+  body {
+    color: var(--exam-ink);
+  }
+
+  .exam-header {
+    border: 1px solid var(--exam-border);
+    background: linear-gradient(to bottom, #ffffff, var(--exam-header-bg));
+    border-radius: 8px;
+    padding: 12px 14px;
+  }
+
+  .keep-together {
+    border: 1px solid var(--exam-soft-border);
+    border-radius: 8px;
+    background: var(--exam-panel-bg);
+    padding: 12px 14px;
+    margin-bottom: 18px;
+  }
+
+  h2 {
+    color: var(--exam-accent) !important;
+    margin-top: 0;
+  }
+
+  h3 {
+    margin-top: 0;
+    color: #0f172a;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    background: #fff;
+  }
+
+  th,
+  td {
+    border: 1px solid #111827;
+    padding: 8px;
+    font-size: 16px;
+    vertical-align: top;
+  }
+
+  th {
+    font-weight: 700;
+    text-align: left;
+    background: #f8fafc;
+  }
+
+  .answer-block {
+    margin-top: 24px;
+    padding-top: 16px;
+    border-top: 2px solid #e5e7eb;
+  }
+
+  .wordsearch-grid {
+    width: auto;
+    margin: 12px auto;
+    border-collapse: collapse;
+  }
+
+  .wordsearch-grid td {
+    border: 1px solid #111827;
+    width: 2.1em;
+    height: 2.1em;
+    text-align: center;
+    font-weight: 700;
+    font-size: 15px;
+    padding: 4px;
+    vertical-align: middle;
+    background: #fff;
+  }
+
+  .clues-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+    margin-top: 14px;
+  }
+
+  .reading-header-grid {
+    display: grid;
+    grid-template-columns: 1fr 150px;
+    gap: 14px;
+    align-items: start;
+    margin-bottom: 12px;
+  }
+
+  .reading-illustration {
+    width: 100%;
+    max-width: 150px;
+    height: auto;
+    display: block;
+    justify-self: end;
+  }
+
+  /* Force visible markers (global app styles can hide them). */
+  ol {
+    list-style-type: decimal !important;
+    list-style-position: outside !important;
+    padding-left: 24px !important;
+  }
+
+  ul {
+    list-style-type: disc !important;
+    list-style-position: outside !important;
+    padding-left: 22px !important;
+  }
+
+  li {
+    display: list-item !important;
+  }
+
+  @media print {
+    @page {
+      margin: 1.5cm;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+    }
+
+    div[style*="max-width: 900px"] {
+      max-width: 100% !important;
+      padding: 5mm 6mm !important;
+      box-sizing: border-box !important;
+      line-height: 1.25 !important;
+      font-size: 14px !important;
+    }
+
+    h1 {
+      font-size: 24px !important;
+      margin-bottom: 2px !important;
+    }
+
+    h2 {
+      font-size: 18px !important;
+      margin-bottom: 6px !important;
+    }
+
+    h3 {
+      font-size: 16px !important;
+      margin-bottom: 6px !important;
+    }
+
+    p,
+    li,
+    th,
+    td {
+      font-size: 14px !important;
+    }
+
+    .keep-together {
+      break-inside: auto;
+      page-break-inside: auto;
+      background: #fff;
+      border-color: #d1d5db;
+      padding: 8px 10px;
+      margin-bottom: 10px;
+    }
+
+    h2,
+    h3 {
+      break-after: avoid;
+      page-break-after: avoid;
+    }
+
+    th,
+    td {
+      padding: 5px;
+    }
+
+    .wordsearch-grid td {
+      width: 1.8em;
+      height: 1.8em;
+      font-size: 12px !important;
+      padding: 2px;
+    }
+
+    .clues-grid {
+      gap: 12px;
+    }
+
+    .answer-block {
+      margin-top: 10px;
+      padding-top: 10px;
+    }
+
+    .section-answers-container {
+      break-before: page;
+      page-break-before: always;
+    }
+  }
+</style>
+
+<div style="max-width: 900px; margin: 0 auto; padding: 20px; font-family: Arial, sans-serif; line-height: 1.45; color: #333;">
+  <div class="exam-header" style="text-align: center; margin-bottom: 18px;">
+    <div style="display: inline-block; margin-bottom: 6px;">
+      <img src="/brizzle-logo.png" alt="Brizzle Logo" style="width: 45px; height: 45px; object-fit: contain;" />
+    </div>
+    <h1 style="font-size: 30px; line-height: 1.2; margin: 0 0 4px; color: #0f172a;">Travel English Lesson 6</h1>
+    <h2 style="font-size: 22px; margin: 0; font-weight: 700;">Theme 3: Travel &amp; Transport (Week 2)</h2>
+  </div>
+
+  <div class="keep-together">
+    <h2 style="font-size: 22px; font-weight: 700; margin-bottom: 10px;">Vocabulary</h2>
+    <p style="font-size: 16px; margin: 0 0 12px;">Let&rsquo;s revise some of the vocabulary we&rsquo;ve learned in lessons 1 to 5.</p>
+
+    <div style="overflow-x: auto;">
+      <table class="wordsearch-grid" aria-label="Word search grid">
+        <tbody>
+          <tr>
+            <td>A</td><td>D</td><td>Q</td><td>W</td><td>T</td><td>D</td><td>R</td><td>I</td><td>V</td><td>E</td><td>M</td><td>R</td><td>O</td><td>F</td><td>T</td><td>A</td><td>L</td><td>P</td>
+          </tr>
+          <tr>
+            <td>M</td><td>I</td><td>W</td><td>S</td><td>H</td><td>R</td><td>T</td><td>D</td><td>O</td><td>O</td><td>T</td><td>S</td><td>R</td><td>E</td><td>D</td><td>N</td><td>U</td><td>Y</td>
+          </tr>
+          <tr>
+            <td>U</td><td>I</td><td>O</td><td>P</td><td>G</td><td>A</td><td>C</td><td>S</td><td>D</td><td>F</td><td>G</td><td>P</td><td>S</td><td>W</td><td>R</td><td>J</td><td>B</td><td>K</td>
+          </tr>
+          <tr>
+            <td>F</td><td>S</td><td>J</td><td>K</td><td>U</td><td>L</td><td>L</td><td>B</td><td>R</td><td>O</td><td>K</td><td>E</td><td>Z</td><td>T</td><td>A</td><td>O</td><td>M</td><td>O</td>
+          </tr>
+          <tr>
+            <td>X</td><td>O</td><td>B</td><td>C</td><td>O</td><td>V</td><td>I</td><td>B</td><td>A</td><td>N</td><td>M</td><td>A</td><td>L</td><td>E</td><td>N</td><td>U</td><td>E</td><td>O</td>
+          </tr>
+          <tr>
+            <td>F</td><td>L</td><td>E</td><td>W</td><td>R</td><td>Q</td><td>M</td><td>W</td><td>D</td><td>G</td><td>L</td><td>K</td><td>Y</td><td>K</td><td>K</td><td>R</td><td>E</td><td>B</td>
+          </tr>
+          <tr>
+            <td>K</td><td>D</td><td>W</td><td>H</td><td>B</td><td>O</td><td>B</td><td>T</td><td>R</td><td>A</td><td>V</td><td>E</td><td>L</td><td>C</td><td>M</td><td>N</td><td>T</td><td>L</td>
+          </tr>
+          <tr>
+            <td>B</td><td>R</td><td>P</td><td>A</td><td>S</td><td>S</td><td>E</td><td>N</td><td>G</td><td>E</td><td>R</td><td>U</td><td>W</td><td>I</td><td>A</td><td>E</td><td>C</td><td>N</td>
+          </tr>
+          <tr>
+            <td>C</td><td>O</td><td>M</td><td>M</td><td>U</td><td>T</td><td>E</td><td>C</td><td>I</td><td>F</td><td>F</td><td>A</td><td>R</td><td>T</td><td>Q</td><td>Y</td><td>S</td><td>D</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p style="font-size: 16px; margin: 14px 0 10px;">In the wordsearch, try to find &hellip;</p>
+
+    <div class="clues-grid">
+      <div>
+        <p style="font-size: 16px; margin: 0 0 6px;"><strong>The English translation of these verbs:</strong></p>
+        <ul style="font-size: 16px; margin: 0;">
+          <li style="margin-bottom: 4px;">conduire</li>
+          <li style="margin-bottom: 4px;">parler</li>
+          <li style="margin-bottom: 4px;">r&eacute;server</li>
+          <li style="margin-bottom: 4px;">voyager</li>
+          <li style="margin-bottom: 4px;">nager</li>
+          <li style="margin-bottom: 4px;">rencontrer</li>
+          <li>grimper</li>
+        </ul>
+      </div>
+
+      <div>
+        <p style="font-size: 16px; margin: 0 0 6px;"><strong>The past simple of these verbs:</strong></p>
+        <ul style="font-size: 16px; margin: 0;">
+          <li style="margin-bottom: 4px;">break</li>
+          <li style="margin-bottom: 4px;">sell</li>
+          <li style="margin-bottom: 4px;">understand</li>
+          <li style="margin-bottom: 4px;">drink</li>
+          <li style="margin-bottom: 4px;">bring</li>
+          <li style="margin-bottom: 4px;">catch</li>
+          <li>fly</li>
+        </ul>
+      </div>
+    </div>
+
+    <div style="margin-top: 14px;">
+      <p style="font-size: 16px; margin: 0 0 6px;"><strong>These words:</strong></p>
+      <ul style="font-size: 16px; margin: 0;">
+        <li style="margin-bottom: 4px;">a person who travels in a vehicle but is not the driver</li>
+        <li style="margin-bottom: 4px;">the raised area at a train or bus station where you wait and board</li>
+        <li style="margin-bottom: 4px;">all the vehicles moving along a road at the same time</li>
+        <li style="margin-bottom: 4px;">a trip from one place to another</li>
+        <li style="margin-bottom: 4px;">a small card or paper that proves you have paid to travel</li>
+        <li>to travel regularly between home and work</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<div style="max-width: 900px; margin: 0 auto; padding: 20px; font-family: Arial, sans-serif; line-height: 1.45; color: #333;" class="page-break">
+  <div class="keep-together">
+    <div class="reading-header-grid">
+      <h2 style="font-size: 22px; font-weight: 700; margin: 0;">Reading: The Car Rental Problem</h2>
+      <img
+        src="https://ulrwcortyhassmytkcij.supabase.co/storage/v1/object/public/travel-english/car-rental-problem.png"
+        alt="A worried man at a desk with a question mark above his head"
+        class="reading-illustration"
+      />
+    </div>
+
+    <p style="font-size: 16px; margin: 0 0 10px;">
+      Melissa and Ravi arrived at Barcelona airport at 10 p.m. on a Monday in August. They were very tired after their long flight from Sydney. They wanted to rent a car for their holiday.
+    </p>
+    <p style="font-size: 16px; margin: 0 0 10px;">
+      They walked to the car rental desk and showed their reservation confirmation to the man at the desk. The man looked at his computer for a long time. Then he looked worried. He could not find their reservation in the system. Melissa and Ravi were very surprised because they booked the car two months ago.
+    </p>
+    <p style="font-size: 16px; margin: 0 0 10px;">
+      The man checked his computer again but there was no reservation. He offered them other cars. First, he offered them a manual car, but Melissa and Ravi could only drive automatic cars. Then the man found one automatic car. It was a BMW and it looked very nice. But there was a problem: it cost 150 euros per day. This was too expensive for them. Their budget was only 40 euros per day.
+    </p>
+    <p style="font-size: 16px; margin: 0 0 10px;">
+      Melissa and Ravi thought about their options. It was late and they were very tired. They left the car rental desk and took a taxi to their hotel in the city centre. The next day at the hotel, they made a new plan. Barcelona had excellent public transport, so they did not really need a car.
+    </p>
+    <p style="font-size: 16px; margin: 0 0 14px;">
+      They bought metro tickets. For the rest of their holiday, they travelled around the city by metro, bus, and tram. They saved a lot of money and they enjoyed seeing the city like the local people. In the end, they were happy that they didn&rsquo;t have a car because the traffic in Barcelona was terrible!
+    </p>
+
+    <h3 style="font-size: 18px; font-weight: 700; margin-bottom: 10px;">Questions</h3>
+    <ol style="font-size: 16px; margin: 0;">
+      <li style="margin-bottom: 10px;">
+        What time did Melissa and Ravi arrive at Barcelona airport?
+        <span data-grammar-input="te6-r-q1" style="display: block; min-height: 22px; border-bottom: 1px solid #94a3b8; margin-top: 4px;"></span>
+      </li>
+      <li style="margin-bottom: 10px;">
+        What was the problem at the car rental desk?
+        <span data-grammar-input="te6-r-q2" style="display: block; min-height: 22px; border-bottom: 1px solid #94a3b8; margin-top: 4px;"></span>
+      </li>
+      <li style="margin-bottom: 10px;">
+        Why didn&rsquo;t they take the manual car?
+        <span data-grammar-input="te6-r-q3" style="display: block; min-height: 22px; border-bottom: 1px solid #94a3b8; margin-top: 4px;"></span>
+      </li>
+      <li style="margin-bottom: 10px;">
+        How much did the BMW cost per day?
+        <span data-grammar-input="te6-r-q4" style="display: block; min-height: 22px; border-bottom: 1px solid #94a3b8; margin-top: 4px;"></span>
+      </li>
+      <li style="margin-bottom: 10px;">
+        How did they get to their hotel?
+        <span data-grammar-input="te6-r-q5" style="display: block; min-height: 22px; border-bottom: 1px solid #94a3b8; margin-top: 4px;"></span>
+      </li>
+      <li style="margin-bottom: 10px;">
+        What did they use for transport during their holiday?
+        <span data-grammar-input="te6-r-q6" style="display: block; min-height: 22px; border-bottom: 1px solid #94a3b8; margin-top: 4px;"></span>
+      </li>
+      <li>
+        Were they pleased with their decision? Why?
+        <span data-grammar-input="te6-r-q7" style="display: block; min-height: 44px; border-bottom: 1px solid #94a3b8; margin-top: 4px;"></span>
+      </li>
+    </ol>
+  </div>
+</div>
+
+<div style="max-width: 900px; margin: 0 auto; padding: 20px; font-family: Arial, sans-serif; line-height: 1.45; color: #333;" class="section-answers-container">
+  <div class="answer-block">
+    <h2 style="font-size: 22px; font-weight: 700; margin: 0 0 12px;">Answers</h2>
+
+    <div style="margin-bottom: 14px;">
+      <h3 style="font-size: 18px; margin: 0 0 6px;">Vocabulary: Wordsearch</h3>
+      <p style="font-size: 16px; margin: 0 0 8px;"><strong>French verbs:</strong> drive, talk, book, travel, swim, meet, climb</p>
+      <p style="font-size: 16px; margin: 0 0 8px;"><strong>Definitions:</strong> passenger, platform, traffic, journey, ticket, commute</p>
+      <p style="font-size: 16px; margin: 0;"><strong>Past simple:</strong> broke, sold, understood, drank, brought, caught, flew</p>
+    </div>
+
+    <div style="margin-bottom: 0;">
+      <h3 style="font-size: 18px; margin: 0 0 8px;">Reading: The Car Rental Problem</h3>
+      <ol style="padding-left: 24px; font-size: 16px; margin: 0;">
+        <li style="margin-bottom: 5px;">At 10 p.m. on a Monday in August.</li>
+        <li style="margin-bottom: 5px;">The man could not find their reservation in the system.</li>
+        <li style="margin-bottom: 5px;">They could only drive automatic cars.</li>
+        <li style="margin-bottom: 5px;">150 euros per day.</li>
+        <li style="margin-bottom: 5px;">They took a taxi.</li>
+        <li style="margin-bottom: 5px;">Metro, bus, and tram (metro tickets).</li>
+        <li>Yes. They saved money, enjoyed seeing the city like local people, and were glad they didn&rsquo;t have a car because the traffic was terrible.</li>
+      </ol>
+    </div>
+  </div>
+</div>
