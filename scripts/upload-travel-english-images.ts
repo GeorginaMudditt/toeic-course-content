@@ -16,6 +16,7 @@ config({ path: resolve(process.cwd(), '.env') })
 const BUCKET = 'travel-english'
 const FILES = [
   { name: 'confused-man-car-rental.jpg', contentType: 'image/jpeg' },
+  { name: 'travel-lesson6-airport-announcement.mp3', contentType: 'audio/mpeg' },
 ]
 
 async function main() {

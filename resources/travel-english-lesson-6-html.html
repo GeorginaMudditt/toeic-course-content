@@ -120,6 +120,14 @@
     display: list-item !important;
   }
 
+  .listening-item-print {
+    margin-bottom: 16px;
+  }
+
+  .listening-item-print:last-child {
+    margin-bottom: 0;
+  }
+
   @media print {
     @page {
       margin: 1.5cm;
@@ -199,6 +207,12 @@
     .section-answers-container {
       break-before: page;
       page-break-before: always;
+    }
+
+    .listening-item-print {
+      break-inside: avoid;
+      page-break-inside: avoid;
+      margin-bottom: 12px;
     }
   }
 </style>
@@ -353,6 +367,38 @@
       </li>
     </ol>
   </div>
+
+  <div class="keep-together">
+    <h2 style="font-size: 22px; font-weight: 700; margin-bottom: 10px;">Listening: Airport Announcement</h2>
+    <p style="font-size: 16px; margin: 0 0 12px;">Write the missing word or number to complete each sentence.</p>
+
+    <div class="listening-item-print">
+      <div style="border: 1px solid var(--exam-soft-border); border-radius: 10px; background: #fff; padding: 12px 14px; margin-bottom: 12px;">
+        <audio controls preload="metadata" style="width: 100%; max-width: 560px; height: 40px;">
+          <source src="https://ulrwcortyhassmytkcij.supabase.co/storage/v1/object/public/travel-english/travel-lesson6-airport-announcement.mp3" type="audio/mpeg" />
+          Your browser does not support the audio element.
+        </audio>
+      </div>
+
+      <ol style="font-size: 16px; margin: 0;">
+        <li style="margin-bottom: 10px;">
+          There are delays because of the <strong><span data-grammar-input="te6-l-q1" style="display: inline-block; min-width: 140px; border-bottom: 1px solid #94a3b8;"></span></strong>.
+        </li>
+        <li style="margin-bottom: 10px;">
+          The restaurants close at <strong><span data-grammar-input="te6-l-q2" style="display: inline-block; min-width: 140px; border-bottom: 1px solid #94a3b8;"></span></strong>.
+        </li>
+        <li style="margin-bottom: 10px;">
+          Passengers do not have to pay for children&rsquo;s <strong><span data-grammar-input="te6-l-q3" style="display: inline-block; min-width: 140px; border-bottom: 1px solid #94a3b8;"></span></strong>.
+        </li>
+        <li style="margin-bottom: 10px;">
+          At 9 p.m. the doctor will be near the <strong><span data-grammar-input="te6-l-q4" style="display: inline-block; min-width: 180px; border-bottom: 1px solid #94a3b8;"></span></strong>.
+        </li>
+        <li>
+          There is a lost coat in the <strong><span data-grammar-input="te6-l-q5" style="display: inline-block; min-width: 140px; border-bottom: 1px solid #94a3b8;"></span></strong>.
+        </li>
+      </ol>
+    </div>
+  </div>
 </div>
 
 <div style="max-width: 900px; margin: 0 auto; padding: 20px; font-family: Arial, sans-serif; line-height: 1.45; color: #333;" class="section-answers-container">
@@ -366,7 +412,7 @@
       <p style="font-size: 16px; margin: 0;"><strong>Past simple:</strong> broke, sold, understood, drank, brought, caught, flew</p>
     </div>
 
-    <div style="margin-bottom: 0;">
+    <div style="margin-bottom: 14px;">
       <h3 style="font-size: 18px; margin: 0 0 8px;">Reading: The Car Rental Problem</h3>
       <ol style="padding-left: 24px; font-size: 16px; margin: 0;">
         <li style="margin-bottom: 5px;">At 10 p.m. on a Monday in August.</li>
@@ -377,6 +423,24 @@
         <li style="margin-bottom: 5px;">Metro, bus, and tram (metro tickets).</li>
         <li>Yes. They saved money, enjoyed seeing the city like local people, and were glad they didn&rsquo;t have a car because the traffic was terrible.</li>
       </ol>
+    </div>
+
+    <div style="margin-bottom: 14px;">
+      <h3 style="font-size: 18px; margin: 0 0 8px;">Listening: Airport Announcement</h3>
+      <ol style="padding-left: 24px; font-size: 16px; margin: 0 0 12px;">
+        <li style="margin-bottom: 5px;"><strong>weather</strong></li>
+        <li style="margin-bottom: 5px;"><strong>11.30 pm</strong></li>
+        <li style="margin-bottom: 5px;"><strong>meals</strong></li>
+        <li style="margin-bottom: 5px;"><strong>Italian restaurant</strong></li>
+        <li><strong>cafe</strong></li>
+      </ol>
+
+      <h3 style="font-size: 18px; margin: 0 0 8px;">Audioscript</h3>
+      <div style="border: 1px solid var(--exam-soft-border); border-radius: 8px; background: #f8fafc; padding: 10px 12px; font-size: 16px; line-height: 1.5;">
+        <p style="margin: 0;">
+          Good afternoon. We are sorry there are problems with the planes today because of bad weather. There is no snow now but there is lots of wind and that makes it difficult for the planes to fly. We are happy to say that all our shops are open until 9.30 pm and the restaurants are open until 11.30 pm. When you buy an adult&rsquo;s meal this evening, you do not have to pay for your children&rsquo;s meals and hot and cold drinks are also cheap today. Please remember that if you do not feel well, there is a doctor here in the airport. The doctor will be at a desk next to the bookshop until 6 pm and then outside the Italian restaurant in the evening. Finally, there is a coat in the cafe next to the toilets. If it is yours, please get it as soon as possible. Thank you for listening and good afternoon.
+        </p>
+      </div>
     </div>
   </div>
 </div>
