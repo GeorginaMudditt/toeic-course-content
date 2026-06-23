@@ -1,5 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { supabaseServer } from '@/lib/supabase'
+import { isVocabularyLevel, VOCABULARY_TABLES } from '@/lib/vocabulary-levels'
+
+export const dynamic = 'force-dynamic'
 
 export async function GET(
   request: NextRequest,
@@ -8,14 +11,14 @@ export async function GET(
   try {
     const level = params.level.toLowerCase()
 
-    // Only A1 is currently available
-    if (level !== 'a1') {
+    if (!isVocabularyLevel(level)) {
       return NextResponse.json({ data: [], error: null })
     }
 
-    // Fetch distinct topic_page values from the A1 table using service role key
+    const { vocab } = VOCABULARY_TABLES[level]
+
     const { data, error } = await supabaseServer
-      .from('Brizzle_A1_vocab')
+      .from(vocab)
       .select('topic_page')
       .order('topic_page', { ascending: true })
 
@@ -27,24 +30,21 @@ export async function GET(
     const rows = (data || []).filter((row: any) => !!row.topic_page)
     const topicToCount = new Map<string, number>()
     const topicToOriginalName = new Map<string, string>()
-    
+
     for (const row of rows) {
-      // Normalize the topic name for grouping: trim whitespace, remove extra spaces, lowercase
       const normalizedKey = row.topic_page.trim().replace(/\s+/g, ' ').toLowerCase()
       const originalName = row.topic_page.trim().replace(/\s+/g, ' ')
-      
-      // Store the count
+
       topicToCount.set(normalizedKey, (topicToCount.get(normalizedKey) || 0) + 1)
-      // Store the original name (use the first occurrence as the display name)
       if (!topicToOriginalName.has(normalizedKey)) {
         topicToOriginalName.set(normalizedKey, originalName)
       }
     }
-    
+
     const topicsWithCounts = Array.from(topicToCount.entries())
-      .map(([normalizedName, count]) => ({ 
-        name: topicToOriginalName.get(normalizedName) || normalizedName, 
-        count 
+      .map(([normalizedName, count]) => ({
+        name: topicToOriginalName.get(normalizedName) || normalizedName,
+        count,
       }))
       .sort((a, b) => a.name.localeCompare(b.name))
 

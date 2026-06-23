@@ -7,6 +7,7 @@ import Navbar from '@/components/Navbar'
 import ChallengeModal from '@/components/ChallengeModal'
 import Link from 'next/link'
 import { supabase } from '@/lib/supabase'
+import { isVocabularyLevel } from '@/lib/vocabulary-levels'
 
 interface Word {
   word_english: string
@@ -109,7 +110,7 @@ export default function ChallengePage() {
   // Fetch words for challenges
   useEffect(() => {
     const fetchWords = async () => {
-      if ((challengeType === 'bronze' || challengeType === 'silver' || challengeType === 'gold') && level === 'a1') {
+      if ((challengeType === 'bronze' || challengeType === 'silver' || challengeType === 'gold') && isVocabularyLevel(level)) {
         setLoading(true)
         setError('')
         try {

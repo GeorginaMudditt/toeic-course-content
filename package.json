@@ -26,6 +26,8 @@
     "sync:resources": "tsx scripts/sync-resources-from-db.ts",
     "sync:course-descriptions": "tsx scripts/sync-course-descriptions-from-website.ts",
     "update:placement-test": "tsx scripts/update-placement-test-with-answer-inputs.ts",
+    "import:a2-vocab": "tsx scripts/import-a2-vocabulary-pilot.ts",
+    "generate:a2-vocab-tts": "tsx scripts/generate-a2-vocabulary-tts.ts",
     "migrate:add-skill": "tsx scripts/migrate-add-skill.ts"
   },
   "dependencies": {

@@ -38,10 +38,10 @@ export default async function VocabularyPage({ searchParams }: { searchParams: {
           <div className="bg-white shadow rounded-lg p-6">
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {LEVEL_INFO.map((level) => {
-                const isA1 = level.id === 'A1'
+                const isAvailable = level.id === 'A1' || level.id === 'A2'
                 const cardContent = (
                   <>
-                    {!isA1 && (
+                    {!isAvailable && (
                       <div className="absolute inset-0 flex items-center justify-center bg-white bg-opacity-90 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity z-10">
                         <span className="text-sm font-medium text-gray-700">This level is coming soon</span>
                       </div>
@@ -55,7 +55,7 @@ export default async function VocabularyPage({ searchParams }: { searchParams: {
                           {level.name}
                         </h3>
                       </div>
-                      {isA1 && (
+                      {isAvailable && (
                         <div className="text-2xl" style={{ color: level.color }}>
                           →
                         </div>
@@ -65,7 +65,7 @@ export default async function VocabularyPage({ searchParams }: { searchParams: {
                 )
                 
                 const cardClassName = `border-2 rounded-lg p-6 transition-all ${
-                  isA1 
+                  isAvailable 
                     ? 'hover:shadow-lg cursor-pointer' 
                     : 'cursor-not-allowed opacity-60 relative group'
                 }`
@@ -74,7 +74,7 @@ export default async function VocabularyPage({ searchParams }: { searchParams: {
                   ? `/student/vocabulary/${level.id.toLowerCase()}?viewAs=${viewAs}`
                   : `/student/vocabulary/${level.id.toLowerCase()}`
                 
-                return isA1 ? (
+                return isAvailable ? (
                   <Link
                     key={level.id}
                     href={href}

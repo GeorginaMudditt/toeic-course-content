@@ -5,6 +5,7 @@ import { useParams, useRouter, useSearchParams } from 'next/navigation'
 import { LEVEL_COLORS } from '@/lib/level-colors'
 import Navbar from '@/components/Navbar'
 import Link from 'next/link'
+import { isVocabularyLevel } from '@/lib/vocabulary-levels'
 
 interface Topic {
   name: string
@@ -34,7 +35,7 @@ export default function VocabularyLevelPage() {
 
   // Fetch progress for all topics in this level
   const fetchProgress = useCallback(async () => {
-    if (level !== 'a1') return
+    if (!isVocabularyLevel(level)) return
     
     try {
       const url = viewAs 
@@ -73,7 +74,7 @@ export default function VocabularyLevelPage() {
 
   // Refresh progress when page becomes visible (e.g., when navigating back from a challenge)
   useEffect(() => {
-    if (level !== 'a1') return
+    if (!isVocabularyLevel(level)) return
 
     const handleVisibilityChange = () => {
       if (document.visibilityState === 'visible') {
@@ -164,8 +165,7 @@ export default function VocabularyLevelPage() {
       setLoading(true)
       setError('')
       try {
-        // Only A1 is currently available
-        if (level !== 'a1') {
+        if (!isVocabularyLevel(level)) {
           setTopics([])
           setLoading(false)
           return
@@ -194,7 +194,7 @@ export default function VocabularyLevelPage() {
   useEffect(() => {
     const fetchIcons = async () => {
       try {
-        if (level !== 'a1') return
+        if (!isVocabularyLevel(level)) return
 
         const response = await fetch(`/api/vocabulary/${level}/icons`)
         const result = await response.json()
@@ -209,7 +209,7 @@ export default function VocabularyLevelPage() {
       }
     }
 
-    if (level === 'a1') fetchIcons()
+    if (isVocabularyLevel(level)) fetchIcons()
   }, [level])
 
   return (
@@ -282,9 +282,9 @@ export default function VocabularyLevelPage() {
                   {!loading && !error && topics.length === 0 && (
                     <tr>
                       <td colSpan={6} className="px-6 py-4 text-center text-gray-500">
-                        {level === 'a1' 
+                        {isVocabularyLevel(level)
                           ? 'No themes found for this level at the moment.'
-                          : 'This level is coming soon. Only A1 is currently available.'}
+                          : 'This level is coming soon.'}
                       </td>
                     </tr>
                   )}

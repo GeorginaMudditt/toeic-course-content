@@ -1,5 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { supabaseServer } from '@/lib/supabase'
+import { isVocabularyLevel, VOCABULARY_TABLES } from '@/lib/vocabulary-levels'
+
+export const dynamic = 'force-dynamic'
 
 export async function GET(
   request: NextRequest,
@@ -8,14 +11,14 @@ export async function GET(
   try {
     const level = params.level.toLowerCase()
 
-    // Only A1 is currently available
-    if (level !== 'a1') {
+    if (!isVocabularyLevel(level)) {
       return NextResponse.json({ data: {}, error: null })
     }
 
-    // Fetch icons from Brizzle_A1_icons using service role key
+    const { icons } = VOCABULARY_TABLES[level]
+
     const { data, error } = await supabaseServer
-      .from('Brizzle_A1_icons')
+      .from(icons)
       .select('topic_page, icon')
 
     if (error) {
