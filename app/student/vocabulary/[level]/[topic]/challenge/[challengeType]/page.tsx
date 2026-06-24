@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState, useMemo } from 'react'
+import { useEffect, useState, useMemo, useCallback } from 'react'
 import { useParams, useRouter, useSearchParams } from 'next/navigation'
 import { LEVEL_COLORS } from '@/lib/level-colors'
 import Navbar from '@/components/Navbar'
@@ -55,6 +55,7 @@ export default function ChallengePage() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
   const [draggedWord, setDraggedWord] = useState<string | null>(null)
+  const [selectedWord, setSelectedWord] = useState<string | null>(null)
   const [wordPositions, setWordPositions] = useState<Record<number, string>>({})
   const [shuffledWords, setShuffledWords] = useState<string[]>([])
   const [listenedWords, setListenedWords] = useState<Set<string>>(new Set())
@@ -375,8 +376,38 @@ export default function ChallengePage() {
       })
   }
 
-  // Drag and drop functions for silver challenge
+  // Drag and drop / click-to-place for silver challenge
+  const placeWordInSlot = useCallback((word: string, slotIndex: number) => {
+    setWordPositions((prev) => {
+      const newPositions = { ...prev }
+
+      const wordBeingReplaced = newPositions[slotIndex]
+      if (wordBeingReplaced) {
+        setShuffledWords((prevPool) =>
+          prevPool.includes(wordBeingReplaced) ? prevPool : [...prevPool, wordBeingReplaced]
+        )
+      }
+
+      for (const key of Object.keys(newPositions)) {
+        const k = Number(key)
+        if (newPositions[k] === word) {
+          delete newPositions[k]
+          break
+        }
+      }
+
+      newPositions[slotIndex] = word
+      setShuffledWords((prevPool) => prevPool.filter((w) => w !== word))
+
+      return newPositions
+    })
+
+    setSelectedWord(null)
+    setDraggedWord(null)
+  }, [])
+
   const handleDragStart = (e: React.DragEvent, word: string) => {
+    setSelectedWord(null)
     setDraggedWord(word)
     e.dataTransfer.effectAllowed = 'move'
   }
@@ -389,40 +420,21 @@ export default function ChallengePage() {
   const handleDrop = (e: React.DragEvent, slotIndex: number) => {
     e.preventDefault()
     if (!draggedWord) return
+    placeWordInSlot(draggedWord, slotIndex)
+  }
 
-    setWordPositions(prev => {
-      const newPositions = { ...prev }
+  const handleWordCardClick = (word: string) => {
+    if (isViewMode) return
+    setSelectedWord((prev) => (prev === word ? null : word))
+  }
 
-      // If this drop zone already had a word, return it to the pool
-      const wordBeingReplaced = newPositions[slotIndex]
-      if (wordBeingReplaced) {
-        setShuffledWords(prevPool => (
-          prevPool.includes(wordBeingReplaced) ? prevPool : [...prevPool, wordBeingReplaced]
-        ))
-      }
-
-      // Remove the dragged word from any previous drop zone
-      for (const key of Object.keys(newPositions)) {
-        const k = Number(key)
-        if (newPositions[k] === draggedWord) {
-          delete newPositions[k]
-          break
-        }
-      }
-
-      // Place the dragged word in the current drop zone
-      newPositions[slotIndex] = draggedWord
-
-      // Remove the dragged word from the pool on the right
-      setShuffledWords(prevPool => prevPool.filter(w => w !== draggedWord))
-
-      return newPositions
-    })
-
-    setDraggedWord(null)
+  const handleSlotClick = (slotIndex: number) => {
+    if (isViewMode || !selectedWord) return
+    placeWordInSlot(selectedWord, slotIndex)
   }
 
   const removeWord = (slotIndex: number) => {
+    setSelectedWord(null)
     setWordPositions(prev => {
       const newPositions = { ...prev }
       const removed = newPositions[slotIndex]
@@ -933,7 +945,7 @@ export default function ChallengePage() {
                         Match the words
                       </h3>
                       <p className="text-gray-600">
-                        Drag the English words (coloured cards) to the boxes next to their corresponding French translations. Click a placed card to return it to the list.
+                        Drag the English words to the boxes next to their French translations, or click a word and then click a box to place it. Click a placed card to return it to the list.
                       </p>
                     </div>
                     
@@ -941,19 +953,35 @@ export default function ChallengePage() {
                       <div className="mb-6">
                         {/* English words pool */}
                         <div className="bg-gray-50 rounded-lg p-4 border border-gray-200 mb-6">
-                          <h4 className="font-semibold text-gray-900 mb-4">English words to drag</h4>
+                          <h4 className="font-semibold text-gray-900 mb-4">English words</h4>
                           <div className="flex flex-wrap gap-3">
-                            {shuffledWords.map((word, index) => (
+                            {shuffledWords.map((word, index) => {
+                              const isSelected = selectedWord === word
+                              return (
                               <div
                                 key={index}
-                                className="px-4 py-2 rounded text-white cursor-move transition-opacity hover:opacity-80 text-sm"
-                                style={{ backgroundColor: levelColor }}
-                                draggable
+                                role="button"
+                                tabIndex={isViewMode ? -1 : 0}
+                                className={`px-4 py-2 rounded text-white cursor-pointer transition-all hover:opacity-80 text-sm select-none ${
+                                  isSelected ? 'ring-4 ring-offset-2 ring-white outline outline-2' : ''
+                                }`}
+                                style={{
+                                  backgroundColor: levelColor,
+                                  outlineColor: isSelected ? levelColor : undefined,
+                                }}
+                                draggable={!isViewMode}
                                 onDragStart={(e) => handleDragStart(e, word)}
+                                onClick={() => handleWordCardClick(word)}
+                                onKeyDown={(e) => {
+                                  if (e.key === 'Enter' || e.key === ' ') {
+                                    e.preventDefault()
+                                    handleWordCardClick(word)
+                                  }
+                                }}
                               >
                                 {word}
                               </div>
-                            ))}
+                            )})}
                           </div>
                           {shuffledWords.length === 0 && (
                             <p className="text-gray-500 text-sm italic">All words have been placed!</p>
@@ -979,21 +1007,36 @@ export default function ChallengePage() {
                                 )}
                               </div>
                               <div
-                                className="min-h-[60px] border-2 border-dashed rounded p-2 bg-gray-50 transition-colors hover:bg-gray-100"
+                                className={`min-h-[60px] border-2 border-dashed rounded p-2 bg-gray-50 transition-colors ${
+                                  selectedWord && !isViewMode
+                                    ? 'cursor-pointer hover:bg-gray-100 border-solid'
+                                    : 'hover:bg-gray-100'
+                                }`}
+                                style={
+                                  selectedWord && !isViewMode
+                                    ? { borderColor: levelColor }
+                                    : undefined
+                                }
                                 onDragOver={handleDragOver}
                                 onDrop={(e) => handleDrop(e, index)}
+                                onClick={() => handleSlotClick(index)}
                               >
                                 {wordPositions[index] ? (
                                   <div
                                     className="inline-block px-3 py-2 rounded text-white text-sm cursor-pointer transition-opacity hover:opacity-80 break-words"
                                     style={{ backgroundColor: levelColor }}
-                                    onClick={() => removeWord(index)}
+                                    onClick={(e) => {
+                                      e.stopPropagation()
+                                      if (!isViewMode) removeWord(index)
+                                    }}
                                     title="Click to remove"
                                   >
                                     {wordPositions[index]}
                                   </div>
                                 ) : (
-                                  <div className="text-gray-400 text-xs">Drop here</div>
+                                  <div className="text-gray-400 text-xs">
+                                    {selectedWord && !isViewMode ? 'Click to place' : 'Drop or click here'}
+                                  </div>
                                 )}
                               </div>
                             </div>
