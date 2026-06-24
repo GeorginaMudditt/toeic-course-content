@@ -1,6 +1,8 @@
 /** Extra accepted English answers for gold challenge typing (beyond word_english). */
 const GOLD_ALTERNATIVES: Record<string, string[]> = {
   'a2|Activities (B)|spare time': ['free time'],
+  'a2|Adjectives (B)|good-looking': ['good looking'],
+  'a2|Adjectives (B)|well-known': ['well known'],
 }
 
 function normalizeGoldAnswer(value: string): string {
