@@ -8,6 +8,10 @@ import ChallengeModal from '@/components/ChallengeModal'
 import Link from 'next/link'
 import { supabase } from '@/lib/supabase'
 import { isVocabularyLevel } from '@/lib/vocabulary-levels'
+import {
+  getGoldAlternatives,
+  isGoldEnglishAnswerCorrect,
+} from '@/lib/vocabulary-gold-alternatives'
 
 interface Word {
   word_english: string
@@ -518,9 +522,8 @@ export default function ChallengePage() {
     if (challengeType === 'gold') {
       const allCorrect = words.every((word, i) => {
         const userRaw = goldInputs[i] || ''
-        const user = userRaw.replace(/\s+/g, ' ').trim() // tolerate extra spaces only
-        const expected = word.word_english.replace(/\s+/g, ' ').trim()
-        return user.toLocaleLowerCase() === expected.toLocaleLowerCase()
+        const alternatives = getGoldAlternatives(level, topic, word.word_english)
+        return isGoldEnglishAnswerCorrect(userRaw, word.word_english, alternatives)
       })
       if (!allCorrect) {
         const newErrorCount = goldErrorCount + 1
@@ -674,9 +677,8 @@ export default function ChallengePage() {
     const word = words[slotIndex]
     if (!word) return false
     const userRaw = goldInputs[slotIndex] || ''
-    const user = userRaw.replace(/\s+/g, ' ').trim()
-    const expected = word.word_english.replace(/\s+/g, ' ').trim()
-    return user.toLocaleLowerCase() === expected.toLocaleLowerCase()
+    const alternatives = getGoldAlternatives(level, topic, word.word_english)
+    return isGoldEnglishAnswerCorrect(userRaw, word.word_english, alternatives)
   }
 
   if (loading) {

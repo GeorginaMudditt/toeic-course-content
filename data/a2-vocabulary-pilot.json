@@ -39,7 +39,7 @@
         { "word_english": "skiing", "translation_french": "ski" },
         { "word_english": "skating", "translation_french": "patinage" },
         { "word_english": "snowboarding", "translation_french": "snowboard" },
-        { "word_english": "spare time", "translation_french": "temps libre" },
+        { "word_english": "spare time", "translation_french": "temps libre", "gold_alternatives": ["free time"] },
         { "word_english": "surfing", "translation_french": "surf" },
         { "word_english": "swimming", "translation_french": "natation" },
         { "word_english": "table tennis", "translation_french": "tennis de table" },
