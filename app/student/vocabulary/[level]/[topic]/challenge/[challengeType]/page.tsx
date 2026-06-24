@@ -9,8 +9,8 @@ import Link from 'next/link'
 import { supabase } from '@/lib/supabase'
 import { isVocabularyLevel } from '@/lib/vocabulary-levels'
 import {
-  getGoldAlternatives,
-  isGoldEnglishAnswerCorrect,
+  getGoldSlotCorrectness,
+  isGoldChallengeCorrect,
 } from '@/lib/vocabulary-gold-alternatives'
 
 interface Word {
@@ -226,6 +226,11 @@ export default function ChallengePage() {
     if (challengeType !== 'silver' || !silverHelpModeEnabled) return {} as Record<number, boolean>
     return getSilverSlotCorrectness(words, wordPositions)
   }, [challengeType, silverHelpModeEnabled, words, wordPositions])
+
+  const goldSlotCorrectness = useMemo(() => {
+    if (challengeType !== 'gold' || !helpModeEnabled) return {} as Record<number, boolean>
+    return getGoldSlotCorrectness(words, goldInputs, level, topic)
+  }, [challengeType, helpModeEnabled, words, goldInputs, level, topic])
 
   const handleGoldInput = (slotIndex: number, value: string) => {
     setGoldInputs(prev => ({ ...prev, [slotIndex]: value }))
@@ -518,13 +523,9 @@ export default function ChallengePage() {
       }
     }
     
-    // For gold challenge, validate typed answers (strict match)
+    // For gold challenge, validate typed answers (duplicate French accepts interchangeable English)
     if (challengeType === 'gold') {
-      const allCorrect = words.every((word, i) => {
-        const userRaw = goldInputs[i] || ''
-        const alternatives = getGoldAlternatives(level, topic, word.word_english)
-        return isGoldEnglishAnswerCorrect(userRaw, word.word_english, alternatives)
-      })
+      const allCorrect = isGoldChallengeCorrect(words, goldInputs, level, topic)
       if (!allCorrect) {
         const newErrorCount = goldErrorCount + 1
         setGoldErrorCount(newErrorCount)
@@ -671,16 +672,6 @@ export default function ChallengePage() {
     setHelpPromptChallenge(null)
   }
   
-  // Check if a gold challenge answer is correct.
-  // Capitalization is flexible, but spelling/punctuation must still match.
-  const isGoldAnswerCorrect = (slotIndex: number): boolean => {
-    const word = words[slotIndex]
-    if (!word) return false
-    const userRaw = goldInputs[slotIndex] || ''
-    const alternatives = getGoldAlternatives(level, topic, word.word_english)
-    return isGoldEnglishAnswerCorrect(userRaw, word.word_english, alternatives)
-  }
-
   if (loading) {
     return (
       <div className="min-h-screen bg-gray-50">
@@ -1083,7 +1074,7 @@ export default function ChallengePage() {
                       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 mb-6">
                         {goldShuffledSlots.map(({ word, slotIndex }) => {
                           const hasInput = (goldInputs[slotIndex] || '').trim().length > 0
-                          const isCorrect = helpModeEnabled && hasInput ? isGoldAnswerCorrect(slotIndex) : null
+                          const isCorrect = helpModeEnabled && hasInput ? (goldSlotCorrectness[slotIndex] ?? false) : null
                           
                           return (
                             <div key={slotIndex} className="border rounded-lg p-4 bg-white">
