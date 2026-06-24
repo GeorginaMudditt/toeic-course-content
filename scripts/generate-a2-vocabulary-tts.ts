@@ -16,6 +16,7 @@
  *   npx tsx scripts/generate-a2-vocabulary-tts.ts --dry-run
  *   npx tsx scripts/generate-a2-vocabulary-tts.ts --skip-existing
  *   npx tsx scripts/generate-a2-vocabulary-tts.ts --force
+ *   npx tsx scripts/generate-a2-vocabulary-tts.ts --words "omelette,melon" --force
  */
 
 import { config } from 'dotenv'
@@ -37,6 +38,8 @@ const TTS_SEED = 42
 interface VocabWord {
   word_english: string
   translation_french: string
+  /** Optional alternate text sent to TTS when the display spelling mispronounces */
+  tts_text?: string
 }
 
 interface VocabTopic {
@@ -58,7 +61,8 @@ function sleep(ms: number) {
 async function generateSpeech(
   apiKey: string,
   voiceId: string,
-  text: string
+  text: string,
+  seed: number = TTS_SEED
 ): Promise<Buffer> {
   const response = await fetch(
     `https://api.elevenlabs.io/v1/text-to-speech/${voiceId}`,
@@ -73,7 +77,7 @@ async function generateSpeech(
         text,
         model_id: TTS_MODEL_ID,
         language_code: TTS_LANGUAGE_CODE,
-        seed: TTS_SEED,
+        seed,
         voice_settings: {
           stability: 0.85,
           similarity_boost: 0.85,
@@ -119,6 +123,14 @@ async function main() {
           .map((t) => t.trim())
           .filter(Boolean)
       : null
+  const wordsArgIndex = process.argv.indexOf('--words')
+  const wordsFilter =
+    wordsArgIndex >= 0
+      ? process.argv[wordsArgIndex + 1]
+          ?.split(',')
+          .map((w) => w.trim().toLowerCase())
+          .filter(Boolean)
+      : null
 
   const apiKey = process.env.ELEVENLABS_API_KEY
   const voiceId = process.env.ELEVENLABS_VOICE_ID || DEFAULT_VOICE_ID
@@ -133,6 +145,10 @@ async function main() {
   console.log(`Model: ${TTS_MODEL_ID}, language: ${TTS_LANGUAGE_CODE}, seed: ${TTS_SEED}`)
   if (forceRegenerate) {
     console.log('Force mode: regenerating all audio from ElevenLabs (ignoring cache)')
+  }
+
+  if (wordsFilter?.length) {
+    console.log(`Words filter: ${wordsFilter.join(', ')}`)
   }
 
   const data: VocabData = JSON.parse(readFileSync(DATA_FILE, 'utf-8'))
@@ -165,9 +181,15 @@ async function main() {
   let failed = 0
 
   for (const topic of topics) {
-    console.log(`\n=== ${topic.topic_page} (${topic.words.length} words) ===`)
+    const topicWords = wordsFilter?.length
+      ? topic.words.filter((w) => wordsFilter.includes(w.word_english.toLowerCase()))
+      : topic.words
 
-    for (const word of topic.words) {
+    if (topicWords.length === 0) continue
+
+    console.log(`\n=== ${topic.topic_page} (${topicWords.length} words) ===`)
+
+    for (const word of topicWords) {
       const storagePath = `${topic.slug}/${slugifyVocabularyText(word.word_english)}.mp3`
       const cacheFile = join(cacheDir, storagePath.replace(/\//g, '__'))
 
@@ -192,23 +214,36 @@ async function main() {
       }
 
       try {
+        const spokenText = word.tts_text ?? word.word_english
+        const seed = word.tts_text
+          ? TTS_SEED + spokenText.length
+          : forceRegenerate
+            ? TTS_SEED + word.word_english.length
+            : TTS_SEED
+
         let audioBuffer: Buffer
         if (!forceRegenerate && existsSync(cacheFile)) {
           audioBuffer = readFileSync(cacheFile)
           console.log(`  cache hit: ${word.word_english}`)
         } else {
-          console.log(`  generating: ${word.word_english}`)
-          audioBuffer = await generateSpeech(apiKey!, voiceId, word.word_english)
+          console.log(
+            `  generating: ${word.word_english}` +
+              (spokenText !== word.word_english ? ` (spoken as "${spokenText}")` : '')
+          )
+          audioBuffer = await generateSpeech(apiKey!, voiceId, spokenText, seed)
           writeFileSync(cacheFile, audioBuffer)
           await sleep(300)
         }
 
         const { error: uploadError } = await supabaseServer.storage
           .from(AUDIO_BUCKET)
-          .upload(storagePath, audioBuffer, {
-            contentType: 'audio/mpeg',
-            upsert: true,
-          })
+          .remove([storagePath])
+          .then(() =>
+            supabaseServer.storage.from(AUDIO_BUCKET).upload(storagePath, audioBuffer, {
+              contentType: 'audio/mpeg',
+              upsert: true,
+            })
+          )
 
         if (uploadError) {
           throw new Error(uploadError.message)
@@ -218,9 +253,11 @@ async function main() {
           .from(AUDIO_BUCKET)
           .getPublicUrl(storagePath)
 
+        const versionedUrl = `${urlData.publicUrl}?v=${Date.now()}`
+
         const { error: updateError } = await supabaseServer
           .from('Brizzle_A2_vocab')
-          .update({ pron_english: urlData.publicUrl })
+          .update({ pron_english: versionedUrl })
           .eq('topic_page', topic.topic_page)
           .eq('word_english', word.word_english)
 
