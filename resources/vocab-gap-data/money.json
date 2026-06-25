@@ -1,0 +1,24 @@
+{
+  "sentences": [
+    { "number": 1, "parts": ["The union argued that workers' ", { "slot": "gapfill-q1", "answers": ["remuneration"] }, " had not kept pace with inflation."] },
+    { "number": 2, "parts": ["Loan repayments are classified as ", { "slot": "gapfill-q2", "answers": ["fixed costs"] }, " because they do not change with sales volumes."] },
+    { "number": 3, "parts": ["The contract limits ", { "slot": "gapfill-q3", "answers": ["overtime"] }, " to a maximum of ten hours per week."] },
+    { "number": 4, "parts": ["Wholesalers often operate on a narrow ", { "slot": "gapfill-q4", "answers": ["margin"] }, " of only a few per cent per item."] },
+    { "number": 5, "parts": ["After forty years with the firm, he retired on a generous company ", { "slot": "gapfill-q5", "answers": ["pension"] }, "."] },
+    { "number": 6, "parts": ["Weak consumer confidence led to a sharp fall in retail ", { "slot": "gapfill-q6", "answers": ["sales"] }, " in October."] },
+    { "number": 7, "parts": ["The bank refused to approve the ", { "slot": "gapfill-q7", "answers": ["mortgage"] }, " until the couple improved their credit score."] },
+    { "number": 8, "parts": ["The regional manager questioned whether the new sales ", { "slot": "gapfill-q8", "answers": ["target"] }, " of €5 million was realistic."] },
+    { "number": 9, "parts": ["The airline paid generous ", { "slot": "gapfill-q9", "answers": ["compensation"] }, " to passengers whose flights had been cancelled."] },
+    { "number": 10, "parts": ["Electricity used in the factory is a ", { "slot": "gapfill-q10", "answers": ["variable cost"] }, " that fluctuates with production levels."] },
+    { "number": 11, "parts": ["After the merger, every employee received a one-off ", { "slot": "gapfill-q11", "answers": ["bonus"] }, " of €500."] },
+    { "number": 12, "parts": ["Despite losing a major contract, the shop's ", { "slot": "gapfill-q12", "answers": ["turnover"] }, " remained above €1 million."] },
+    { "number": 13, "parts": ["The project was halted because it had already exceeded its allocated ", { "slot": "gapfill-q13", "answers": ["budget"] }, "."] },
+    { "number": 14, "parts": ["As part of the deal, the CEO received additional ", { "slot": "gapfill-q14", "answers": ["share options"] }, " in the newly listed company."] },
+    { "number": 15, "parts": ["Real estate agents typically receive a ", { "slot": "gapfill-q15", "answers": ["commission"] }, " when a property sale is completed."] },
+    { "number": 16, "parts": ["The board criticised the previous sales ", { "slot": "gapfill-q16", "answers": ["forecast"] }, " because it was far too optimistic."] },
+    { "number": 17, "parts": ["The start-up achieved rapid ", { "slot": "gapfill-q17", "answers": ["growth"] }, " by expanding into three new markets simultaneously."] },
+    { "number": 18, "parts": ["Negotiations focused on a higher base ", { "slot": "gapfill-q18", "answers": ["salary"] }, " before any benefits were discussed."] },
+    { "number": 19, "parts": ["Managers questioned whether the hotel bill was a legitimate business ", { "slot": "gapfill-q19", "answers": ["expense"] }, "."] },
+    { "number": 20, "parts": ["The accountant reviewed the monthly ", { "slot": "gapfill-q20", "answers": ["overheads"] }, " to find areas where spending could be cut."] }
+  ]
+}

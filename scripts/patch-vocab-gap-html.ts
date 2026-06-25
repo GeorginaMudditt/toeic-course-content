@@ -134,6 +134,11 @@ const PATCHES: Array<{
     jsonFile: 'customer-service.json',
     audioDir: '/vocab-audio/customer-service-vocab-audio/',
   },
+  {
+    htmlFile: 'money-vocabulary-html.html',
+    jsonFile: 'money.json',
+    audioDir: '/vocab-audio/money-vocab-audio/',
+  },
 ]
 
 function patchFile(htmlFile: string, jsonFile: string, audioDir: string) {

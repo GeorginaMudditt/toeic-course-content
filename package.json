@@ -29,6 +29,8 @@
     "import:a2-vocab": "tsx scripts/import-a2-vocabulary-pilot.ts",
     "generate:a2-vocab-tts": "tsx scripts/generate-a2-vocabulary-tts.ts",
     "generate:customer-service-vocab-tts": "tsx scripts/generate-customer-service-vocab-tts.ts",
+    "generate:money-html": "tsx scripts/generate-money-html.ts",
+    "generate:money-vocab-tts": "tsx scripts/generate-money-vocab-tts.ts",
     "migrate:add-skill": "tsx scripts/migrate-add-skill.ts"
   },
   "dependencies": {

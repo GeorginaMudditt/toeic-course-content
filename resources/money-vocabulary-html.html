@@ -1,0 +1,352 @@
+<!-- PAGE 1: Vocabulary List -->
+<style>
+  @media print {
+    @page { margin: 1.5cm; }
+    body { margin: 0; padding: 0; }
+    .page-break { page-break-before: always; }
+    .no-break { page-break-inside: avoid; break-inside: avoid; }
+    .keep-together { page-break-inside: avoid; break-inside: avoid; }
+    h2, h3 { page-break-after: avoid; break-after: avoid; }
+    table { page-break-inside: avoid; break-inside: avoid; }
+    ul, ol { page-break-inside: avoid; break-inside: avoid; }
+  }
+
+  @keyframes vsg-shake {
+    0%, 100% { transform: translateX(0); }
+    20%, 60% { transform: translateX(-6px); }
+    40%, 80% { transform: translateX(6px); }
+  }
+  .vsg-shake { animation: vsg-shake 0.45s ease; }
+  .vsg-slot-correct {
+    border: 3px solid #15803d !important;
+    background: #ecfdf5 !important;
+    box-shadow: inset 0 0 0 1px rgba(21, 128, 61, 0.15);
+  }
+  .vsg-slot-wrong { border-color: #b91c1c !important; background: #fee2e2 !important; }
+  .vsg-layout {
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+    align-items: flex-start;
+  }
+  .vsg-sentences-col { flex: 1; min-width: 0; }
+  .vsg-bank-col {
+    width: min(260px, 100%);
+    flex-shrink: 0;
+    position: sticky;
+    top: 12px;
+    padding: 14px;
+    border-radius: 10px;
+    background: linear-gradient(135deg, #e8eaf6 0%, #f5f6fc 100%);
+    border: 1px solid #c5cae9;
+    box-shadow: 0 2px 6px rgba(56, 67, 143, 0.1);
+  }
+  .vsg-bank-scroll-notice {
+    margin: 0 0 10px;
+    padding: 8px 10px;
+    border-radius: 8px;
+    background: linear-gradient(135deg, #fff7ed 0%, #ffedd5 100%);
+    border: 1px solid #fdba74;
+    font-size: 12px;
+    line-height: 1.45;
+    color: #9a3412;
+  }
+  .vsg-bank-scroll-wrap {
+    position: relative;
+  }
+  .vsg-bank-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    max-height: min(70vh, 640px);
+    overflow-y: auto;
+    padding-right: 4px;
+    scrollbar-width: thin;
+    scrollbar-color: #38438f #e8eaf6;
+  }
+  .vsg-bank-grid::-webkit-scrollbar { width: 8px; }
+  .vsg-bank-grid::-webkit-scrollbar-track {
+    background: #e8eaf6;
+    border-radius: 8px;
+  }
+  .vsg-bank-grid::-webkit-scrollbar-thumb {
+    background: #38438f;
+    border-radius: 8px;
+  }
+  .vsg-bank-fade {
+    position: absolute;
+    left: 0;
+    right: 8px;
+    height: 28px;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+    z-index: 1;
+  }
+  .vsg-bank-fade-top {
+    top: 0;
+    background: linear-gradient(180deg, rgba(245, 246, 252, 0.98) 0%, rgba(245, 246, 252, 0) 100%);
+  }
+  .vsg-bank-fade-bottom {
+    bottom: 0;
+    background: linear-gradient(0deg, rgba(245, 246, 252, 0.98) 0%, rgba(245, 246, 252, 0) 100%);
+  }
+  .vsg-toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    align-items: center;
+    margin-top: 18px;
+  }
+  @media (max-width: 720px) {
+    .vsg-layout { flex-direction: column; }
+    .vsg-bank-col { width: 100%; position: static; }
+    .vsg-bank-grid {
+      flex-direction: row;
+      flex-wrap: wrap;
+      max-height: none;
+    }
+    .vsg-chip { flex: 0 1 auto; width: auto !important; }
+  }
+  @media print {
+    .vsg-no-print { display: none !important; }
+    .vsg-slot { border: 1px dashed #333 !important; background: #fff !important; }
+  }
+
+</style>
+<div style="max-width: 800px; margin: 0 auto; padding: 20px; font-family: Arial, sans-serif; line-height: 1.5; color: #333; background: linear-gradient(to bottom, #e8eaf6, #ffffff);">
+
+  <div style="text-align: center; margin-bottom: 25px; padding: 20px; background: linear-gradient(135deg, #38438f 0%, #2d3569 100%); border-radius: 12px; box-shadow: 0 4px 6px rgba(56,67,143,0.3);" class="no-break">
+    <div style="display: inline-block; margin-bottom: 8px;">
+      <img src="/brizzle-logo.png" alt="Brizzle Logo" style="width: 50px; height: 50px; object-fit: contain; background: white; padding: 5px; border-radius: 50%;" />
+    </div>
+    <h1 style="font-size: 28px; font-weight: bold; margin: 0; color: #ffffff; text-shadow: 0 2px 4px rgba(0,0,0,0.2);">Money</h1>
+  </div>
+
+  <div style="margin-bottom: 30px; padding: 20px; background: white; border-radius: 10px; box-shadow: 0 2px 4px rgba(0,0,0,0.05);" class="keep-together">
+    <h2 style="font-size: 20px; font-weight: bold; margin-bottom: 15px; color: #38438f; border-bottom: 3px solid #38438f; padding-bottom: 8px;">Part 1: Vocabulary List with Pronunciation and Translation</h2>
+
+    <table style="width: 100%; border-collapse: collapse; margin-top: 12px; font-size: 16px; border: 1px solid #e5e7eb; box-shadow: 0 1px 3px rgba(0,0,0,0.05);" class="no-break">
+      <thead>
+        <tr style="background: linear-gradient(135deg, #38438f 0%, #2d3569 100%);">
+          <th style="border: 1px solid #e5e7eb; padding: 10px; text-align: left; font-weight: bold; font-size: 16px; width: 25%; color: white;">Word/Phrase</th>
+          <th style="border: 1px solid #e5e7eb; padding: 10px; text-align: left; font-weight: bold; font-size: 16px; width: 15%; color: white;">Pronunciation</th>
+          <th style="border: 1px solid #e5e7eb; padding: 10px; text-align: left; font-weight: bold; font-size: 16px; width: 20%; color: white;">French Translation</th>
+          <th style="border: 1px solid #e5e7eb; padding: 10px; text-align: left; font-weight: bold; font-size: 16px; width: 40%; color: white;">Example Sentence</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px; font-weight: bold; color: #1e293b;">salary</td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px;"><div onclick="document.getElementById('audio-salary').play()" style="display: inline-block; background: linear-gradient(135deg, #ba3627 0%, #9a2d21 100%); color: white; padding: 4px 12px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; box-shadow: 0 2px 4px rgba(186,54,39,0.3); transition: transform 0.1s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">🔊 Listen</div><audio id="audio-salary" preload="auto"><source src="/vocab-audio/money-vocab-audio/salary.mp3" type="audio/mpeg"></audio></td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px; font-style: italic; color: #64748b;">salaire</td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px;">Her annual salary increased after the promotion.</td>
+        </tr>
+        <tr style="background: #e8eaf6;">
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px; font-weight: bold; color: #1e293b;">overtime</td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px;"><div onclick="document.getElementById('audio-overtime').play()" style="display: inline-block; background: linear-gradient(135deg, #ba3627 0%, #9a2d21 100%); color: white; padding: 4px 12px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; box-shadow: 0 2px 4px rgba(186,54,39,0.3); transition: transform 0.1s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">🔊 Listen</div><audio id="audio-overtime" preload="auto"><source src="/vocab-audio/money-vocab-audio/overtime.mp3" type="audio/mpeg"></audio></td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px; font-style: italic; color: #64748b;">heures supplémentaires</td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px;">Employees receive a higher rate for overtime on public holidays.</td>
+        </tr>
+        <tr>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px; font-weight: bold; color: #1e293b;">remuneration</td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px;"><div onclick="document.getElementById('audio-remuneration').play()" style="display: inline-block; background: linear-gradient(135deg, #ba3627 0%, #9a2d21 100%); color: white; padding: 4px 12px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; box-shadow: 0 2px 4px rgba(186,54,39,0.3); transition: transform 0.1s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">🔊 Listen</div><audio id="audio-remuneration" preload="auto"><source src="/vocab-audio/money-vocab-audio/remuneration.mp3" type="audio/mpeg"></audio></td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px; font-style: italic; color: #64748b;">rémunération</td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px;">The remuneration package includes a company car and health insurance.</td>
+        </tr>
+        <tr style="background: #e8eaf6;">
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px; font-weight: bold; color: #1e293b;">compensation</td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px;"><div onclick="document.getElementById('audio-compensation').play()" style="display: inline-block; background: linear-gradient(135deg, #ba3627 0%, #9a2d21 100%); color: white; padding: 4px 12px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; box-shadow: 0 2px 4px rgba(186,54,39,0.3); transition: transform 0.1s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">🔊 Listen</div><audio id="audio-compensation" preload="auto"><source src="/vocab-audio/money-vocab-audio/compensation.mp3" type="audio/mpeg"></audio></td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px; font-style: italic; color: #64748b;">compensation / indemnisation</td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px;">The company offered compensation to customers affected by the error.</td>
+        </tr>
+        <tr>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px; font-weight: bold; color: #1e293b;">pension</td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px;"><div onclick="document.getElementById('audio-pension').play()" style="display: inline-block; background: linear-gradient(135deg, #ba3627 0%, #9a2d21 100%); color: white; padding: 4px 12px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; box-shadow: 0 2px 4px rgba(186,54,39,0.3); transition: transform 0.1s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">🔊 Listen</div><audio id="audio-pension" preload="auto"><source src="/vocab-audio/money-vocab-audio/pension.mp3" type="audio/mpeg"></audio></td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px; font-style: italic; color: #64748b;">retraite / pension</td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px;">He contributes to a private pension plan every month.</td>
+        </tr>
+        <tr style="background: #e8eaf6;">
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px; font-weight: bold; color: #1e293b;">commission</td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px;"><div onclick="document.getElementById('audio-commission').play()" style="display: inline-block; background: linear-gradient(135deg, #ba3627 0%, #9a2d21 100%); color: white; padding: 4px 12px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; box-shadow: 0 2px 4px rgba(186,54,39,0.3); transition: transform 0.1s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">🔊 Listen</div><audio id="audio-commission" preload="auto"><source src="/vocab-audio/money-vocab-audio/commission.mp3" type="audio/mpeg"></audio></td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px; font-style: italic; color: #64748b;">commission</td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px;">She earns a 5% commission on each sale she closes.</td>
+        </tr>
+        <tr>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px; font-weight: bold; color: #1e293b;">mortgage</td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px;"><div onclick="document.getElementById('audio-mortgage').play()" style="display: inline-block; background: linear-gradient(135deg, #ba3627 0%, #9a2d21 100%); color: white; padding: 4px 12px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; box-shadow: 0 2px 4px rgba(186,54,39,0.3); transition: transform 0.1s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">🔊 Listen</div><audio id="audio-mortgage" preload="auto"><source src="/vocab-audio/money-vocab-audio/mortgage.mp3" type="audio/mpeg"></audio></td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px; font-style: italic; color: #64748b;">emprunt immobilier / hypothèque</td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px;">They are paying off a 25-year mortgage on their house.</td>
+        </tr>
+        <tr style="background: #e8eaf6;">
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px; font-weight: bold; color: #1e293b;">share options</td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px;"><div onclick="document.getElementById('audio-share-options').play()" style="display: inline-block; background: linear-gradient(135deg, #ba3627 0%, #9a2d21 100%); color: white; padding: 4px 12px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; box-shadow: 0 2px 4px rgba(186,54,39,0.3); transition: transform 0.1s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">🔊 Listen</div><audio id="audio-share-options" preload="auto"><source src="/vocab-audio/money-vocab-audio/share options.mp3" type="audio/mpeg"></audio></td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px; font-style: italic; color: #64748b;">stock-options / options sur actions</td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px;">Executives were granted share options as an incentive.</td>
+        </tr>
+        <tr>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px; font-weight: bold; color: #1e293b;">bonus</td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px;"><div onclick="document.getElementById('audio-bonus').play()" style="display: inline-block; background: linear-gradient(135deg, #ba3627 0%, #9a2d21 100%); color: white; padding: 4px 12px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; box-shadow: 0 2px 4px rgba(186,54,39,0.3); transition: transform 0.1s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">🔊 Listen</div><audio id="audio-bonus" preload="auto"><source src="/vocab-audio/money-vocab-audio/bonus.mp3" type="audio/mpeg"></audio></td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px; font-style: italic; color: #64748b;">prime</td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px;">The team received a year-end bonus for exceeding their targets.</td>
+        </tr>
+        <tr style="background: #e8eaf6;">
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px; font-weight: bold; color: #1e293b;">sales</td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px;"><div onclick="document.getElementById('audio-sales').play()" style="display: inline-block; background: linear-gradient(135deg, #ba3627 0%, #9a2d21 100%); color: white; padding: 4px 12px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; box-shadow: 0 2px 4px rgba(186,54,39,0.3); transition: transform 0.1s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">🔊 Listen</div><audio id="audio-sales" preload="auto"><source src="/vocab-audio/money-vocab-audio/sales.mp3" type="audio/mpeg"></audio></td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px; font-style: italic; color: #64748b;">ventes</td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px;">Sales fell by 8% during the summer quarter.</td>
+        </tr>
+        <tr>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px; font-weight: bold; color: #1e293b;">target</td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px;"><div onclick="document.getElementById('audio-target').play()" style="display: inline-block; background: linear-gradient(135deg, #ba3627 0%, #9a2d21 100%); color: white; padding: 4px 12px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; box-shadow: 0 2px 4px rgba(186,54,39,0.3); transition: transform 0.1s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">🔊 Listen</div><audio id="audio-target" preload="auto"><source src="/vocab-audio/money-vocab-audio/target.mp3" type="audio/mpeg"></audio></td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px; font-style: italic; color: #64748b;">objectif</td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px;">The sales director set a challenging revenue target for the team.</td>
+        </tr>
+        <tr style="background: #e8eaf6;">
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px; font-weight: bold; color: #1e293b;">turnover</td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px;"><div onclick="document.getElementById('audio-turnover').play()" style="display: inline-block; background: linear-gradient(135deg, #ba3627 0%, #9a2d21 100%); color: white; padding: 4px 12px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; box-shadow: 0 2px 4px rgba(186,54,39,0.3); transition: transform 0.1s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">🔊 Listen</div><audio id="audio-turnover" preload="auto"><source src="/vocab-audio/money-vocab-audio/turnover.mp3" type="audio/mpeg"></audio></td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px; font-style: italic; color: #64748b;">chiffre d'affaires</td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px;">The firm's turnover has grown steadily over the past five years.</td>
+        </tr>
+        <tr>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px; font-weight: bold; color: #1e293b;">forecast</td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px;"><div onclick="document.getElementById('audio-forecast').play()" style="display: inline-block; background: linear-gradient(135deg, #ba3627 0%, #9a2d21 100%); color: white; padding: 4px 12px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; box-shadow: 0 2px 4px rgba(186,54,39,0.3); transition: transform 0.1s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">🔊 Listen</div><audio id="audio-forecast" preload="auto"><source src="/vocab-audio/money-vocab-audio/forecast.mp3" type="audio/mpeg"></audio></td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px; font-style: italic; color: #64748b;">prévisions</td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px;">The finance team published an optimistic sales forecast for next year.</td>
+        </tr>
+        <tr style="background: #e8eaf6;">
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px; font-weight: bold; color: #1e293b;">budget</td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px;"><div onclick="document.getElementById('audio-budget').play()" style="display: inline-block; background: linear-gradient(135deg, #ba3627 0%, #9a2d21 100%); color: white; padding: 4px 12px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; box-shadow: 0 2px 4px rgba(186,54,39,0.3); transition: transform 0.1s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">🔊 Listen</div><audio id="audio-budget" preload="auto"><source src="/vocab-audio/money-vocab-audio/budget.mp3" type="audio/mpeg"></audio></td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px; font-style: italic; color: #64748b;">budget</td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px;">Marketing must operate within a tight budget this quarter.</td>
+        </tr>
+        <tr>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px; font-weight: bold; color: #1e293b;">growth</td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px;"><div onclick="document.getElementById('audio-growth').play()" style="display: inline-block; background: linear-gradient(135deg, #ba3627 0%, #9a2d21 100%); color: white; padding: 4px 12px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; box-shadow: 0 2px 4px rgba(186,54,39,0.3); transition: transform 0.1s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">🔊 Listen</div><audio id="audio-growth" preload="auto"><source src="/vocab-audio/money-vocab-audio/growth.mp3" type="audio/mpeg"></audio></td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px; font-style: italic; color: #64748b;">croissance</td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px;">The company reported strong growth in overseas markets.</td>
+        </tr>
+        <tr style="background: #e8eaf6;">
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px; font-weight: bold; color: #1e293b;">expenses</td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px;"><div onclick="document.getElementById('audio-expenses').play()" style="display: inline-block; background: linear-gradient(135deg, #ba3627 0%, #9a2d21 100%); color: white; padding: 4px 12px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; box-shadow: 0 2px 4px rgba(186,54,39,0.3); transition: transform 0.1s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">🔊 Listen</div><audio id="audio-expenses" preload="auto"><source src="/vocab-audio/money-vocab-audio/expenses.mp3" type="audio/mpeg"></audio></td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px; font-style: italic; color: #64748b;">frais / dépenses</td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px;">Business travel expenses must be approved in advance.</td>
+        </tr>
+        <tr>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px; font-weight: bold; color: #1e293b;">fixed costs</td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px;"><div onclick="document.getElementById('audio-fixed-costs').play()" style="display: inline-block; background: linear-gradient(135deg, #ba3627 0%, #9a2d21 100%); color: white; padding: 4px 12px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; box-shadow: 0 2px 4px rgba(186,54,39,0.3); transition: transform 0.1s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">🔊 Listen</div><audio id="audio-fixed-costs" preload="auto"><source src="/vocab-audio/money-vocab-audio/fixed costs.mp3" type="audio/mpeg"></audio></td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px; font-style: italic; color: #64748b;">coûts fixes</td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px;">Rent and salaries are examples of fixed costs.</td>
+        </tr>
+        <tr style="background: #e8eaf6;">
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px; font-weight: bold; color: #1e293b;">variable costs</td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px;"><div onclick="document.getElementById('audio-variable-costs').play()" style="display: inline-block; background: linear-gradient(135deg, #ba3627 0%, #9a2d21 100%); color: white; padding: 4px 12px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; box-shadow: 0 2px 4px rgba(186,54,39,0.3); transition: transform 0.1s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">🔊 Listen</div><audio id="audio-variable-costs" preload="auto"><source src="/vocab-audio/money-vocab-audio/variable costs.mp3" type="audio/mpeg"></audio></td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px; font-style: italic; color: #64748b;">coûts variables</td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px;">Variable costs increase when production volumes rise.</td>
+        </tr>
+        <tr>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px; font-weight: bold; color: #1e293b;">overheads</td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px;"><div onclick="document.getElementById('audio-overheads').play()" style="display: inline-block; background: linear-gradient(135deg, #ba3627 0%, #9a2d21 100%); color: white; padding: 4px 12px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; box-shadow: 0 2px 4px rgba(186,54,39,0.3); transition: transform 0.1s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">🔊 Listen</div><audio id="audio-overheads" preload="auto"><source src="/vocab-audio/money-vocab-audio/overheads.mp3" type="audio/mpeg"></audio></td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px; font-style: italic; color: #64748b;">frais généraux</td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px;">By moving into a new office with shared facilities, the company reduced overheads.</td>
+        </tr>
+        <tr style="background: #e8eaf6;">
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px; font-weight: bold; color: #1e293b;">margin</td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px;"><div onclick="document.getElementById('audio-margin').play()" style="display: inline-block; background: linear-gradient(135deg, #ba3627 0%, #9a2d21 100%); color: white; padding: 4px 12px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; box-shadow: 0 2px 4px rgba(186,54,39,0.3); transition: transform 0.1s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">🔊 Listen</div><audio id="audio-margin" preload="auto"><source src="/vocab-audio/money-vocab-audio/margin.mp3" type="audio/mpeg"></audio></td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px; font-style: italic; color: #64748b;">marge (bénéficiaire)</td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px;">A slim profit margin left little room for price cuts.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- PAGE 2: Gap Fill Exercise -->
+<div style="max-width: 800px; margin: 0 auto; padding: 20px; font-family: Arial, sans-serif; line-height: 1.5; color: #333; background: linear-gradient(to bottom, #f5e6e4, #ffffff);" class="page-break">
+
+  <div style="margin-bottom: 30px; padding: 20px; background: white; border-radius: 10px; box-shadow: 0 2px 4px rgba(0,0,0,0.05);" class="keep-together">
+    <h2 style="font-size: 20px; font-weight: bold; margin-bottom: 15px; color: #ba3627; border-bottom: 3px solid #ba3627; padding-bottom: 8px;">Part 2: Gap Fill Exercise</h2>
+    <p style="font-size: 16px; margin-bottom: 15px; color: #475569;">Drag the word cards from the <strong>scrollable word bank on the right</strong> into the gaps in each sentence, or click a card and then click a gap. Use the <strong>Check answers</strong> button when you are ready.</p>
+
+    <div data-vocab-gap-fill-mount="true" data-vocab-audio-dir="/vocab-audio/money-vocab-audio/" style="margin-top: 8px;">
+      <div class="vocab-series-gap-data" hidden aria-hidden="true">{
+  "sentences": [
+    { "number": 1, "parts": ["The union argued that workers' ", { "slot": "gapfill-q1", "answers": ["remuneration"] }, " had not kept pace with inflation."] },
+    { "number": 2, "parts": ["Loan repayments are classified as ", { "slot": "gapfill-q2", "answers": ["fixed costs"] }, " because they do not change with sales volumes."] },
+    { "number": 3, "parts": ["The contract limits ", { "slot": "gapfill-q3", "answers": ["overtime"] }, " to a maximum of ten hours per week."] },
+    { "number": 4, "parts": ["Wholesalers often operate on a narrow ", { "slot": "gapfill-q4", "answers": ["margin"] }, " of only a few per cent per item."] },
+    { "number": 5, "parts": ["After forty years with the firm, he retired on a generous company ", { "slot": "gapfill-q5", "answers": ["pension"] }, "."] },
+    { "number": 6, "parts": ["Weak consumer confidence led to a sharp fall in retail ", { "slot": "gapfill-q6", "answers": ["sales"] }, " in October."] },
+    { "number": 7, "parts": ["The bank refused to approve the ", { "slot": "gapfill-q7", "answers": ["mortgage"] }, " until the couple improved their credit score."] },
+    { "number": 8, "parts": ["The regional manager questioned whether the new sales ", { "slot": "gapfill-q8", "answers": ["target"] }, " of €5 million was realistic."] },
+    { "number": 9, "parts": ["The airline paid generous ", { "slot": "gapfill-q9", "answers": ["compensation"] }, " to passengers whose flights had been cancelled."] },
+    { "number": 10, "parts": ["Electricity used in the factory is a ", { "slot": "gapfill-q10", "answers": ["variable cost"] }, " that fluctuates with production levels."] },
+    { "number": 11, "parts": ["After the merger, every employee received a one-off ", { "slot": "gapfill-q11", "answers": ["bonus"] }, " of €500."] },
+    { "number": 12, "parts": ["Despite losing a major contract, the shop's ", { "slot": "gapfill-q12", "answers": ["turnover"] }, " remained above €1 million."] },
+    { "number": 13, "parts": ["The project was halted because it had already exceeded its allocated ", { "slot": "gapfill-q13", "answers": ["budget"] }, "."] },
+    { "number": 14, "parts": ["As part of the deal, the CEO received additional ", { "slot": "gapfill-q14", "answers": ["share options"] }, " in the newly listed company."] },
+    { "number": 15, "parts": ["Real estate agents typically receive a ", { "slot": "gapfill-q15", "answers": ["commission"] }, " when a property sale is completed."] },
+    { "number": 16, "parts": ["The board criticised the previous sales ", { "slot": "gapfill-q16", "answers": ["forecast"] }, " because it was far too optimistic."] },
+    { "number": 17, "parts": ["The start-up achieved rapid ", { "slot": "gapfill-q17", "answers": ["growth"] }, " by expanding into three new markets simultaneously."] },
+    { "number": 18, "parts": ["Negotiations focused on a higher base ", { "slot": "gapfill-q18", "answers": ["salary"] }, " before any benefits were discussed."] },
+    { "number": 19, "parts": ["Managers questioned whether the hotel bill was a legitimate business ", { "slot": "gapfill-q19", "answers": ["expense"] }, "."] },
+    { "number": 20, "parts": ["The accountant reviewed the monthly ", { "slot": "gapfill-q20", "answers": ["overheads"] }, " to find areas where spending could be cut."] }
+  ]
+}</div>
+    </div>
+  </div>
+</div>
+
+<!-- PAGE 3: Discussion Questions -->
+<div style="max-width: 800px; margin: 0 auto; padding: 20px; font-family: Arial, sans-serif; line-height: 1.5; color: #333; background: linear-gradient(to bottom, #e8eaf6, #ffffff);" class="page-break">
+
+  <div style="margin-bottom: 30px; padding: 20px; background: white; border-radius: 10px; box-shadow: 0 2px 4px rgba(0,0,0,0.05);" class="keep-together">
+    <h2 style="font-size: 20px; font-weight: bold; margin-bottom: 15px; color: #38438f; border-bottom: 3px solid #38438f; padding-bottom: 8px;">Part 3: Discussion Questions</h2>
+    <p style="font-size: 16px; margin-bottom: 15px; color: #475569;">Use the vocabulary from this worksheet to answer the following questions.</p>
+
+    <div style="background: linear-gradient(135deg, #e8eaf6 0%, #c5cae9 100%); padding: 20px; border-radius: 10px; border-left: 5px solid #38438f; box-shadow: 0 2px 4px rgba(56,67,143,0.1);">
+      <ol style="padding-left: 25px; font-size: 16px; list-style-type: decimal; margin: 0;">
+        <li style="margin-bottom: 15px; padding: 10px; background: white; border-radius: 6px; box-shadow: 0 1px 2px rgba(0,0,0,0.05);">What factors should employees consider when comparing salary, bonus, and pension benefits in a job offer?</li>
+        <li style="margin-bottom: 15px; padding: 10px; background: white; border-radius: 6px; box-shadow: 0 1px 2px rgba(0,0,0,0.05);">How can a company balance growth targets with controlling expenses and overheads?</li>
+        <li style="margin-bottom: 15px; padding: 10px; background: white; border-radius: 6px; box-shadow: 0 1px 2px rgba(0,0,0,0.05);">Why might a business choose to offer share options instead of a higher base salary?</li>
+        <li style="margin-bottom: 15px; padding: 10px; background: white; border-radius: 6px; box-shadow: 0 1px 2px rgba(0,0,0,0.05);">What is the difference between fixed costs and variable costs? Give examples from a business you know.</li>
+        <li style="margin-bottom: 15px; padding: 10px; background: white; border-radius: 6px; box-shadow: 0 1px 2px rgba(0,0,0,0.05);">Do you think sales staff should be paid mainly through commission, a fixed salary, or a mix? Why?</li>
+        <li style="margin-bottom: 0; padding: 10px; background: white; border-radius: 6px; box-shadow: 0 1px 2px rgba(0,0,0,0.05);">What were you taught about managing money at school? What do you think schools should teach about this topic?</li>
+      </ol>
+    </div>
+  </div>
+</div>
+
+<!-- PAGE 4: Answer Key -->
+<div style="max-width: 800px; margin: 0 auto; padding: 20px; font-family: Arial, sans-serif; line-height: 1.5; color: #333; background: linear-gradient(to bottom, #e8eaf6, #ffffff);" class="page-break">
+
+  <div style="margin-top: 30px; padding-top: 20px; border-top: 3px solid #38438f;" class="no-break">
+    <h2 style="font-size: 22px; font-weight: bold; margin-bottom: 20px; color: white; text-align: center; padding: 15px; background: linear-gradient(135deg, #38438f 0%, #2d3569 100%); border-radius: 10px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">📝 Answer Key</h2>
+
+    <div style="margin-bottom: 20px; padding: 20px; background: white; border-radius: 10px; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
+      <h3 style="font-size: 22px; font-weight: bold; margin-bottom: 15px; color: #ba3627; border-bottom: 2px solid #ba3627; padding-bottom: 6px;">Part 2: Gap Fill Exercise</h3>
+      <ol style="padding-left: 25px; font-size: 16px; list-style-type: decimal;">
+        <li style="margin-bottom: 10px; padding: 8px; background: #f5e6e4; border-radius: 4px;">The union argued that workers' <strong style="color: #38438f;">remuneration</strong> had not kept pace with inflation.</li>
+        <li style="margin-bottom: 10px; padding: 8px; background: #f5e6e4; border-radius: 4px;">Loan repayments are classified as <strong style="color: #38438f;">fixed costs</strong> because they do not change with sales volumes.</li>
+        <li style="margin-bottom: 10px; padding: 8px; background: #f5e6e4; border-radius: 4px;">The contract limits <strong style="color: #38438f;">overtime</strong> to a maximum of ten hours per week.</li>
+        <li style="margin-bottom: 10px; padding: 8px; background: #f5e6e4; border-radius: 4px;">Wholesalers often operate on a narrow <strong style="color: #38438f;">margin</strong> of only a few per cent per item.</li>
+        <li style="margin-bottom: 10px; padding: 8px; background: #f5e6e4; border-radius: 4px;">After forty years with the firm, he retired on a generous company <strong style="color: #38438f;">pension</strong>.</li>
+        <li style="margin-bottom: 10px; padding: 8px; background: #f5e6e4; border-radius: 4px;">Weak consumer confidence led to a sharp fall in retail <strong style="color: #38438f;">sales</strong> in October.</li>
+        <li style="margin-bottom: 10px; padding: 8px; background: #f5e6e4; border-radius: 4px;">The bank refused to approve the <strong style="color: #38438f;">mortgage</strong> until the couple improved their credit score.</li>
+        <li style="margin-bottom: 10px; padding: 8px; background: #f5e6e4; border-radius: 4px;">The regional manager questioned whether the new sales <strong style="color: #38438f;">target</strong> of €5 million was realistic.</li>
+        <li style="margin-bottom: 10px; padding: 8px; background: #f5e6e4; border-radius: 4px;">The airline paid generous <strong style="color: #38438f;">compensation</strong> to passengers whose flights had been cancelled.</li>
+        <li style="margin-bottom: 10px; padding: 8px; background: #f5e6e4; border-radius: 4px;">Electricity used in the factory is a <strong style="color: #38438f;">variable cost</strong> that fluctuates with production levels.</li>
+        <li style="margin-bottom: 10px; padding: 8px; background: #f5e6e4; border-radius: 4px;">After the merger, every employee received a one-off <strong style="color: #38438f;">bonus</strong> of €500.</li>
+        <li style="margin-bottom: 10px; padding: 8px; background: #f5e6e4; border-radius: 4px;">Despite losing a major contract, the shop's <strong style="color: #38438f;">turnover</strong> remained above €1 million.</li>
+        <li style="margin-bottom: 10px; padding: 8px; background: #f5e6e4; border-radius: 4px;">The project was halted because it had already exceeded its allocated <strong style="color: #38438f;">budget</strong>.</li>
+        <li style="margin-bottom: 10px; padding: 8px; background: #f5e6e4; border-radius: 4px;">As part of the deal, the CEO received additional <strong style="color: #38438f;">share options</strong> in the newly listed company.</li>
+        <li style="margin-bottom: 10px; padding: 8px; background: #f5e6e4; border-radius: 4px;">Real estate agents typically receive a <strong style="color: #38438f;">commission</strong> when a property sale is completed.</li>
+        <li style="margin-bottom: 10px; padding: 8px; background: #f5e6e4; border-radius: 4px;">The board criticised the previous sales <strong style="color: #38438f;">forecast</strong> because it was far too optimistic.</li>
+        <li style="margin-bottom: 10px; padding: 8px; background: #f5e6e4; border-radius: 4px;">The start-up achieved rapid <strong style="color: #38438f;">growth</strong> by expanding into three new markets simultaneously.</li>
+        <li style="margin-bottom: 10px; padding: 8px; background: #f5e6e4; border-radius: 4px;">Negotiations focused on a higher base <strong style="color: #38438f;">salary</strong> before any benefits were discussed.</li>
+        <li style="margin-bottom: 10px; padding: 8px; background: #f5e6e4; border-radius: 4px;">Managers questioned whether the hotel bill was a legitimate business <strong style="color: #38438f;">expense</strong>.</li>
+        <li style="margin-bottom: 10px; padding: 8px; background: #f5e6e4; border-radius: 4px;">The accountant reviewed the monthly <strong style="color: #38438f;">overheads</strong> to find areas where spending could be cut.</li>
+      </ol>
+    </div>
+  </div>
+</div>
