@@ -33,9 +33,9 @@ async function main() {
   const courses = [
     { name: 'TOEIC® Pack - Progress', duration: 15 },
     { name: 'TOEIC® Pack - Perform', duration: 20 },
-    { name: 'PRO Pack - Launch', duration: 20 },
-    { name: 'PRO Pack - Scale', duration: 40 },
-    { name: 'PRO Pack - Lead', duration: 60 },
+    { name: 'PRO Pack - Launch', duration: 10 },
+    { name: 'PRO Pack - Scale', duration: 20 },
+    { name: 'PRO Pack - Lead', duration: 40 },
     { name: 'Travel English', duration: 10 },
     { name: 'Speak English with Confidence', duration: 10 },
     { name: 'Serve and Sell in English', duration: 10 }

@@ -59,9 +59,9 @@ interface PresetCourseOption {
 const PRESET_COURSE_OPTIONS: PresetCourseOption[] = [
   { id: 'preset_toeic_progress_15', name: 'TOEIC® Pack - Progress', duration: 15 },
   { id: 'preset_toeic_perform_20', name: 'TOEIC® Pack - Perform', duration: 20 },
-  { id: 'preset_pro_launch_20', name: 'PRO Pack - Launch', duration: 20 },
-  { id: 'preset_pro_scale_40', name: 'PRO Pack - Scale', duration: 40 },
-  { id: 'preset_pro_lead_60', name: 'PRO Pack - Lead', duration: 60 },
+  { id: 'preset_pro_launch_10', name: 'PRO Pack - Launch', duration: 10 },
+  { id: 'preset_pro_scale_20', name: 'PRO Pack - Scale', duration: 20 },
+  { id: 'preset_pro_lead_40', name: 'PRO Pack - Lead', duration: 40 },
   { id: 'preset_travel_english', name: 'Travel English', duration: 10 },
   { id: 'preset_speak_confidence', name: 'Speak English with Confidence', duration: 10 },
   { id: 'preset_serve_sell', name: 'Serve and Sell in English', duration: 10 },
