@@ -34,7 +34,8 @@ const WORDS: ReadonlyArray<{ word: string; tts_text?: string }> = [
   { word: 'satisfaction' },
   { word: 'complaint' },
   { word: 'to handle' },
-  { word: 'to resolve' },
+  /** Comma pause avoids eliding the final consonant in "resolve" */
+  { word: 'to resolve', tts_text: 'to, resolve' },
   { word: 'query' },
   { word: 'feedback' },
   { word: 'after-sales service' },
@@ -48,7 +49,8 @@ const WORDS: ReadonlyArray<{ word: string; tts_text?: string }> = [
   { word: 'retention' },
   { word: 'courteous' },
   { word: 'escalation' },
-  { word: 'service standards' },
+  /** Comma pause keeps the plural "-s" on "standards" audible */
+  { word: 'service standards', tts_text: 'service, standards' },
 ]
 
 function sleep(ms: number) {
