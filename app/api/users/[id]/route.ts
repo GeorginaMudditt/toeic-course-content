@@ -20,13 +20,18 @@ export async function PATCH(
     const body = await request.json()
     const rawStatus = body.studentLifecycleStatus
     const rawDashboardFolderArchived = body.dashboardFolderArchived
+    const rawVocabularyProgressArchived = body.vocabularyProgressArchived
 
     const hasStatusUpdate = rawStatus !== undefined
     const hasDashboardArchiveUpdate = rawDashboardFolderArchived !== undefined
+    const hasVocabularyProgressArchiveUpdate = rawVocabularyProgressArchived !== undefined
 
-    if (!hasStatusUpdate && !hasDashboardArchiveUpdate) {
+    if (!hasStatusUpdate && !hasDashboardArchiveUpdate && !hasVocabularyProgressArchiveUpdate) {
       return NextResponse.json(
-        { error: 'studentLifecycleStatus or dashboardFolderArchived is required' },
+        {
+          error:
+            'studentLifecycleStatus, dashboardFolderArchived, or vocabularyProgressArchived is required',
+        },
         { status: 400 }
       )
     }
@@ -52,6 +57,13 @@ export async function PATCH(
       updatePayload.dashboardFolderArchived = rawDashboardFolderArchived
     }
 
+    if (hasVocabularyProgressArchiveUpdate) {
+      if (typeof rawVocabularyProgressArchived !== 'boolean') {
+        return NextResponse.json({ error: 'Invalid vocabularyProgressArchived' }, { status: 400 })
+      }
+      updatePayload.vocabularyProgressArchived = rawVocabularyProgressArchived
+    }
+
     const { data: userData, error: userError } = await supabaseServer
       .from('User')
       .select('id, role')
@@ -67,7 +79,7 @@ export async function PATCH(
       .from('User')
       .update(updatePayload)
       .eq('id', params.id)
-      .select('id, email, name, studentLifecycleStatus, dashboardFolderArchived')
+      .select('id, email, name, studentLifecycleStatus, dashboardFolderArchived, vocabularyProgressArchived')
       .single()
 
     if (updateError) {
