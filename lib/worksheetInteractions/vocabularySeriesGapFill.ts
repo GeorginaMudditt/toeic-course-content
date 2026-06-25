@@ -19,7 +19,7 @@ export type VocabGapConfig = {
   sentences: VocabGapSentence[]
 }
 
-const CHIP_COLORS = ['#38438f', '#ba3627', '#5c6bc0', '#c62828', '#2d3569', '#9a2d21'] as const
+const BRIZZLE_BLUE = '#38438f'
 
 function shuffle<T>(arr: T[]): T[] {
   const a = arr.slice()
@@ -128,14 +128,13 @@ export function mountVocabularySeriesGapFill(root: HTMLElement): () => void {
     return null
   }
 
-  function makeChip(word: string, colorIndex: number): HTMLElement {
-    const color = CHIP_COLORS[colorIndex % CHIP_COLORS.length]!
+  function makeChip(word: string): HTMLElement {
     const chip = document.createElement('div')
     chip.className = 'vsg-chip'
     chip.dataset.word = word
     chip.setAttribute('aria-label', word)
     chip.setAttribute('draggable', 'true')
-    chip.style.cssText = `display: inline-flex; align-items: center; gap: 4px; font: 600 13px Arial, sans-serif; padding: 8px 12px; border-radius: 8px; background: ${color}; color: #fff; cursor: grab; box-shadow: 0 2px 4px rgba(0,0,0,0.15); user-select: none; touch-action: manipulation; text-align: center; line-height: 1.25;`
+    chip.style.cssText = `display: inline-flex; align-items: center; gap: 4px; font: 600 13px Arial, sans-serif; padding: 8px 12px; border-radius: 8px; background: ${BRIZZLE_BLUE}; color: #fff; cursor: grab; box-shadow: 0 2px 4px rgba(0,0,0,0.15); user-select: none; touch-action: manipulation; text-align: center; line-height: 1.25;`
     chip.textContent = word
 
     function onDragStart(e: DragEvent) {
@@ -352,8 +351,8 @@ export function mountVocabularySeriesGapFill(root: HTMLElement): () => void {
     fadeBottom.setAttribute('aria-hidden', 'true')
     bankScrollWrap.appendChild(fadeBottom)
 
-    shuffle(wordBank).forEach((word, i) => {
-      bankEl!.appendChild(makeChip(word, i))
+    shuffle(wordBank).forEach((word) => {
+      bankEl!.appendChild(makeChip(word))
     })
 
     function updateScrollFades() {
