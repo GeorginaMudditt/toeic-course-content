@@ -1,0 +1,24 @@
+{
+  "sentences": [
+    { "number": 1, "parts": ["Please check your ", { "slot": "gapfill-q1", "answers": ["inbox"] }, " because I sent you the file this morning."] },
+    { "number": 2, "parts": ["During the video conference, her ", { "slot": "gapfill-q2", "answers": ["microphone"] }, " was not working properly so we couldn't hear everything."] },
+    { "number": 3, "parts": ["I left a message on his ", { "slot": "gapfill-q3", "answers": ["voicemail"] }, " because he didn't answer."] },
+    { "number": 4, "parts": ["Could you ", { "slot": "gapfill-q4", "answers": ["put"] }, " me ", { "slot": "gapfill-q5", "answers": ["through"] }, " to the customer service department?"] },
+    { "number": 5, "parts": ["I was picking up some cruise ", { "slot": "gapfill-q6", "answers": ["brochure"] }, " for my mother."] },
+    { "number": 6, "parts": ["This mobile is very old; it's not a ", { "slot": "gapfill-q7", "answers": ["smartphone"] }, ", just a basic model."] },
+    { "number": 7, "parts": ["The ", { "slot": "gapfill-q8", "answers": ["call centre"] }, " in India deals with about 90% of customer enquiries."] },
+    { "number": 8, "parts": ["When you finish your call, don't forget to ", { "slot": "gapfill-q9", "answers": ["hang up"] }, "."] },
+    { "number": 9, "parts": ["Please write a short and ", { "slot": "gapfill-q10", "answers": ["concise"] }, " email to the client to explain the policy."] },
+    { "number": 10, "parts": ["I couldn't answer the phone at lunchtime, but I will ", { "slot": "gapfill-q11", "answers": ["call"] }, " them ", { "slot": "gapfill-q12", "answers": ["back"] }, " later today."] },
+    { "number": 11, "parts": ["He sent me the contract as an email ", { "slot": "gapfill-q13", "answers": ["attachment"] }, "."] },
+    { "number": 12, "parts": ["The office still has a ", { "slot": "gapfill-q14", "answers": ["landline"] }, " for official calls."] },
+    { "number": 13, "parts": ["If you can't see the link to the training course in your inbox, check in your ", { "slot": "gapfill-q15", "answers": ["junk mail"] }, " folder."] },
+    { "number": 14, "parts": ["She gave me her ", { "slot": "gapfill-q16", "answers": ["business card"] }, " so I could contact her again."] },
+    { "number": 15, "parts": ["The parcel arrived this morning thanks to a ", { "slot": "gapfill-q17", "answers": ["courier"] }, "."] },
+    { "number": 16, "parts": ["Try to use the correct level of ", { "slot": "gapfill-q18", "answers": ["formality"] }, " when writing to the mayor."] },
+    { "number": 17, "parts": ["I will ", { "slot": "gapfill-q19", "answers": ["forward"] }, " this email to the HR department."] },
+    { "number": 18, "parts": ["During the online lesson, please turn on your ", { "slot": "gapfill-q20", "answers": ["webcam"] }, "."] },
+    { "number": 19, "parts": ["If you need help, you can call the emergency ", { "slot": "gapfill-q21", "answers": ["helpline / hotline", "helpline", "hotline"] }, "."] },
+    { "number": 20, "parts": ["Use these ", { "slot": "gapfill-q22", "answers": ["keywords"] }, " to find the document on the website."] }
+  ]
+}

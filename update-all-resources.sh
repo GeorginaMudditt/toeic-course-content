@@ -61,9 +61,9 @@ npm run update:resource:supabase "Used to Be used to" "used-to-be-used-to-html.h
 
 # Vocabulary
 npm run update:resource:supabase "Jobs, People" "jobs-people-organisations-vocabulary-html.html"
-npm run update:resource:supabase "Presentations Vocabulary" "presentations-vocabulary-html.html"
 npm run update:resource:supabase "Telephoning and Writing" "telephoning-writing-vocabulary-html.html"
-npm run update:resource:supabase "Travel Vocabulary" "travel-vocabulary-html.html"
+npm run update:resource:supabase "Business travel" "travel-vocabulary-html.html"
+npm run update:resource:supabase "Customer Service" "customer-service-vocabulary-html.html"
 npm run update:resource:supabase "Natur'Evasion Vocabulary" "naturevasion-vocabulary-html.html"
 npm run update:resource:supabase "Vocabulary: Military and Marine" "military-marine-vocabulary-html.html"
 npm run update:resource:supabase "Vocabulary: Aircraft and Aviation" "aircraft-aviation-vocabulary-html.html"
@@ -77,7 +77,7 @@ npm run update:resource:supabase "Speaking: The Workplace" "speaking-the-workpla
 npm run update:resource:supabase "Speaking: Work-Life Balance" "speaking-work-life-balance-html.html"
 npm run update:resource:supabase "Speaking Workplace" "speaking-workplace-html.html"
 npm run update:resource:supabase "Meetings" "speaking-meetings-html.html"
-npm run update:resource:supabase "Presentations" "speaking-presentations-html.html"
+npm run update:resource:supabase "PRO Speaking: Presentations" "speaking-presentations-html.html"
 npm run update:resource:supabase "Argumentation" "speaking-argumentation-html.html"
 npm run update:resource:supabase "Speaking: Making Comparisons" "speaking-making-comparisons-html.html"
 npm run update:resource:supabase "Speaking: Your Future Career" "speaking-your-future-career-html.html"

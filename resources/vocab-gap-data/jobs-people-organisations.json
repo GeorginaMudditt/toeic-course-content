@@ -1,0 +1,24 @@
+{
+  "sentences": [
+    { "number": 1, "parts": ["After six months on a temporary contract, they offered her a ", { "slot": "gapfill-q1", "answers": ["permanent"] }, " position."] },
+    { "number": 2, "parts": ["The manager is ", { "slot": "gapfill-q2", "answers": ["responsible for"] }, " training all the new employees."] },
+    { "number": 3, "parts": ["In 2008 Mark Zuckerberg, ", { "slot": "gapfill-q3", "answers": ["founder"] }, " of Facebook, became the world's youngest self-made billionaire at the age of 23."] },
+    { "number": 4, "parts": ["His ", { "slot": "gapfill-q4", "answers": ["career path"] }, " began in sales and led to a position as commercial director."] },
+    { "number": 5, "parts": ["He has a ", { "slot": "gapfill-q5", "answers": ["full-time"] }, " job as an accountant, working from 9 to 5 every weekday."] },
+    { "number": 6, "parts": ["Factory workers often work in ", { "slot": "gapfill-q6", "answers": ["shifts"] }, ", covering mornings, afternoons, and nights."] },
+    { "number": 7, "parts": ["My ", { "slot": "gapfill-q7", "answers": ["commute"] }, " to work takes about 45 minutes each way by train."] },
+    { "number": 8, "parts": ["Many university students look for ", { "slot": "gapfill-q8", "answers": ["part-time"] }, " jobs in cafés or restaurants while they study."] },
+    { "number": 9, "parts": ["We need ", { "slot": "gapfill-q9", "answers": ["skilled"] }, " technicians who have experience with this equipment."] },
+    { "number": 10, "parts": ["Who is ", { "slot": "gapfill-q10", "answers": ["in charge of"] }, " the marketing department?"] },
+    { "number": 11, "parts": ["After university, most students hope to ", { "slot": "gapfill-q11", "answers": ["graduate"] }, " with good qualifications."] },
+    { "number": 12, "parts": ["Young professionals want to climb the ", { "slot": "gapfill-q12", "answers": ["career ladder"] }, " and reach senior positions."] },
+    { "number": 13, "parts": ["He received a ", { "slot": "gapfill-q13", "answers": ["promotion"] }, " and now earns a higher salary as a senior manager."] },
+    { "number": 14, "parts": ["The government is pushing to increase the ", { "slot": "gapfill-q14", "answers": ["retirement"] }, " age to 68."] },
+    { "number": 15, "parts": ["My nephew is looking for ", { "slot": "gapfill-q15", "answers": ["temporary"] }, " work during the summer holidays."] },
+    { "number": 16, "parts": ["Following her ", { "slot": "gapfill-q16", "answers": ["redundancy"] }, ", she retrained as a product manager."] },
+    { "number": 17, "parts": ["Many journalists and photographers work as ", { "slot": "gapfill-q17", "answers": ["freelance"] }, " professionals."] },
+    { "number": 18, "parts": ["The company offers excellent ", { "slot": "gapfill-q18", "answers": ["training"] }, " opportunities for new employees."] },
+    { "number": 19, "parts": ["The ", { "slot": "gapfill-q19", "answers": ["board"] }, " meets once a month to discuss company strategy."] },
+    { "number": 20, "parts": ["An ", { "slot": "gapfill-q20", "answers": ["entrepreneur"] }, " takes risks to start and run their own business."] }
+  ]
+}

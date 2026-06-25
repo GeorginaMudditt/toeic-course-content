@@ -1,0 +1,352 @@
+<!-- PAGE 1: Vocabulary List -->
+<style>
+  @media print {
+    @page { margin: 1.5cm; }
+    body { margin: 0; padding: 0; }
+    .page-break { page-break-before: always; }
+    .no-break { page-break-inside: avoid; break-inside: avoid; }
+    .keep-together { page-break-inside: avoid; break-inside: avoid; }
+    h2, h3 { page-break-after: avoid; break-after: avoid; }
+    table { page-break-inside: avoid; break-inside: avoid; }
+    ul, ol { page-break-inside: avoid; break-inside: avoid; }
+  }
+
+  @keyframes vsg-shake {
+    0%, 100% { transform: translateX(0); }
+    20%, 60% { transform: translateX(-6px); }
+    40%, 80% { transform: translateX(6px); }
+  }
+  .vsg-shake { animation: vsg-shake 0.45s ease; }
+  .vsg-slot-correct {
+    border: 3px solid #15803d !important;
+    background: #ecfdf5 !important;
+    box-shadow: inset 0 0 0 1px rgba(21, 128, 61, 0.15);
+  }
+  .vsg-slot-wrong { border-color: #b91c1c !important; background: #fee2e2 !important; }
+  .vsg-layout {
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+    align-items: flex-start;
+  }
+  .vsg-sentences-col { flex: 1; min-width: 0; }
+  .vsg-bank-col {
+    width: min(260px, 100%);
+    flex-shrink: 0;
+    position: sticky;
+    top: 12px;
+    padding: 14px;
+    border-radius: 10px;
+    background: linear-gradient(135deg, #e8eaf6 0%, #f5f6fc 100%);
+    border: 1px solid #c5cae9;
+    box-shadow: 0 2px 6px rgba(56, 67, 143, 0.1);
+  }
+  .vsg-bank-scroll-notice {
+    margin: 0 0 10px;
+    padding: 8px 10px;
+    border-radius: 8px;
+    background: linear-gradient(135deg, #fff7ed 0%, #ffedd5 100%);
+    border: 1px solid #fdba74;
+    font-size: 12px;
+    line-height: 1.45;
+    color: #9a3412;
+  }
+  .vsg-bank-scroll-wrap {
+    position: relative;
+  }
+  .vsg-bank-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    max-height: min(70vh, 640px);
+    overflow-y: auto;
+    padding-right: 4px;
+    scrollbar-width: thin;
+    scrollbar-color: #38438f #e8eaf6;
+  }
+  .vsg-bank-grid::-webkit-scrollbar { width: 8px; }
+  .vsg-bank-grid::-webkit-scrollbar-track {
+    background: #e8eaf6;
+    border-radius: 8px;
+  }
+  .vsg-bank-grid::-webkit-scrollbar-thumb {
+    background: #38438f;
+    border-radius: 8px;
+  }
+  .vsg-bank-fade {
+    position: absolute;
+    left: 0;
+    right: 8px;
+    height: 28px;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+    z-index: 1;
+  }
+  .vsg-bank-fade-top {
+    top: 0;
+    background: linear-gradient(180deg, rgba(245, 246, 252, 0.98) 0%, rgba(245, 246, 252, 0) 100%);
+  }
+  .vsg-bank-fade-bottom {
+    bottom: 0;
+    background: linear-gradient(0deg, rgba(245, 246, 252, 0.98) 0%, rgba(245, 246, 252, 0) 100%);
+  }
+  .vsg-toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    align-items: center;
+    margin-top: 18px;
+  }
+  @media (max-width: 720px) {
+    .vsg-layout { flex-direction: column; }
+    .vsg-bank-col { width: 100%; position: static; }
+    .vsg-bank-grid {
+      flex-direction: row;
+      flex-wrap: wrap;
+      max-height: none;
+    }
+    .vsg-chip { flex: 0 1 auto; width: auto !important; }
+  }
+  @media print {
+    .vsg-no-print { display: none !important; }
+    .vsg-slot { border: 1px dashed #333 !important; background: #fff !important; }
+  }
+
+</style>
+<div style="max-width: 800px; margin: 0 auto; padding: 20px; font-family: Arial, sans-serif; line-height: 1.5; color: #333; background: linear-gradient(to bottom, #e8eaf6, #ffffff);">
+
+  <div style="text-align: center; margin-bottom: 25px; padding: 20px; background: linear-gradient(135deg, #38438f 0%, #2d3569 100%); border-radius: 12px; box-shadow: 0 4px 6px rgba(56,67,143,0.3);" class="no-break">
+    <div style="display: inline-block; margin-bottom: 8px;">
+      <img src="/brizzle-logo.png" alt="Brizzle Logo" style="width: 50px; height: 50px; object-fit: contain; background: white; padding: 5px; border-radius: 50%;" />
+    </div>
+    <h1 style="font-size: 28px; font-weight: bold; margin: 0; color: #ffffff; text-shadow: 0 2px 4px rgba(0,0,0,0.2);">Customer Service</h1>
+  </div>
+
+  <div style="margin-bottom: 30px; padding: 20px; background: white; border-radius: 10px; box-shadow: 0 2px 4px rgba(0,0,0,0.05);" class="keep-together">
+    <h2 style="font-size: 20px; font-weight: bold; margin-bottom: 15px; color: #38438f; border-bottom: 3px solid #38438f; padding-bottom: 8px;">Part 1: Vocabulary List with Pronunciation and Translation</h2>
+
+    <table style="width: 100%; border-collapse: collapse; margin-top: 12px; font-size: 16px; border: 1px solid #e5e7eb; box-shadow: 0 1px 3px rgba(0,0,0,0.05);" class="no-break">
+      <thead>
+        <tr style="background: linear-gradient(135deg, #38438f 0%, #2d3569 100%);">
+          <th style="border: 1px solid #e5e7eb; padding: 10px; text-align: left; font-weight: bold; font-size: 16px; width: 25%; color: white;">Word/Phrase</th>
+          <th style="border: 1px solid #e5e7eb; padding: 10px; text-align: left; font-weight: bold; font-size: 16px; width: 15%; color: white;">Pronunciation</th>
+          <th style="border: 1px solid #e5e7eb; padding: 10px; text-align: left; font-weight: bold; font-size: 16px; width: 20%; color: white;">French Translation</th>
+          <th style="border: 1px solid #e5e7eb; padding: 10px; text-align: left; font-weight: bold; font-size: 16px; width: 40%; color: white;">Example Sentence</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px; font-weight: bold; color: #1e293b;">customer</td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px;"><div onclick="document.getElementById('audio-customer').play()" style="display: inline-block; background: linear-gradient(135deg, #ba3627 0%, #9a2d21 100%); color: white; padding: 4px 12px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; box-shadow: 0 2px 4px rgba(186,54,39,0.3); transition: transform 0.1s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">🔊 Listen</div><audio id="audio-customer" preload="auto"><source src="/vocab-audio/customer-service-vocab-audio/customer.mp3" type="audio/mpeg"></audio></td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px; font-style: italic; color: #64748b;">client / consommateur</td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px;">The customer was happy with the support she received.</td>
+        </tr>
+        <tr style="background: #e8eaf6;">
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px; font-weight: bold; color: #1e293b;">client</td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px;"><div onclick="document.getElementById('audio-client').play()" style="display: inline-block; background: linear-gradient(135deg, #ba3627 0%, #9a2d21 100%); color: white; padding: 4px 12px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; box-shadow: 0 2px 4px rgba(186,54,39,0.3); transition: transform 0.1s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">🔊 Listen</div><audio id="audio-client" preload="auto"><source src="/vocab-audio/customer-service-vocab-audio/client.mp3" type="audio/mpeg"></audio></td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px; font-style: italic; color: #64748b;">client</td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px;">Our company has several international clients.</td>
+        </tr>
+        <tr>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px; font-weight: bold; color: #1e293b;">satisfaction</td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px;"><div onclick="document.getElementById('audio-satisfaction').play()" style="display: inline-block; background: linear-gradient(135deg, #ba3627 0%, #9a2d21 100%); color: white; padding: 4px 12px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; box-shadow: 0 2px 4px rgba(186,54,39,0.3); transition: transform 0.1s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">🔊 Listen</div><audio id="audio-satisfaction" preload="auto"><source src="/vocab-audio/customer-service-vocab-audio/satisfaction.mp3" type="audio/mpeg"></audio></td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px; font-style: italic; color: #64748b;">satisfaction</td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px;">Customer satisfaction is one of our main priorities.</td>
+        </tr>
+        <tr style="background: #e8eaf6;">
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px; font-weight: bold; color: #1e293b;">complaint</td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px;"><div onclick="document.getElementById('audio-complaint').play()" style="display: inline-block; background: linear-gradient(135deg, #ba3627 0%, #9a2d21 100%); color: white; padding: 4px 12px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; box-shadow: 0 2px 4px rgba(186,54,39,0.3); transition: transform 0.1s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">🔊 Listen</div><audio id="audio-complaint" preload="auto"><source src="/vocab-audio/customer-service-vocab-audio/complaint.mp3" type="audio/mpeg"></audio></td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px; font-style: italic; color: #64748b;">réclamation / plainte</td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px;">The manager dealt with a complaint about a delayed delivery.</td>
+        </tr>
+        <tr>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px; font-weight: bold; color: #1e293b;">to handle</td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px;"><div onclick="document.getElementById('audio-to-handle').play()" style="display: inline-block; background: linear-gradient(135deg, #ba3627 0%, #9a2d21 100%); color: white; padding: 4px 12px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; box-shadow: 0 2px 4px rgba(186,54,39,0.3); transition: transform 0.1s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">🔊 Listen</div><audio id="audio-to-handle" preload="auto"><source src="/vocab-audio/customer-service-vocab-audio/to handle.mp3" type="audio/mpeg"></audio></td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px; font-style: italic; color: #64748b;">gérer</td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px;">She knows how to handle difficult situations professionally.</td>
+        </tr>
+        <tr style="background: #e8eaf6;">
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px; font-weight: bold; color: #1e293b;">to resolve</td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px;"><div onclick="document.getElementById('audio-to-resolve').play()" style="display: inline-block; background: linear-gradient(135deg, #ba3627 0%, #9a2d21 100%); color: white; padding: 4px 12px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; box-shadow: 0 2px 4px rgba(186,54,39,0.3); transition: transform 0.1s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">🔊 Listen</div><audio id="audio-to-resolve" preload="auto"><source src="/vocab-audio/customer-service-vocab-audio/to resolve.mp3" type="audio/mpeg"></audio></td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px; font-style: italic; color: #64748b;">résoudre</td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px;">We resolved the issue within 24 hours.</td>
+        </tr>
+        <tr>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px; font-weight: bold; color: #1e293b;">query</td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px;"><div onclick="document.getElementById('audio-query').play()" style="display: inline-block; background: linear-gradient(135deg, #ba3627 0%, #9a2d21 100%); color: white; padding: 4px 12px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; box-shadow: 0 2px 4px rgba(186,54,39,0.3); transition: transform 0.1s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">🔊 Listen</div><audio id="audio-query" preload="auto"><source src="/vocab-audio/customer-service-vocab-audio/query.mp3" type="audio/mpeg"></audio></td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px; font-style: italic; color: #64748b;">demande / question</td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px;">If you have a query, please contact our support team.</td>
+        </tr>
+        <tr style="background: #e8eaf6;">
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px; font-weight: bold; color: #1e293b;">feedback</td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px;"><div onclick="document.getElementById('audio-feedback').play()" style="display: inline-block; background: linear-gradient(135deg, #ba3627 0%, #9a2d21 100%); color: white; padding: 4px 12px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; box-shadow: 0 2px 4px rgba(186,54,39,0.3); transition: transform 0.1s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">🔊 Listen</div><audio id="audio-feedback" preload="auto"><source src="/vocab-audio/customer-service-vocab-audio/feedback.mp3" type="audio/mpeg"></audio></td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px; font-style: italic; color: #64748b;">retour d'expérience / commentaires</td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px;">We encourage customers to leave feedback after their purchase.</td>
+        </tr>
+        <tr>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px; font-weight: bold; color: #1e293b;">after-sales service</td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px;"><div onclick="document.getElementById('audio-after-sales-service').play()" style="display: inline-block; background: linear-gradient(135deg, #ba3627 0%, #9a2d21 100%); color: white; padding: 4px 12px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; box-shadow: 0 2px 4px rgba(186,54,39,0.3); transition: transform 0.1s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">🔊 Listen</div><audio id="audio-after-sales-service" preload="auto"><source src="/vocab-audio/customer-service-vocab-audio/after-sales service.mp3" type="audio/mpeg"></audio></td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px; font-style: italic; color: #64748b;">service après-vente (SAV)</td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px;">Good after-sales service helps build customer loyalty.</td>
+        </tr>
+        <tr style="background: #e8eaf6;">
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px; font-weight: bold; color: #1e293b;">guarantee</td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px;"><div onclick="document.getElementById('audio-guarantee').play()" style="display: inline-block; background: linear-gradient(135deg, #ba3627 0%, #9a2d21 100%); color: white; padding: 4px 12px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; box-shadow: 0 2px 4px rgba(186,54,39,0.3); transition: transform 0.1s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">🔊 Listen</div><audio id="audio-guarantee" preload="auto"><source src="/vocab-audio/customer-service-vocab-audio/guarantee.mp3" type="audio/mpeg"></audio></td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px; font-style: italic; color: #64748b;">garantie</td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px;">This product comes with a two-year guarantee.</td>
+        </tr>
+        <tr>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px; font-weight: bold; color: #1e293b;">refund</td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px;"><div onclick="document.getElementById('audio-refund').play()" style="display: inline-block; background: linear-gradient(135deg, #ba3627 0%, #9a2d21 100%); color: white; padding: 4px 12px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; box-shadow: 0 2px 4px rgba(186,54,39,0.3); transition: transform 0.1s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">🔊 Listen</div><audio id="audio-refund" preload="auto"><source src="/vocab-audio/customer-service-vocab-audio/refund.mp3" type="audio/mpeg"></audio></td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px; font-style: italic; color: #64748b;">remboursement</td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px;">The customer requested a refund for the damaged item.</td>
+        </tr>
+        <tr style="background: #e8eaf6;">
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px; font-weight: bold; color: #1e293b;">exchange</td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px;"><div onclick="document.getElementById('audio-exchange').play()" style="display: inline-block; background: linear-gradient(135deg, #ba3627 0%, #9a2d21 100%); color: white; padding: 4px 12px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; box-shadow: 0 2px 4px rgba(186,54,39,0.3); transition: transform 0.1s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">🔊 Listen</div><audio id="audio-exchange" preload="auto"><source src="/vocab-audio/customer-service-vocab-audio/exchange.mp3" type="audio/mpeg"></audio></td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px; font-style: italic; color: #64748b;">échange</td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px;">The store offered an exchange instead of a refund.</td>
+        </tr>
+        <tr>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px; font-weight: bold; color: #1e293b;">faulty</td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px;"><div onclick="document.getElementById('audio-faulty').play()" style="display: inline-block; background: linear-gradient(135deg, #ba3627 0%, #9a2d21 100%); color: white; padding: 4px 12px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; box-shadow: 0 2px 4px rgba(186,54,39,0.3); transition: transform 0.1s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">🔊 Listen</div><audio id="audio-faulty" preload="auto"><source src="/vocab-audio/customer-service-vocab-audio/faulty.mp3" type="audio/mpeg"></audio></td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px; font-style: italic; color: #64748b;">défectueux</td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px;">The customer returned a faulty charger.</td>
+        </tr>
+        <tr style="background: #e8eaf6;">
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px; font-weight: bold; color: #1e293b;">defective</td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px;"><div onclick="document.getElementById('audio-defective').play()" style="display: inline-block; background: linear-gradient(135deg, #ba3627 0%, #9a2d21 100%); color: white; padding: 4px 12px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; box-shadow: 0 2px 4px rgba(186,54,39,0.3); transition: transform 0.1s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">🔊 Listen</div><audio id="audio-defective" preload="auto"><source src="/vocab-audio/customer-service-vocab-audio/defective.mp3" type="audio/mpeg"></audio></td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px; font-style: italic; color: #64748b;">défectueux</td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px;">Several defective products were removed from the shelves.</td>
+        </tr>
+        <tr>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px; font-weight: bold; color: #1e293b;">apology</td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px;"><div onclick="document.getElementById('audio-apology').play()" style="display: inline-block; background: linear-gradient(135deg, #ba3627 0%, #9a2d21 100%); color: white; padding: 4px 12px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; box-shadow: 0 2px 4px rgba(186,54,39,0.3); transition: transform 0.1s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">🔊 Listen</div><audio id="audio-apology" preload="auto"><source src="/vocab-audio/customer-service-vocab-audio/apology.mp3" type="audio/mpeg"></audio></td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px; font-style: italic; color: #64748b;">excuses</td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px;">The company sent a formal apology for the inconvenience.</td>
+        </tr>
+        <tr style="background: #e8eaf6;">
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px; font-weight: bold; color: #1e293b;">response time</td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px;"><div onclick="document.getElementById('audio-response-time').play()" style="display: inline-block; background: linear-gradient(135deg, #ba3627 0%, #9a2d21 100%); color: white; padding: 4px 12px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; box-shadow: 0 2px 4px rgba(186,54,39,0.3); transition: transform 0.1s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">🔊 Listen</div><audio id="audio-response-time" preload="auto"><source src="/vocab-audio/customer-service-vocab-audio/response time.mp3" type="audio/mpeg"></audio></td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px; font-style: italic; color: #64748b;">délai de réponse</td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px;">Our average response time is under two hours.</td>
+        </tr>
+        <tr>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px; font-weight: bold; color: #1e293b;">retention</td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px;"><div onclick="document.getElementById('audio-retention').play()" style="display: inline-block; background: linear-gradient(135deg, #ba3627 0%, #9a2d21 100%); color: white; padding: 4px 12px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; box-shadow: 0 2px 4px rgba(186,54,39,0.3); transition: transform 0.1s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">🔊 Listen</div><audio id="audio-retention" preload="auto"><source src="/vocab-audio/customer-service-vocab-audio/retention.mp3" type="audio/mpeg"></audio></td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px; font-style: italic; color: #64748b;">fidélisation</td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px;">Customer retention is cheaper than finding new customers.</td>
+        </tr>
+        <tr style="background: #e8eaf6;">
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px; font-weight: bold; color: #1e293b;">courteous</td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px;"><div onclick="document.getElementById('audio-courteous').play()" style="display: inline-block; background: linear-gradient(135deg, #ba3627 0%, #9a2d21 100%); color: white; padding: 4px 12px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; box-shadow: 0 2px 4px rgba(186,54,39,0.3); transition: transform 0.1s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">🔊 Listen</div><audio id="audio-courteous" preload="auto"><source src="/vocab-audio/customer-service-vocab-audio/courteous.mp3" type="audio/mpeg"></audio></td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px; font-style: italic; color: #64748b;">courtois / poli</td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px;">The receptionist was very courteous and helpful.</td>
+        </tr>
+        <tr>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px; font-weight: bold; color: #1e293b;">escalation</td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px;"><div onclick="document.getElementById('audio-escalation').play()" style="display: inline-block; background: linear-gradient(135deg, #ba3627 0%, #9a2d21 100%); color: white; padding: 4px 12px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; box-shadow: 0 2px 4px rgba(186,54,39,0.3); transition: transform 0.1s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">🔊 Listen</div><audio id="audio-escalation" preload="auto"><source src="/vocab-audio/customer-service-vocab-audio/escalation.mp3" type="audio/mpeg"></audio></td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px; font-style: italic; color: #64748b;">escalade (d'un problème)</td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px;">The issue required escalation to the technical department.</td>
+        </tr>
+        <tr style="background: #e8eaf6;">
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px; font-weight: bold; color: #1e293b;">service standards</td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px;"><div onclick="document.getElementById('audio-service-standards').play()" style="display: inline-block; background: linear-gradient(135deg, #ba3627 0%, #9a2d21 100%); color: white; padding: 4px 12px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; box-shadow: 0 2px 4px rgba(186,54,39,0.3); transition: transform 0.1s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">🔊 Listen</div><audio id="audio-service-standards" preload="auto"><source src="/vocab-audio/customer-service-vocab-audio/service standards.mp3" type="audio/mpeg"></audio></td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px; font-style: italic; color: #64748b;">normes de service</td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px;">All employees must follow the company's service standards.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- PAGE 2: Gap Fill Exercise -->
+<div style="max-width: 800px; margin: 0 auto; padding: 20px; font-family: Arial, sans-serif; line-height: 1.5; color: #333; background: linear-gradient(to bottom, #f5e6e4, #ffffff);" class="page-break">
+
+  <div style="margin-bottom: 30px; padding: 20px; background: white; border-radius: 10px; box-shadow: 0 2px 4px rgba(0,0,0,0.05);" class="keep-together">
+    <h2 style="font-size: 20px; font-weight: bold; margin-bottom: 15px; color: #ba3627; border-bottom: 3px solid #ba3627; padding-bottom: 8px;">Part 2: Gap Fill Exercise</h2>
+    <p style="font-size: 16px; margin-bottom: 15px; color: #475569;">Drag the word cards from the <strong>scrollable word bank on the right</strong> into the gaps in each sentence, or click a card and then click a gap. Use the <strong>Check answers</strong> button when you are ready.</p>
+
+    <div data-vocab-gap-fill-mount="true" data-vocab-audio-dir="/vocab-audio/customer-service-vocab-audio/" style="margin-top: 8px;">
+      <div class="vocab-series-gap-data" hidden aria-hidden="true">{
+  "sentences": [
+    { "number": 1, "parts": ["The ", { "slot": "gapfill-q1", "answers": ["customer"] }, " contacted us because his order arrived late."] },
+    { "number": 2, "parts": ["We received a ", { "slot": "gapfill-q2", "answers": ["complaint"] }, " from a customer who was unhappy with the product quality."] },
+    { "number": 3, "parts": ["Our team aims to improve customer ", { "slot": "gapfill-q3", "answers": ["satisfaction"] }, " through excellent service."] },
+    { "number": 4, "parts": ["If you have a ", { "slot": "gapfill-q4", "answers": ["query"] }, " about your invoice, please email our accounts department."] },
+    { "number": 5, "parts": ["The support agent was able ", { "slot": "gapfill-q5", "answers": ["to resolve"] }, " the problem quickly and efficiently."] },
+    { "number": 6, "parts": ["It is important to ", { "slot": "gapfill-q6", "answers": ["to handle"] }, " difficult customers calmly and professionally."] },
+    { "number": 7, "parts": ["The company provides excellent ", { "slot": "gapfill-q7", "answers": ["after-sales service"] }, " for all electronic products."] },
+    { "number": 8, "parts": ["Every new ", { "slot": "gapfill-q8", "answers": ["client"] }, " receives a welcome call from their account manager."] },
+    { "number": 9, "parts": ["The laptop is still covered by the manufacturer's ", { "slot": "gapfill-q9", "answers": ["guarantee"] }, "."] },
+    { "number": 10, "parts": ["The customer requested a full ", { "slot": "gapfill-q10", "answers": ["refund"] }, " after receiving the wrong item."] },
+    { "number": 11, "parts": ["We offered an ", { "slot": "gapfill-q11", "answers": ["exchange"] }, " because the customer preferred a different size."] },
+    { "number": 12, "parts": ["The technician confirmed that the printer was ", { "slot": "gapfill-q12", "answers": ["faulty"] }, " and needed replacing."] },
+    { "number": 13, "parts": ["Several ", { "slot": "gapfill-q13", "answers": ["defective"] }, " units were discovered during the quality inspection."] },
+    { "number": 14, "parts": ["The manager sent a written ", { "slot": "gapfill-q14", "answers": ["apology"] }, " for the delivery delay."] },
+    { "number": 15, "parts": ["Our average ", { "slot": "gapfill-q15", "answers": ["response time"] }, " is less than four hours during business days."] },
+    { "number": 16, "parts": ["Customer ", { "slot": "gapfill-q16", "answers": ["retention"] }, " is a key objective for subscription-based businesses."] },
+    { "number": 17, "parts": ["The employee remained ", { "slot": "gapfill-q17", "answers": ["courteous"] }, " even when the customer became frustrated."] },
+    { "number": 18, "parts": ["The issue required ", { "slot": "gapfill-q18", "answers": ["escalation"] }, " to a senior manager."] },
+    { "number": 19, "parts": ["We regularly collect ", { "slot": "gapfill-q19", "answers": ["feedback"] }, " to improve our services."] },
+    { "number": 20, "parts": ["All staff must follow the company's ", { "slot": "gapfill-q20", "answers": ["service standards"] }, " when speaking with customers."] }
+  ]
+}</div>
+    </div>
+  </div>
+</div>
+
+<!-- PAGE 3: Discussion Questions -->
+<div style="max-width: 800px; margin: 0 auto; padding: 20px; font-family: Arial, sans-serif; line-height: 1.5; color: #333; background: linear-gradient(to bottom, #e8eaf6, #ffffff);" class="page-break">
+
+  <div style="margin-bottom: 30px; padding: 20px; background: white; border-radius: 10px; box-shadow: 0 2px 4px rgba(0,0,0,0.05);" class="keep-together">
+    <h2 style="font-size: 20px; font-weight: bold; margin-bottom: 15px; color: #38438f; border-bottom: 3px solid #38438f; padding-bottom: 8px;">Part 3: Discussion Questions</h2>
+    <p style="font-size: 16px; margin-bottom: 15px; color: #475569;">Use the vocabulary from this worksheet to answer the following questions.</p>
+
+    <div style="background: linear-gradient(135deg, #e8eaf6 0%, #c5cae9 100%); padding: 20px; border-radius: 10px; border-left: 5px solid #38438f; box-shadow: 0 2px 4px rgba(56,67,143,0.1);">
+      <ol style="padding-left: 25px; font-size: 16px; list-style-type: decimal; margin: 0;">
+        <li style="margin-bottom: 15px; padding: 10px; background: white; border-radius: 6px; box-shadow: 0 1px 2px rgba(0,0,0,0.05);">Think about a time when you received excellent customer service. What made you satisfied with the experience?</li>
+        <li style="margin-bottom: 15px; padding: 10px; background: white; border-radius: 6px; box-shadow: 0 1px 2px rgba(0,0,0,0.05);">Have you ever made a complaint to a company? How did they handle it? Were they able to resolve the issue?</li>
+        <li style="margin-bottom: 15px; padding: 10px; background: white; border-radius: 6px; box-shadow: 0 1px 2px rgba(0,0,0,0.05);">Why is customer feedback important for businesses? How can companies use it to improve customer satisfaction?</li>
+        <li style="margin-bottom: 15px; padding: 10px; background: white; border-radius: 6px; box-shadow: 0 1px 2px rgba(0,0,0,0.05);">What should a company do if it sells a faulty or defective product? Should customers always receive a refund or an exchange?</li>
+        <li style="margin-bottom: 15px; padding: 10px; background: white; border-radius: 6px; box-shadow: 0 1px 2px rgba(0,0,0,0.05);">Why are response time and courteous communication important in customer service?</li>
+        <li style="margin-bottom: 0; padding: 10px; background: white; border-radius: 6px; box-shadow: 0 1px 2px rgba(0,0,0,0.05);">What can companies do to improve customer retention and encourage clients to stay loyal?</li>
+      </ol>
+    </div>
+  </div>
+</div>
+
+<!-- PAGE 4: Answer Key -->
+<div style="max-width: 800px; margin: 0 auto; padding: 20px; font-family: Arial, sans-serif; line-height: 1.5; color: #333; background: linear-gradient(to bottom, #e8eaf6, #ffffff);" class="page-break">
+
+  <div style="margin-top: 30px; padding-top: 20px; border-top: 3px solid #38438f;" class="no-break">
+    <h2 style="font-size: 22px; font-weight: bold; margin-bottom: 20px; color: white; text-align: center; padding: 15px; background: linear-gradient(135deg, #38438f 0%, #2d3569 100%); border-radius: 10px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">📝 Answer Key</h2>
+
+    <div style="margin-bottom: 20px; padding: 20px; background: white; border-radius: 10px; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
+      <h3 style="font-size: 22px; font-weight: bold; margin-bottom: 15px; color: #ba3627; border-bottom: 2px solid #ba3627; padding-bottom: 6px;">Part 2: Gap Fill Exercise</h3>
+      <ol style="padding-left: 25px; font-size: 16px; list-style-type: decimal;">
+        <li style="margin-bottom: 10px; padding: 8px; background: #f5e6e4; border-radius: 4px;">The <strong style="color: #38438f;">customer</strong> contacted us because his order arrived late.</li>
+        <li style="margin-bottom: 10px; padding: 8px; background: #f5e6e4; border-radius: 4px;">We received a <strong style="color: #38438f;">complaint</strong> from a customer who was unhappy with the product quality.</li>
+        <li style="margin-bottom: 10px; padding: 8px; background: #f5e6e4; border-radius: 4px;">Our team aims to improve customer <strong style="color: #38438f;">satisfaction</strong> through excellent service.</li>
+        <li style="margin-bottom: 10px; padding: 8px; background: #f5e6e4; border-radius: 4px;">If you have a <strong style="color: #38438f;">query</strong> about your invoice, please email our accounts department.</li>
+        <li style="margin-bottom: 10px; padding: 8px; background: #f5e6e4; border-radius: 4px;">The support agent was able <strong style="color: #38438f;">to resolve</strong> the problem quickly and efficiently.</li>
+        <li style="margin-bottom: 10px; padding: 8px; background: #f5e6e4; border-radius: 4px;">It is important to <strong style="color: #38438f;">to handle</strong> difficult customers calmly and professionally.</li>
+        <li style="margin-bottom: 10px; padding: 8px; background: #f5e6e4; border-radius: 4px;">The company provides excellent <strong style="color: #38438f;">after-sales service</strong> for all electronic products.</li>
+        <li style="margin-bottom: 10px; padding: 8px; background: #f5e6e4; border-radius: 4px;">Every new <strong style="color: #38438f;">client</strong> receives a welcome call from their account manager.</li>
+        <li style="margin-bottom: 10px; padding: 8px; background: #f5e6e4; border-radius: 4px;">The laptop is still covered by the manufacturer's <strong style="color: #38438f;">guarantee</strong>.</li>
+        <li style="margin-bottom: 10px; padding: 8px; background: #f5e6e4; border-radius: 4px;">The customer requested a full <strong style="color: #38438f;">refund</strong> after receiving the wrong item.</li>
+        <li style="margin-bottom: 10px; padding: 8px; background: #f5e6e4; border-radius: 4px;">We offered an <strong style="color: #38438f;">exchange</strong> because the customer preferred a different size.</li>
+        <li style="margin-bottom: 10px; padding: 8px; background: #f5e6e4; border-radius: 4px;">The technician confirmed that the printer was <strong style="color: #38438f;">faulty</strong> and needed replacing.</li>
+        <li style="margin-bottom: 10px; padding: 8px; background: #f5e6e4; border-radius: 4px;">Several <strong style="color: #38438f;">defective</strong> units were discovered during the quality inspection.</li>
+        <li style="margin-bottom: 10px; padding: 8px; background: #f5e6e4; border-radius: 4px;">The manager sent a written <strong style="color: #38438f;">apology</strong> for the delivery delay.</li>
+        <li style="margin-bottom: 10px; padding: 8px; background: #f5e6e4; border-radius: 4px;">Our average <strong style="color: #38438f;">response time</strong> is less than four hours during business days.</li>
+        <li style="margin-bottom: 10px; padding: 8px; background: #f5e6e4; border-radius: 4px;">Customer <strong style="color: #38438f;">retention</strong> is a key objective for subscription-based businesses.</li>
+        <li style="margin-bottom: 10px; padding: 8px; background: #f5e6e4; border-radius: 4px;">The employee remained <strong style="color: #38438f;">courteous</strong> even when the customer became frustrated.</li>
+        <li style="margin-bottom: 10px; padding: 8px; background: #f5e6e4; border-radius: 4px;">The issue required <strong style="color: #38438f;">escalation</strong> to a senior manager.</li>
+        <li style="margin-bottom: 10px; padding: 8px; background: #f5e6e4; border-radius: 4px;">We regularly collect <strong style="color: #38438f;">feedback</strong> to improve our services.</li>
+        <li style="margin-bottom: 10px; padding: 8px; background: #f5e6e4; border-radius: 4px;">All staff must follow the company's <strong style="color: #38438f;">service standards</strong> when speaking with customers.</li>
+      </ol>
+    </div>
+  </div>
+</div>

@@ -32,6 +32,109 @@
       break-inside: avoid;
     }
   }
+
+  @keyframes vsg-shake {
+    0%, 100% { transform: translateX(0); }
+    20%, 60% { transform: translateX(-6px); }
+    40%, 80% { transform: translateX(6px); }
+  }
+  .vsg-shake { animation: vsg-shake 0.45s ease; }
+  .vsg-slot-correct {
+    border: 3px solid #15803d !important;
+    background: #ecfdf5 !important;
+    box-shadow: inset 0 0 0 1px rgba(21, 128, 61, 0.15);
+  }
+  .vsg-slot-wrong { border-color: #b91c1c !important; background: #fee2e2 !important; }
+  .vsg-layout {
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+    align-items: flex-start;
+  }
+  .vsg-sentences-col { flex: 1; min-width: 0; }
+  .vsg-bank-col {
+    width: min(260px, 100%);
+    flex-shrink: 0;
+    position: sticky;
+    top: 12px;
+    padding: 14px;
+    border-radius: 10px;
+    background: linear-gradient(135deg, #e8eaf6 0%, #f5f6fc 100%);
+    border: 1px solid #c5cae9;
+    box-shadow: 0 2px 6px rgba(56, 67, 143, 0.1);
+  }
+  .vsg-bank-scroll-notice {
+    margin: 0 0 10px;
+    padding: 8px 10px;
+    border-radius: 8px;
+    background: linear-gradient(135deg, #fff7ed 0%, #ffedd5 100%);
+    border: 1px solid #fdba74;
+    font-size: 12px;
+    line-height: 1.45;
+    color: #9a3412;
+  }
+  .vsg-bank-scroll-wrap {
+    position: relative;
+  }
+  .vsg-bank-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    max-height: min(70vh, 640px);
+    overflow-y: auto;
+    padding-right: 4px;
+    scrollbar-width: thin;
+    scrollbar-color: #38438f #e8eaf6;
+  }
+  .vsg-bank-grid::-webkit-scrollbar { width: 8px; }
+  .vsg-bank-grid::-webkit-scrollbar-track {
+    background: #e8eaf6;
+    border-radius: 8px;
+  }
+  .vsg-bank-grid::-webkit-scrollbar-thumb {
+    background: #38438f;
+    border-radius: 8px;
+  }
+  .vsg-bank-fade {
+    position: absolute;
+    left: 0;
+    right: 8px;
+    height: 28px;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+    z-index: 1;
+  }
+  .vsg-bank-fade-top {
+    top: 0;
+    background: linear-gradient(180deg, rgba(245, 246, 252, 0.98) 0%, rgba(245, 246, 252, 0) 100%);
+  }
+  .vsg-bank-fade-bottom {
+    bottom: 0;
+    background: linear-gradient(0deg, rgba(245, 246, 252, 0.98) 0%, rgba(245, 246, 252, 0) 100%);
+  }
+  .vsg-toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    align-items: center;
+    margin-top: 18px;
+  }
+  @media (max-width: 720px) {
+    .vsg-layout { flex-direction: column; }
+    .vsg-bank-col { width: 100%; position: static; }
+    .vsg-bank-grid {
+      flex-direction: row;
+      flex-wrap: wrap;
+      max-height: none;
+    }
+    .vsg-chip { flex: 0 1 auto; width: auto !important; }
+  }
+  @media print {
+    .vsg-no-print { display: none !important; }
+    .vsg-slot { border: 1px dashed #333 !important; background: #fff !important; }
+  }
+
 </style>
 <div style="max-width: 800px; margin: 0 auto; padding: 20px; font-family: Arial, sans-serif; line-height: 1.5; color: #333; background: linear-gradient(to bottom, #e8eaf6, #ffffff);">
   
@@ -188,30 +291,34 @@
   <!-- Part 2: Gap Fill Exercise -->
   <div style="margin-bottom: 30px; padding: 20px; background: white; border-radius: 10px; box-shadow: 0 2px 4px rgba(0,0,0,0.05);" class="keep-together">
     <h2 style="font-size: 20px; font-weight: bold; margin-bottom: 15px; color: #ba3627; border-bottom: 3px solid #ba3627; padding-bottom: 8px;">Part 2: Gap Fill Exercise</h2>
-    <p style="font-size: 16px; margin-bottom: 15px; color: #475569;">Complete the sentences using the correct word or phrase from the vocabulary list.</p>
+    <p style="font-size: 16px; margin-bottom: 15px; color: #475569;">Drag the word cards from the <strong>scrollable word bank on the right</strong> into the gaps in each sentence, or click a card and then click a gap. Use the <strong>Check answers</strong> button when you are ready.</p>
     
-    <ol style="padding-left: 25px; font-size: 16px; list-style-type: decimal;">
-      <li style="margin-bottom: 14px; padding: 8px; background: #f5e6e4; border-radius: 6px; border-left: 3px solid #ba3627;">After six months on a temporary contract, they offered her a <strong><span data-grammar-input="gapfill-q1" style="display: inline-block; min-width: 120px;"></span></strong> position.</li>
-      <li style="margin-bottom: 14px; padding: 8px; background: #f5e6e4; border-radius: 6px; border-left: 3px solid #ba3627;">The manager is <strong><span data-grammar-input="gapfill-q2" style="display: inline-block; min-width: 120px;"></span></strong> training all the new employees.</li>
-      <li style="margin-bottom: 14px; padding: 8px; background: #f5e6e4; border-radius: 6px; border-left: 3px solid #ba3627;">In 2008 Mark Zuckerberg, <strong><span data-grammar-input="gapfill-q3" style="display: inline-block; min-width: 120px;"></span></strong> of Facebook, became the world's youngest self-made billionaire at the age of 23.</li>
-      <li style="margin-bottom: 14px; padding: 8px; background: #f5e6e4; border-radius: 6px; border-left: 3px solid #ba3627;">His <strong><span data-grammar-input="gapfill-q4" style="display: inline-block; min-width: 120px;"></span></strong> began in sales and led to a position as commercial director.</li>
-      <li style="margin-bottom: 14px; padding: 8px; background: #f5e6e4; border-radius: 6px; border-left: 3px solid #ba3627;">He has a <strong><span data-grammar-input="gapfill-q5" style="display: inline-block; min-width: 120px;"></span></strong> job as an accountant, working from 9 to 5 every weekday.</li>
-      <li style="margin-bottom: 14px; padding: 8px; background: #f5e6e4; border-radius: 6px; border-left: 3px solid #ba3627;">Factory workers often work in <strong><span data-grammar-input="gapfill-q6" style="display: inline-block; min-width: 120px;"></span></strong>, covering mornings, afternoons, and nights.</li>
-      <li style="margin-bottom: 14px; padding: 8px; background: #f5e6e4; border-radius: 6px; border-left: 3px solid #ba3627;">My <strong><span data-grammar-input="gapfill-q7" style="display: inline-block; min-width: 120px;"></span></strong> to work takes about 45 minutes each way by train.</li>
-      <li style="margin-bottom: 14px; padding: 8px; background: #f5e6e4; border-radius: 6px; border-left: 3px solid #ba3627;">Many university students look for <strong><span data-grammar-input="gapfill-q8" style="display: inline-block; min-width: 120px;"></span></strong> jobs in cafés or restaurants while they study.</li>
-      <li style="margin-bottom: 14px; padding: 8px; background: #f5e6e4; border-radius: 6px; border-left: 3px solid #ba3627;">We need <strong><span data-grammar-input="gapfill-q9" style="display: inline-block; min-width: 120px;"></span></strong> technicians who have experience with this equipment.</li>
-      <li style="margin-bottom: 14px; padding: 8px; background: #f5e6e4; border-radius: 6px; border-left: 3px solid #ba3627;">Who is <strong><span data-grammar-input="gapfill-q10" style="display: inline-block; min-width: 120px;"></span></strong> the marketing department?</li>
-      <li style="margin-bottom: 14px; padding: 8px; background: #f5e6e4; border-radius: 6px; border-left: 3px solid #ba3627;">After university, most students hope to <strong><span data-grammar-input="gapfill-q11" style="display: inline-block; min-width: 120px;"></span></strong> with good qualifications.</li>
-      <li style="margin-bottom: 14px; padding: 8px; background: #f5e6e4; border-radius: 6px; border-left: 3px solid #ba3627;">Young professionals want to climb the <strong><span data-grammar-input="gapfill-q12" style="display: inline-block; min-width: 120px;"></span></strong> and reach senior positions.</li>
-      <li style="margin-bottom: 14px; padding: 8px; background: #f5e6e4; border-radius: 6px; border-left: 3px solid #ba3627;">He received a <strong><span data-grammar-input="gapfill-q13" style="display: inline-block; min-width: 120px;"></span></strong> and now earns a higher salary as a senior manager.</li>
-      <li style="margin-bottom: 14px; padding: 8px; background: #f5e6e4; border-radius: 6px; border-left: 3px solid #ba3627;">The government is pushing to increase the <strong><span data-grammar-input="gapfill-q14" style="display: inline-block; min-width: 120px;"></span></strong> age to 68.</li>
-      <li style="margin-bottom: 14px; padding: 8px; background: #f5e6e4; border-radius: 6px; border-left: 3px solid #ba3627;">My nephew is looking for <strong><span data-grammar-input="gapfill-q15" style="display: inline-block; min-width: 120px;"></span></strong> work during the summer holidays.</li>
-      <li style="margin-bottom: 14px; padding: 8px; background: #f5e6e4; border-radius: 6px; border-left: 3px solid #ba3627;">Following her <strong><span data-grammar-input="gapfill-q16" style="display: inline-block; min-width: 120px;"></span></strong>, she retrained as a product manager.</li>
-      <li style="margin-bottom: 14px; padding: 8px; background: #f5e6e4; border-radius: 6px; border-left: 3px solid #ba3627;">Many journalists and photographers work as <strong><span data-grammar-input="gapfill-q17" style="display: inline-block; min-width: 120px;"></span></strong> professionals.</li>
-      <li style="margin-bottom: 14px; padding: 8px; background: #f5e6e4; border-radius: 6px; border-left: 3px solid #ba3627;">The company offers excellent <strong><span data-grammar-input="gapfill-q18" style="display: inline-block; min-width: 120px;"></span></strong> opportunities for new employees.</li>
-      <li style="margin-bottom: 14px; padding: 8px; background: #f5e6e4; border-radius: 6px; border-left: 3px solid #ba3627;">The <strong><span data-grammar-input="gapfill-q19" style="display: inline-block; min-width: 120px;"></span></strong> meets once a month to discuss company strategy.</li>
-      <li style="margin-bottom: 14px; padding: 8px; background: #f5e6e4; border-radius: 6px; border-left: 3px solid #ba3627;">An <strong><span data-grammar-input="gapfill-q20" style="display: inline-block; min-width: 120px;"></span></strong> takes risks to start and run their own business.</li>
-    </ol>
+    <div data-vocab-gap-fill-mount="true" data-vocab-audio-dir="/vocab-audio/jobs-people-organisations-vocab-audio/" style="margin-top: 8px;">
+      <div class="vocab-series-gap-data" hidden aria-hidden="true">{
+  "sentences": [
+    { "number": 1, "parts": ["After six months on a temporary contract, they offered her a ", { "slot": "gapfill-q1", "answers": ["permanent"] }, " position."] },
+    { "number": 2, "parts": ["The manager is ", { "slot": "gapfill-q2", "answers": ["responsible for"] }, " training all the new employees."] },
+    { "number": 3, "parts": ["In 2008 Mark Zuckerberg, ", { "slot": "gapfill-q3", "answers": ["founder"] }, " of Facebook, became the world's youngest self-made billionaire at the age of 23."] },
+    { "number": 4, "parts": ["His ", { "slot": "gapfill-q4", "answers": ["career path"] }, " began in sales and led to a position as commercial director."] },
+    { "number": 5, "parts": ["He has a ", { "slot": "gapfill-q5", "answers": ["full-time"] }, " job as an accountant, working from 9 to 5 every weekday."] },
+    { "number": 6, "parts": ["Factory workers often work in ", { "slot": "gapfill-q6", "answers": ["shifts"] }, ", covering mornings, afternoons, and nights."] },
+    { "number": 7, "parts": ["My ", { "slot": "gapfill-q7", "answers": ["commute"] }, " to work takes about 45 minutes each way by train."] },
+    { "number": 8, "parts": ["Many university students look for ", { "slot": "gapfill-q8", "answers": ["part-time"] }, " jobs in cafés or restaurants while they study."] },
+    { "number": 9, "parts": ["We need ", { "slot": "gapfill-q9", "answers": ["skilled"] }, " technicians who have experience with this equipment."] },
+    { "number": 10, "parts": ["Who is ", { "slot": "gapfill-q10", "answers": ["in charge of"] }, " the marketing department?"] },
+    { "number": 11, "parts": ["After university, most students hope to ", { "slot": "gapfill-q11", "answers": ["graduate"] }, " with good qualifications."] },
+    { "number": 12, "parts": ["Young professionals want to climb the ", { "slot": "gapfill-q12", "answers": ["career ladder"] }, " and reach senior positions."] },
+    { "number": 13, "parts": ["He received a ", { "slot": "gapfill-q13", "answers": ["promotion"] }, " and now earns a higher salary as a senior manager."] },
+    { "number": 14, "parts": ["The government is pushing to increase the ", { "slot": "gapfill-q14", "answers": ["retirement"] }, " age to 68."] },
+    { "number": 15, "parts": ["My nephew is looking for ", { "slot": "gapfill-q15", "answers": ["temporary"] }, " work during the summer holidays."] },
+    { "number": 16, "parts": ["Following her ", { "slot": "gapfill-q16", "answers": ["redundancy"] }, ", she retrained as a product manager."] },
+    { "number": 17, "parts": ["Many journalists and photographers work as ", { "slot": "gapfill-q17", "answers": ["freelance"] }, " professionals."] },
+    { "number": 18, "parts": ["The company offers excellent ", { "slot": "gapfill-q18", "answers": ["training"] }, " opportunities for new employees."] },
+    { "number": 19, "parts": ["The ", { "slot": "gapfill-q19", "answers": ["board"] }, " meets once a month to discuss company strategy."] },
+    { "number": 20, "parts": ["An ", { "slot": "gapfill-q20", "answers": ["entrepreneur"] }, " takes risks to start and run their own business."] }
+  ]
+}</div>
+    </div>
   </div>
 </div>
 

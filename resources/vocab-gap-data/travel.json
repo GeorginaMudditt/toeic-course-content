@@ -1,0 +1,24 @@
+{
+  "sentences": [
+    { "number": 1, "parts": ["I need to make a ", { "slot": "gapfill-q1", "answers": ["hotel reservation"] }, " for a double room near the airport."] },
+    { "number": 2, "parts": ["Don't forget to print your ", { "slot": "gapfill-q2", "answers": ["boarding pass"] }, " before going to the airport."] },
+    { "number": 3, "parts": ["Our ", { "slot": "gapfill-q3", "answers": ["itinerary"] }, " includes meetings in three different cities over five days."] },
+    { "number": 4, "parts": ["After a long flight from Australia, I always suffer from ", { "slot": "gapfill-q4", "answers": ["jet lag"] }, "."] },
+    { "number": 5, "parts": ["The ", { "slot": "gapfill-q5", "answers": ["conference venue"] }, " is equipped with meeting rooms and audiovisual equipment."] },
+    { "number": 6, "parts": ["You can get a full ", { "slot": "gapfill-q6", "answers": ["reimbursement"] }, " if you cancel more than 48 hours in advance."] },
+    { "number": 7, "parts": ["She has ", { "slot": "gapfill-q7", "answers": ["frequent flyer"] }, " status with the airline because she flies so often."] },
+    { "number": 8, "parts": ["Unfortunately, we have a four-hour ", { "slot": "gapfill-q8", "answers": ["layover / stopover", "layover", "stopover"] }, " in Dubai."] },
+    { "number": 9, "parts": ["I prefer a ", { "slot": "gapfill-q9", "answers": ["direct flight"] }, " because I don't like changing planes."] },
+    { "number": 10, "parts": ["The company provides a ", { "slot": "gapfill-q10", "answers": ["travel allowance"] }, " to cover hotels and meals during business trips."] },
+    { "number": 11, "parts": ["All the managers are in different ", { "slot": "gapfill-q11", "answers": ["time zones"] }, ", so we need to schedule the call carefully."] },
+    { "number": 12, "parts": ["Please keep all your receipts to claim from your ", { "slot": "gapfill-q12", "answers": ["expense account"] }, " when you return to the office."] },
+    { "number": 13, "parts": ["The ", { "slot": "gapfill-q13", "answers": ["departure lounge"] }, " was crowded, so we waited for the flight at a café instead."] },
+    { "number": 14, "parts": ["My ", { "slot": "gapfill-q14", "answers": ["travel insurance"] }, " covers medical emergencies and lost luggage."] },
+    { "number": 15, "parts": ["After ", { "slot": "gapfill-q15", "answers": ["check-in"] }, ", proceed directly to the security checkpoint."] },
+    { "number": 16, "parts": ["We were really pleased with our ", { "slot": "gapfill-q16", "answers": ["accommodation"] }, ", especially the comfortable rooms and the generous breakfast."] },
+    { "number": 17, "parts": ["The airline offers an ", { "slot": "gapfill-q17", "answers": ["upgrade"] }, " to business class for an additional fee."] },
+    { "number": 18, "parts": ["My luggage hasn't arrived at the ", { "slot": "gapfill-q18", "answers": ["baggage claim"] }, " yet."] },
+    { "number": 19, "parts": ["Flying from Paris to Lima, you have the option of a ", { "slot": "gapfill-q19", "answers": ["connecting flight"] }, " from Madrid or Lisbon."] },
+    { "number": 20, "parts": ["She goes on a ", { "slot": "gapfill-q20", "answers": ["business trip"] }, " at least twice a month."] }
+  ]
+}

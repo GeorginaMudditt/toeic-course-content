@@ -8,6 +8,7 @@ import { mountAircraftAviationAdjectiveMatch } from '@/lib/worksheetInteractions
 import { mountAircraftAviationVerbsGapFill } from '@/lib/worksheetInteractions/aircraftAviationVerbsGapFill'
 import { mountInstructionsDescriptionsArmyAdjectiveMatch } from '@/lib/worksheetInteractions/instructionsDescriptionsArmyAdjectivesMatch'
 import { mountInstructionsDescriptionsArmyVerbsMission } from '@/lib/worksheetInteractions/instructionsDescriptionsArmyVerbsMission'
+import { mountVocabularySeriesGapFill } from '@/lib/worksheetInteractions/vocabularySeriesGapFill'
 import { mountPastSimpleArmyEdPronunciation } from '@/lib/worksheetInteractions/pastSimpleArmyEdPronunciation'
 import {
   mergeGiaqMatchPlacementsIntoNotes,
@@ -787,7 +788,9 @@ export default function WorksheetViewer({
     typeof resource.content === 'string' &&
     (resource.content.includes('data-giaq-match') || resource.content.includes('data-giaq-listening'))
   const hasPspActivities = hasKlActivity || hasListeningActivity
-  const hasMountedWorksheetActivities = hasPspActivities || hasGiaqActivities
+  const hasVocabGapFill =
+    typeof resource.content === 'string' && resource.content.includes('data-vocab-gap-fill-mount')
+  const hasMountedWorksheetActivities = hasPspActivities || hasGiaqActivities || hasVocabGapFill
   const hasPhraseAudioRoot =
     typeof resource.content === 'string' && resource.content.includes('data-phrase-audio-root')
   const hasWritingTimers =
@@ -2652,6 +2655,30 @@ export default function WorksheetViewer({
       detach?.()
     }
   }, [resource.content])
+
+  useLayoutEffect(() => {
+    if (!hasVocabGapFill) return
+    let detach: (() => void) | undefined
+    let cancelled = false
+
+    const tryMount = () => {
+      if (cancelled) return
+      const host = contentRef.current
+      if (!host) return
+      const el = host.querySelector('[data-vocab-gap-fill-mount]') as HTMLElement | null
+      if (!el) return
+      detach = mountVocabularySeriesGapFill(el)
+    }
+
+    tryMount()
+    const rafId = requestAnimationFrame(tryMount)
+
+    return () => {
+      cancelled = true
+      cancelAnimationFrame(rafId)
+      detach?.()
+    }
+  }, [hasVocabGapFill, resource.content])
 
   // Interactive worksheet activities (drag-and-drop, listening, etc.).
   useLayoutEffect(() => {

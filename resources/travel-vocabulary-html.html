@@ -32,6 +32,109 @@
       break-inside: avoid;
     }
   }
+
+  @keyframes vsg-shake {
+    0%, 100% { transform: translateX(0); }
+    20%, 60% { transform: translateX(-6px); }
+    40%, 80% { transform: translateX(6px); }
+  }
+  .vsg-shake { animation: vsg-shake 0.45s ease; }
+  .vsg-slot-correct {
+    border: 3px solid #15803d !important;
+    background: #ecfdf5 !important;
+    box-shadow: inset 0 0 0 1px rgba(21, 128, 61, 0.15);
+  }
+  .vsg-slot-wrong { border-color: #b91c1c !important; background: #fee2e2 !important; }
+  .vsg-layout {
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+    align-items: flex-start;
+  }
+  .vsg-sentences-col { flex: 1; min-width: 0; }
+  .vsg-bank-col {
+    width: min(260px, 100%);
+    flex-shrink: 0;
+    position: sticky;
+    top: 12px;
+    padding: 14px;
+    border-radius: 10px;
+    background: linear-gradient(135deg, #e8eaf6 0%, #f5f6fc 100%);
+    border: 1px solid #c5cae9;
+    box-shadow: 0 2px 6px rgba(56, 67, 143, 0.1);
+  }
+  .vsg-bank-scroll-notice {
+    margin: 0 0 10px;
+    padding: 8px 10px;
+    border-radius: 8px;
+    background: linear-gradient(135deg, #fff7ed 0%, #ffedd5 100%);
+    border: 1px solid #fdba74;
+    font-size: 12px;
+    line-height: 1.45;
+    color: #9a3412;
+  }
+  .vsg-bank-scroll-wrap {
+    position: relative;
+  }
+  .vsg-bank-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    max-height: min(70vh, 640px);
+    overflow-y: auto;
+    padding-right: 4px;
+    scrollbar-width: thin;
+    scrollbar-color: #38438f #e8eaf6;
+  }
+  .vsg-bank-grid::-webkit-scrollbar { width: 8px; }
+  .vsg-bank-grid::-webkit-scrollbar-track {
+    background: #e8eaf6;
+    border-radius: 8px;
+  }
+  .vsg-bank-grid::-webkit-scrollbar-thumb {
+    background: #38438f;
+    border-radius: 8px;
+  }
+  .vsg-bank-fade {
+    position: absolute;
+    left: 0;
+    right: 8px;
+    height: 28px;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+    z-index: 1;
+  }
+  .vsg-bank-fade-top {
+    top: 0;
+    background: linear-gradient(180deg, rgba(245, 246, 252, 0.98) 0%, rgba(245, 246, 252, 0) 100%);
+  }
+  .vsg-bank-fade-bottom {
+    bottom: 0;
+    background: linear-gradient(0deg, rgba(245, 246, 252, 0.98) 0%, rgba(245, 246, 252, 0) 100%);
+  }
+  .vsg-toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    align-items: center;
+    margin-top: 18px;
+  }
+  @media (max-width: 720px) {
+    .vsg-layout { flex-direction: column; }
+    .vsg-bank-col { width: 100%; position: static; }
+    .vsg-bank-grid {
+      flex-direction: row;
+      flex-wrap: wrap;
+      max-height: none;
+    }
+    .vsg-chip { flex: 0 1 auto; width: auto !important; }
+  }
+  @media print {
+    .vsg-no-print { display: none !important; }
+    .vsg-slot { border: 1px dashed #333 !important; background: #fff !important; }
+  }
+
 </style>
 <div style="max-width: 800px; margin: 0 auto; padding: 20px; font-family: Arial, sans-serif; line-height: 1.5; color: #333; background: linear-gradient(to bottom, #e8eaf6, #ffffff);">
   
@@ -188,30 +291,34 @@
   <!-- Part 2: Gap Fill Exercise -->
   <div style="margin-bottom: 30px; padding: 20px; background: white; border-radius: 10px; box-shadow: 0 2px 4px rgba(0,0,0,0.05);" class="keep-together">
     <h2 style="font-size: 20px; font-weight: bold; margin-bottom: 15px; color: #ba3627; border-bottom: 3px solid #ba3627; padding-bottom: 8px;">Part 2: Gap Fill Exercise</h2>
-    <p style="font-size: 16px; margin-bottom: 15px; color: #475569;">Complete the sentences using the correct word or phrase from the vocabulary list.</p>
+    <p style="font-size: 16px; margin-bottom: 15px; color: #475569;">Drag the word cards from the <strong>scrollable word bank on the right</strong> into the gaps in each sentence, or click a card and then click a gap. Use the <strong>Check answers</strong> button when you are ready.</p>
     
-    <ol style="padding-left: 25px; font-size: 16px; list-style-type: decimal;">
-      <li style="margin-bottom: 14px; padding: 8px; background: #f5e6e4; border-radius: 6px; border-left: 3px solid #ba3627;">I need to make a <strong><span data-grammar-input="gapfill-q1" style="display: inline-block; min-width: 120px;"></span></strong> for a double room near the airport.</li>
-      <li style="margin-bottom: 14px; padding: 8px; background: #f5e6e4; border-radius: 6px; border-left: 3px solid #ba3627;">Don't forget to print your <strong><span data-grammar-input="gapfill-q2" style="display: inline-block; min-width: 120px;"></span></strong> before going to the airport.</li>
-      <li style="margin-bottom: 14px; padding: 8px; background: #f5e6e4; border-radius: 6px; border-left: 3px solid #ba3627;">Our <strong><span data-grammar-input="gapfill-q3" style="display: inline-block; min-width: 120px;"></span></strong> includes meetings in three different cities over five days.</li>
-      <li style="margin-bottom: 14px; padding: 8px; background: #f5e6e4; border-radius: 6px; border-left: 3px solid #ba3627;">After a long flight from Australia, I always suffer from <strong><span data-grammar-input="gapfill-q4" style="display: inline-block; min-width: 120px;"></span></strong>.</li>
-      <li style="margin-bottom: 14px; padding: 8px; background: #f5e6e4; border-radius: 6px; border-left: 3px solid #ba3627;">The <strong><span data-grammar-input="gapfill-q5" style="display: inline-block; min-width: 120px;"></span></strong> is equipped with meeting rooms and audiovisual equipment.</li>
-      <li style="margin-bottom: 14px; padding: 8px; background: #f5e6e4; border-radius: 6px; border-left: 3px solid #ba3627;">You can get a full <strong><span data-grammar-input="gapfill-q6" style="display: inline-block; min-width: 120px;"></span></strong> if you cancel more than 48 hours in advance.</li>
-      <li style="margin-bottom: 14px; padding: 8px; background: #f5e6e4; border-radius: 6px; border-left: 3px solid #ba3627;">She has <strong><span data-grammar-input="gapfill-q7" style="display: inline-block; min-width: 120px;"></span></strong> status with the airline because she flies so often.</li>
-      <li style="margin-bottom: 14px; padding: 8px; background: #f5e6e4; border-radius: 6px; border-left: 3px solid #ba3627;">Unfortunately, we have a four-hour <strong><span data-grammar-input="gapfill-q8" style="display: inline-block; min-width: 120px;"></span></strong> in Dubai.</li>
-      <li style="margin-bottom: 14px; padding: 8px; background: #f5e6e4; border-radius: 6px; border-left: 3px solid #ba3627;">I prefer a <strong><span data-grammar-input="gapfill-q9" style="display: inline-block; min-width: 120px;"></span></strong> because I don't like changing planes.</li>
-      <li style="margin-bottom: 14px; padding: 8px; background: #f5e6e4; border-radius: 6px; border-left: 3px solid #ba3627;">The company provides a <strong><span data-grammar-input="gapfill-q10" style="display: inline-block; min-width: 120px;"></span></strong> to cover hotels and meals during business trips.</li>
-      <li style="margin-bottom: 14px; padding: 8px; background: #f5e6e4; border-radius: 6px; border-left: 3px solid #ba3627;">All the managers are in different <strong><span data-grammar-input="gapfill-q11" style="display: inline-block; min-width: 120px;"></span></strong>, so we need to schedule the call carefully.</li>
-      <li style="margin-bottom: 14px; padding: 8px; background: #f5e6e4; border-radius: 6px; border-left: 3px solid #ba3627;">Please keep all your receipts to claim from your <strong><span data-grammar-input="gapfill-q12" style="display: inline-block; min-width: 120px;"></span></strong> when you return to the office.</li>
-      <li style="margin-bottom: 14px; padding: 8px; background: #f5e6e4; border-radius: 6px; border-left: 3px solid #ba3627;">The <strong><span data-grammar-input="gapfill-q13" style="display: inline-block; min-width: 120px;"></span></strong> was crowded, so we waited for the flight at a café instead.</li>
-      <li style="margin-bottom: 14px; padding: 8px; background: #f5e6e4; border-radius: 6px; border-left: 3px solid #ba3627;">My <strong><span data-grammar-input="gapfill-q14" style="display: inline-block; min-width: 120px;"></span></strong> covers medical emergencies and lost luggage.</li>
-      <li style="margin-bottom: 14px; padding: 8px; background: #f5e6e4; border-radius: 6px; border-left: 3px solid #ba3627;">After <strong><span data-grammar-input="gapfill-q15" style="display: inline-block; min-width: 120px;"></span></strong>, proceed directly to the security checkpoint.</li>
-      <li style="margin-bottom: 14px; padding: 8px; background: #f5e6e4; border-radius: 6px; border-left: 3px solid #ba3627;">We were really pleased with our <strong><span data-grammar-input="gapfill-q16" style="display: inline-block; min-width: 120px;"></span></strong>, especially the comfortable rooms and the generous breakfast.</li>
-      <li style="margin-bottom: 14px; padding: 8px; background: #f5e6e4; border-radius: 6px; border-left: 3px solid #ba3627;">The airline offers an <strong><span data-grammar-input="gapfill-q17" style="display: inline-block; min-width: 120px;"></span></strong> to business class for an additional fee.</li>
-      <li style="margin-bottom: 14px; padding: 8px; background: #f5e6e4; border-radius: 6px; border-left: 3px solid #ba3627;">My luggage hasn't arrived at the <strong><span data-grammar-input="gapfill-q18" style="display: inline-block; min-width: 120px;"></span></strong> yet.</li>
-      <li style="margin-bottom: 14px; padding: 8px; background: #f5e6e4; border-radius: 6px; border-left: 3px solid #ba3627;">Flying from Paris to Lima, you have the option of a <strong><span data-grammar-input="gapfill-q19" style="display: inline-block; min-width: 120px;"></span></strong> from Madrid or Lisbon.</li>
-      <li style="margin-bottom: 14px; padding: 8px; background: #f5e6e4; border-radius: 6px; border-left: 3px solid #ba3627;">She goes on a <strong><span data-grammar-input="gapfill-q20" style="display: inline-block; min-width: 120px;"></span></strong> at least twice a month.</li>
-    </ol>
+    <div data-vocab-gap-fill-mount="true" data-vocab-audio-dir="/vocab-audio/travel-vocab-audio/" style="margin-top: 8px;">
+      <div class="vocab-series-gap-data" hidden aria-hidden="true">{
+  "sentences": [
+    { "number": 1, "parts": ["I need to make a ", { "slot": "gapfill-q1", "answers": ["hotel reservation"] }, " for a double room near the airport."] },
+    { "number": 2, "parts": ["Don't forget to print your ", { "slot": "gapfill-q2", "answers": ["boarding pass"] }, " before going to the airport."] },
+    { "number": 3, "parts": ["Our ", { "slot": "gapfill-q3", "answers": ["itinerary"] }, " includes meetings in three different cities over five days."] },
+    { "number": 4, "parts": ["After a long flight from Australia, I always suffer from ", { "slot": "gapfill-q4", "answers": ["jet lag"] }, "."] },
+    { "number": 5, "parts": ["The ", { "slot": "gapfill-q5", "answers": ["conference venue"] }, " is equipped with meeting rooms and audiovisual equipment."] },
+    { "number": 6, "parts": ["You can get a full ", { "slot": "gapfill-q6", "answers": ["reimbursement"] }, " if you cancel more than 48 hours in advance."] },
+    { "number": 7, "parts": ["She has ", { "slot": "gapfill-q7", "answers": ["frequent flyer"] }, " status with the airline because she flies so often."] },
+    { "number": 8, "parts": ["Unfortunately, we have a four-hour ", { "slot": "gapfill-q8", "answers": ["layover / stopover", "layover", "stopover"] }, " in Dubai."] },
+    { "number": 9, "parts": ["I prefer a ", { "slot": "gapfill-q9", "answers": ["direct flight"] }, " because I don't like changing planes."] },
+    { "number": 10, "parts": ["The company provides a ", { "slot": "gapfill-q10", "answers": ["travel allowance"] }, " to cover hotels and meals during business trips."] },
+    { "number": 11, "parts": ["All the managers are in different ", { "slot": "gapfill-q11", "answers": ["time zones"] }, ", so we need to schedule the call carefully."] },
+    { "number": 12, "parts": ["Please keep all your receipts to claim from your ", { "slot": "gapfill-q12", "answers": ["expense account"] }, " when you return to the office."] },
+    { "number": 13, "parts": ["The ", { "slot": "gapfill-q13", "answers": ["departure lounge"] }, " was crowded, so we waited for the flight at a café instead."] },
+    { "number": 14, "parts": ["My ", { "slot": "gapfill-q14", "answers": ["travel insurance"] }, " covers medical emergencies and lost luggage."] },
+    { "number": 15, "parts": ["After ", { "slot": "gapfill-q15", "answers": ["check-in"] }, ", proceed directly to the security checkpoint."] },
+    { "number": 16, "parts": ["We were really pleased with our ", { "slot": "gapfill-q16", "answers": ["accommodation"] }, ", especially the comfortable rooms and the generous breakfast."] },
+    { "number": 17, "parts": ["The airline offers an ", { "slot": "gapfill-q17", "answers": ["upgrade"] }, " to business class for an additional fee."] },
+    { "number": 18, "parts": ["My luggage hasn't arrived at the ", { "slot": "gapfill-q18", "answers": ["baggage claim"] }, " yet."] },
+    { "number": 19, "parts": ["Flying from Paris to Lima, you have the option of a ", { "slot": "gapfill-q19", "answers": ["connecting flight"] }, " from Madrid or Lisbon."] },
+    { "number": 20, "parts": ["She goes on a ", { "slot": "gapfill-q20", "answers": ["business trip"] }, " at least twice a month."] }
+  ]
+}</div>
+    </div>
   </div>
 </div>
 

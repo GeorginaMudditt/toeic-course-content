@@ -32,6 +32,109 @@
       break-inside: avoid;
     }
   }
+
+  @keyframes vsg-shake {
+    0%, 100% { transform: translateX(0); }
+    20%, 60% { transform: translateX(-6px); }
+    40%, 80% { transform: translateX(6px); }
+  }
+  .vsg-shake { animation: vsg-shake 0.45s ease; }
+  .vsg-slot-correct {
+    border: 3px solid #15803d !important;
+    background: #ecfdf5 !important;
+    box-shadow: inset 0 0 0 1px rgba(21, 128, 61, 0.15);
+  }
+  .vsg-slot-wrong { border-color: #b91c1c !important; background: #fee2e2 !important; }
+  .vsg-layout {
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+    align-items: flex-start;
+  }
+  .vsg-sentences-col { flex: 1; min-width: 0; }
+  .vsg-bank-col {
+    width: min(260px, 100%);
+    flex-shrink: 0;
+    position: sticky;
+    top: 12px;
+    padding: 14px;
+    border-radius: 10px;
+    background: linear-gradient(135deg, #e8eaf6 0%, #f5f6fc 100%);
+    border: 1px solid #c5cae9;
+    box-shadow: 0 2px 6px rgba(56, 67, 143, 0.1);
+  }
+  .vsg-bank-scroll-notice {
+    margin: 0 0 10px;
+    padding: 8px 10px;
+    border-radius: 8px;
+    background: linear-gradient(135deg, #fff7ed 0%, #ffedd5 100%);
+    border: 1px solid #fdba74;
+    font-size: 12px;
+    line-height: 1.45;
+    color: #9a3412;
+  }
+  .vsg-bank-scroll-wrap {
+    position: relative;
+  }
+  .vsg-bank-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    max-height: min(70vh, 640px);
+    overflow-y: auto;
+    padding-right: 4px;
+    scrollbar-width: thin;
+    scrollbar-color: #38438f #e8eaf6;
+  }
+  .vsg-bank-grid::-webkit-scrollbar { width: 8px; }
+  .vsg-bank-grid::-webkit-scrollbar-track {
+    background: #e8eaf6;
+    border-radius: 8px;
+  }
+  .vsg-bank-grid::-webkit-scrollbar-thumb {
+    background: #38438f;
+    border-radius: 8px;
+  }
+  .vsg-bank-fade {
+    position: absolute;
+    left: 0;
+    right: 8px;
+    height: 28px;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+    z-index: 1;
+  }
+  .vsg-bank-fade-top {
+    top: 0;
+    background: linear-gradient(180deg, rgba(245, 246, 252, 0.98) 0%, rgba(245, 246, 252, 0) 100%);
+  }
+  .vsg-bank-fade-bottom {
+    bottom: 0;
+    background: linear-gradient(0deg, rgba(245, 246, 252, 0.98) 0%, rgba(245, 246, 252, 0) 100%);
+  }
+  .vsg-toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    align-items: center;
+    margin-top: 18px;
+  }
+  @media (max-width: 720px) {
+    .vsg-layout { flex-direction: column; }
+    .vsg-bank-col { width: 100%; position: static; }
+    .vsg-bank-grid {
+      flex-direction: row;
+      flex-wrap: wrap;
+      max-height: none;
+    }
+    .vsg-chip { flex: 0 1 auto; width: auto !important; }
+  }
+  @media print {
+    .vsg-no-print { display: none !important; }
+    .vsg-slot { border: 1px dashed #333 !important; background: #fff !important; }
+  }
+
 </style>
 <div style="max-width: 800px; margin: 0 auto; padding: 20px; font-family: Arial, sans-serif; line-height: 1.5; color: #333; background: linear-gradient(to bottom, #e8eaf6, #ffffff);">
   
@@ -188,30 +291,34 @@
   <!-- Part 2: Gap Fill Exercise -->
   <div style="margin-bottom: 30px; padding: 20px; background: white; border-radius: 10px; box-shadow: 0 2px 4px rgba(0,0,0,0.05);" class="keep-together">
     <h2 style="font-size: 20px; font-weight: bold; margin-bottom: 15px; color: #ba3627; border-bottom: 3px solid #ba3627; padding-bottom: 8px;">Part 2: Gap Fill Exercise</h2>
-    <p style="font-size: 16px; margin-bottom: 15px; color: #475569;">Complete the sentences using the correct word or phrase from the vocabulary list.</p>
+    <p style="font-size: 16px; margin-bottom: 15px; color: #475569;">Drag the word cards from the <strong>scrollable word bank on the right</strong> into the gaps in each sentence, or click a card and then click a gap. Use the <strong>Check answers</strong> button when you are ready.</p>
     
-    <ol style="padding-left: 25px; font-size: 16px; list-style-type: decimal;">
-      <li style="margin-bottom: 14px; padding: 8px; background: #f5e6e4; border-radius: 6px; border-left: 3px solid #ba3627;">Please check your <strong><span data-grammar-input="gapfill-q1" style="display: inline-block; min-width: 120px;"></span></strong> because I sent you the file this morning.</li>
-      <li style="margin-bottom: 14px; padding: 8px; background: #f5e6e4; border-radius: 6px; border-left: 3px solid #ba3627;">During the video conference, her <strong><span data-grammar-input="gapfill-q2" style="display: inline-block; min-width: 120px;"></span></strong> was not working properly so we couldn't hear everything.</li>
-      <li style="margin-bottom: 14px; padding: 8px; background: #f5e6e4; border-radius: 6px; border-left: 3px solid #ba3627;">I left a message on his <strong><span data-grammar-input="gapfill-q3" style="display: inline-block; min-width: 120px;"></span></strong> because he didn't answer.</li>
-      <li style="margin-bottom: 14px; padding: 8px; background: #f5e6e4; border-radius: 6px; border-left: 3px solid #ba3627;">Could you <strong><span data-grammar-input="gapfill-q4" style="display: inline-block; min-width: 120px;"></span></strong> me <strong><span data-grammar-input="gapfill-q5" style="display: inline-block; min-width: 120px;"></span></strong> to the customer service department?</li>
-      <li style="margin-bottom: 14px; padding: 8px; background: #f5e6e4; border-radius: 6px; border-left: 3px solid #ba3627;">I was picking up some cruise <strong><span data-grammar-input="gapfill-q6" style="display: inline-block; min-width: 120px;"></span></strong> for my mother.</li>
-      <li style="margin-bottom: 14px; padding: 8px; background: #f5e6e4; border-radius: 6px; border-left: 3px solid #ba3627;">This mobile is very old; it's not a <strong><span data-grammar-input="gapfill-q7" style="display: inline-block; min-width: 120px;"></span></strong>, just a basic model.</li>
-      <li style="margin-bottom: 14px; padding: 8px; background: #f5e6e4; border-radius: 6px; border-left: 3px solid #ba3627;">The <strong><span data-grammar-input="gapfill-q8" style="display: inline-block; min-width: 120px;"></span></strong> in India deals with about 90% of customer enquiries.</li>
-      <li style="margin-bottom: 14px; padding: 8px; background: #f5e6e4; border-radius: 6px; border-left: 3px solid #ba3627;">When you finish your call, don't forget to <strong><span data-grammar-input="gapfill-q9" style="display: inline-block; min-width: 120px;"></span></strong>.</li>
-      <li style="margin-bottom: 14px; padding: 8px; background: #f5e6e4; border-radius: 6px; border-left: 3px solid #ba3627;">Please write a short and <strong><span data-grammar-input="gapfill-q10" style="display: inline-block; min-width: 120px;"></span></strong> email to the client to explain the policy.</li>
-      <li style="margin-bottom: 14px; padding: 8px; background: #f5e6e4; border-radius: 6px; border-left: 3px solid #ba3627;">I couldn't answer the phone at lunchtime, but I will <strong><span data-grammar-input="gapfill-q11" style="display: inline-block; min-width: 120px;"></span></strong> them <strong><span data-grammar-input="gapfill-q12" style="display: inline-block; min-width: 120px;"></span></strong> later today.</li>
-      <li style="margin-bottom: 14px; padding: 8px; background: #f5e6e4; border-radius: 6px; border-left: 3px solid #ba3627;">He sent me the contract as an email <strong><span data-grammar-input="gapfill-q13" style="display: inline-block; min-width: 120px;"></span></strong>.</li>
-      <li style="margin-bottom: 14px; padding: 8px; background: #f5e6e4; border-radius: 6px; border-left: 3px solid #ba3627;">The office still has a <strong><span data-grammar-input="gapfill-q14" style="display: inline-block; min-width: 120px;"></span></strong> for official calls.</li>
-      <li style="margin-bottom: 14px; padding: 8px; background: #f5e6e4; border-radius: 6px; border-left: 3px solid #ba3627;">If you can't see the link to the training course in your inbox, check in your <strong><span data-grammar-input="gapfill-q15" style="display: inline-block; min-width: 120px;"></span></strong> folder.</li>
-      <li style="margin-bottom: 14px; padding: 8px; background: #f5e6e4; border-radius: 6px; border-left: 3px solid #ba3627;">She gave me her <strong><span data-grammar-input="gapfill-q16" style="display: inline-block; min-width: 120px;"></span></strong> so I could contact her again.</li>
-      <li style="margin-bottom: 14px; padding: 8px; background: #f5e6e4; border-radius: 6px; border-left: 3px solid #ba3627;">The parcel arrived this morning thanks to a <strong><span data-grammar-input="gapfill-q17" style="display: inline-block; min-width: 120px;"></span></strong>.</li>
-      <li style="margin-bottom: 14px; padding: 8px; background: #f5e6e4; border-radius: 6px; border-left: 3px solid #ba3627;">Try to use the correct level of <strong><span data-grammar-input="gapfill-q18" style="display: inline-block; min-width: 120px;"></span></strong> when writing to the mayor.</li>
-      <li style="margin-bottom: 14px; padding: 8px; background: #f5e6e4; border-radius: 6px; border-left: 3px solid #ba3627;">I will <strong><span data-grammar-input="gapfill-q19" style="display: inline-block; min-width: 120px;"></span></strong> this email to the HR department.</li>
-      <li style="margin-bottom: 14px; padding: 8px; background: #f5e6e4; border-radius: 6px; border-left: 3px solid #ba3627;">During the online lesson, please turn on your <strong><span data-grammar-input="gapfill-q20" style="display: inline-block; min-width: 120px;"></span></strong>.</li>
-      <li style="margin-bottom: 14px; padding: 8px; background: #f5e6e4; border-radius: 6px; border-left: 3px solid #ba3627;">If you need help, you can call the emergency <strong><span data-grammar-input="gapfill-q21" style="display: inline-block; min-width: 120px;"></span></strong>.</li>
-      <li style="margin-bottom: 14px; padding: 8px; background: #f5e6e4; border-radius: 6px; border-left: 3px solid #ba3627;">Use these <strong><span data-grammar-input="gapfill-q22" style="display: inline-block; min-width: 120px;"></span></strong> to find the document on the website.</li>
-    </ol>
+    <div data-vocab-gap-fill-mount="true" data-vocab-audio-dir="/vocab-audio/telephoning-writing-vocab-audio/" style="margin-top: 8px;">
+      <div class="vocab-series-gap-data" hidden aria-hidden="true">{
+  "sentences": [
+    { "number": 1, "parts": ["Please check your ", { "slot": "gapfill-q1", "answers": ["inbox"] }, " because I sent you the file this morning."] },
+    { "number": 2, "parts": ["During the video conference, her ", { "slot": "gapfill-q2", "answers": ["microphone"] }, " was not working properly so we couldn't hear everything."] },
+    { "number": 3, "parts": ["I left a message on his ", { "slot": "gapfill-q3", "answers": ["voicemail"] }, " because he didn't answer."] },
+    { "number": 4, "parts": ["Could you ", { "slot": "gapfill-q4", "answers": ["put"] }, " me ", { "slot": "gapfill-q5", "answers": ["through"] }, " to the customer service department?"] },
+    { "number": 5, "parts": ["I was picking up some cruise ", { "slot": "gapfill-q6", "answers": ["brochure"] }, " for my mother."] },
+    { "number": 6, "parts": ["This mobile is very old; it's not a ", { "slot": "gapfill-q7", "answers": ["smartphone"] }, ", just a basic model."] },
+    { "number": 7, "parts": ["The ", { "slot": "gapfill-q8", "answers": ["call centre"] }, " in India deals with about 90% of customer enquiries."] },
+    { "number": 8, "parts": ["When you finish your call, don't forget to ", { "slot": "gapfill-q9", "answers": ["hang up"] }, "."] },
+    { "number": 9, "parts": ["Please write a short and ", { "slot": "gapfill-q10", "answers": ["concise"] }, " email to the client to explain the policy."] },
+    { "number": 10, "parts": ["I couldn't answer the phone at lunchtime, but I will ", { "slot": "gapfill-q11", "answers": ["call"] }, " them ", { "slot": "gapfill-q12", "answers": ["back"] }, " later today."] },
+    { "number": 11, "parts": ["He sent me the contract as an email ", { "slot": "gapfill-q13", "answers": ["attachment"] }, "."] },
+    { "number": 12, "parts": ["The office still has a ", { "slot": "gapfill-q14", "answers": ["landline"] }, " for official calls."] },
+    { "number": 13, "parts": ["If you can't see the link to the training course in your inbox, check in your ", { "slot": "gapfill-q15", "answers": ["junk mail"] }, " folder."] },
+    { "number": 14, "parts": ["She gave me her ", { "slot": "gapfill-q16", "answers": ["business card"] }, " so I could contact her again."] },
+    { "number": 15, "parts": ["The parcel arrived this morning thanks to a ", { "slot": "gapfill-q17", "answers": ["courier"] }, "."] },
+    { "number": 16, "parts": ["Try to use the correct level of ", { "slot": "gapfill-q18", "answers": ["formality"] }, " when writing to the mayor."] },
+    { "number": 17, "parts": ["I will ", { "slot": "gapfill-q19", "answers": ["forward"] }, " this email to the HR department."] },
+    { "number": 18, "parts": ["During the online lesson, please turn on your ", { "slot": "gapfill-q20", "answers": ["webcam"] }, "."] },
+    { "number": 19, "parts": ["If you need help, you can call the emergency ", { "slot": "gapfill-q21", "answers": ["helpline / hotline", "helpline", "hotline"] }, "."] },
+    { "number": 20, "parts": ["Use these ", { "slot": "gapfill-q22", "answers": ["keywords"] }, " to find the document on the website."] }
+  ]
+}</div>
+    </div>
   </div>
 </div>
 
