@@ -102,6 +102,34 @@ const expandAnswerVariants = (value: string): string[] => {
   return pieces.length ? pieces : [trimmed]
 }
 
+/** Remove trailing grammar-note parentheses, e.g. "waters (Present Simple - habitual action)". */
+const stripAnswerKeyAnnotation = (value: string): string => {
+  return value.replace(/\s*\([^)]*\)\s*$/g, '').trim()
+}
+
+/** Parse one answer-key line into one group per blank (ellipsis = multiple blanks). */
+const parseAnswerKeyLine = (raw: string): string[][] => {
+  const stripped = stripAnswerKeyAnnotation(raw.trim())
+  if (!stripped) return []
+
+  if (/\.\.\./.test(stripped)) {
+    return stripped
+      .split(/\s*\.\.\.\s*/)
+      .map((part) =>
+        expandAnswerVariants(part)
+          .map((token) => normalizeAnswerValue(token))
+          .filter(Boolean)
+      )
+      .filter((group) => group.length > 0)
+  }
+
+  const variants = expandAnswerVariants(stripped)
+    .map((token) => normalizeAnswerValue(token))
+    .filter(Boolean)
+
+  return variants.length ? [variants] : []
+}
+
 const buildPrefixLabelRegex = (prefix: string): RegExp | null => {
   const match = prefix.match(/^([a-zA-Z]+)(\d+)$/)
   if (!match) return null
@@ -137,19 +165,20 @@ const extractAnswerTokenGroups = (scope: ParentNode): string[][] => {
 
   if (list) {
     return Array.from(list.querySelectorAll('li'))
-      .map((item) => {
+      .flatMap((item) => {
         const strongTokens = Array.from(item.querySelectorAll('strong'))
           .map((el) => (el.textContent || '').trim())
           .filter(Boolean)
-          .flatMap((token) => expandAnswerVariants(token))
-          .map((token) => normalizeAnswerValue(token))
-          .filter(Boolean)
 
-        if (strongTokens.length) return strongTokens
+        if (strongTokens.length) {
+          return strongTokens.map((token) =>
+            expandAnswerVariants(stripAnswerKeyAnnotation(token))
+              .map((part) => normalizeAnswerValue(part))
+              .filter(Boolean)
+          ).filter((group) => group.length > 0)
+        }
 
-        return expandAnswerVariants((item.textContent || '').trim())
-          .map((token) => normalizeAnswerValue(token))
-          .filter(Boolean)
+        return parseAnswerKeyLine((item.textContent || '').trim())
       })
       .filter((group) => group.length > 0)
   }
