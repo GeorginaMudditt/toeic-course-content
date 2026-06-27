@@ -81,11 +81,23 @@ export const authOptions: NextAuthOptions = {
           if (user.role) token.role = user.role
           if (user.id) token.id = user.id
           if (user.avatar !== undefined) token.avatar = user.avatar
+          if (user.role === 'GUARDIAN') {
+            token.activeChildId = null
+            token.activeChildName = null
+          }
         }
         
         // Handle session updates (e.g., when avatar is changed)
-        if (trigger === 'update' && session?.avatar !== undefined) {
-          token.avatar = session.avatar
+        if (trigger === 'update' && session) {
+          if (session.avatar !== undefined) {
+            token.avatar = session.avatar
+          }
+          if (session.activeChildId !== undefined) {
+            token.activeChildId = session.activeChildId
+          }
+          if (session.activeChildName !== undefined) {
+            token.activeChildName = session.activeChildName
+          }
         }
         
         return token
@@ -100,6 +112,12 @@ export const authOptions: NextAuthOptions = {
           if (token.role) session.user.role = token.role as string
           if (token.id) session.user.id = token.id as string
           if (token.avatar !== undefined) session.user.avatar = token.avatar as string | null
+          if (token.activeChildId !== undefined) {
+            session.user.activeChildId = token.activeChildId as string | null
+          }
+          if (token.activeChildName !== undefined) {
+            session.user.activeChildName = token.activeChildName as string | null
+          }
         }
         return session
       } catch (error) {

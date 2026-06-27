@@ -3,6 +3,10 @@ import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
 import { supabaseServer } from '@/lib/supabase'
 import { randomUUID } from 'crypto'
+import {
+  canWriteVocabularyProgress,
+  resolveVocabularyProgressTarget,
+} from '@/lib/vocabulary-progress-target'
 
 // GET: Fetch vocabulary progress for the current user (student) or all students (teacher)
 export async function GET(request: NextRequest) {
@@ -18,16 +22,15 @@ export async function GET(request: NextRequest) {
     const topic = searchParams.get('topic')
     const studentId = searchParams.get('studentId')
 
-    // If studentId is provided, only teachers can access it
-    const targetStudentId = studentId || session.user.id
-    if (studentId && session.user.role !== 'TEACHER') {
-      return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
+    const target = await resolveVocabularyProgressTarget(session, studentId)
+    if (!target.ok) {
+      return NextResponse.json({ error: target.error }, { status: target.status })
     }
 
     let query = supabaseServer
       .from('VocabularyProgress')
       .select('*')
-      .eq('studentId', targetStudentId)
+      .eq('studentId', target.studentId)
 
     if (level) {
       query = query.eq('level', level.toLowerCase())
@@ -57,9 +60,15 @@ export async function POST(request: NextRequest) {
   try {
     const session = await getServerSession(authOptions)
     
-    if (!session || session.user.role !== 'STUDENT') {
+    if (!session || !canWriteVocabularyProgress(session)) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
+
+    const target = await resolveVocabularyProgressTarget(session, null)
+    if (!target.ok) {
+      return NextResponse.json({ error: target.error }, { status: target.status })
+    }
+    const targetStudentId = target.studentId
 
     const body = await request.json()
     let { level, topic, bronze, silver, gold } = body
@@ -77,7 +86,7 @@ export async function POST(request: NextRequest) {
     silver = Boolean(silver)
     gold = Boolean(gold)
 
-    console.log('Vocabulary progress POST:', { studentId: session.user.id, level: normalizedLevel, topic, bronze, silver, gold })
+    console.log('Vocabulary progress POST:', { studentId: targetStudentId, level: normalizedLevel, topic, bronze, silver, gold })
 
     // Check if progress already exists
     // Use ilike for case-insensitive matching and trim for whitespace handling
@@ -85,7 +94,7 @@ export async function POST(request: NextRequest) {
     let { data: existing, error: checkError } = await supabaseServer
       .from('VocabularyProgress')
       .select('id, bronze, silver, gold, topic')
-      .eq('studentId', session.user.id)
+      .eq('studentId', targetStudentId)
       .eq('level', normalizedLevel)
       .eq('topic', topic)
       .order('updatedAt', { ascending: false })
@@ -97,7 +106,7 @@ export async function POST(request: NextRequest) {
       const { data: allRecords, error: fetchError } = await supabaseServer
         .from('VocabularyProgress')
         .select('id, bronze, silver, gold, topic')
-        .eq('studentId', session.user.id)
+        .eq('studentId', targetStudentId)
         .eq('level', normalizedLevel)
       
       if (!fetchError && allRecords && allRecords.length > 0) {
@@ -188,7 +197,7 @@ export async function POST(request: NextRequest) {
       const now = new Date().toISOString()
       const insertData: any = {
         id: randomUUID(),
-        studentId: session.user.id,
+        studentId: targetStudentId,
         level: normalizedLevel,
         topic: normalizedTopic, // Use normalized topic
         bronze: Boolean(bronze),

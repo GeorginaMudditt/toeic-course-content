@@ -21,6 +21,8 @@ export default function DashboardRedirect() {
         router.push('/teacher/dashboard')
       } else if (session.user.role === 'STUDENT') {
         router.push('/student/dashboard')
+      } else if (session.user.role === 'GUARDIAN') {
+        router.push('/family')
       } else {
         router.push('/login')
       }

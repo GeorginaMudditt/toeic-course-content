@@ -3,7 +3,7 @@
 import { useEffect, useState, useMemo, useCallback } from 'react'
 import { useParams, useRouter, useSearchParams } from 'next/navigation'
 import { LEVEL_COLORS } from '@/lib/level-colors'
-import Navbar from '@/components/Navbar'
+import VocabularyNav from '@/components/VocabularyNav'
 import ChallengeModal from '@/components/ChallengeModal'
 import Link from 'next/link'
 import { supabase } from '@/lib/supabase'
@@ -675,7 +675,7 @@ export default function ChallengePage() {
   if (loading) {
     return (
       <div className="min-h-screen bg-gray-50">
-        <Navbar />
+        <VocabularyNav />
         <div className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
           <div className="px-4 py-6 sm:px-0">
             <div className="flex items-center justify-center min-h-[400px]">
@@ -689,7 +689,7 @@ export default function ChallengePage() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <Navbar />
+      <VocabularyNav />
       <ChallengeModal
         isOpen={modalState.isOpen}
         onClose={handleModalClose}

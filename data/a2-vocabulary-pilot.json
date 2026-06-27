@@ -396,6 +396,109 @@
         { "word_english": "entrance", "translation_french": "entrée" },
         { "word_english": "exit", "translation_french": "sortie" }
       ]
+    },
+    {
+      "topic_page": "Home (B)",
+      "slug": "home-b",
+      "icon_file": "home-b.png",
+      "words": [
+        { "word_english": "furniture", "translation_french": "meubles" },
+        { "word_english": "garage", "translation_french": "garage" },
+        { "word_english": "gate", "translation_french": "portail" },
+        { "word_english": "heating", "translation_french": "chauffage" },
+        { "word_english": "inside", "translation_french": "à l'intérieur" },
+        { "word_english": "outside", "translation_french": "à l'extérieur" },
+        { "word_english": "lamp", "translation_french": "lampe" },
+        { "word_english": "mirror", "translation_french": "miroir" },
+        { "word_english": "pillow", "translation_french": "oreiller" },
+        { "word_english": "roof", "translation_french": "toit" },
+        { "word_english": "shelf", "translation_french": "étagère" },
+        { "word_english": "sink", "translation_french": "évier" },
+        { "word_english": "sitting room", "translation_french": "salon" },
+        { "word_english": "sofa", "translation_french": "canapé" }
+      ]
+    },
+    {
+      "topic_page": "Jobs (A)",
+      "slug": "jobs-a",
+      "icon_file": "jobs-a.png",
+      "words": [
+        { "word_english": "receptionist", "translation_french": "réceptionniste" },
+        { "word_english": "writer", "translation_french": "écrivain(e)" },
+        { "word_english": "engineer", "translation_french": "ingénieur(e)" },
+        { "word_english": "shop assistant", "translation_french": "vendeur / vendeuse" },
+        { "word_english": "nurse", "translation_french": "infirmier / infirmière" },
+        { "word_english": "painter", "translation_french": "peintre" },
+        { "word_english": "dentist", "translation_french": "dentiste" },
+        { "word_english": "chef", "translation_french": "chef cuisinier / cheffe cuisinière" },
+        { "word_english": "student", "translation_french": "étudiant(e)" },
+        { "word_english": "doctor", "translation_french": "médecin" },
+        { "word_english": "photographer", "translation_french": "photographe" },
+        { "word_english": "teacher", "translation_french": "professeur(e)" },
+        { "word_english": "taxi driver", "translation_french": "chauffeur / chauffeuse de taxi" },
+        { "word_english": "tennis player", "translation_french": "joueur / joueuse de tennis" },
+        { "word_english": "waiter", "translation_french": "serveur / serveuse" },
+        { "word_english": "singer", "translation_french": "chanteur / chanteuse" }
+      ]
+    },
+    {
+      "topic_page": "Jobs (B)",
+      "slug": "jobs-b",
+      "icon_file": "jobs-b.png",
+      "words": [
+        { "word_english": "manager", "translation_french": "manager" },
+        { "word_english": "actor", "translation_french": "acteur / actrice" },
+        { "word_english": "cleaner", "translation_french": "agent d'entretien" },
+        { "word_english": "clown", "translation_french": "clown" },
+        { "word_english": "dancer", "translation_french": "danseur / danseuse" },
+        { "word_english": "office worker", "translation_french": "employé(e) de bureau" },
+        { "word_english": "tour guide", "translation_french": "guide touristique" },
+        { "word_english": "artist", "translation_french": "artiste" },
+        { "word_english": "business owner", "translation_french": "chef / cheffe d'entreprise" },
+        { "word_english": "farmer", "translation_french": "agriculteur / agricultrice" },
+        { "word_english": "footballer", "translation_french": "footballeur / footballeuse" },
+        { "word_english": "mechanic", "translation_french": "mécanicien(ne)" },
+        { "word_english": "occupation", "translation_french": "profession" },
+        { "word_english": "pilot", "translation_french": "pilote" },
+        { "word_english": "salesperson", "translation_french": "vendeur / vendeuse" },
+        { "word_english": "secretary", "translation_french": "secrétaire" }
+      ]
+    },
+    {
+      "topic_page": "Media",
+      "slug": "media",
+      "icon_file": "media.png",
+      "words": [
+        { "word_english": "album", "translation_french": "album" },
+        { "word_english": "advertisement", "translation_french": "publicité" },
+        { "word_english": "channel", "translation_french": "chaîne" },
+        { "word_english": "digital camera", "translation_french": "appareil photo numérique" },
+        { "word_english": "download", "translation_french": "téléchargement" },
+        { "word_english": "magazine", "translation_french": "magazine" },
+        { "word_english": "email", "translation_french": "e-mail" },
+        { "word_english": "poster", "translation_french": "affiche" },
+        { "word_english": "programme", "translation_french": "programme" },
+        { "word_english": "screen", "translation_french": "écran" },
+        { "word_english": "video", "translation_french": "vidéo" }
+      ]
+    },
+    {
+      "topic_page": "Money",
+      "slug": "money",
+      "icon_file": "money.png",
+      "words": [
+        { "word_english": "cheque", "translation_french": "chèque" },
+        { "word_english": "discount", "translation_french": "réduction" },
+        { "word_english": "gold", "translation_french": "or" },
+        { "word_english": "half-price", "translation_french": "à moitié prix" },
+        { "word_english": "on sale", "translation_french": "en solde" },
+        { "word_english": "price", "translation_french": "prix" },
+        { "word_english": "receipt", "translation_french": "reçu" },
+        { "word_english": "rent", "translation_french": "loyer" },
+        { "word_english": "card", "translation_french": "carte" },
+        { "word_english": "cash", "translation_french": "argent liquide" },
+        { "word_english": "purse", "translation_french": "porte-monnaie" }
+      ]
     }
   ]
 }

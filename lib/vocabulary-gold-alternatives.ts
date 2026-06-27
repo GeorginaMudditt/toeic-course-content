@@ -3,6 +3,7 @@ const GOLD_ALTERNATIVES: Record<string, string[]> = {
   'a2|Activities (B)|spare time': ['free time'],
   'a2|Adjectives (B)|good-looking': ['good looking'],
   'a2|Adjectives (B)|well-known': ['well known'],
+  'a2|Money|half-price': ['half price'],
 }
 
 export interface VocabularyWord {

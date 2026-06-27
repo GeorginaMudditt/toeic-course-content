@@ -3,7 +3,7 @@
 import { useEffect, useState, useCallback } from 'react'
 import { useParams, useRouter, useSearchParams } from 'next/navigation'
 import { LEVEL_COLORS } from '@/lib/level-colors'
-import Navbar from '@/components/Navbar'
+import VocabularyNav from '@/components/VocabularyNav'
 import Link from 'next/link'
 import { isVocabularyLevel } from '@/lib/vocabulary-levels'
 
@@ -214,7 +214,7 @@ export default function VocabularyLevelPage() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <Navbar />
+      <VocabularyNav />
       <div className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
         <div className="px-4 py-6 sm:px-0">
           <Link

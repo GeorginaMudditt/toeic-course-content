@@ -1,35 +1,41 @@
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
 import { redirect } from 'next/navigation'
-import Navbar from '@/components/Navbar'
 import Link from 'next/link'
 import { LEVEL_INFO } from '@/lib/level-colors'
+import { resolveVocabularyStudentContext } from '@/lib/vocabulary-student-context'
+import VocabularyNav from '@/components/VocabularyNav'
 
 export default async function VocabularyPage({ searchParams }: { searchParams: { viewAs?: string } }) {
   const session = await getServerSession(authOptions)
   const viewAs = searchParams?.viewAs
-  
-  // Allow teachers to view if they have viewAs parameter
-  if (viewAs && session?.user.role === 'TEACHER') {
-    // Teacher viewing as student - allow access
-  } else if (!session || session.user.role !== 'STUDENT') {
-    redirect('/login')
+  const ctx = await resolveVocabularyStudentContext(session, viewAs)
+
+  if (!ctx.allowed) {
+    redirect(ctx.backHref)
   }
+
+  const isGuardian = ctx.isGuardian
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <Navbar />
+      <VocabularyNav />
       <div className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
         <div className="px-4 py-6 sm:px-0">
           <Link
-            href={viewAs ? `/teacher/students/${viewAs}/view` : '/student/dashboard'}
+            href={ctx.backHref}
             className="inline-flex items-center text-sm text-gray-600 hover:text-gray-900 mb-4 transition-colors"
           >
             <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
             </svg>
-            Back to Dashboard
+            {isGuardian ? 'Switch learner' : 'Back to Dashboard'}
           </Link>
+          {isGuardian && ctx.activeChildName && (
+            <p className="text-sm text-gray-600 mb-4">
+              Progress board for <strong>{ctx.activeChildName}</strong>
+            </p>
+          )}
           <h1 className="text-3xl font-bold text-gray-900 mb-4">Vocabulary by CEFR Level</h1>
           <p className="text-gray-600 mb-8">
             Select the level that best matches your current English skills
@@ -70,7 +76,7 @@ export default async function VocabularyPage({ searchParams }: { searchParams: {
                     : 'cursor-not-allowed opacity-60 relative group'
                 }`
                 
-                const href = viewAs 
+                const href = ctx.isTeacherView && viewAs
                   ? `/student/vocabulary/${level.id.toLowerCase()}?viewAs=${viewAs}`
                   : `/student/vocabulary/${level.id.toLowerCase()}`
                 
@@ -101,4 +107,3 @@ export default async function VocabularyPage({ searchParams }: { searchParams: {
     </div>
   )
 }
-
