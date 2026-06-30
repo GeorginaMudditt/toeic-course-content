@@ -2690,17 +2690,22 @@ export default function WorksheetViewer({
     let detach: (() => void) | undefined
     let cancelled = false
 
-    const tryMount = () => {
-      if (cancelled) return
+    const tryMount = (): boolean => {
+      if (cancelled) return false
       const host = contentRef.current
-      if (!host) return
+      if (!host) return false
       const el = host.querySelector('[data-vocab-gap-fill-mount]') as HTMLElement | null
-      if (!el) return
+      if (!el) return false
+      if (el.getAttribute('data-vocab-gap-mounted') === 'true') return true
+      detach?.()
       detach = mountVocabularySeriesGapFill(el)
+      return el.getAttribute('data-vocab-gap-mounted') === 'true'
     }
 
-    tryMount()
-    const rafId = requestAnimationFrame(tryMount)
+    const mounted = tryMount()
+    const rafId = mounted ? 0 : requestAnimationFrame(() => {
+      tryMount()
+    })
 
     return () => {
       cancelled = true

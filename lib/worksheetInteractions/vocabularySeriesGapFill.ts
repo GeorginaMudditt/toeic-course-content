@@ -103,6 +103,10 @@ function buildWordBank(config: VocabGapConfig): string[] {
 }
 
 export function mountVocabularySeriesGapFill(root: HTMLElement): () => void {
+  if (root.getAttribute('data-vocab-gap-mounted') === 'true' && root.querySelector('.vsg-layout')) {
+    return () => {}
+  }
+
   const config = parseConfig(root)
 
   let selectedChip: HTMLElement | null = null
@@ -401,8 +405,12 @@ export function mountVocabularySeriesGapFill(root: HTMLElement): () => void {
   }
 
   build()
+  if (config?.sentences?.length) {
+    root.setAttribute('data-vocab-gap-mounted', 'true')
+  }
 
   return () => {
+    root.removeAttribute('data-vocab-gap-mounted')
     root.innerHTML = ''
   }
 }
