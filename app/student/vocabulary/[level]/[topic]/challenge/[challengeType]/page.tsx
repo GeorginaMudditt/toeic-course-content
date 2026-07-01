@@ -12,6 +12,7 @@ import {
   getGoldSlotCorrectness,
   isGoldChallengeCorrect,
 } from '@/lib/vocabulary-gold-alternatives'
+import { orderWordsForBronze } from '@/lib/vocabulary-bronze-order'
 
 interface Word {
   word_english: string
@@ -221,6 +222,11 @@ export default function ChallengePage() {
     const slots = words.map((w, i) => ({ word: w, slotIndex: i }))
     return [...slots].sort(() => Math.random() - 0.5)
   }, [challengeType, words])
+
+  const bronzeDisplayWords = useMemo(() => {
+    if (challengeType !== 'bronze' || !words.length) return words
+    return orderWordsForBronze(level, topic, words)
+  }, [challengeType, level, topic, words])
 
   const silverSlotCorrectness = useMemo(() => {
     if (challengeType !== 'silver' || !silverHelpModeEnabled) return {} as Record<number, boolean>
@@ -876,9 +882,9 @@ export default function ChallengePage() {
                       </p>
                     </div>
                     
-                    {words.length > 0 ? (
+                    {bronzeDisplayWords.length > 0 ? (
                       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 mb-6">
-                        {words.map((word, index) => (
+                        {bronzeDisplayWords.map((word, index) => (
                           <div key={index} className="border rounded-lg p-4 bg-white flex flex-col">
                             <div className="flex-1 mb-3">
                               <div className="font-semibold text-gray-900 mb-1 text-sm">

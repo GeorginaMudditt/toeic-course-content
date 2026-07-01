@@ -499,6 +499,141 @@
         { "word_english": "cash", "translation_french": "argent liquide" },
         { "word_english": "purse", "translation_french": "porte-monnaie" }
       ]
+    },
+    {
+      "topic_page": "Natural World",
+      "slug": "natural-world",
+      "icon_file": "natural-world.png",
+      "bronze_groups": [
+        ["summer", "autumn", "winter", "spring"],
+        ["north", "east", "south", "west"],
+        ["countryside", "area", "field", "wood", "forest"],
+        ["island", "lake", "desert"],
+        ["sky", "cloud", "fog", "sunny", "storm", "thunderstorm"],
+        ["moon", "star"]
+      ],
+      "words": [
+        { "word_english": "countryside", "translation_french": "campagne" },
+        { "word_english": "desert", "translation_french": "désert" },
+        { "word_english": "area", "translation_french": "région" },
+        { "word_english": "summer", "translation_french": "été" },
+        { "word_english": "autumn", "translation_french": "automne" },
+        { "word_english": "winter", "translation_french": "hiver" },
+        { "word_english": "spring", "translation_french": "printemps" },
+        { "word_english": "cloud", "translation_french": "nuage" },
+        { "word_english": "north", "translation_french": "nord" },
+        { "word_english": "east", "translation_french": "est" },
+        { "word_english": "south", "translation_french": "sud" },
+        { "word_english": "west", "translation_french": "ouest" },
+        { "word_english": "wood", "translation_french": "bois" },
+        { "word_english": "field", "translation_french": "champ" },
+        { "word_english": "fog", "translation_french": "brouillard" },
+        { "word_english": "forest", "translation_french": "forêt" },
+        { "word_english": "island", "translation_french": "île" },
+        { "word_english": "lake", "translation_french": "lac" },
+        { "word_english": "sky", "translation_french": "ciel" },
+        { "word_english": "star", "translation_french": "étoile" },
+        { "word_english": "storm", "translation_french": "tempête" },
+        { "word_english": "sunny", "translation_french": "ensoleillé(e)" },
+        { "word_english": "moon", "translation_french": "lune" },
+        { "word_english": "thunderstorm", "translation_french": "orage" }
+      ]
+    },
+    {
+      "topic_page": "Nouns (A)",
+      "slug": "nouns-a",
+      "icon_file": "nouns-a.png",
+      "words": [
+        { "word_english": "umbrella", "translation_french": "parapluie" },
+        { "word_english": "wallet", "translation_french": "portefeuille" },
+        { "word_english": "bottle", "translation_french": "bouteille" },
+        { "word_english": "alarm clock", "translation_french": "réveil" },
+        { "word_english": "diary", "translation_french": "agenda" },
+        { "word_english": "comb", "translation_french": "peigne" },
+        { "word_english": "document", "translation_french": "document" },
+        { "word_english": "battery", "translation_french": "pile" },
+        { "word_english": "envelope", "translation_french": "enveloppe" },
+        { "word_english": "balloon", "translation_french": "ballon" },
+        { "word_english": "blackboard", "translation_french": "tableau" },
+        { "word_english": "blanket", "translation_french": "couverture" },
+        { "word_english": "calendar", "translation_french": "calendrier" },
+        { "word_english": "mug", "translation_french": "tasse" }
+      ]
+    },
+    {
+      "topic_page": "Nouns (B)",
+      "slug": "nouns-b",
+      "icon_file": "nouns-b.png",
+      "words": [
+        { "word_english": "bowl", "translation_french": "bol" },
+        { "word_english": "can", "translation_french": "boîte de conserve" },
+        { "word_english": "washing machine", "translation_french": "machine à laver" },
+        { "word_english": "kite", "translation_french": "cerf-volant" },
+        { "word_english": "puzzle", "translation_french": "puzzle" },
+        { "word_english": "rubber", "translation_french": "gomme" },
+        { "word_english": "ruler", "translation_french": "règle" },
+        { "word_english": "scissors", "translation_french": "ciseaux" },
+        { "word_english": "shampoo", "translation_french": "shampoing" },
+        { "word_english": "soap", "translation_french": "savon" },
+        { "word_english": "stamp", "translation_french": "timbre" },
+        { "word_english": "toothbrush", "translation_french": "brosse à dents" },
+        { "word_english": "towel", "translation_french": "serviette" }
+      ]
+    },
+    {
+      "topic_page": "People",
+      "slug": "people",
+      "icon_file": "people.png",
+      "bronze_groups": [
+        ["girlfriend", "boyfriend"],
+        ["king", "queen"],
+        ["aunt", "uncle"]
+      ],
+      "words": [
+        { "word_english": "boss", "translation_french": "patron(ne)" },
+        { "word_english": "grandfather", "translation_french": "grand-père" },
+        { "word_english": "grandmother", "translation_french": "grand-mère" },
+        { "word_english": "aunt", "translation_french": "tante" },
+        { "word_english": "uncle", "translation_french": "oncle" },
+        { "word_english": "colleague", "translation_french": "collègue" },
+        { "word_english": "classmate", "translation_french": "camarade de classe" },
+        { "word_english": "cousin", "translation_french": "cousin(e)" },
+        { "word_english": "customer", "translation_french": "client(e)" },
+        { "word_english": "winner", "translation_french": "gagnant(e)" },
+        { "word_english": "grandchild", "translation_french": "petit-enfant" },
+        { "word_english": "granddaughter", "translation_french": "petite-fille" },
+        { "word_english": "grandson", "translation_french": "petit-fils" },
+        { "word_english": "grandparent", "translation_french": "grand-parent" },
+        { "word_english": "guest", "translation_french": "invité(e)" },
+        { "word_english": "kid", "translation_french": "enfant" },
+        { "word_english": "neighbour", "translation_french": "voisin(e)" },
+        { "word_english": "king", "translation_french": "roi" },
+        { "word_english": "queen", "translation_french": "reine" },
+        { "word_english": "boyfriend", "translation_french": "petit ami" },
+        { "word_english": "girlfriend", "translation_french": "petite amie" },
+        { "word_english": "team", "translation_french": "équipe" },
+        { "word_english": "teenager", "translation_french": "adolescent(e)" }
+      ]
+    },
+    {
+      "topic_page": "Technology",
+      "slug": "technology",
+      "icon_file": "technology.png",
+      "words": [
+        { "word_english": "keyboard", "translation_french": "clavier" },
+        { "word_english": "web page", "translation_french": "page web" },
+        { "word_english": "electric", "translation_french": "électrique" },
+        { "word_english": "file", "translation_french": "fichier" },
+        { "word_english": "folder", "translation_french": "dossier" },
+        { "word_english": "laptop", "translation_french": "ordinateur portable" },
+        { "word_english": "memory", "translation_french": "mémoire" },
+        { "word_english": "online", "translation_french": "en ligne" },
+        { "word_english": "printer", "translation_french": "imprimante" },
+        { "word_english": "software", "translation_french": "logiciel" },
+        { "word_english": "telephone", "translation_french": "téléphone" },
+        { "word_english": "text message", "translation_french": "SMS" },
+        { "word_english": "video game", "translation_french": "jeu vidéo" }
+      ]
     }
   ]
 }
