@@ -896,7 +896,7 @@ export default function ChallengePage() {
                             </div>
                             {word.pron_english && (
                               <button
-                                onClick={() => playAudio(word.pron_english, word.word_english)}
+                                onClick={() => playAudio(word.pron_english ?? null, word.word_english)}
                                 className="w-full px-3 py-2 rounded-md text-white text-lg transition-opacity hover:opacity-80"
                                 style={{ backgroundColor: levelColor }}
                                 title="Listen to pronunciation"
