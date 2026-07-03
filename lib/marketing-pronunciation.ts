@@ -65,3 +65,10 @@ export function isValidMarketingSupabaseUrl(url: string): boolean {
 export function isValidMarketingSlug(slug: string): boolean {
   return /^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(slug)
 }
+
+/** e.g. to-bounce → To bounce, weather → Weather */
+export function slugToVocabularyLabel(slug: string): string {
+  const phrase = slug.split('-').filter(Boolean).join(' ')
+  if (!phrase) return ''
+  return phrase.charAt(0).toUpperCase() + phrase.slice(1).toLowerCase()
+}
