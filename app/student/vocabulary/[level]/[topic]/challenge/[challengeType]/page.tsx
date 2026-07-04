@@ -950,10 +950,10 @@ export default function ChallengePage() {
                     
                     {words.length > 0 ? (
                       <div className="mb-6">
-                        {/* English words pool */}
-                        <div className="bg-gray-50 rounded-lg p-4 border border-gray-200 mb-6">
+                        {/* English words pool — sticky so cards stay visible while scrolling French slots */}
+                        <div className="sticky top-0 z-10 mb-6 rounded-lg border border-gray-200 bg-gray-50 p-4 shadow-sm">
                           <h4 className="font-semibold text-gray-900 mb-4">English words</h4>
-                          <div className="flex flex-wrap gap-3">
+                          <div className="flex max-h-[min(40vh,280px)] flex-wrap gap-3 overflow-y-auto pr-1">
                             {shuffledWords.map((word, index) => {
                               const isSelected = selectedWord === word
                               return (

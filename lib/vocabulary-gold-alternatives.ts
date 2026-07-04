@@ -1,9 +1,16 @@
 /** Extra accepted English answers for gold challenge typing (beyond word_english). */
 const GOLD_ALTERNATIVES: Record<string, string[]> = {
   'a2|Activities (B)|spare time': ['free time'],
+  'a2|Adjectives (B)|amazing': ['incredible'],
   'a2|Adjectives (B)|good-looking': ['good looking'],
   'a2|Adjectives (B)|well-known': ['well known'],
   'a2|Money|half-price': ['half price'],
+  'a2|Technology|web page': ['website', 'web site'],
+  'a2|Travel (A)|aeroplane': ['plane', 'airplane'],
+  'a2|Travel (A)|bicycle': ['bike'],
+  'a2|Travel (A)|car park': ['carpark'],
+  'a2|Travel (A)|driving licence': ['driving license'],
+  'a2|Travel (B)|underground': ['subway'],
 }
 
 export interface VocabularyWord {
