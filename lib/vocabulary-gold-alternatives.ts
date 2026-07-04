@@ -11,6 +11,7 @@ const GOLD_ALTERNATIVES: Record<string, string[]> = {
   'a2|Travel (A)|car park': ['carpark'],
   'a2|Travel (A)|driving licence': ['driving license'],
   'a2|Travel (B)|underground': ['subway'],
+  'a2|Verbs (B)|to book': ['to reserve'],
 }
 
 export interface VocabularyWord {
