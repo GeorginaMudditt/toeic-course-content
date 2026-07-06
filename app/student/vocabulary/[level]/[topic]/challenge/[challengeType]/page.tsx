@@ -123,17 +123,18 @@ export default function ChallengePage() {
         try {
           // Fetch words from API route (uses service role key server-side)
           const response = await fetch(`/api/vocabulary/${level}/${encodeURIComponent(topic)}`)
-          const result = await response.json()
+          const result = (await response.json()) as { data?: Word[]; error?: string }
 
           if (!response.ok || result.error) {
             throw new Error(result.error || 'Error loading words')
           }
-          
-          setWords(result.data || [])
-          
+
+          const fetchedWords = result.data ?? []
+          setWords(fetchedWords)
+
           // For silver challenge, shuffle English word pool (distinct from Challenge 1 order)
-          if (challengeType === 'silver' && result.data && result.data.length > 0) {
-            const englishWords = result.data.map((item: Word) => item.word_english)
+          if (challengeType === 'silver' && fetchedWords.length > 0) {
+            const englishWords = fetchedWords.map((item) => item.word_english)
             const shuffled = shuffleForVocabularyChallenge(
               englishWords,
               level,
