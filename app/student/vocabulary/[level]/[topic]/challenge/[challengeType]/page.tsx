@@ -13,6 +13,7 @@ import {
   isGoldChallengeCorrect,
 } from '@/lib/vocabulary-gold-alternatives'
 import { orderWordsForBronze } from '@/lib/vocabulary-bronze-order'
+import { shuffleForVocabularyChallenge } from '@/lib/vocabulary-shuffle'
 
 interface Word {
   word_english: string
@@ -130,10 +131,15 @@ export default function ChallengePage() {
           
           setWords(result.data || [])
           
-          // For silver challenge, create shuffled English words
+          // For silver challenge, shuffle English word pool (distinct from Challenge 1 order)
           if (challengeType === 'silver' && result.data && result.data.length > 0) {
             const englishWords = result.data.map((item: Word) => item.word_english)
-            const shuffled = [...englishWords].sort(() => Math.random() - 0.5)
+            const shuffled = shuffleForVocabularyChallenge(
+              englishWords,
+              level,
+              topic,
+              'silver-english'
+            )
             setShuffledWords(shuffled)
             setWordPositions({})
           }
@@ -216,12 +222,18 @@ export default function ChallengePage() {
   // In view mode, show the challenge even if completed (but don't allow submission)
   const shouldShowChallenge = !isCompleted || isViewMode
 
-  // Gold challenge: shuffle while keeping stable slot indices (duplicate French must not share one input)
+  // Gold challenge: shuffle French slots (distinct from Challenge 1 and Challenge 2 order)
   const goldShuffledSlots = useMemo(() => {
     if (challengeType !== 'gold' || !words?.length) return [] as { word: Word; slotIndex: number }[]
     const slots = words.map((w, i) => ({ word: w, slotIndex: i }))
-    return [...slots].sort(() => Math.random() - 0.5)
-  }, [challengeType, words])
+    return shuffleForVocabularyChallenge(slots, level, topic, 'gold')
+  }, [challengeType, words, level, topic])
+
+  const silverShuffledSlots = useMemo(() => {
+    if (challengeType !== 'silver' || !words?.length) return [] as { word: Word; slotIndex: number }[]
+    const slots = words.map((w, i) => ({ word: w, slotIndex: i }))
+    return shuffleForVocabularyChallenge(slots, level, topic, 'silver-french')
+  }, [challengeType, words, level, topic])
 
   const bronzeDisplayWords = useMemo(() => {
     if (challengeType !== 'bronze' || !words.length) return words
@@ -989,15 +1001,15 @@ export default function ChallengePage() {
 
                         {/* Match area - responsive grid */}
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-                          {words.map((word, index) => (
-                            <div key={index} className="border rounded-lg p-4 bg-white">
+                          {silverShuffledSlots.map(({ word, slotIndex }) => (
+                            <div key={slotIndex} className="border rounded-lg p-4 bg-white">
                               <div className="flex items-center justify-between mb-2">
                                 <div className="font-semibold text-gray-900 text-sm">
                                   {word.translation_french}
                                 </div>
                                 {silverHelpModeEnabled && (
                                   <span className="text-xl">
-                                    {(silverSlotCorrectness[index] ?? false) ? (
+                                    {(silverSlotCorrectness[slotIndex] ?? false) ? (
                                       <span className="text-green-600" title="Correct">✓</span>
                                     ) : (
                                       <span className="text-red-600" title="Incorrect">✗</span>
@@ -1017,20 +1029,20 @@ export default function ChallengePage() {
                                     : undefined
                                 }
                                 onDragOver={handleDragOver}
-                                onDrop={(e) => handleDrop(e, index)}
-                                onClick={() => handleSlotClick(index)}
+                                onDrop={(e) => handleDrop(e, slotIndex)}
+                                onClick={() => handleSlotClick(slotIndex)}
                               >
-                                {wordPositions[index] ? (
+                                {wordPositions[slotIndex] ? (
                                   <div
                                     className="inline-block px-3 py-2 rounded text-white text-sm cursor-pointer transition-opacity hover:opacity-80 break-words"
                                     style={{ backgroundColor: levelColor }}
                                     onClick={(e) => {
                                       e.stopPropagation()
-                                      if (!isViewMode) removeWord(index)
+                                      if (!isViewMode) removeWord(slotIndex)
                                     }}
                                     title="Click to remove"
                                   >
-                                    {wordPositions[index]}
+                                    {wordPositions[slotIndex]}
                                   </div>
                                 ) : (
                                   <div className="text-gray-400 text-xs">
