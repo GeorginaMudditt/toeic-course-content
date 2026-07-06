@@ -128,6 +128,21 @@ function DougsIcon() {
   return <BrandLogo src="/images/admin-logos/dougs.svg" alt="Dougs" />
 }
 
+function BpfIcon() {
+  return (
+    <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" aria-hidden="true">
+      <rect x="4" y="3" width="16" height="18" rx="2" fill="#047857" />
+      <path
+        d="M8 8h8M8 12h6M8 16h8"
+        stroke="#fff"
+        strokeWidth="1.6"
+        strokeLinecap="round"
+      />
+      <path d="M15 6.5 17 4.5" stroke="#a7f3d0" strokeWidth="1.4" strokeLinecap="round" />
+    </svg>
+  )
+}
+
 const ICONS = {
   cursor: CursorIcon,
   github: GitHubIcon,
@@ -141,6 +156,7 @@ const ICONS = {
   qonto: QontoIcon,
   mollie: MollieIcon,
   dougs: DougsIcon,
+  bpf: BpfIcon,
 } as const
 
 function InlineAdminLink({ phrase, href }: { phrase: string; href: string }) {

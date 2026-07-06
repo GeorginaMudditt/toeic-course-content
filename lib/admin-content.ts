@@ -11,6 +11,7 @@ export type AdminIcon =
   | 'qonto'
   | 'mollie'
   | 'dougs'
+  | 'bpf'
 
 export type AdminLinkItem = {
   title?: string
@@ -104,7 +105,7 @@ export const ADMIN_SECTIONS: AdminSection[] = [
       },
       {
         description:
-          'Accounting and performance centrally referenced on the Dougs platform.',
+          'Accounting and performance centrally referenced on the Dougs platform (end of tax year 30th September).',
         inlineLinks: [
           {
             phrase: 'Dougs platform',
@@ -112,6 +113,17 @@ export const ADMIN_SECTIONS: AdminSection[] = [
           },
         ],
         icon: 'dougs',
+      },
+      {
+        description:
+          'A BPF ("Bilan Pédagogique et Financier") needs to be lodged annually in May to include NDA-covered activity.',
+        inlineLinks: [
+          {
+            phrase: 'NDA-covered activity',
+            href: '/teacher/admin/nda-covered-activity',
+          },
+        ],
+        icon: 'bpf',
       },
     ],
   },
