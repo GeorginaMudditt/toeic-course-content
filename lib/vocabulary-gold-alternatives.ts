@@ -10,6 +10,15 @@ const GOLD_ALTERNATIVES: Record<string, string[]> = {
   'a2|Buildings|lift': ['elevator'],
   'a2|Buildings|secondary school': ['high school'],
   'a2|Buildings|sports centre': ['sports center'],
+  'a2|Clothes|earring': ['earing'],
+  'a2|Clothes|jewellery': ['jewelery'],
+  'a2|Clothes|swimming costume': ['swimsuit'],
+  'a2|Clothes|trainers': ['sneakers'],
+  'a2|Communication|How about ...?': ['what about ...?', 'what about'],
+  'a2|Communication|I don\'t mind': ['i do not mind'],
+  'a2|Communication|mistake': ['error'],
+  'a2|Communication|surname': ['family name'],
+  'a2|Communication|You\'re welcome': ['you are welcome'],
   'a2|Money|half-price': ['half price'],
   'a2|Technology|web page': ['website', 'web site'],
   'a2|Travel (A)|aeroplane': ['plane', 'airplane'],
@@ -26,7 +35,12 @@ export interface VocabularyWord {
 }
 
 function normalizeGoldAnswer(value: string): string {
-  return value.replace(/\s+/g, ' ').trim().toLocaleLowerCase()
+  return value
+    .replace(/\.{3,}/g, ' ')
+    .replace(/[!?…]/g, '')
+    .replace(/\s+/g, ' ')
+    .trim()
+    .toLocaleLowerCase()
 }
 
 function groupIndicesByFrench(words: VocabularyWord[]): Map<string, number[]> {
