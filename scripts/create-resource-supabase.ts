@@ -15,6 +15,7 @@ async function main() {
 
   const title = process.argv[2]
   const htmlFileName = process.argv[3]
+  const templateTitlePattern = process.argv[4] || '%Jobs, People%'
 
   if (!title || !htmlFileName) {
     console.log('Usage: npx tsx scripts/create-resource-supabase.ts "Resource Title" file.html')
@@ -52,7 +53,7 @@ async function main() {
   const { data: template } = await supabaseServer
     .from('Resource')
     .select('creatorId, type, level, skill, estimatedHours')
-    .ilike('title', '%Jobs, People%')
+    .ilike('title', templateTitlePattern)
     .limit(1)
 
   const ref = template?.[0]

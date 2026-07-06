@@ -34,6 +34,7 @@ npm run update:resource:supabase "Presenting Services and Products" "presenting-
 npm run update:resource:supabase "Giving Information and Answering Questions" "giving-information-and-answering-questions-html.html"
 npm run update:resource:supabase "Modal Verbs" "modal-verbs-html.html"
 npm run update:resource:supabase "Mixed Tense Review" "mixed-tense-review-html.html"
+npm run update:resource:supabase "Mixed Past Tenses" "mixed-past-tenses-html.html"
 npm run update:resource:supabase "Mixed Tense Review 2" "mixed-tense-review-2-html.html"
 npm run update:resource:supabase "Mixed Tenses" "mixed-tenses-html.html"
 npm run update:resource:supabase "Passive Voice 1" "passive-voice-1-html.html"

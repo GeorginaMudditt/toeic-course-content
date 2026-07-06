@@ -1,0 +1,261 @@
+<style>
+  .mpt-section { margin-top: 28px; margin-bottom: 12px; }
+  .mpt-section:first-of-type { margin-top: 0; }
+  .mpt-profile-card {
+    margin-bottom: 32px;
+    padding: 22px;
+    background: #ffffff;
+    border-radius: 12px;
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 4px 14px rgba(15, 23, 42, 0.06);
+  }
+  .mpt-profile-header {
+    display: flex;
+    gap: 20px;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    margin-bottom: 18px;
+  }
+  .mpt-photo {
+    width: 130px;
+    height: 130px;
+    object-fit: cover;
+    border-radius: 12px;
+    border: 3px solid #e2e8f0;
+    flex-shrink: 0;
+  }
+  .mpt-timeline {
+    margin: 16px 0;
+    padding-left: 0;
+    list-style: none;
+    border-left: 3px solid #c7d2fe;
+  }
+  .mpt-timeline li {
+    position: relative;
+    padding: 0 0 14px 18px;
+    font-size: 15px;
+    line-height: 1.5;
+  }
+  .mpt-timeline li::before {
+    content: '';
+    position: absolute;
+    left: -7px;
+    top: 6px;
+    width: 11px;
+    height: 11px;
+    border-radius: 50%;
+    background: #4f46e5;
+    border: 2px solid #fff;
+    box-shadow: 0 0 0 1px #c7d2fe;
+  }
+  .mpt-year {
+    font-weight: 700;
+    color: #4338ca;
+    margin-right: 6px;
+  }
+  .mpt-bio {
+    font-size: 16px;
+    line-height: 1.65;
+    color: #334155;
+  }
+  .mpt-gap li { margin-bottom: 12px; }
+  .mpt-verb { color: #b91c1c; font-weight: 600; }
+  @media print {
+    @page { margin: 1.5cm; size: A4; }
+    .page-break { page-break-before: always; }
+    .mpt-profile-card { page-break-inside: avoid; break-inside: avoid; box-shadow: none; }
+    .screen-only { display: none !important; }
+  }
+  .grammar-ai-feedback-scroll-hint { display: none !important; }
+  .grammar-ai-feedback-panel {
+    display: none;
+    box-sizing: border-box;
+    height: min(38vh, 300px);
+    max-height: min(38vh, 300px);
+    min-height: 200px;
+    overflow-x: hidden;
+    overflow-y: scroll;
+    overscroll-behavior: contain;
+    scrollbar-gutter: stable;
+    -webkit-overflow-scrolling: touch;
+    padding: 14px 16px 18px 16px;
+    border: 2px solid #818cf8 !important;
+    border-radius: 8px;
+    background: #f8fafc;
+    box-shadow: 0 4px 14px rgba(79, 70, 229, 0.15);
+    position: relative;
+    z-index: 2;
+  }
+  .grammar-ai-feedback-panel::-webkit-scrollbar { width: 14px; }
+  .grammar-ai-feedback-panel::-webkit-scrollbar-track { background: #e0e7ff; border-radius: 8px; }
+  .grammar-ai-feedback-panel::-webkit-scrollbar-thumb { background: #4f46e5; border-radius: 8px; border: 3px solid #e0e7ff; }
+  .grammar-ai-feedback-mount { margin-top: 14px; overflow: visible; }
+  .grammar-save-controls + .grammar-ai-feedback-panel { margin-top: 16px; }
+  [data-grammar-save-section], [data-grammar-ai-feedback-host] { overflow: visible; }
+</style>
+
+<div style="max-width: 860px; margin: 0 auto; padding: 20px; font-family: Arial, sans-serif; line-height: 1.45; color: #1e293b;">
+
+  <div style="text-align: center; margin-bottom: 20px; padding: 18px; background: linear-gradient(135deg, #312e81 0%, #4338ca 50%, #6366f1 100%); border-radius: 12px;">
+    <img src="/brizzle-logo.png" alt="Brizzle Logo" style="width: 48px; height: 48px; object-fit: contain; background: white; padding: 4px; border-radius: 50%; margin-bottom: 8px;" />
+    <h1 style="font-size: 28px; font-weight: bold; margin: 0; color: #ffffff;">Mixed Past Tenses</h1>
+  </div>
+
+  <p style="font-size: 16px; margin-bottom: 8px; color: #475569;">
+  This worksheet uses <strong>four employee profiles</strong>. Each section focuses on a different skill: reading for comprehension (with your teacher), gap-fill tense practice, speaking, and writing. Read the summary or study the timeline carefully before each task.
+  </p>
+
+  <!-- PROFILE 1: Joo-Sing Park -->
+  <div class="mpt-profile-card mpt-section" style="border-top: 5px solid #0ea5e9;">
+    <h2 style="font-size: 22px; font-weight: bold; margin: 0 0 6px 0; color: #0c4a6e;">Profile 1: Reading &amp; comprehension</h2>
+    <p style="font-size: 15px; margin: 0 0 16px 0; color: #64748b;">Read the summary below. Your teacher will ask comprehension questions about mixed past tenses.</p>
+
+    <div class="mpt-profile-header">
+      <img src="/images/mixed-past-tenses/joo-sing-park.jpg" alt="Joo-Sing Park" class="mpt-photo" />
+      <div style="flex: 1; min-width: 220px;">
+        <h3 style="font-size: 20px; margin: 0 0 4px 0; color: #0f172a;">Joo-Sing Park</h3>
+        <p style="margin: 0 0 4px 0; font-size: 15px; color: #475569;"><strong>Senior Product Manager</strong> · Smartlight Technologies · Barcelona, Spain</p>
+        <p style="margin: 0; font-size: 14px; color: #64748b;">International · commercial lighting technology</p>
+      </div>
+    </div>
+
+    <div class="mpt-bio">
+      <p style="margin: 0 0 12px 0;">Joo-Sing Park has lived in Barcelona since she finished her master&apos;s degree in 2017. She is originally from Seoul, where she studied industrial design and worked for an electronics company until 2015. She moved to Spain to study innovation and entrepreneurship, then joined a consulting firm as a product analyst. By 2020 she had been promoted and was leading research for a new logistics software project when the company restructured and she was made redundant.</p>
+      <p style="margin: 0 0 12px 0;">For nine months she worked as a freelance consultant. While she was negotiating her departure from the consulting firm, she was already contacting new clients in the building-technology sector. By the time she joined Smartlight in January 2021, she had already tested two product ideas with early customers.</p>
+      <p style="margin: 0 0 12px 0;">Smartlight makes smart lighting systems for offices and factories. At Smartlight, she has simplified the planning process for new products and has been training junior product managers since last year. Her team has launched three major updates, and a new control dashboard has been adopted by more than 200 site managers. She was promoted to senior product manager in 2024 and now manages a team of nine people, working with colleagues in Spain, Germany, and Poland.</p>
+      <p style="margin: 0;">Before she started at Smartlight, she had been working independently for nine months. She had not been unemployed in the strict sense — she had been sending invoices to clients — but the period felt uncertain after the redundancy.</p>
+    </div>
+  </div>
+
+  <!-- PROFILE 2: Margaux Delcourt -->
+  <div class="mpt-profile-card mpt-section" style="border-top: 5px solid #db2777;">
+    <h2 style="font-size: 22px; font-weight: bold; margin: 0 0 6px 0; color: #9d174d;">Profile 2: Gap fill (mixed tenses)</h2>
+    <p style="font-size: 15px; margin: 0 0 16px 0; color: #64748b;">Study the timeline, then complete the sentences using the correct tense of the verb in brackets. The sentences are <strong>not</strong> in chronological order. Click <strong>Check answers</strong> when you are ready.</p>
+
+    <div class="mpt-profile-header">
+      <img src="/images/mixed-past-tenses/margaux-delcourt.jpg" alt="Margaux Delcourt" class="mpt-photo" />
+      <div style="flex: 1; min-width: 220px;">
+        <h3 style="font-size: 20px; margin: 0 0 4px 0; color: #0f172a;">Margaux Delcourt</h3>
+        <p style="margin: 0 0 4px 0; font-size: 15px; color: #475569;"><strong>HR Business Partner</strong> · Office Inc · Lyon, France</p>
+        <p style="margin: 0; font-size: 14px; color: #64748b;">French · office furniture company · 420 employees</p>
+      </div>
+    </div>
+
+    <ul class="mpt-timeline">
+      <li><span class="mpt-year">2012</span> BA Human Resources Management, Université Lumière Lyon 2</li>
+      <li><span class="mpt-year">2014–2016</span> HR Coordinator, Société Verte (sustainable packaging company)</li>
+      <li><span class="mpt-year">2016</span> Promoted to HR Generalist at Société Verte</li>
+      <li><span class="mpt-year">Nov 2017</span> Made redundant when Société Verte was taken over; three months unemployed</li>
+      <li><span class="mpt-year">2018</span> Joined Office Inc as HR Officer (Lyon headquarters)</li>
+      <li><span class="mpt-year">2019</span> Completed professional certificate in labour law (evening course, funded by her employer)</li>
+      <li><span class="mpt-year">2020–2021</span> Maternity leave; returned January 2021 as Senior HR Officer</li>
+      <li><span class="mpt-year">2021–2025</span> Led annual performance reviews; negotiated two agreements with staff representatives</li>
+      <li><span class="mpt-year">Jan 2026</span> Promoted to HR Business Partner for sales and operations</li>
+      <li><span class="mpt-year">Present</span> Supports 180 employees; reports to the HR Director</li>
+    </ul>
+
+    <div data-grammar-per-section-check="true">
+      <ol class="mpt-gap" style="padding-left: 22px; font-size: 16px; list-style-type: decimal;">
+        <li>Margaux <strong><span data-grammar-input="mpt-p2-q1" data-grammar-acceptable="started" style="display: inline-block; min-width: 100px;"></span></strong> <span class="mpt-verb">(start)</span> working for Office Inc in 2018.</li>
+        <li>She <strong><span data-grammar-input="mpt-p2-q2" data-grammar-acceptable="has been working|'s been working|has worked" style="display: inline-block; min-width: 120px;"></span></strong> <span class="mpt-verb">(work)</span> in her current role for six months.</li>
+        <li>Margaux <strong><span data-grammar-input="mpt-p2-q3" data-grammar-acceptable="was promoted" style="display: inline-block; min-width: 120px;"></span></strong> <span class="mpt-verb">(promote)</span> from senior HR officer to HR business partner in January 2026.</li>
+        <li>Before she joined Office Inc, she <strong><span data-grammar-input="mpt-p2-q4" data-grammar-acceptable="had been|was" style="display: inline-block; min-width: 80px;"></span></strong> unemployed for three months.</li>
+        <li>While she <strong><span data-grammar-input="mpt-p2-q5" data-grammar-acceptable="was preparing|had been preparing" style="display: inline-block; min-width: 120px;"></span></strong> <span class="mpt-verb">(prepare)</span> her labour-law portfolio, she also volunteered at a local career centre.</li>
+        <li>Margaux <strong><span data-grammar-input="mpt-p2-q6" data-grammar-acceptable="has never worked|'s never worked" style="display: inline-block; min-width: 120px;"></span></strong> <span class="mpt-verb">(never/work)</span> in manufacturing; her background is entirely in services.</li>
+        <li>Her previous employer <strong><span data-grammar-input="mpt-p2-q7" data-grammar-acceptable="made|had made" style="display: inline-block; min-width: 80px;"></span></strong> twenty staff redundant in November 2017.</li>
+        <li>She <strong><span data-grammar-input="mpt-p2-q8" data-grammar-acceptable="has completed|'s completed|completed" style="display: inline-block; min-width: 100px;"></span></strong> <span class="mpt-verb">(complete)</span> a professional certificate in labour law since 2019.</li>
+        <li>By the time she returned from maternity leave, Office Inc <strong><span data-grammar-input="mpt-p2-q9" data-grammar-acceptable="had already revised|had revised" style="display: inline-block; min-width: 140px;"></span></strong> its parental-leave policy.</li>
+        <li>Margaux <strong><span data-grammar-input="mpt-p2-q10" data-grammar-acceptable="had been coordinating|had coordinated" style="display: inline-block; min-width: 140px;"></span></strong> <span class="mpt-verb">(coordinate)</span> recruitment campaigns for two years before her first promotion.</li>
+        <li>The executive committee <strong><span data-grammar-input="mpt-p2-q11" data-grammar-acceptable="offered" style="display: inline-block; min-width: 100px;"></span></strong> <span class="mpt-verb">(offer)</span> her the HR business partner position after she had led a complex disciplinary case.</li>
+        <li>Since January, she <strong><span data-grammar-input="mpt-p2-q12" data-grammar-acceptable="has been supporting|'s been supporting|has supported" style="display: inline-block; min-width: 140px;"></span></strong> <span class="mpt-verb">(support)</span> both the commercial director and the head of operations.</li>
+      </ol>
+    </div>
+  </div>
+
+  <!-- PROFILE 3: Samira Okonkwo -->
+  <div class="mpt-profile-card mpt-section" style="border-top: 5px solid #059669;">
+    <h2 style="font-size: 22px; font-weight: bold; margin: 0 0 6px 0; color: #065f46;">Profile 3: Speaking</h2>
+    <p style="font-size: 15px; margin: 0 0 16px 0; color: #64748b;">Study the timeline, then speak for 2–3 minutes about this person&apos;s career so far. Use a range of past and present tenses.</p>
+
+    <div class="mpt-profile-header">
+      <img src="/images/mixed-past-tenses/samira-okonkwo.jpg" alt="Samira Okonkwo" class="mpt-photo" />
+      <div style="flex: 1; min-width: 220px;">
+        <h3 style="font-size: 20px; margin: 0 0 4px 0; color: #0f172a;">Samira Okonkwo</h3>
+        <p style="margin: 0 0 4px 0; font-size: 15px; color: #475569;"><strong>Executive Assistant to the CEO</strong> · Meridian Logistics · London, UK</p>
+        <p style="margin: 0; font-size: 14px; color: #64748b;">International · transport and logistics company</p>
+      </div>
+    </div>
+
+    <ul class="mpt-timeline">
+      <li><span class="mpt-year">2010</span> Diploma in Business Administration, South Thames College</li>
+      <li><span class="mpt-year">2011–2014</span> Administrative assistant, temp agencies (legal and financial services)</li>
+      <li><span class="mpt-year">2014–2017</span> Personal assistant, BrightPath (financial services start-up)</li>
+      <li><span class="mpt-year">2017</span> Promoted to executive assistant to the Chief Operating Officer; managed the executive calendar and board meetings</li>
+      <li><span class="mpt-year">2019</span> BrightPath was sold to a larger company; role cut — four months between jobs</li>
+      <li><span class="mpt-year">2019–2020</span> Short contract roles as an executive assistant (pharmaceutical and media companies)</li>
+      <li><span class="mpt-year">2020</span> Joined Meridian Logistics as executive assistant to the CEO</li>
+      <li><span class="mpt-year">2021–2023</span> Organised online and in-person board meetings across five time zones during a company restructuring</li>
+      <li><span class="mpt-year">2024</span> Completed a part-time management and leadership qualification</li>
+      <li><span class="mpt-year">Present</span> Manages the CEO&apos;s diary; works with investors, regulators, and union representatives</li>
+    </ul>
+
+    <div style="margin-top: 16px; padding: 14px; background: #ecfdf5; border-radius: 8px; border-left: 4px solid #10b981;">
+      <p style="margin: 0; font-size: 15px; color: #065f46;"><strong>Speaking prompts:</strong> Summarise Samira&apos;s career chronologically. Mention at least one setback, one promotion, and what she has been doing recently. Include present perfect, past perfect, and past continuous where appropriate.</p>
+    </div>
+  </div>
+
+  <!-- PROFILE 4: Lucas Bernard -->
+  <div class="mpt-profile-card mpt-section" style="border-top: 5px solid #d97706;">
+    <h2 style="font-size: 22px; font-weight: bold; margin: 0 0 6px 0; color: #92400e;">Profile 4: Writing</h2>
+    <p style="font-size: 15px; margin: 0 0 16px 0; color: #64748b;">Imagine you <strong>are</strong> Lucas. Write a summary of your career so far (150–220 words). Use mixed past tenses and professional vocabulary. Click <strong>Save</strong>, then <strong>Get AI Feedback</strong>.</p>
+
+    <div class="mpt-profile-header">
+      <img src="/images/mixed-past-tenses/lucas-bernard.jpg" alt="Lucas Bernard" class="mpt-photo" />
+      <div style="flex: 1; min-width: 220px;">
+        <h3 style="font-size: 20px; margin: 0 0 4px 0; color: #0f172a;">Lucas Bernard</h3>
+        <p style="margin: 0 0 4px 0; font-size: 15px; color: #475569;"><strong>Senior Digital Designer</strong> · Atelier Rivage · Marseille, France</p>
+        <p style="margin: 0; font-size: 14px; color: #64748b;">French · design agency · hotel and travel clients</p>
+      </div>
+    </div>
+
+    <ul class="mpt-timeline">
+      <li><span class="mpt-year">2013–2016</span> Degree in digital arts, École Supérieure d&apos;Art d&apos;Aix-en-Provence</li>
+      <li><span class="mpt-year">2016–2018</span> Junior graphic designer, freelance (branding for local restaurants)</li>
+      <li><span class="mpt-year">2018</span> Digital product designer, Cabestan Interactive (web and app agency, Toulon)</li>
+      <li><span class="mpt-year">2020</span> Led the design for a cruise-line booking website (award nomination)</li>
+      <li><span class="mpt-year">2021</span> Project cancelled before launch; team reduced — Lucas moved to contract work</li>
+      <li><span class="mpt-year">2021–2022</span> Six-month freelance period (online shops and website accessibility reviews)</li>
+      <li><span class="mpt-year">2022</span> Joined Atelier Rivage as a mid-level product designer</li>
+      <li><span class="mpt-year">2024</span> Promoted to senior digital designer; mentors two junior designers</li>
+      <li><span class="mpt-year">2025</span> Led a rebrand and new company style guide for a regional hotel group</li>
+      <li><span class="mpt-year">Present</span> Creates screen designs for websites and apps; passes final files to the development team</li>
+    </ul>
+
+    <div data-grammar-ai-feedback-host="writing1">
+      <div data-grammar-save-section="true" data-grammar-ai-feedback="writing1">
+        <span data-grammar-input="writing1-q1" data-grammar-input-type="textarea" data-grammar-textarea-rows="12" style="display: block; min-height: 220px;"></span>
+      </div>
+      <div class="grammar-ai-feedback-mount" data-for="writing1"></div>
+    </div>
+  </div>
+
+</div>
+
+<!-- Answers (Profile 2 only) -->
+<div style="max-width: 860px; margin: 0 auto; padding: 20px; font-family: Arial, sans-serif; line-height: 1.45; color: #1e293b;" class="page-break">
+  <h2 style="font-size: 22px; font-weight: bold; margin-bottom: 12px; color: #000;">📝 Answers: Profile 2 (gap fill)</h2>
+  <ol style="padding-left: 22px; font-size: 16px; list-style-type: decimal;">
+    <li style="margin-bottom: 6px;"><strong>started</strong> — past simple (finished time: 2018)</li>
+    <li style="margin-bottom: 6px;"><strong>has been working</strong> — present perfect continuous (duration up to now: six months)</li>
+    <li style="margin-bottom: 6px;"><strong>was promoted</strong> — past simple passive (completed event: January 2026)</li>
+    <li style="margin-bottom: 6px;"><strong>had been</strong> unemployed — past perfect (state before joining Office Inc in 2018)</li>
+    <li style="margin-bottom: 6px;"><strong>was preparing</strong> / <strong>had been preparing</strong> — past continuous / past perfect continuous (background activity)</li>
+    <li style="margin-bottom: 6px;"><strong>has never worked</strong> — present perfect (experience up to now)</li>
+    <li style="margin-bottom: 6px;"><strong>made</strong> / <strong>had made</strong> — past simple / past perfect (redundancies in Nov 2017)</li>
+    <li style="margin-bottom: 6px;"><strong>has completed</strong> / <strong>completed</strong> — present perfect with <em>since</em> / past simple if seen as finished course</li>
+    <li style="margin-bottom: 6px;"><strong>had already revised</strong> — past perfect (action before her return in 2021)</li>
+    <li style="margin-bottom: 6px;"><strong>had been coordinating</strong> — past perfect continuous (duration before promotion in 2016)</li>
+    <li style="margin-bottom: 6px;"><strong>offered</strong> — past simple (specific offer after the disciplinary case)</li>
+    <li style="margin-bottom: 6px;"><strong>has been supporting</strong> — present perfect continuous (ongoing since January)</li>
+  </ol>
+</div>
