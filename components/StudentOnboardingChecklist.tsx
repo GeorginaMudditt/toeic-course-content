@@ -498,19 +498,6 @@ export default function StudentOnboardingChecklist({
                         </p>
                       )}
 
-                      {externalLink && !isNotApplicable && (
-                        <p className="mt-2 text-sm text-gray-600">
-                          Record this student&apos;s training in the{' '}
-                          <Link
-                            href={externalLink.href}
-                            className="font-medium text-[#38438f] underline hover:text-[#2d3569]"
-                          >
-                            {externalLink.label}
-                          </Link>
-                          , then mark this step complete.
-                        </p>
-                      )}
-
                       {isStudentDocument && isUploaded && item.completedAt && (
                         <p className="mt-2 text-sm text-emerald-700">
                           Uploaded on {formatUKDate(item.completedAt)}

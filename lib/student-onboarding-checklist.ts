@@ -254,6 +254,12 @@ export const STUDENT_ONBOARDING_CHECKLIST_ITEMS: OnboardingChecklistItemDefiniti
     allowedMimeTypes: ['application/pdf'],
   },
   {
+    slug: 'book-toeic-exam',
+    label: 'Book TOEIC exam',
+    type: 'complete-or-na',
+    completeNoteOnly: true,
+  },
+  {
     slug: 'end-of-course-certificate',
     label: 'End-of-course certificate',
     type: 'convention-contract',
