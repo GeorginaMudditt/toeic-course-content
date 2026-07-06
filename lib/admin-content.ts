@@ -8,6 +8,9 @@ export type AdminIcon =
   | 'linkedin'
   | 'mailchimp'
   | 'pronunciation'
+  | 'qonto'
+  | 'mollie'
+  | 'dougs'
 
 export type AdminLinkItem = {
   title?: string
@@ -83,6 +86,34 @@ export const ADMIN_SECTIONS: AdminSection[] = [
     description: 'Invoicing, accounting, and financial admin.',
     cardClassName: 'bg-emerald-50 border-emerald-200',
     headingClassName: 'text-emerald-900',
+    items: [
+      {
+        description: 'The business bank is with Qonto.',
+        inlineLinks: [{ phrase: 'Qonto', href: 'https://app.qonto.com/signin' }],
+        icon: 'qonto',
+      },
+      {
+        description: 'Credit card payments are processed by Mollie.',
+        inlineLinks: [
+          {
+            phrase: 'Mollie',
+            href: 'https://my.mollie.com/dashboard/login?lang=fr',
+          },
+        ],
+        icon: 'mollie',
+      },
+      {
+        description:
+          'Accounting and performance centrally referenced on the Dougs platform.',
+        inlineLinks: [
+          {
+            phrase: 'Dougs platform',
+            href: 'https://app.dougs.fr/app/c/214963/accounting/operations/payments',
+          },
+        ],
+        icon: 'dougs',
+      },
+    ],
   },
   {
     title: 'Tech',

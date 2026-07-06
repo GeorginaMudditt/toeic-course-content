@@ -38,9 +38,11 @@ export default async function TeacherAdminPage() {
                     dividerClassName={
                       section.title === 'Marketing'
                         ? 'divide-pink-100/80 border-pink-100/80'
-                        : section.title === 'Tech'
-                          ? 'divide-blue-100/80 border-blue-100/80'
-                          : undefined
+                        : section.title === 'Finances'
+                          ? 'divide-emerald-100/80 border-emerald-100/80'
+                          : section.title === 'Tech'
+                            ? 'divide-blue-100/80 border-blue-100/80'
+                            : undefined
                     }
                   />
                 ) : null}
