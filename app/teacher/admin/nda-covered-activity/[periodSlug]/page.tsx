@@ -42,8 +42,9 @@ export default async function NdaCoveredActivityPeriodPage({
 
           <h1 className="text-3xl font-bold text-gray-900 mb-2">{period.label}</h1>
           <p className="text-gray-600 mb-8 max-w-3xl">
-            Log student training actions for this BPF period. Use the dropdowns where possible to
-            keep data consistent for cadres C, F, and G when you prepare the declaration.
+            Log NDA-covered student training actions for this BPF period. Summary totals at the top
+            roll up hours and revenue for cadres C, F, and G when you lodge the declaration in May.
+            Use the dropdown hints to choose the right cadre F category for each trainee.
           </p>
 
           <BpfEntryManager period={period} />

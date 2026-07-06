@@ -1,21 +1,27 @@
 'use client'
 
-import { useCallback, useEffect, useMemo, useState, type ReactNode } from 'react'
+import { useCallback, useEffect, useState, type ReactNode } from 'react'
 import {
   bpfEntryToDraft,
   CERTIFICATION_TYPE_OPTIONS,
   emptyBpfEntryDraft,
   FUNDING_SOURCE_OPTIONS,
+  hintForFundingSource,
+  hintForStagiaireCategory,
   labelForCertificationType,
   labelForFundingSource,
   labelForModality,
   labelForStagiaireCategory,
   MODALITY_OPTIONS,
+  optionSelectLabel,
   STAGIAIRE_CATEGORY_OPTIONS,
+  SUGGESTED_STAGIAIRE_FOR_FUNDING,
   type BpfEntry,
   type BpfEntryDraft,
   type BpfPeriod,
+  type BpfSelectOption,
 } from '@/lib/bpf'
+import BpfSummaryPanel from '@/components/BpfSummaryPanel'
 
 type Props = {
   period: BpfPeriod
@@ -71,6 +77,35 @@ function SelectField<T extends string>({
   )
 }
 
+function HintedSelectField<T extends string>({
+  value,
+  onChange,
+  options,
+  hint,
+}: {
+  value: T
+  onChange: (value: T) => void
+  options: BpfSelectOption<T>[]
+  hint?: string
+}) {
+  return (
+    <div>
+      <select
+        value={value}
+        onChange={(e) => onChange(e.target.value as T)}
+        className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm shadow-sm focus:border-[#38438f] focus:outline-none focus:ring-1 focus:ring-[#38438f]"
+      >
+        {options.map((option) => (
+          <option key={option.value} value={option.value}>
+            {optionSelectLabel(option)}
+          </option>
+        ))}
+      </select>
+      {hint ? <p className="mt-2 text-xs leading-relaxed text-gray-600">{hint}</p> : null}
+    </div>
+  )
+}
+
 function SectionCard({ title, children }: { title: string; children: ReactNode }) {
   return (
     <section className="rounded-lg border border-gray-200 bg-white p-5 shadow-sm">
@@ -97,9 +132,23 @@ function BpfEntryForm({
     onChange({ ...draft, [field]: value })
   }
 
+  const updateFundingSource = (fundingSource: BpfEntryDraft['funding_source']) => {
+    const suggested = SUGGESTED_STAGIAIRE_FOR_FUNDING[fundingSource]
+    onChange({
+      ...draft,
+      funding_source: fundingSource,
+      stagiaire_category: suggested ?? draft.stagiaire_category,
+    })
+  }
+
   return (
     <div className="space-y-6">
       <SectionCard title="Student / stagiaire identification">
+        <div className="md:col-span-2 rounded-md border border-blue-100 bg-blue-50 px-4 py-3 text-sm text-blue-900">
+          <strong>Cadre F</strong> describes <em>who the trainee is</em> (their status).{' '}
+          <strong>Funding source</strong> (cadre C) describes <em>who paid</em>. They are related
+          but not identical — use the hints below.
+        </div>
         <div>
           <FieldLabel required>Student name</FieldLabel>
           <input
@@ -111,10 +160,11 @@ function BpfEntryForm({
         </div>
         <div>
           <FieldLabel required>Stagiaire status / category (cadre F)</FieldLabel>
-          <SelectField
+          <HintedSelectField
             value={draft.stagiaire_category}
             onChange={(value) => update('stagiaire_category', value)}
             options={STAGIAIRE_CATEGORY_OPTIONS}
+            hint={hintForStagiaireCategory(draft.stagiaire_category)}
           />
         </div>
       </SectionCard>
@@ -166,17 +216,6 @@ function BpfEntryForm({
             options={MODALITY_OPTIONS}
           />
         </div>
-        <div>
-          <FieldLabel required>In BPF scope?</FieldLabel>
-          <SelectField
-            value={draft.in_bpf_scope ? 'yes' : 'no'}
-            onChange={(value) => update('in_bpf_scope', value === 'yes')}
-            options={[
-              { value: 'yes', label: 'Yes' },
-              { value: 'no', label: 'No' },
-            ]}
-          />
-        </div>
         <div className="md:col-span-2">
           <FieldLabel>Certification type</FieldLabel>
           <SelectField
@@ -208,12 +247,13 @@ function BpfEntryForm({
             className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm shadow-sm focus:border-[#38438f] focus:outline-none focus:ring-1 focus:ring-[#38438f]"
           />
         </div>
-        <div>
-          <FieldLabel required>Funding source / device</FieldLabel>
-          <SelectField
+        <div className="md:col-span-2">
+          <FieldLabel required>Funding source / device (cadre C)</FieldLabel>
+          <HintedSelectField
             value={draft.funding_source}
-            onChange={(value) => update('funding_source', value)}
+            onChange={updateFundingSource}
             options={FUNDING_SOURCE_OPTIONS}
+            hint={hintForFundingSource(draft.funding_source)}
           />
         </div>
         {draft.funding_source === 'opco' ? (
@@ -275,11 +315,6 @@ export default function BpfEntryManager({ period }: Props) {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [saving, setSaving] = useState(false)
-
-  const scopedEntries = useMemo(
-    () => entries.filter((entry) => entry.in_bpf_scope),
-    [entries]
-  )
 
   const loadEntries = useCallback(async () => {
     setError(null)
@@ -374,11 +409,14 @@ export default function BpfEntryManager({ period }: Props) {
         </div>
       ) : null}
 
+      <BpfSummaryPanel period={period} entries={entries} />
+
       <div>
         <h2 className="mb-2 text-xl font-semibold text-gray-900">Add training action</h2>
         <p className="mb-6 text-sm text-gray-600">
-          Record NDA-covered activity delivered between {period.label}. Entries marked in BPF scope
-          can be filtered for your May BPF declaration.
+          Only record <strong>NDA-covered professional training</strong> here (not children&apos;s or
+          leisure lessons). Each row is one student training action for {period.label}. Summary
+          totals above update automatically.
         </p>
         <BpfEntryForm
           draft={draft}
@@ -394,9 +432,7 @@ export default function BpfEntryManager({ period }: Props) {
           <div>
             <h2 className="text-xl font-semibold text-gray-900">Saved entries</h2>
             <p className="text-sm text-gray-600">
-              {loading
-                ? 'Loading…'
-                : `${entries.length} total · ${scopedEntries.length} in BPF scope`}
+              {loading ? 'Loading…' : `${entries.length} NDA-covered action${entries.length === 1 ? '' : 's'}`}
             </p>
           </div>
         </div>
@@ -441,15 +477,6 @@ export default function BpfEntryManager({ period }: Props) {
                       <p className="text-sm text-gray-600">{entry.course_name}</p>
                     </div>
                     <div className="flex flex-wrap gap-2">
-                      <span
-                        className={`rounded-full px-2.5 py-1 text-xs font-medium ${
-                          entry.in_bpf_scope
-                            ? 'bg-emerald-100 text-emerald-800'
-                            : 'bg-gray-100 text-gray-600'
-                        }`}
-                      >
-                        {entry.in_bpf_scope ? 'In BPF scope' : 'Out of BPF scope'}
-                      </span>
                       <button
                         type="button"
                         onClick={() => startEdit(entry)}

@@ -65,11 +65,33 @@ export const BPF_PERIODS: BpfPeriod[] = [
   },
 ]
 
-export const STAGIAIRE_CATEGORY_OPTIONS: { value: StagiaireCategory; label: string }[] = [
-  { value: 'salarie_employeur_prive', label: "Salarié d'employeur privé" },
-  { value: 'personne_recherche_emploi', label: "Personne en recherche d'emploi" },
-  { value: 'particulier_propres_frais', label: 'Particulier à ses propres frais' },
-  { value: 'autres', label: 'Autres (dirigeants non salariés, agents publics, etc.)' },
+export type BpfSelectOption<T extends string> = {
+  value: T
+  label: string
+  hint: string
+}
+
+export const STAGIAIRE_CATEGORY_OPTIONS: BpfSelectOption<StagiaireCategory>[] = [
+  {
+    value: 'particulier_propres_frais',
+    label: 'Particulier à ses propres frais',
+    hint: 'Most adult self-funded students, CPF users, and individuals paying their own invoice.',
+  },
+  {
+    value: 'salarie_employeur_prive',
+    label: "Salarié d'employeur privé",
+    hint: 'Employee whose OPCO or employer pays (OPCO, direct B2B for staff).',
+  },
+  {
+    value: 'personne_recherche_emploi',
+    label: "Personne en recherche d'emploi",
+    hint: 'Job seeker — usually when France Travail (or similar) funds the training.',
+  },
+  {
+    value: 'autres',
+    label: 'Autres',
+    hint: 'Non-salaried company directors, public agents, or other cases that do not fit above.',
+  },
 ]
 
 export const MODALITY_OPTIONS: { value: TrainingModality; label: string }[] = [
@@ -84,14 +106,61 @@ export const CERTIFICATION_TYPE_OPTIONS: { value: CertificationType; label: stri
   { value: 'other_professional', label: 'Other professional certification' },
 ]
 
-export const FUNDING_SOURCE_OPTIONS: { value: FundingSource; label: string }[] = [
-  { value: 'cpf', label: 'CPF' },
-  { value: 'opco', label: 'OPCO' },
-  { value: 'self_funded_individual', label: 'Self-funded individual' },
-  { value: 'b2b_enterprise', label: 'Direct B2B enterprise payment' },
-  { value: 'france_travail', label: 'France Travail' },
-  { value: 'other', label: 'Other' },
+export const FUNDING_SOURCE_OPTIONS: BpfSelectOption<FundingSource>[] = [
+  {
+    value: 'cpf',
+    label: 'CPF',
+    hint: 'Cadre C funding. Cadre F: usually particulier à ses propres frais.',
+  },
+  {
+    value: 'self_funded_individual',
+    label: 'Self-funded individual',
+    hint: 'Cadre C funding. Cadre F: particulier à ses propres frais.',
+  },
+  {
+    value: 'opco',
+    label: 'OPCO',
+    hint: "Cadre C funding. Cadre F: usually salarié d'employeur privé.",
+  },
+  {
+    value: 'b2b_enterprise',
+    label: 'Direct B2B enterprise payment',
+    hint: "Cadre C funding. Cadre F: usually salarié d'employeur privé (staff); autres if a director.",
+  },
+  {
+    value: 'france_travail',
+    label: 'France Travail',
+    hint: "Cadre C funding. Cadre F: usually personne en recherche d'emploi.",
+  },
+  {
+    value: 'other',
+    label: 'Other',
+    hint: 'Cadre C funding. Choose cadre F based on who the trainee is.',
+  },
 ]
+
+/** Typical cadre F match when funding source is selected — always check the actual trainee. */
+export const SUGGESTED_STAGIAIRE_FOR_FUNDING: Partial<
+  Record<FundingSource, StagiaireCategory>
+> = {
+  cpf: 'particulier_propres_frais',
+  self_funded_individual: 'particulier_propres_frais',
+  opco: 'salarie_employeur_prive',
+  b2b_enterprise: 'salarie_employeur_prive',
+  france_travail: 'personne_recherche_emploi',
+}
+
+export function optionSelectLabel<T extends string>(option: BpfSelectOption<T>): string {
+  return `${option.label} — ${option.hint}`
+}
+
+export function hintForStagiaireCategory(value: StagiaireCategory): string {
+  return STAGIAIRE_CATEGORY_OPTIONS.find((option) => option.value === value)?.hint ?? ''
+}
+
+export function hintForFundingSource(value: FundingSource): string {
+  return FUNDING_SOURCE_OPTIONS.find((option) => option.value === value)?.hint ?? ''
+}
 
 export const DEFAULT_TRAINER = 'Georgina Mudditt'
 
@@ -221,7 +290,7 @@ export function parseBpfEntryBody(
       end_date: endDate,
       hours,
       modality: modality as TrainingModality,
-      in_bpf_scope: raw.in_bpf_scope === true || raw.in_bpf_scope === 'true',
+      in_bpf_scope: true,
       certification_type: certificationType as CertificationType,
       price_ht: priceHt,
       invoice_number: invoiceNumber,
