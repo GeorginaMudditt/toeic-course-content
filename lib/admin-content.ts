@@ -88,7 +88,7 @@ export const ADMIN_SECTIONS: AdminSection[] = [
     headingClassName: 'text-emerald-900',
     items: [
       {
-        description: 'The business bank is with Qonto.',
+        description: 'The business banks with Qonto.',
         inlineLinks: [{ phrase: 'Qonto', href: 'https://app.qonto.com/signin' }],
         icon: 'qonto',
       },

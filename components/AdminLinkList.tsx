@@ -1,6 +1,19 @@
 import Link from 'next/link'
+import Image from 'next/image'
 import type { ReactNode } from 'react'
 import type { AdminLinkItem } from '@/lib/admin-content'
+
+function BrandLogo({ src, alt }: { src: string; alt: string }) {
+  return (
+    <Image
+      src={src}
+      alt={alt}
+      width={20}
+      height={20}
+      className="h-5 w-5 object-contain"
+    />
+  )
+}
 
 function CursorIcon() {
   return (
@@ -104,47 +117,15 @@ function PronunciationIcon() {
 }
 
 function QontoIcon() {
-  return (
-    <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" aria-hidden="true">
-      <rect x="3" y="5" width="18" height="14" rx="3" fill="#5c4ee5" />
-      <path
-        d="M7 12h3.5l1.5-2.5 2 5 1.5-2.5H17"
-        stroke="#fff"
-        strokeWidth="1.6"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg>
-  )
+  return <BrandLogo src="/images/admin-logos/qonto.svg" alt="Qonto" />
 }
 
 function MollieIcon() {
-  return (
-    <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" aria-hidden="true">
-      <rect x="3" y="5" width="18" height="14" rx="3" fill="#111" />
-      <path
-        d="M8.5 9.5v5M8.5 12h2.2a1.8 1.8 0 000-3.6H8.5M13.5 9.5v5M16 9.5l-2.5 5"
-        stroke="#fff"
-        strokeWidth="1.6"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg>
-  )
+  return <BrandLogo src="/images/admin-logos/mollie.svg" alt="Mollie" />
 }
 
 function DougsIcon() {
-  return (
-    <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" aria-hidden="true">
-      <rect x="3" y="5" width="18" height="14" rx="3" fill="#0f766e" />
-      <path
-        d="M8 9h8M8 12h5.5M8 15h8"
-        stroke="#fff"
-        strokeWidth="1.6"
-        strokeLinecap="round"
-      />
-    </svg>
-  )
+  return <BrandLogo src="/images/admin-logos/dougs.svg" alt="Dougs" />
 }
 
 const ICONS = {
