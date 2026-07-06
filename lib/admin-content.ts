@@ -12,6 +12,10 @@ export type AdminIcon =
   | 'mollie'
   | 'dougs'
   | 'bpf'
+  | 'canva'
+  | 'maf'
+  | 'edof'
+  | 'wedof'
 
 export type AdminLinkItem = {
   title?: string
@@ -45,6 +49,11 @@ export const ADMIN_SECTIONS: AdminSection[] = [
         description: 'Brizzle English School has an Instagram account.',
         inlineLinks: [{ phrase: 'Instagram', href: 'https://www.instagram.com/brizzleenglish/' }],
         icon: 'instagram',
+      },
+      {
+        description: 'Templates for social media posts are found on Canva.',
+        inlineLinks: [{ phrase: 'Canva', href: 'https://www.canva.com/' }],
+        icon: 'canva',
       },
       {
         description:
@@ -163,5 +172,37 @@ export const ADMIN_SECTIONS: AdminSection[] = [
     description: 'Training fund admin and EDOF-related processes.',
     cardClassName: 'bg-amber-50 border-amber-200',
     headingClassName: 'text-amber-900',
+    items: [
+      {
+        description:
+          'The administrative “regulatory” space for training providers is Mon Activité Formation (MAF).',
+        inlineLinks: [
+          {
+            phrase: 'Mon Activité Formation (MAF)',
+            href: 'https://www.monactiviteformation.emploi.gouv.fr/mon-activite-formation/latest/#/',
+          },
+        ],
+        icon: 'maf',
+      },
+      {
+        description:
+          'The platform to manage training offers that can be bought with CPF credits is EDOF.',
+        inlineLinks: [
+          { phrase: 'EDOF', href: 'https://of.moncompteformation.gouv.fr/espace-public/' },
+        ],
+        icon: 'edof',
+      },
+      {
+        description:
+          'The platform that ETS use to manage all the EDOF/CPF information is Wedof.',
+        inlineLinks: [
+          {
+            phrase: 'Wedof',
+            href: 'https://www.wedof.fr/formation/certifications/catalogue/?state=active',
+          },
+        ],
+        icon: 'wedof',
+      },
+    ],
   },
 ]

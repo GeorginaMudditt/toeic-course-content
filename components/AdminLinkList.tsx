@@ -143,6 +143,68 @@ function BpfIcon() {
   )
 }
 
+function CanvaIcon() {
+  return (
+    <svg viewBox="0 0 24 24" className="h-5 w-5" aria-hidden="true">
+      <circle cx="12" cy="12" r="10" fill="#00c4cc" />
+      <path
+        d="M8.5 9.5c0-1.4 1.1-2.5 2.5-2.5.9 0 1.7.5 2.1 1.2.4-.7 1.2-1.2 2.1-1.2 1.4 0 2.5 1.1 2.5 2.5 0 2.8-4.6 5.5-4.6 5.5S8.5 12.3 8.5 9.5z"
+        fill="#7d2ae8"
+      />
+      <path
+        d="M14.5 14.5c0-1.1.9-2 2-2s2 .9 2 2-.9 2-2 2-2-.9-2-2z"
+        fill="#ff7bac"
+      />
+    </svg>
+  )
+}
+
+function MafIcon() {
+  return (
+    <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" aria-hidden="true">
+      <rect x="3" y="4" width="18" height="16" rx="2" fill="#000091" />
+      <path d="M3 8h18" stroke="#fff" strokeWidth="1.2" opacity="0.35" />
+      <path
+        d="M7 13h10M7 16h7"
+        stroke="#fff"
+        strokeWidth="1.6"
+        strokeLinecap="round"
+      />
+    </svg>
+  )
+}
+
+function EdofIcon() {
+  return (
+    <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" aria-hidden="true">
+      <rect x="4" y="3" width="16" height="18" rx="2" fill="#1e3a8a" />
+      <path
+        d="M8 8h8M8 11.5h8M8 15h5"
+        stroke="#fff"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+      />
+      <circle cx="17" cy="17" r="4" fill="#f59e0b" />
+      <path d="M15.5 17l1 1 2-2" stroke="#fff" strokeWidth="1.2" strokeLinecap="round" />
+    </svg>
+  )
+}
+
+function WedofIcon() {
+  return (
+    <svg viewBox="0 0 24 24" className="h-5 w-5" aria-hidden="true">
+      <rect x="3" y="5" width="18" height="14" rx="2" fill="#4f46e5" />
+      <path
+        d="M7 10h10M7 13h7"
+        stroke="#fff"
+        strokeWidth="1.6"
+        strokeLinecap="round"
+      />
+      <circle cx="17.5" cy="8.5" r="2" fill="#a5b4fc" />
+    </svg>
+  )
+}
+
 const ICONS = {
   cursor: CursorIcon,
   github: GitHubIcon,
@@ -157,6 +219,10 @@ const ICONS = {
   mollie: MollieIcon,
   dougs: DougsIcon,
   bpf: BpfIcon,
+  canva: CanvaIcon,
+  maf: MafIcon,
+  edof: EdofIcon,
+  wedof: WedofIcon,
 } as const
 
 function InlineAdminLink({ phrase, href }: { phrase: string; href: string }) {

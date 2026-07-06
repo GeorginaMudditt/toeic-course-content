@@ -42,7 +42,9 @@ export default async function TeacherAdminPage() {
                           ? 'divide-emerald-100/80 border-emerald-100/80'
                           : section.title === 'Tech'
                             ? 'divide-blue-100/80 border-blue-100/80'
-                            : undefined
+                            : section.title === 'CPF/EDOF'
+                              ? 'divide-amber-100/80 border-amber-100/80'
+                              : undefined
                     }
                   />
                 ) : null}
