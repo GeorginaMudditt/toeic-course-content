@@ -168,6 +168,21 @@ export function getBpfPeriod(slug: string): BpfPeriod | undefined {
   return BPF_PERIODS.find((period) => period.slug === slug)
 }
 
+/** BPF declaration period that contains today, if any. */
+export function getActiveBpfPeriod(referenceDate = new Date()): BpfPeriod | undefined {
+  const isoDate = referenceDate.toISOString().slice(0, 10)
+  return BPF_PERIODS.find((period) => isoDate >= period.startDate && isoDate <= period.endDate)
+}
+
+/** Teacher admin page for logging NDA-covered BPF activity (current period when possible). */
+export function bpfNdaActivityLogHref(referenceDate = new Date()): string {
+  const active = getActiveBpfPeriod(referenceDate)
+  if (active) {
+    return `/teacher/admin/nda-covered-activity/${active.slug}`
+  }
+  return '/teacher/admin/nda-covered-activity'
+}
+
 export function isBpfPeriodSlug(slug: string): slug is BpfPeriodSlug {
   return BPF_PERIODS.some((period) => period.slug === slug)
 }

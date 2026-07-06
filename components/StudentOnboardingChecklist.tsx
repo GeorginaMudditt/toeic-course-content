@@ -1,10 +1,14 @@
 'use client'
 
 import { useEffect, useMemo, useState } from 'react'
+import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { supabase } from '@/lib/supabase'
 import { formatUKDate } from '@/lib/date-utils'
-import type { OnboardingChecklistItemView } from '@/lib/student-onboarding-checklist'
+import {
+  resolveChecklistExternalLink,
+  type OnboardingChecklistItemView,
+} from '@/lib/student-onboarding-checklist'
 import LanguageAssessmentChecklistCard from '@/components/LanguageAssessmentChecklistCard'
 import DualDocumentOrNaChecklistCard from '@/components/DualDocumentOrNaChecklistCard'
 import PdfWorkflowChecklistCard from '@/components/PdfWorkflowChecklistCard'
@@ -452,6 +456,7 @@ export default function StudentOnboardingChecklist({
           const showCompleteOrNaNotePanel =
             isExpanded && isCompleteOrNa && expandedMode === 'note'
           const showCompletePanel = isExpanded && isCompleteOrNa && expandedMode === 'complete'
+          const externalLink = resolveChecklistExternalLink(item)
 
           return (
             <li
@@ -490,6 +495,19 @@ export default function StudentOnboardingChecklist({
                             Loom video
                           </a>
                           .
+                        </p>
+                      )}
+
+                      {externalLink && !isNotApplicable && (
+                        <p className="mt-2 text-sm text-gray-600">
+                          Record this student&apos;s training in the{' '}
+                          <Link
+                            href={externalLink.href}
+                            className="font-medium text-[#38438f] underline hover:text-[#2d3569]"
+                          >
+                            {externalLink.label}
+                          </Link>
+                          , then mark this step complete.
                         </p>
                       )}
 
@@ -539,6 +557,15 @@ export default function StudentOnboardingChecklist({
                 </div>
 
                 <div className="flex shrink-0 flex-wrap gap-2 sm:justify-end">
+                  {externalLink && !isNotApplicable && (
+                    <Link
+                      href={externalLink.href}
+                      className="rounded-md border border-[#38438f] bg-white px-3 py-1.5 text-sm font-medium text-[#38438f] transition-colors hover:bg-[#e8eaf6]"
+                    >
+                      {externalLink.label}
+                    </Link>
+                  )}
+
                   {isStudentDocument && !isUploaded && !isExpanded && (
                     <button
                       type="button"

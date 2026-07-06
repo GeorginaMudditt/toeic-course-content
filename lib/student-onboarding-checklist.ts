@@ -1,3 +1,5 @@
+import { bpfNdaActivityLogHref } from '@/lib/bpf'
+
 export const ONBOARDING_CHECKLIST_STATUS_VALUES = [
   'PENDING',
   'COMPLETED',
@@ -55,6 +57,12 @@ export type OnboardingChecklistItemDefinition = {
   allowNotApplicable?: boolean
   /** Mark complete + note only — no optional file upload (complete-or-na items only). */
   completeNoteOnly?: boolean
+  /** Link to an admin tool (complete-or-na items only). */
+  externalLink?: {
+    label: string
+    /** Built-in route key — resolved at render time. */
+    route: 'bpf-nda-activity'
+  }
   /** Pre-stored PDF options to publish (template-pick-upload only). */
   templatePickOptions?: ChecklistTemplatePickOption[]
 }
@@ -121,6 +129,23 @@ export function parseTemplateWorkflowState(value: unknown): TemplateWorkflowStat
 
 export function parseLanguageAssessmentWorkflowState(value: unknown): TemplateWorkflowState {
   return parseTemplateWorkflowState(value)
+}
+
+export function resolveChecklistExternalLink(
+  item: Pick<OnboardingChecklistItemDefinition, 'externalLink'>
+): { href: string; label: string } | undefined {
+  if (!item.externalLink) {
+    return undefined
+  }
+
+  if (item.externalLink.route === 'bpf-nda-activity') {
+    return {
+      href: bpfNdaActivityLogHref(),
+      label: item.externalLink.label,
+    }
+  }
+
+  return undefined
 }
 
 export const STUDENT_ONBOARDING_CHECKLIST_ITEMS: OnboardingChecklistItemDefinition[] = [
@@ -234,6 +259,16 @@ export const STUDENT_ONBOARDING_CHECKLIST_ITEMS: OnboardingChecklistItemDefiniti
     type: 'convention-contract',
     documentTitle: 'End-of-course certificate',
     allowedMimeTypes: ['application/pdf'],
+  },
+  {
+    slug: 'log-nda-bpf-activity',
+    label: 'Log NDA-related activity for BPF',
+    type: 'complete-or-na',
+    completeNoteOnly: true,
+    externalLink: {
+      label: 'Open BPF activity log',
+      route: 'bpf-nda-activity',
+    },
   },
   {
     slug: 'student-satisfaction-survey',
