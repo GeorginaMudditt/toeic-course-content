@@ -60,10 +60,49 @@
   }
   .mpt-gap li { margin-bottom: 12px; }
   .mpt-verb { color: #b91c1c; font-weight: 600; }
+  .mpt-page {
+    max-width: 1080px;
+    margin: 0 auto;
+    padding: 20px;
+    font-family: Arial, sans-serif;
+    line-height: 1.45;
+    color: #1e293b;
+  }
+  .mpt-profile-split {
+    display: grid;
+    grid-template-columns: minmax(280px, 38%) 1fr;
+    gap: 28px;
+    align-items: start;
+  }
+  .mpt-profile-split .mpt-timeline {
+    margin: 0;
+  }
+  .mpt-profile-panel {
+    padding: 18px 20px;
+    background: #f8fafc;
+    border-radius: 10px;
+    border: 1px solid #e2e8f0;
+  }
+  .mpt-col-label {
+    margin: 0 0 10px 0;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: #64748b;
+  }
+  @media (max-width: 820px) {
+    .mpt-profile-split {
+      grid-template-columns: 1fr;
+      gap: 20px;
+    }
+  }
   @media print {
     @page { margin: 1.5cm; size: A4; }
     .page-break { page-break-before: always; }
     .mpt-profile-card { page-break-inside: avoid; break-inside: avoid; box-shadow: none; }
+    .mpt-profile-split { grid-template-columns: 1fr; gap: 16px; }
+    .mpt-profile-panel { background: transparent; border: none; padding: 0; }
     .screen-only { display: none !important; }
   }
   .grammar-ai-feedback-scroll-hint { display: none !important; }
@@ -94,7 +133,7 @@
   [data-grammar-save-section], [data-grammar-ai-feedback-host] { overflow: visible; }
 </style>
 
-<div style="max-width: 860px; margin: 0 auto; padding: 20px; font-family: Arial, sans-serif; line-height: 1.45; color: #1e293b;">
+<div class="mpt-page">
 
   <div style="text-align: center; margin-bottom: 20px; padding: 18px; background: linear-gradient(135deg, #312e81 0%, #4338ca 50%, #6366f1 100%); border-radius: 12px;">
     <img src="/brizzle-logo.png" alt="Brizzle Logo" style="width: 48px; height: 48px; object-fit: contain; background: white; padding: 4px; border-radius: 50%; margin-bottom: 8px;" />
@@ -115,24 +154,30 @@
       </div>
     </div>
 
-    <ul class="mpt-timeline">
-      <li><span class="mpt-year">2008–2012</span> BA Industrial Design, Hongik University, Seoul</li>
-      <li><span class="mpt-year">2012–2015</span> Junior industrial designer, Hanaro Electronics (consumer appliances)</li>
-      <li><span class="mpt-year">2015</span> Relocated to Barcelona; MSc Innovation &amp; Entrepreneurship, ESADE</li>
-      <li><span class="mpt-year">2017–2019</span> Product analyst, Nexa Consulting</li>
-      <li><span class="mpt-year">2019–2020</span> Senior product analyst; led research for a logistics software project</li>
-      <li><span class="mpt-year">Mar 2020</span> Made redundant when Nexa restructured its European offices</li>
-      <li><span class="mpt-year">Apr–Dec 2020</span> Freelance product consultant</li>
-      <li><span class="mpt-year">Jan 2021</span> Joined Smartlight as Product Manager</li>
-      <li><span class="mpt-year">2022–2023</span> Led European launch of Smartlight Pro control dashboard</li>
-      <li><span class="mpt-year">2024</span> Promoted to Senior Product Manager</li>
-      <li><span class="mpt-year">Present</span> Manages a team of nine; works with colleagues in Spain, Germany, and Poland</li>
-    </ul>
+    <div class="mpt-profile-split">
+      <div>
+        <p class="mpt-col-label">Timeline</p>
+        <ul class="mpt-timeline">
+          <li><span class="mpt-year">2008–2012</span> BA Industrial Design, Hongik University, Seoul</li>
+          <li><span class="mpt-year">2012–2015</span> Junior industrial designer, Hanaro Electronics (consumer appliances)</li>
+          <li><span class="mpt-year">2015</span> Relocated to Barcelona; MSc Innovation &amp; Entrepreneurship, ESADE</li>
+          <li><span class="mpt-year">2017–2020</span> Product analyst, then senior product analyst, Nexa Consulting</li>
+          <li><span class="mpt-year">2020–2021</span> Part-time PhD in sustainable product design, Universitat Politècnica de Catalunya, Barcelona</li>
+          <li><span class="mpt-year">Jan 2021</span> Joined Smartlight as Product Manager</li>
+          <li><span class="mpt-year">2022–2023</span> Led European launch of Smartlight Pro control dashboard</li>
+          <li><span class="mpt-year">2024</span> Promoted to Senior Product Manager</li>
+          <li><span class="mpt-year">Present</span> Manages a team of nine; works with colleagues in Spain, Germany, and Poland</li>
+        </ul>
+      </div>
 
-    <div class="mpt-bio">
-      <p style="margin: 0 0 12px 0;">Joo-Sing Park has lived in Barcelona since she finished her master&apos;s degree in 2017. She is originally from Seoul, where she studied industrial design and worked for an electronics company until 2015. She moved to Spain to study innovation and entrepreneurship, then joined a consulting firm as a product analyst. By 2020 she had been promoted and was leading research for a new logistics software project when the company restructured and she was made redundant.</p>
-      <p style="margin: 0 0 12px 0;">For nine months she worked as a freelance consultant. While she was negotiating her departure from the consulting firm, she was already contacting new clients in the building-technology sector. By the time she joined Smartlight in January 2021, she had already tested two product ideas with early customers.</p>
-      <p style="margin: 0;">Smartlight makes smart lighting systems for offices and factories. At Smartlight, she has simplified the planning process for new products and has been training junior product managers since last year. Her team has launched three major updates, and a new control dashboard has been adopted by more than 200 site managers. She was promoted to senior product manager in 2024 and now manages a team of nine people, working with colleagues in Spain, Germany, and Poland.</p>
+      <div class="mpt-profile-panel">
+        <p class="mpt-col-label">Summary</p>
+        <div class="mpt-bio">
+          <p style="margin: 0 0 12px 0;">Joo-Sing Park has lived in Barcelona since she finished her master&apos;s degree in 2017. She is originally from Seoul, where she studied industrial design and worked for an electronics company until 2015. She moved to Spain to study innovation and entrepreneurship, then joined a consulting firm as a product analyst. By 2020 she had been promoted twice and was leading research for a new logistics software project.</p>
+          <p style="margin: 0 0 12px 0;">She then began a part-time PhD in sustainable product design at the Universitat Politècnica de Catalunya. While she was writing her research proposal, she was still finishing a few consultancy tasks for Nexa. By the time she joined Smartlight in January 2021, she had already completed the first year of her doctorate.</p>
+          <p style="margin: 0;">Smartlight makes smart lighting systems for offices and factories. At Smartlight, she has simplified the planning process for new products and has been training junior product managers since last year. Her team has launched three major updates, and a new control dashboard has been adopted by more than 200 site managers. She was promoted to senior product manager in 2024 and now manages a team of nine people, working with colleagues in Spain, Germany, and Poland.</p>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -150,41 +195,47 @@
       </div>
     </div>
 
-    <ul class="mpt-timeline">
-      <li><span class="mpt-year">2012</span> BA Human Resources Management, Université Lumière Lyon 2</li>
-      <li><span class="mpt-year">2014–2016</span> HR Coordinator, Société Verte (sustainable packaging company)</li>
-      <li><span class="mpt-year">2016</span> Promoted to HR Generalist at Société Verte</li>
-      <li><span class="mpt-year">Nov 2017</span> Made redundant when Société Verte was taken over; three months unemployed</li>
-      <li><span class="mpt-year">2018</span> Joined Office Inc as HR Officer (Lyon headquarters)</li>
-      <li><span class="mpt-year">2019</span> Completed professional certificate in labour law (evening course, funded by her employer)</li>
-      <li><span class="mpt-year">2020–2021</span> Maternity leave; returned January 2021 as Senior HR Officer</li>
-      <li><span class="mpt-year">2021–2025</span> Led annual performance reviews; negotiated two agreements with staff representatives</li>
-      <li><span class="mpt-year">Jan 2026</span> Promoted to HR Business Partner for sales and operations</li>
-      <li><span class="mpt-year">Present</span> Supports 180 employees; reports to the HR Director</li>
-    </ul>
+    <div class="mpt-profile-split">
+      <div>
+        <p class="mpt-col-label">Timeline</p>
+        <ul class="mpt-timeline">
+          <li><span class="mpt-year">2012</span> BA Human Resources Management, Université Lumière Lyon 2</li>
+          <li><span class="mpt-year">2014–2016</span> HR Coordinator, Société Verte (sustainable packaging company)</li>
+          <li><span class="mpt-year">2016</span> Promoted to HR Generalist at Société Verte</li>
+          <li><span class="mpt-year">Nov 2017</span> Made redundant when Société Verte was taken over; three months unemployed</li>
+          <li><span class="mpt-year">2018</span> Joined Office Inc as HR Officer (Lyon headquarters)</li>
+          <li><span class="mpt-year">2019</span> Completed professional certificate in labour law (evening course, funded by her employer)</li>
+          <li><span class="mpt-year">2020–2021</span> Maternity leave; returned January 2021 as Senior HR Officer</li>
+          <li><span class="mpt-year">2021–2025</span> Led annual performance reviews; negotiated two agreements with staff representatives</li>
+          <li><span class="mpt-year">Jan 2026</span> Promoted to HR Business Partner for sales and operations</li>
+          <li><span class="mpt-year">Present</span> Supports 180 employees; reports to the HR Director</li>
+        </ul>
+      </div>
 
-    <div data-grammar-per-section-check="true">
-      <ol class="mpt-gap" style="padding-left: 22px; font-size: 16px; list-style-type: decimal;">
-        <li>Margaux <strong><span data-grammar-input="mpt-p2-q1" data-grammar-acceptable="started" style="display: inline-block; min-width: 100px;"></span></strong> <span class="mpt-verb">(start)</span> working for Office Inc in 2018.</li>
-        <li>She <strong><span data-grammar-input="mpt-p2-q2" data-grammar-acceptable="has been working|'s been working|has worked" style="display: inline-block; min-width: 120px;"></span></strong> <span class="mpt-verb">(work)</span> in her current role since the beginning of 2026.</li>
-        <li>Margaux <strong><span data-grammar-input="mpt-p2-q3" data-grammar-acceptable="was promoted" style="display: inline-block; min-width: 120px;"></span></strong> <span class="mpt-verb">(promote)</span> from senior HR officer to HR business partner in January 2026.</li>
-        <li>Before she joined Office Inc, she <strong><span data-grammar-input="mpt-p2-q4" data-grammar-acceptable="had been|was" style="display: inline-block; min-width: 80px;"></span></strong> unemployed for three months.</li>
-        <li>While she <strong><span data-grammar-input="mpt-p2-q5" data-grammar-acceptable="was preparing|had been preparing" style="display: inline-block; min-width: 120px;"></span></strong> <span class="mpt-verb">(prepare)</span> her labour-law portfolio, she also volunteered at a local career centre.</li>
-        <li>Margaux <strong><span data-grammar-input="mpt-p2-q6" data-grammar-acceptable="has never worked|'s never worked" style="display: inline-block; min-width: 120px;"></span></strong> <span class="mpt-verb">(never/work)</span> in manufacturing; her background is entirely in services.</li>
-        <li>Her previous employer <strong><span data-grammar-input="mpt-p2-q7" data-grammar-acceptable="made|had made" style="display: inline-block; min-width: 80px;"></span></strong> <span class="mpt-verb">(make)</span> twenty staff redundant in November 2017.</li>
-        <li>She <strong><span data-grammar-input="mpt-p2-q8" data-grammar-acceptable="completed" style="display: inline-block; min-width: 100px;"></span></strong> <span class="mpt-verb">(complete)</span> a professional certificate in labour law in 2019.</li>
-        <li>By the time she returned from maternity leave, Office Inc <strong><span data-grammar-input="mpt-p2-q9" data-grammar-acceptable="had already revised|had revised" style="display: inline-block; min-width: 140px;"></span></strong> <span class="mpt-verb">(revise)</span> its parental-leave policy.</li>
-        <li>Margaux <strong><span data-grammar-input="mpt-p2-q10" data-grammar-acceptable="had been coordinating|had coordinated" style="display: inline-block; min-width: 140px;"></span></strong> <span class="mpt-verb">(coordinate)</span> recruitment campaigns for two years before her first promotion.</li>
-        <li>The executive committee <strong><span data-grammar-input="mpt-p2-q11" data-grammar-acceptable="offered" style="display: inline-block; min-width: 100px;"></span></strong> <span class="mpt-verb">(offer)</span> her the HR business partner position after she had led a complex disciplinary case.</li>
-        <li>Since January 2026, she <strong><span data-grammar-input="mpt-p2-q12" data-grammar-acceptable="has been supporting|'s been supporting|has supported" style="display: inline-block; min-width: 140px;"></span></strong> <span class="mpt-verb">(support)</span> both the commercial director and the head of operations.</li>
-      </ol>
+      <div class="mpt-profile-panel" data-grammar-per-section-check="true">
+        <p class="mpt-col-label">Gap fill</p>
+        <ol class="mpt-gap" style="padding-left: 22px; font-size: 16px; list-style-type: decimal; margin: 0;">
+          <li>Margaux <strong><span data-grammar-input="mpt-p2-q1" data-grammar-acceptable="started" style="display: inline-block; min-width: 100px;"></span></strong> <span class="mpt-verb">(start)</span> working for Office Inc in 2018.</li>
+          <li>She <strong><span data-grammar-input="mpt-p2-q2" data-grammar-acceptable="has been working|'s been working|has worked" style="display: inline-block; min-width: 120px;"></span></strong> <span class="mpt-verb">(work)</span> in her current role since the beginning of 2026.</li>
+          <li>Margaux <strong><span data-grammar-input="mpt-p2-q3" data-grammar-acceptable="was promoted" style="display: inline-block; min-width: 120px;"></span></strong> <span class="mpt-verb">(promote)</span> from senior HR officer to HR business partner in January 2026.</li>
+          <li>Before she joined Office Inc, she <strong><span data-grammar-input="mpt-p2-q4" data-grammar-acceptable="had been|was" style="display: inline-block; min-width: 80px;"></span></strong> unemployed for three months.</li>
+          <li>While she <strong><span data-grammar-input="mpt-p2-q5" data-grammar-acceptable="was preparing|had been preparing" style="display: inline-block; min-width: 120px;"></span></strong> <span class="mpt-verb">(prepare)</span> her labour-law portfolio, she also volunteered at a local career centre.</li>
+          <li>Margaux <strong><span data-grammar-input="mpt-p2-q6" data-grammar-acceptable="has never worked|'s never worked" style="display: inline-block; min-width: 120px;"></span></strong> <span class="mpt-verb">(never/work)</span> in manufacturing; her background is entirely in services.</li>
+          <li>Her previous employer <strong><span data-grammar-input="mpt-p2-q7" data-grammar-acceptable="made|had made" style="display: inline-block; min-width: 80px;"></span></strong> <span class="mpt-verb">(make)</span> twenty staff redundant in November 2017.</li>
+          <li>She <strong><span data-grammar-input="mpt-p2-q8" data-grammar-acceptable="completed" style="display: inline-block; min-width: 100px;"></span></strong> <span class="mpt-verb">(complete)</span> a professional certificate in labour law in 2019.</li>
+          <li>By the time she returned from maternity leave, Office Inc <strong><span data-grammar-input="mpt-p2-q9" data-grammar-acceptable="had already revised|had revised" style="display: inline-block; min-width: 140px;"></span></strong> <span class="mpt-verb">(revise)</span> its parental-leave policy.</li>
+          <li>Margaux <strong><span data-grammar-input="mpt-p2-q10" data-grammar-acceptable="had been coordinating|had coordinated" style="display: inline-block; min-width: 140px;"></span></strong> <span class="mpt-verb">(coordinate)</span> recruitment campaigns for two years before her first promotion.</li>
+          <li>The executive committee <strong><span data-grammar-input="mpt-p2-q11" data-grammar-acceptable="offered" style="display: inline-block; min-width: 100px;"></span></strong> <span class="mpt-verb">(offer)</span> her the HR business partner position after she had led a complex disciplinary case.</li>
+          <li>Since January 2026, she <strong><span data-grammar-input="mpt-p2-q12" data-grammar-acceptable="has been supporting|'s been supporting|has supported" style="display: inline-block; min-width: 140px;"></span></strong> <span class="mpt-verb">(support)</span> both the commercial director and the head of operations.</li>
+        </ol>
+      </div>
     </div>
   </div>
 
   <!-- PROFILE 3: Samira Okonkwo -->
   <div class="mpt-profile-card mpt-section" style="border-top: 5px solid #059669;">
     <h2 style="font-size: 22px; font-weight: bold; margin: 0 0 6px 0; color: #065f46;">Profile 3: Speaking</h2>
-    <p style="font-size: 15px; margin: 0 0 16px 0; color: #64748b;">Study the timeline, then speak for 2–3 minutes about this person&apos;s career so far. Use a range of past and present tenses.</p>
+    <p style="font-size: 15px; margin: 0 0 16px 0; color: #64748b;">Study the timeline, then talk about Samira&apos;s career so far.</p>
 
     <div class="mpt-profile-header">
       <img src="/images/mixed-past-tenses/samira-okonkwo.jpg" alt="Samira Okonkwo" class="mpt-photo" />
@@ -200,17 +251,13 @@
       <li><span class="mpt-year">2011–2014</span> Administrative assistant, temp agencies (legal and financial services)</li>
       <li><span class="mpt-year">2014–2017</span> Personal assistant, BrightPath (financial services start-up)</li>
       <li><span class="mpt-year">2017</span> Promoted to executive assistant to the Chief Operating Officer; managed the executive calendar and board meetings</li>
-      <li><span class="mpt-year">2019</span> BrightPath was sold to a larger company; role cut — four months between jobs</li>
-      <li><span class="mpt-year">2019–2020</span> Short contract roles as an executive assistant (pharmaceutical and media companies)</li>
+      <li><span class="mpt-year">2019</span> Six-month sabbatical (unpaid leave): travel and volunteer work with a business-education charity in Ghana</li>
+      <li><span class="mpt-year">Late 2019</span> Returned to BrightPath as executive assistant to the COO</li>
       <li><span class="mpt-year">2020</span> Joined Meridian Logistics as executive assistant to the CEO</li>
       <li><span class="mpt-year">2021–2023</span> Organised online and in-person board meetings across five time zones during a company restructuring</li>
       <li><span class="mpt-year">2024</span> Completed a part-time management and leadership qualification</li>
       <li><span class="mpt-year">Present</span> Manages the CEO&apos;s diary; works with investors, regulators, and union representatives</li>
     </ul>
-
-    <div style="margin-top: 16px; padding: 14px; background: #ecfdf5; border-radius: 8px; border-left: 4px solid #10b981;">
-      <p style="margin: 0; font-size: 15px; color: #065f46;"><strong>Speaking prompts:</strong> Summarise Samira&apos;s career chronologically. Mention at least one setback, one promotion, and what she has been doing recently. Include present perfect, past perfect, and past continuous where appropriate.</p>
-    </div>
   </div>
 
   <!-- PROFILE 4: Lucas Bernard -->
@@ -227,31 +274,38 @@
       </div>
     </div>
 
-    <ul class="mpt-timeline">
-      <li><span class="mpt-year">2013–2016</span> Degree in digital arts, École Supérieure d&apos;Art d&apos;Aix-en-Provence</li>
-      <li><span class="mpt-year">2016–2018</span> Junior graphic designer, freelance (branding for local restaurants)</li>
-      <li><span class="mpt-year">2018</span> Digital product designer, Cabestan Interactive (web and app agency, Toulon)</li>
-      <li><span class="mpt-year">2020</span> Led the design for a cruise-line booking website (award nomination)</li>
-      <li><span class="mpt-year">2021</span> Project cancelled before launch; team reduced — Lucas moved to contract work</li>
-      <li><span class="mpt-year">2021–2022</span> Six-month freelance period (online shops and website accessibility reviews)</li>
-      <li><span class="mpt-year">2022</span> Joined Atelier Rivage as a mid-level product designer</li>
-      <li><span class="mpt-year">2024</span> Promoted to senior digital designer; mentors two junior designers</li>
-      <li><span class="mpt-year">2025</span> Led a rebrand and new company style guide for a regional hotel group</li>
-      <li><span class="mpt-year">Present</span> Creates screen designs for websites and apps; passes final files to the development team</li>
-    </ul>
-
-    <div data-grammar-ai-feedback-host="writing1">
-      <div data-grammar-save-section="true" data-grammar-ai-feedback="writing1">
-        <span data-grammar-input="writing1-q1" data-grammar-input-type="textarea" data-grammar-textarea-rows="12" style="display: block; min-height: 220px;"></span>
+    <div class="mpt-profile-split">
+      <div>
+        <p class="mpt-col-label">Timeline</p>
+        <ul class="mpt-timeline">
+          <li><span class="mpt-year">2013–2016</span> Degree in digital arts, École Supérieure d&apos;Art d&apos;Aix-en-Provence</li>
+          <li><span class="mpt-year">2016–2018</span> Junior graphic designer, freelance (branding for local restaurants)</li>
+          <li><span class="mpt-year">2018</span> Digital product designer, Cabestan Interactive (web and app agency, Toulon)</li>
+          <li><span class="mpt-year">2020</span> Led the design for a cruise-line booking website (award nomination)</li>
+          <li><span class="mpt-year">2021</span> Four months paternity leave after the birth of his daughter</li>
+          <li><span class="mpt-year">2022</span> Joined Atelier Rivage as a mid-level product designer</li>
+          <li><span class="mpt-year">2024</span> Promoted to senior digital designer; mentors two junior designers</li>
+          <li><span class="mpt-year">2025</span> Led a rebrand and new company style guide for a regional hotel group</li>
+          <li><span class="mpt-year">Present</span> Creates screen designs for websites and apps; passes final files to the development team</li>
+        </ul>
       </div>
-      <div class="grammar-ai-feedback-mount" data-for="writing1"></div>
+
+      <div class="mpt-profile-panel">
+        <p class="mpt-col-label">Writing</p>
+        <div data-grammar-ai-feedback-host="writing1">
+          <div data-grammar-save-section="true" data-grammar-ai-feedback="writing1">
+            <span data-grammar-input="writing1-q1" data-grammar-input-type="textarea" data-grammar-textarea-rows="12" style="display: block; min-height: 220px;"></span>
+          </div>
+          <div class="grammar-ai-feedback-mount" data-for="writing1"></div>
+        </div>
+      </div>
     </div>
   </div>
 
 </div>
 
 <!-- Answers (Profile 2 only) -->
-<div style="max-width: 860px; margin: 0 auto; padding: 20px; font-family: Arial, sans-serif; line-height: 1.45; color: #1e293b;" class="page-break">
+<div class="mpt-page page-break">
   <h2 style="font-size: 22px; font-weight: bold; margin-bottom: 12px; color: #000;">📝 Answers: Profile 2 (gap fill)</h2>
   <ol style="padding-left: 22px; font-size: 16px; list-style-type: decimal;">
     <li style="margin-bottom: 6px;"><strong>started</strong> — past simple (finished time: 2018)</li>
