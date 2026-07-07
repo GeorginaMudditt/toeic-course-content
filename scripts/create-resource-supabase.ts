@@ -16,6 +16,7 @@ async function main() {
   const title = process.argv[2]
   const htmlFileName = process.argv[3]
   const templateTitlePattern = process.argv[4] || '%Jobs, People%'
+  const levelOverride = process.argv[5]
 
   if (!title || !htmlFileName) {
     console.log('Usage: npx tsx scripts/create-resource-supabase.ts "Resource Title" file.html')
@@ -74,7 +75,7 @@ async function main() {
       type: ref.type,
       content,
       estimatedHours: ref.estimatedHours ?? 1,
-      level: ref.level,
+      level: levelOverride || ref.level,
       skill: ref.skill,
       creatorId: ref.creatorId,
       createdAt: now,

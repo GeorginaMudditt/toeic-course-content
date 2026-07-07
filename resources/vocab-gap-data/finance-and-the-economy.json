@@ -1,0 +1,24 @@
+{
+  "sentences": [
+    { "number": 1, "parts": ["They use their ", { "slot": "gapfill-q1", "answers": ["current account"] }, " for everyday payments and direct debits."] },
+    { "number": 2, "parts": ["The couple opened a ", { "slot": "gapfill-q2", "answers": ["joint account"] }, " to manage shared household expenses."] },
+    { "number": 3, "parts": ["Paying the full ", { "slot": "gapfill-q3", "answers": ["credit card"] }, " balance each month helps avoid costly interest charges."] },
+    { "number": 4, "parts": ["The central bank raised ", { "slot": "gapfill-q4", "answers": ["interest"] }, " rates to slow inflation."] },
+    { "number": 5, "parts": ["The firm relied on a short-term ", { "slot": "gapfill-q5", "answers": ["overdraft"] }, " to cover its monthly payroll."] },
+    { "number": 6, "parts": ["Strong household ", { "slot": "gapfill-q6", "answers": ["savings"] }, " can cushion the impact of an economic downturn."] },
+    { "number": 7, "parts": ["The treasurer checked the account ", { "slot": "gapfill-q7", "answers": ["balance"] }, " before authorising the transfer."] },
+    { "number": 8, "parts": ["The start-up had to ", { "slot": "gapfill-q8", "answers": ["borrow"] }, " heavily to finance its overseas expansion."] },
+    { "number": 9, "parts": ["The board published a detailed ", { "slot": "gapfill-q9", "answers": ["financial"] }, " statement for shareholders."] },
+    { "number": 10, "parts": ["The company secured a five-year ", { "slot": "gapfill-q10", "answers": ["loan"] }, " at a fixed rate of 4.2%."] },
+    { "number": 11, "parts": ["An independent ", { "slot": "gapfill-q11", "answers": ["broker"] }, " negotiated better insurance terms on their behalf."] },
+    { "number": 12, "parts": ["An experienced commodity ", { "slot": "gapfill-q12", "answers": ["trader"] }, " anticipated the rise in oil prices."] },
+    { "number": 13, "parts": ["Long-term ", { "slot": "gapfill-q13", "answers": ["investors"] }, " remained cautious amid volatile market conditions."] },
+    { "number": 14, "parts": ["A weaker domestic ", { "slot": "gapfill-q14", "answers": ["currency"] }, " made exports more competitive overseas."] },
+    { "number": 15, "parts": ["Rising ", { "slot": "gapfill-q15", "answers": ["commodities"] }, " prices pushed up manufacturing costs across the sector."] },
+    { "number": 16, "parts": ["The ", { "slot": "gapfill-q16", "answers": ["stock market"] }, " recovered after the government's stimulus announcement."] },
+    { "number": 17, "parts": ["Bilateral ", { "slot": "gapfill-q17", "answers": ["trade"] }, " between the two countries reached a record €12 billion."] },
+    { "number": 18, "parts": ["Weak ", { "slot": "gapfill-q18", "answers": ["economic"] }, " indicators pointed to slower growth in the coming quarter."] },
+    { "number": 19, "parts": ["The government aims to reduce the budget ", { "slot": "gapfill-q19", "answers": ["deficit"] }, " within three years."] },
+    { "number": 20, "parts": ["Analysts warned that rising unemployment could tip the economy into ", { "slot": "gapfill-q20", "answers": ["recession"] }, "."] }
+  ]
+}

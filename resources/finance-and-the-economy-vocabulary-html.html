@@ -1,0 +1,352 @@
+<!-- PAGE 1: Vocabulary List -->
+<style>
+  @media print {
+    @page { margin: 1.5cm; }
+    body { margin: 0; padding: 0; }
+    .page-break { page-break-before: always; }
+    .no-break { page-break-inside: avoid; break-inside: avoid; }
+    .keep-together { page-break-inside: avoid; break-inside: avoid; }
+    h2, h3 { page-break-after: avoid; break-after: avoid; }
+    table { page-break-inside: avoid; break-inside: avoid; }
+    ul, ol { page-break-inside: avoid; break-inside: avoid; }
+  }
+
+  @keyframes vsg-shake {
+    0%, 100% { transform: translateX(0); }
+    20%, 60% { transform: translateX(-6px); }
+    40%, 80% { transform: translateX(6px); }
+  }
+  .vsg-shake { animation: vsg-shake 0.45s ease; }
+  .vsg-slot-correct {
+    border: 3px solid #15803d !important;
+    background: #ecfdf5 !important;
+    box-shadow: inset 0 0 0 1px rgba(21, 128, 61, 0.15);
+  }
+  .vsg-slot-wrong { border-color: #b91c1c !important; background: #fee2e2 !important; }
+  .vsg-layout {
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+    align-items: flex-start;
+  }
+  .vsg-sentences-col { flex: 1; min-width: 0; }
+  .vsg-bank-col {
+    width: min(260px, 100%);
+    flex-shrink: 0;
+    position: sticky;
+    top: 12px;
+    padding: 14px;
+    border-radius: 10px;
+    background: linear-gradient(135deg, #e8eaf6 0%, #f5f6fc 100%);
+    border: 1px solid #c5cae9;
+    box-shadow: 0 2px 6px rgba(56, 67, 143, 0.1);
+  }
+  .vsg-bank-scroll-notice {
+    margin: 0 0 10px;
+    padding: 8px 10px;
+    border-radius: 8px;
+    background: linear-gradient(135deg, #fff7ed 0%, #ffedd5 100%);
+    border: 1px solid #fdba74;
+    font-size: 12px;
+    line-height: 1.45;
+    color: #9a3412;
+  }
+  .vsg-bank-scroll-wrap {
+    position: relative;
+  }
+  .vsg-bank-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    max-height: min(70vh, 640px);
+    overflow-y: auto;
+    padding-right: 4px;
+    scrollbar-width: thin;
+    scrollbar-color: #38438f #e8eaf6;
+  }
+  .vsg-bank-grid::-webkit-scrollbar { width: 8px; }
+  .vsg-bank-grid::-webkit-scrollbar-track {
+    background: #e8eaf6;
+    border-radius: 8px;
+  }
+  .vsg-bank-grid::-webkit-scrollbar-thumb {
+    background: #38438f;
+    border-radius: 8px;
+  }
+  .vsg-bank-fade {
+    position: absolute;
+    left: 0;
+    right: 8px;
+    height: 28px;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+    z-index: 1;
+  }
+  .vsg-bank-fade-top {
+    top: 0;
+    background: linear-gradient(180deg, rgba(245, 246, 252, 0.98) 0%, rgba(245, 246, 252, 0) 100%);
+  }
+  .vsg-bank-fade-bottom {
+    bottom: 0;
+    background: linear-gradient(0deg, rgba(245, 246, 252, 0.98) 0%, rgba(245, 246, 252, 0) 100%);
+  }
+  .vsg-toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    align-items: center;
+    margin-top: 18px;
+  }
+  @media (max-width: 720px) {
+    .vsg-layout { flex-direction: column; }
+    .vsg-bank-col { width: 100%; position: static; }
+    .vsg-bank-grid {
+      flex-direction: row;
+      flex-wrap: wrap;
+      max-height: none;
+    }
+    .vsg-chip { flex: 0 1 auto; width: auto !important; }
+  }
+  @media print {
+    .vsg-no-print { display: none !important; }
+    .vsg-slot { border: 1px dashed #333 !important; background: #fff !important; }
+  }
+
+</style>
+<div style="max-width: 800px; margin: 0 auto; padding: 20px; font-family: Arial, sans-serif; line-height: 1.5; color: #333; background: linear-gradient(to bottom, #e8eaf6, #ffffff);">
+
+  <div style="text-align: center; margin-bottom: 25px; padding: 20px; background: linear-gradient(135deg, #38438f 0%, #2d3569 100%); border-radius: 12px; box-shadow: 0 4px 6px rgba(56,67,143,0.3);" class="no-break">
+    <div style="display: inline-block; margin-bottom: 8px;">
+      <img src="/brizzle-logo.png" alt="Brizzle Logo" style="width: 50px; height: 50px; object-fit: contain; background: white; padding: 5px; border-radius: 50%;" />
+    </div>
+    <h1 style="font-size: 28px; font-weight: bold; margin: 0; color: #ffffff; text-shadow: 0 2px 4px rgba(0,0,0,0.2);">Finance and the Economy</h1>
+  </div>
+
+  <div style="margin-bottom: 30px; padding: 20px; background: white; border-radius: 10px; box-shadow: 0 2px 4px rgba(0,0,0,0.05);" class="keep-together">
+    <h2 style="font-size: 20px; font-weight: bold; margin-bottom: 15px; color: #38438f; border-bottom: 3px solid #38438f; padding-bottom: 8px;">Part 1: Vocabulary List with Pronunciation and Translation</h2>
+
+    <table style="width: 100%; border-collapse: collapse; margin-top: 12px; font-size: 16px; border: 1px solid #e5e7eb; box-shadow: 0 1px 3px rgba(0,0,0,0.05);" class="no-break">
+      <thead>
+        <tr style="background: linear-gradient(135deg, #38438f 0%, #2d3569 100%);">
+          <th style="border: 1px solid #e5e7eb; padding: 10px; text-align: left; font-weight: bold; font-size: 16px; width: 25%; color: white;">Word/Phrase</th>
+          <th style="border: 1px solid #e5e7eb; padding: 10px; text-align: left; font-weight: bold; font-size: 16px; width: 15%; color: white;">Pronunciation</th>
+          <th style="border: 1px solid #e5e7eb; padding: 10px; text-align: left; font-weight: bold; font-size: 16px; width: 20%; color: white;">French Translation</th>
+          <th style="border: 1px solid #e5e7eb; padding: 10px; text-align: left; font-weight: bold; font-size: 16px; width: 40%; color: white;">Example Sentence</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px; font-weight: bold; color: #1e293b;">current account</td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px;"><div onclick="document.getElementById('audio-current-account').play()" style="display: inline-block; background: linear-gradient(135deg, #ba3627 0%, #9a2d21 100%); color: white; padding: 4px 12px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; box-shadow: 0 2px 4px rgba(186,54,39,0.3); transition: transform 0.1s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">🔊 Listen</div><audio id="audio-current-account" preload="auto"><source src="/vocab-audio/finance-and-the-economy-vocab-audio/current account.mp3" type="audio/mpeg"></audio></td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px; font-style: italic; color: #64748b;">compte courant</td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px;">She uses her current account for everyday payments and direct debits.</td>
+        </tr>
+        <tr style="background: #e8eaf6;">
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px; font-weight: bold; color: #1e293b;">joint account</td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px;"><div onclick="document.getElementById('audio-joint-account').play()" style="display: inline-block; background: linear-gradient(135deg, #ba3627 0%, #9a2d21 100%); color: white; padding: 4px 12px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; box-shadow: 0 2px 4px rgba(186,54,39,0.3); transition: transform 0.1s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">🔊 Listen</div><audio id="audio-joint-account" preload="auto"><source src="/vocab-audio/finance-and-the-economy-vocab-audio/joint account.mp3" type="audio/mpeg"></audio></td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px; font-style: italic; color: #64748b;">compte joint</td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px;">They opened a joint account to manage household expenses more easily.</td>
+        </tr>
+        <tr>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px; font-weight: bold; color: #1e293b;">credit card</td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px;"><div onclick="document.getElementById('audio-credit-card').play()" style="display: inline-block; background: linear-gradient(135deg, #ba3627 0%, #9a2d21 100%); color: white; padding: 4px 12px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; box-shadow: 0 2px 4px rgba(186,54,39,0.3); transition: transform 0.1s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">🔊 Listen</div><audio id="audio-credit-card" preload="auto"><source src="/vocab-audio/finance-and-the-economy-vocab-audio/credit card.mp3" type="audio/mpeg"></audio></td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px; font-style: italic; color: #64748b;">carte de crédit</td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px;">Paying the full credit card balance each month avoids costly interest charges.</td>
+        </tr>
+        <tr style="background: #e8eaf6;">
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px; font-weight: bold; color: #1e293b;">interest</td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px;"><div onclick="document.getElementById('audio-interest').play()" style="display: inline-block; background: linear-gradient(135deg, #ba3627 0%, #9a2d21 100%); color: white; padding: 4px 12px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; box-shadow: 0 2px 4px rgba(186,54,39,0.3); transition: transform 0.1s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">🔊 Listen</div><audio id="audio-interest" preload="auto"><source src="/vocab-audio/finance-and-the-economy-vocab-audio/interest.mp3" type="audio/mpeg"></audio></td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px; font-style: italic; color: #64748b;">intérêts</td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px;">The central bank raised interest rates to curb inflation.</td>
+        </tr>
+        <tr>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px; font-weight: bold; color: #1e293b;">overdraft</td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px;"><div onclick="document.getElementById('audio-overdraft').play()" style="display: inline-block; background: linear-gradient(135deg, #ba3627 0%, #9a2d21 100%); color: white; padding: 4px 12px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; box-shadow: 0 2px 4px rgba(186,54,39,0.3); transition: transform 0.1s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">🔊 Listen</div><audio id="audio-overdraft" preload="auto"><source src="/vocab-audio/finance-and-the-economy-vocab-audio/overdraft.mp3" type="audio/mpeg"></audio></td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px; font-style: italic; color: #64748b;">découvert (bancaire)</td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px;">The company relied on a short-term overdraft to cover its payroll.</td>
+        </tr>
+        <tr style="background: #e8eaf6;">
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px; font-weight: bold; color: #1e293b;">savings</td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px;"><div onclick="document.getElementById('audio-savings').play()" style="display: inline-block; background: linear-gradient(135deg, #ba3627 0%, #9a2d21 100%); color: white; padding: 4px 12px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; box-shadow: 0 2px 4px rgba(186,54,39,0.3); transition: transform 0.1s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">🔊 Listen</div><audio id="audio-savings" preload="auto"><source src="/vocab-audio/finance-and-the-economy-vocab-audio/savings.mp3" type="audio/mpeg"></audio></td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px; font-style: italic; color: #64748b;">épargne</td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px;">Robust household savings can cushion the impact of an economic downturn.</td>
+        </tr>
+        <tr>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px; font-weight: bold; color: #1e293b;">balance</td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px;"><div onclick="document.getElementById('audio-balance').play()" style="display: inline-block; background: linear-gradient(135deg, #ba3627 0%, #9a2d21 100%); color: white; padding: 4px 12px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; box-shadow: 0 2px 4px rgba(186,54,39,0.3); transition: transform 0.1s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">🔊 Listen</div><audio id="audio-balance" preload="auto"><source src="/vocab-audio/finance-and-the-economy-vocab-audio/balance.mp3" type="audio/mpeg"></audio></td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px; font-style: italic; color: #64748b;">solde</td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px;">The treasurer reviewed the account balance before authorising the transfer.</td>
+        </tr>
+        <tr style="background: #e8eaf6;">
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px; font-weight: bold; color: #1e293b;">to borrow</td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px;"><div onclick="document.getElementById('audio-to-borrow').play()" style="display: inline-block; background: linear-gradient(135deg, #ba3627 0%, #9a2d21 100%); color: white; padding: 4px 12px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; box-shadow: 0 2px 4px rgba(186,54,39,0.3); transition: transform 0.1s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">🔊 Listen</div><audio id="audio-to-borrow" preload="auto"><source src="/vocab-audio/finance-and-the-economy-vocab-audio/to borrow.mp3" type="audio/mpeg"></audio></td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px; font-style: italic; color: #64748b;">emprunter</td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px;">The start-up had to borrow heavily to finance its expansion abroad.</td>
+        </tr>
+        <tr>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px; font-weight: bold; color: #1e293b;">financial</td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px;"><div onclick="document.getElementById('audio-financial').play()" style="display: inline-block; background: linear-gradient(135deg, #ba3627 0%, #9a2d21 100%); color: white; padding: 4px 12px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; box-shadow: 0 2px 4px rgba(186,54,39,0.3); transition: transform 0.1s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">🔊 Listen</div><audio id="audio-financial" preload="auto"><source src="/vocab-audio/finance-and-the-economy-vocab-audio/financial.mp3" type="audio/mpeg"></audio></td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px; font-style: italic; color: #64748b;">financier / financière</td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px;">The board published a detailed financial statement for shareholders.</td>
+        </tr>
+        <tr style="background: #e8eaf6;">
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px; font-weight: bold; color: #1e293b;">loan</td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px;"><div onclick="document.getElementById('audio-loan').play()" style="display: inline-block; background: linear-gradient(135deg, #ba3627 0%, #9a2d21 100%); color: white; padding: 4px 12px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; box-shadow: 0 2px 4px rgba(186,54,39,0.3); transition: transform 0.1s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">🔊 Listen</div><audio id="audio-loan" preload="auto"><source src="/vocab-audio/finance-and-the-economy-vocab-audio/loan.mp3" type="audio/mpeg"></audio></td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px; font-style: italic; color: #64748b;">prêt / emprunt</td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px;">The firm secured a five-year loan at a fixed rate of 4.2%.</td>
+        </tr>
+        <tr>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px; font-weight: bold; color: #1e293b;">broker</td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px;"><div onclick="document.getElementById('audio-broker').play()" style="display: inline-block; background: linear-gradient(135deg, #ba3627 0%, #9a2d21 100%); color: white; padding: 4px 12px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; box-shadow: 0 2px 4px rgba(186,54,39,0.3); transition: transform 0.1s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">🔊 Listen</div><audio id="audio-broker" preload="auto"><source src="/vocab-audio/finance-and-the-economy-vocab-audio/broker.mp3" type="audio/mpeg"></audio></td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px; font-style: italic; color: #64748b;">courtier</td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px;">An independent broker negotiated better insurance terms on their behalf.</td>
+        </tr>
+        <tr style="background: #e8eaf6;">
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px; font-weight: bold; color: #1e293b;">trader</td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px;"><div onclick="document.getElementById('audio-trader').play()" style="display: inline-block; background: linear-gradient(135deg, #ba3627 0%, #9a2d21 100%); color: white; padding: 4px 12px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; box-shadow: 0 2px 4px rgba(186,54,39,0.3); transition: transform 0.1s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">🔊 Listen</div><audio id="audio-trader" preload="auto"><source src="/vocab-audio/finance-and-the-economy-vocab-audio/trader.mp3" type="audio/mpeg"></audio></td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px; font-style: italic; color: #64748b;">trader / opérateur de marché</td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px;">An experienced commodity trader anticipated the rise in oil prices.</td>
+        </tr>
+        <tr>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px; font-weight: bold; color: #1e293b;">investor</td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px;"><div onclick="document.getElementById('audio-investor').play()" style="display: inline-block; background: linear-gradient(135deg, #ba3627 0%, #9a2d21 100%); color: white; padding: 4px 12px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; box-shadow: 0 2px 4px rgba(186,54,39,0.3); transition: transform 0.1s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">🔊 Listen</div><audio id="audio-investor" preload="auto"><source src="/vocab-audio/finance-and-the-economy-vocab-audio/investor.mp3" type="audio/mpeg"></audio></td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px; font-style: italic; color: #64748b;">investisseur</td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px;">Long-term investors remained cautious amid volatile market conditions.</td>
+        </tr>
+        <tr style="background: #e8eaf6;">
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px; font-weight: bold; color: #1e293b;">currency</td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px;"><div onclick="document.getElementById('audio-currency').play()" style="display: inline-block; background: linear-gradient(135deg, #ba3627 0%, #9a2d21 100%); color: white; padding: 4px 12px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; box-shadow: 0 2px 4px rgba(186,54,39,0.3); transition: transform 0.1s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">🔊 Listen</div><audio id="audio-currency" preload="auto"><source src="/vocab-audio/finance-and-the-economy-vocab-audio/currency.mp3" type="audio/mpeg"></audio></td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px; font-style: italic; color: #64748b;">devise / monnaie</td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px;">A weaker domestic currency made exports more competitive overseas.</td>
+        </tr>
+        <tr>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px; font-weight: bold; color: #1e293b;">commodities</td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px;"><div onclick="document.getElementById('audio-commodities').play()" style="display: inline-block; background: linear-gradient(135deg, #ba3627 0%, #9a2d21 100%); color: white; padding: 4px 12px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; box-shadow: 0 2px 4px rgba(186,54,39,0.3); transition: transform 0.1s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">🔊 Listen</div><audio id="audio-commodities" preload="auto"><source src="/vocab-audio/finance-and-the-economy-vocab-audio/commodities.mp3" type="audio/mpeg"></audio></td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px; font-style: italic; color: #64748b;">matières premières</td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px;">Rising commodity prices pushed up manufacturing costs across the sector.</td>
+        </tr>
+        <tr style="background: #e8eaf6;">
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px; font-weight: bold; color: #1e293b;">stock market</td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px;"><div onclick="document.getElementById('audio-stock-market').play()" style="display: inline-block; background: linear-gradient(135deg, #ba3627 0%, #9a2d21 100%); color: white; padding: 4px 12px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; box-shadow: 0 2px 4px rgba(186,54,39,0.3); transition: transform 0.1s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">🔊 Listen</div><audio id="audio-stock-market" preload="auto"><source src="/vocab-audio/finance-and-the-economy-vocab-audio/stock market.mp3" type="audio/mpeg"></audio></td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px; font-style: italic; color: #64748b;">marché boursier</td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px;">The stock market recovered after the government's stimulus announcement.</td>
+        </tr>
+        <tr>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px; font-weight: bold; color: #1e293b;">trade</td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px;"><div onclick="document.getElementById('audio-trade').play()" style="display: inline-block; background: linear-gradient(135deg, #ba3627 0%, #9a2d21 100%); color: white; padding: 4px 12px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; box-shadow: 0 2px 4px rgba(186,54,39,0.3); transition: transform 0.1s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">🔊 Listen</div><audio id="audio-trade" preload="auto"><source src="/vocab-audio/finance-and-the-economy-vocab-audio/trade.mp3" type="audio/mpeg"></audio></td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px; font-style: italic; color: #64748b;">commerce / échanges</td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px;">Bilateral trade between the two countries reached a record €12 billion.</td>
+        </tr>
+        <tr style="background: #e8eaf6;">
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px; font-weight: bold; color: #1e293b;">economic</td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px;"><div onclick="document.getElementById('audio-economic').play()" style="display: inline-block; background: linear-gradient(135deg, #ba3627 0%, #9a2d21 100%); color: white; padding: 4px 12px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; box-shadow: 0 2px 4px rgba(186,54,39,0.3); transition: transform 0.1s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">🔊 Listen</div><audio id="audio-economic" preload="auto"><source src="/vocab-audio/finance-and-the-economy-vocab-audio/economic.mp3" type="audio/mpeg"></audio></td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px; font-style: italic; color: #64748b;">économique</td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px;">Weak economic indicators pointed to slower growth in the coming quarter.</td>
+        </tr>
+        <tr>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px; font-weight: bold; color: #1e293b;">deficit</td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px;"><div onclick="document.getElementById('audio-deficit').play()" style="display: inline-block; background: linear-gradient(135deg, #ba3627 0%, #9a2d21 100%); color: white; padding: 4px 12px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; box-shadow: 0 2px 4px rgba(186,54,39,0.3); transition: transform 0.1s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">🔊 Listen</div><audio id="audio-deficit" preload="auto"><source src="/vocab-audio/finance-and-the-economy-vocab-audio/deficit.mp3" type="audio/mpeg"></audio></td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px; font-style: italic; color: #64748b;">déficit</td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px;">The government aims to reduce the budget deficit within three years.</td>
+        </tr>
+        <tr style="background: #e8eaf6;">
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px; font-weight: bold; color: #1e293b;">recession</td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px;"><div onclick="document.getElementById('audio-recession').play()" style="display: inline-block; background: linear-gradient(135deg, #ba3627 0%, #9a2d21 100%); color: white; padding: 4px 12px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; box-shadow: 0 2px 4px rgba(186,54,39,0.3); transition: transform 0.1s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">🔊 Listen</div><audio id="audio-recession" preload="auto"><source src="/vocab-audio/finance-and-the-economy-vocab-audio/recession.mp3" type="audio/mpeg"></audio></td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px; font-style: italic; color: #64748b;">récession</td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px;">Analysts warned that rising unemployment could tip the economy into recession.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- PAGE 2: Gap Fill Exercise -->
+<div style="max-width: 800px; margin: 0 auto; padding: 20px; font-family: Arial, sans-serif; line-height: 1.5; color: #333; background: linear-gradient(to bottom, #f5e6e4, #ffffff);" class="page-break">
+
+  <div style="margin-bottom: 30px; padding: 20px; background: white; border-radius: 10px; box-shadow: 0 2px 4px rgba(0,0,0,0.05);" class="keep-together">
+    <h2 style="font-size: 20px; font-weight: bold; margin-bottom: 15px; color: #ba3627; border-bottom: 3px solid #ba3627; padding-bottom: 8px;">Part 2: Gap Fill Exercise</h2>
+    <p style="font-size: 16px; margin-bottom: 15px; color: #475569;">Drag the word cards from the <strong>scrollable word bank on the right</strong> into the gaps in each sentence, or click a card and then click a gap. Use the <strong>Check answers</strong> button when you are ready.</p>
+
+    <div data-vocab-gap-fill-mount="true" data-vocab-audio-dir="/vocab-audio/finance-and-the-economy-vocab-audio/" style="margin-top: 8px;">
+      <div class="vocab-series-gap-data" hidden aria-hidden="true">{
+  "sentences": [
+    { "number": 1, "parts": ["They use their ", { "slot": "gapfill-q1", "answers": ["current account"] }, " for everyday payments and direct debits."] },
+    { "number": 2, "parts": ["The couple opened a ", { "slot": "gapfill-q2", "answers": ["joint account"] }, " to manage shared household expenses."] },
+    { "number": 3, "parts": ["Paying the full ", { "slot": "gapfill-q3", "answers": ["credit card"] }, " balance each month helps avoid costly interest charges."] },
+    { "number": 4, "parts": ["The central bank raised ", { "slot": "gapfill-q4", "answers": ["interest"] }, " rates to slow inflation."] },
+    { "number": 5, "parts": ["The firm relied on a short-term ", { "slot": "gapfill-q5", "answers": ["overdraft"] }, " to cover its monthly payroll."] },
+    { "number": 6, "parts": ["Strong household ", { "slot": "gapfill-q6", "answers": ["savings"] }, " can cushion the impact of an economic downturn."] },
+    { "number": 7, "parts": ["The treasurer checked the account ", { "slot": "gapfill-q7", "answers": ["balance"] }, " before authorising the transfer."] },
+    { "number": 8, "parts": ["The start-up had to ", { "slot": "gapfill-q8", "answers": ["borrow"] }, " heavily to finance its overseas expansion."] },
+    { "number": 9, "parts": ["The board published a detailed ", { "slot": "gapfill-q9", "answers": ["financial"] }, " statement for shareholders."] },
+    { "number": 10, "parts": ["The company secured a five-year ", { "slot": "gapfill-q10", "answers": ["loan"] }, " at a fixed rate of 4.2%."] },
+    { "number": 11, "parts": ["An independent ", { "slot": "gapfill-q11", "answers": ["broker"] }, " negotiated better insurance terms on their behalf."] },
+    { "number": 12, "parts": ["An experienced commodity ", { "slot": "gapfill-q12", "answers": ["trader"] }, " anticipated the rise in oil prices."] },
+    { "number": 13, "parts": ["Long-term ", { "slot": "gapfill-q13", "answers": ["investors"] }, " remained cautious amid volatile market conditions."] },
+    { "number": 14, "parts": ["A weaker domestic ", { "slot": "gapfill-q14", "answers": ["currency"] }, " made exports more competitive overseas."] },
+    { "number": 15, "parts": ["Rising ", { "slot": "gapfill-q15", "answers": ["commodities"] }, " prices pushed up manufacturing costs across the sector."] },
+    { "number": 16, "parts": ["The ", { "slot": "gapfill-q16", "answers": ["stock market"] }, " recovered after the government's stimulus announcement."] },
+    { "number": 17, "parts": ["Bilateral ", { "slot": "gapfill-q17", "answers": ["trade"] }, " between the two countries reached a record €12 billion."] },
+    { "number": 18, "parts": ["Weak ", { "slot": "gapfill-q18", "answers": ["economic"] }, " indicators pointed to slower growth in the coming quarter."] },
+    { "number": 19, "parts": ["The government aims to reduce the budget ", { "slot": "gapfill-q19", "answers": ["deficit"] }, " within three years."] },
+    { "number": 20, "parts": ["Analysts warned that rising unemployment could tip the economy into ", { "slot": "gapfill-q20", "answers": ["recession"] }, "."] }
+  ]
+}</div>
+    </div>
+  </div>
+</div>
+
+<!-- PAGE 3: Discussion Questions -->
+<div style="max-width: 800px; margin: 0 auto; padding: 20px; font-family: Arial, sans-serif; line-height: 1.5; color: #333; background: linear-gradient(to bottom, #e8eaf6, #ffffff);" class="page-break">
+
+  <div style="margin-bottom: 30px; padding: 20px; background: white; border-radius: 10px; box-shadow: 0 2px 4px rgba(0,0,0,0.05);" class="keep-together">
+    <h2 style="font-size: 20px; font-weight: bold; margin-bottom: 15px; color: #38438f; border-bottom: 3px solid #38438f; padding-bottom: 8px;">Part 3: Discussion Questions</h2>
+    <p style="font-size: 16px; margin-bottom: 15px; color: #475569;">Use the vocabulary from this worksheet to answer the following questions.</p>
+
+    <div style="background: linear-gradient(135deg, #e8eaf6 0%, #c5cae9 100%); padding: 20px; border-radius: 10px; border-left: 5px solid #38438f; box-shadow: 0 2px 4px rgba(56,67,143,0.1);">
+      <ol style="padding-left: 25px; font-size: 16px; list-style-type: decimal; margin: 0;">
+        <li style="margin-bottom: 15px; padding: 10px; background: white; border-radius: 6px; box-shadow: 0 1px 2px rgba(0,0,0,0.05);">What are the advantages and risks of keeping most of your money in a current account rather than in savings?</li>
+        <li style="margin-bottom: 15px; padding: 10px; background: white; border-radius: 6px; box-shadow: 0 1px 2px rgba(0,0,0,0.05);">How can a weaker currency affect a country's exports, imports, and inflation?</li>
+        <li style="margin-bottom: 15px; padding: 10px; background: white; border-radius: 6px; box-shadow: 0 1px 2px rgba(0,0,0,0.05);">Why might a government run a budget deficit, and when does it become a serious problem?</li>
+        <li style="margin-bottom: 15px; padding: 10px; background: white; border-radius: 6px; box-shadow: 0 1px 2px rgba(0,0,0,0.05);">What is the difference between a broker, a trader, and an investor? Which role interests you most, and why?</li>
+        <li style="margin-bottom: 15px; padding: 10px; background: white; border-radius: 6px; box-shadow: 0 1px 2px rgba(0,0,0,0.05);">How do rising interest rates influence household borrowing, business investment, and the stock market?</li>
+        <li style="margin-bottom: 0; padding: 10px; background: white; border-radius: 6px; box-shadow: 0 1px 2px rgba(0,0,0,0.05);">What signs might suggest that an economy is heading towards recession?</li>
+      </ol>
+    </div>
+  </div>
+</div>
+
+<!-- PAGE 4: Answer Key -->
+<div style="max-width: 800px; margin: 0 auto; padding: 20px; font-family: Arial, sans-serif; line-height: 1.5; color: #333; background: linear-gradient(to bottom, #e8eaf6, #ffffff);" class="page-break">
+
+  <div style="margin-top: 30px; padding-top: 20px; border-top: 3px solid #38438f;" class="no-break">
+    <h2 style="font-size: 22px; font-weight: bold; margin-bottom: 20px; color: white; text-align: center; padding: 15px; background: linear-gradient(135deg, #38438f 0%, #2d3569 100%); border-radius: 10px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">📝 Answer Key</h2>
+
+    <div style="margin-bottom: 20px; padding: 20px; background: white; border-radius: 10px; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
+      <h3 style="font-size: 22px; font-weight: bold; margin-bottom: 15px; color: #ba3627; border-bottom: 2px solid #ba3627; padding-bottom: 6px;">Part 2: Gap Fill Exercise</h3>
+      <ol style="padding-left: 25px; font-size: 16px; list-style-type: decimal;">
+        <li style="margin-bottom: 10px; padding: 8px; background: #f5e6e4; border-radius: 4px;">They use their <strong style="color: #38438f;">current account</strong> for everyday payments and direct debits.</li>
+        <li style="margin-bottom: 10px; padding: 8px; background: #f5e6e4; border-radius: 4px;">The couple opened a <strong style="color: #38438f;">joint account</strong> to manage shared household expenses.</li>
+        <li style="margin-bottom: 10px; padding: 8px; background: #f5e6e4; border-radius: 4px;">Paying the full <strong style="color: #38438f;">credit card</strong> balance each month helps avoid costly interest charges.</li>
+        <li style="margin-bottom: 10px; padding: 8px; background: #f5e6e4; border-radius: 4px;">The central bank raised <strong style="color: #38438f;">interest</strong> rates to slow inflation.</li>
+        <li style="margin-bottom: 10px; padding: 8px; background: #f5e6e4; border-radius: 4px;">The firm relied on a short-term <strong style="color: #38438f;">overdraft</strong> to cover its monthly payroll.</li>
+        <li style="margin-bottom: 10px; padding: 8px; background: #f5e6e4; border-radius: 4px;">Strong household <strong style="color: #38438f;">savings</strong> can cushion the impact of an economic downturn.</li>
+        <li style="margin-bottom: 10px; padding: 8px; background: #f5e6e4; border-radius: 4px;">The treasurer checked the account <strong style="color: #38438f;">balance</strong> before authorising the transfer.</li>
+        <li style="margin-bottom: 10px; padding: 8px; background: #f5e6e4; border-radius: 4px;">The start-up had to <strong style="color: #38438f;">borrow</strong> heavily to finance its overseas expansion.</li>
+        <li style="margin-bottom: 10px; padding: 8px; background: #f5e6e4; border-radius: 4px;">The board published a detailed <strong style="color: #38438f;">financial</strong> statement for shareholders.</li>
+        <li style="margin-bottom: 10px; padding: 8px; background: #f5e6e4; border-radius: 4px;">The company secured a five-year <strong style="color: #38438f;">loan</strong> at a fixed rate of 4.2%.</li>
+        <li style="margin-bottom: 10px; padding: 8px; background: #f5e6e4; border-radius: 4px;">An independent <strong style="color: #38438f;">broker</strong> negotiated better insurance terms on their behalf.</li>
+        <li style="margin-bottom: 10px; padding: 8px; background: #f5e6e4; border-radius: 4px;">An experienced commodity <strong style="color: #38438f;">trader</strong> anticipated the rise in oil prices.</li>
+        <li style="margin-bottom: 10px; padding: 8px; background: #f5e6e4; border-radius: 4px;">Long-term <strong style="color: #38438f;">investors</strong> remained cautious amid volatile market conditions.</li>
+        <li style="margin-bottom: 10px; padding: 8px; background: #f5e6e4; border-radius: 4px;">A weaker domestic <strong style="color: #38438f;">currency</strong> made exports more competitive overseas.</li>
+        <li style="margin-bottom: 10px; padding: 8px; background: #f5e6e4; border-radius: 4px;">Rising <strong style="color: #38438f;">commodities</strong> prices pushed up manufacturing costs across the sector.</li>
+        <li style="margin-bottom: 10px; padding: 8px; background: #f5e6e4; border-radius: 4px;">The <strong style="color: #38438f;">stock market</strong> recovered after the government's stimulus announcement.</li>
+        <li style="margin-bottom: 10px; padding: 8px; background: #f5e6e4; border-radius: 4px;">Bilateral <strong style="color: #38438f;">trade</strong> between the two countries reached a record €12 billion.</li>
+        <li style="margin-bottom: 10px; padding: 8px; background: #f5e6e4; border-radius: 4px;">Weak <strong style="color: #38438f;">economic</strong> indicators pointed to slower growth in the coming quarter.</li>
+        <li style="margin-bottom: 10px; padding: 8px; background: #f5e6e4; border-radius: 4px;">The government aims to reduce the budget <strong style="color: #38438f;">deficit</strong> within three years.</li>
+        <li style="margin-bottom: 10px; padding: 8px; background: #f5e6e4; border-radius: 4px;">Analysts warned that rising unemployment could tip the economy into <strong style="color: #38438f;">recession</strong>.</li>
+      </ol>
+    </div>
+  </div>
+</div>
