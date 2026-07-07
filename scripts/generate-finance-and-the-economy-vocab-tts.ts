@@ -20,6 +20,8 @@ const ALICE_VOICE_ID = 'Xb7hH8MSUJpSbSDYk0k2'
 const TTS_MODEL_ID = 'eleven_turbo_v2_5'
 const TTS_LANGUAGE_CODE = 'en'
 const TTS_SEED = 42
+/** Slightly slower than default ElevenLabs speed (0.7–1.2). */
+const TTS_SPEED = 0.85
 
 const OUTPUT_DIR = join(process.cwd(), 'public', 'vocab-audio', 'finance-and-the-economy-vocab-audio')
 const CACHE_DIR = join(process.cwd(), '.cache', 'finance-and-the-economy-vocab-audio')
@@ -32,7 +34,7 @@ const WORDS: ReadonlyArray<{ word: string; tts_text?: string; trim_prefix?: stri
   { word: 'overdraft' },
   { word: 'savings', tts_text: 'savings.' },
   { word: 'balance' },
-  { word: 'to borrow', tts_text: 'borrow' },
+  { word: 'to borrow' },
   { word: 'financial' },
   { word: 'loan' },
   { word: 'broker' },
@@ -75,6 +77,7 @@ async function generateSpeech(apiKey: string, text: string, seed: number): Promi
           similarity_boost: 0.85,
           style: 0,
           use_speaker_boost: true,
+          speed: TTS_SPEED,
         },
       }),
     }
@@ -174,7 +177,7 @@ async function main() {
     throw new Error('ELEVENLABS_API_KEY is missing. Add it to .env.local and try again.')
   }
 
-  console.log(`Voice: Alice (${ALICE_VOICE_ID})`)
+  console.log(`Voice: Alice (${ALICE_VOICE_ID}), speed: ${TTS_SPEED}`)
   console.log(`Output: ${OUTPUT_DIR}`)
   console.log(`Words: ${WORDS.length}`)
 

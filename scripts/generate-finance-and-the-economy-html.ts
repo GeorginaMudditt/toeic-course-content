@@ -5,7 +5,7 @@
 import { readFileSync, writeFileSync } from 'fs'
 import { join } from 'path'
 
-const TITLE = 'Finance and the Economy'
+const TITLE = 'Vocabulary: Finance and the Economy'
 const AUDIO_DIR = '/vocab-audio/finance-and-the-economy-vocab-audio/'
 
 const VOCAB: ReadonlyArray<{ word: string; french: string; example: string }> = [
