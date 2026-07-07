@@ -60,43 +60,10 @@
   }
   .mpt-gap li { margin-bottom: 12px; }
   .mpt-verb { color: #b91c1c; font-weight: 600; }
-  .mpt-p2-workspace {
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-  }
-  .mpt-p2-sticky-panel {
-    position: sticky;
-    top: 0;
-    z-index: 10;
-    background: #ffffff;
-    padding-bottom: 12px;
-    border-bottom: 1px solid #e2e8f0;
-    box-shadow: 0 6px 16px rgba(15, 23, 42, 0.06);
-  }
-  .mpt-p2-sticky-panel .mpt-profile-header {
-    margin-bottom: 12px;
-  }
-  .mpt-p2-sticky-panel .mpt-timeline {
-    margin: 0;
-    max-height: min(40vh, 340px);
-    overflow-y: auto;
-    padding-right: 8px;
-    scrollbar-width: thin;
-    scrollbar-color: #a5b4fc #f8fafc;
-  }
-  .mpt-p2-sticky-panel .mpt-timeline::-webkit-scrollbar { width: 8px; }
-  .mpt-p2-sticky-panel .mpt-timeline::-webkit-scrollbar-track { background: #f8fafc; border-radius: 8px; }
-  .mpt-p2-sticky-panel .mpt-timeline::-webkit-scrollbar-thumb { background: #a5b4fc; border-radius: 8px; }
-  .mpt-p2-questions {
-    padding-top: 4px;
-  }
   @media print {
     @page { margin: 1.5cm; size: A4; }
     .page-break { page-break-before: always; }
     .mpt-profile-card { page-break-inside: avoid; break-inside: avoid; box-shadow: none; }
-    .mpt-p2-sticky-panel { position: static; box-shadow: none; border-bottom: none; }
-    .mpt-p2-sticky-panel .mpt-timeline { max-height: none; overflow: visible; }
     .screen-only { display: none !important; }
   }
   .grammar-ai-feedback-scroll-hint { display: none !important; }
@@ -174,47 +141,43 @@
     <h2 style="font-size: 22px; font-weight: bold; margin: 0 0 6px 0; color: #9d174d;">Profile 2: Gap fill (mixed tenses)</h2>
     <p style="font-size: 15px; margin: 0 0 16px 0; color: #64748b;">Study the timeline, then complete the sentences using the correct tense of the verb in brackets. Click <strong>Check answers</strong> when you are ready.</p>
 
-    <div class="mpt-p2-workspace">
-      <div class="mpt-p2-sticky-panel">
-        <div class="mpt-profile-header">
-          <img src="/images/mixed-past-tenses/margaux-delcourt.jpg" alt="Margaux Delcourt" class="mpt-photo" />
-          <div style="flex: 1; min-width: 220px;">
-            <h3 style="font-size: 20px; margin: 0 0 4px 0; color: #0f172a;">Margaux Delcourt</h3>
-            <p style="margin: 0 0 4px 0; font-size: 15px; color: #475569;"><strong>HR Business Partner</strong> · Office Inc · Lyon, France</p>
-            <p style="margin: 0; font-size: 14px; color: #64748b;">French · office furniture company · 420 employees</p>
-          </div>
-        </div>
-
-        <ul class="mpt-timeline">
-          <li><span class="mpt-year">2012</span> BA Human Resources Management, Université Lumière Lyon 2</li>
-          <li><span class="mpt-year">2014–2016</span> HR Coordinator, Société Verte (sustainable packaging company)</li>
-          <li><span class="mpt-year">2016</span> Promoted to HR Generalist at Société Verte</li>
-          <li><span class="mpt-year">Nov 2017</span> Made redundant when Société Verte was taken over; three months unemployed</li>
-          <li><span class="mpt-year">2018</span> Joined Office Inc as HR Officer (Lyon headquarters)</li>
-          <li><span class="mpt-year">2019</span> Completed professional certificate in labour law (evening course, funded by her employer)</li>
-          <li><span class="mpt-year">2020–2021</span> Maternity leave; returned January 2021 as Senior HR Officer</li>
-          <li><span class="mpt-year">2021–2025</span> Led annual performance reviews; negotiated two agreements with staff representatives</li>
-          <li><span class="mpt-year">Jan 2026</span> Promoted to HR Business Partner for sales and operations</li>
-          <li><span class="mpt-year">Present</span> Supports 180 employees; reports to the HR Director</li>
-        </ul>
+    <div class="mpt-profile-header">
+      <img src="/images/mixed-past-tenses/margaux-delcourt.jpg" alt="Margaux Delcourt" class="mpt-photo" />
+      <div style="flex: 1; min-width: 220px;">
+        <h3 style="font-size: 20px; margin: 0 0 4px 0; color: #0f172a;">Margaux Delcourt</h3>
+        <p style="margin: 0 0 4px 0; font-size: 15px; color: #475569;"><strong>HR Business Partner</strong> · Office Inc · Lyon, France</p>
+        <p style="margin: 0; font-size: 14px; color: #64748b;">French · office furniture company · 420 employees</p>
       </div>
+    </div>
 
-      <div class="mpt-p2-questions" data-grammar-per-section-check="true">
-        <ol class="mpt-gap" style="padding-left: 22px; font-size: 16px; list-style-type: decimal;">
-          <li>Margaux <strong><span data-grammar-input="mpt-p2-q1" data-grammar-acceptable="started" style="display: inline-block; min-width: 100px;"></span></strong> <span class="mpt-verb">(start)</span> working for Office Inc in 2018.</li>
-          <li>She <strong><span data-grammar-input="mpt-p2-q2" data-grammar-acceptable="has been working|'s been working|has worked" style="display: inline-block; min-width: 120px;"></span></strong> <span class="mpt-verb">(work)</span> in her current role since the beginning of 2026.</li>
-          <li>Margaux <strong><span data-grammar-input="mpt-p2-q3" data-grammar-acceptable="was promoted" style="display: inline-block; min-width: 120px;"></span></strong> <span class="mpt-verb">(promote)</span> from senior HR officer to HR business partner in January 2026.</li>
-          <li>Before she joined Office Inc, she <strong><span data-grammar-input="mpt-p2-q4" data-grammar-acceptable="had been|was" style="display: inline-block; min-width: 80px;"></span></strong> unemployed for three months.</li>
-          <li>While she <strong><span data-grammar-input="mpt-p2-q5" data-grammar-acceptable="was preparing|had been preparing" style="display: inline-block; min-width: 120px;"></span></strong> <span class="mpt-verb">(prepare)</span> her labour-law portfolio, she also volunteered at a local career centre.</li>
-          <li>Margaux <strong><span data-grammar-input="mpt-p2-q6" data-grammar-acceptable="has never worked|'s never worked" style="display: inline-block; min-width: 120px;"></span></strong> <span class="mpt-verb">(never/work)</span> in manufacturing; her background is entirely in services.</li>
-          <li>Her previous employer <strong><span data-grammar-input="mpt-p2-q7" data-grammar-acceptable="made|had made" style="display: inline-block; min-width: 80px;"></span></strong> <span class="mpt-verb">(make)</span> twenty staff redundant in November 2017.</li>
-          <li>She <strong><span data-grammar-input="mpt-p2-q8" data-grammar-acceptable="completed" style="display: inline-block; min-width: 100px;"></span></strong> <span class="mpt-verb">(complete)</span> a professional certificate in labour law in 2019.</li>
-          <li>By the time she returned from maternity leave, Office Inc <strong><span data-grammar-input="mpt-p2-q9" data-grammar-acceptable="had already revised|had revised" style="display: inline-block; min-width: 140px;"></span></strong> <span class="mpt-verb">(revise)</span> its parental-leave policy.</li>
-          <li>Margaux <strong><span data-grammar-input="mpt-p2-q10" data-grammar-acceptable="had been coordinating|had coordinated" style="display: inline-block; min-width: 140px;"></span></strong> <span class="mpt-verb">(coordinate)</span> recruitment campaigns for two years before her first promotion.</li>
-          <li>The executive committee <strong><span data-grammar-input="mpt-p2-q11" data-grammar-acceptable="offered" style="display: inline-block; min-width: 100px;"></span></strong> <span class="mpt-verb">(offer)</span> her the HR business partner position after she had led a complex disciplinary case.</li>
-          <li>Since January 2026, she <strong><span data-grammar-input="mpt-p2-q12" data-grammar-acceptable="has been supporting|'s been supporting|has supported" style="display: inline-block; min-width: 140px;"></span></strong> <span class="mpt-verb">(support)</span> both the commercial director and the head of operations.</li>
-        </ol>
-      </div>
+    <ul class="mpt-timeline">
+      <li><span class="mpt-year">2012</span> BA Human Resources Management, Université Lumière Lyon 2</li>
+      <li><span class="mpt-year">2014–2016</span> HR Coordinator, Société Verte (sustainable packaging company)</li>
+      <li><span class="mpt-year">2016</span> Promoted to HR Generalist at Société Verte</li>
+      <li><span class="mpt-year">Nov 2017</span> Made redundant when Société Verte was taken over; three months unemployed</li>
+      <li><span class="mpt-year">2018</span> Joined Office Inc as HR Officer (Lyon headquarters)</li>
+      <li><span class="mpt-year">2019</span> Completed professional certificate in labour law (evening course, funded by her employer)</li>
+      <li><span class="mpt-year">2020–2021</span> Maternity leave; returned January 2021 as Senior HR Officer</li>
+      <li><span class="mpt-year">2021–2025</span> Led annual performance reviews; negotiated two agreements with staff representatives</li>
+      <li><span class="mpt-year">Jan 2026</span> Promoted to HR Business Partner for sales and operations</li>
+      <li><span class="mpt-year">Present</span> Supports 180 employees; reports to the HR Director</li>
+    </ul>
+
+    <div data-grammar-per-section-check="true">
+      <ol class="mpt-gap" style="padding-left: 22px; font-size: 16px; list-style-type: decimal;">
+        <li>Margaux <strong><span data-grammar-input="mpt-p2-q1" data-grammar-acceptable="started" style="display: inline-block; min-width: 100px;"></span></strong> <span class="mpt-verb">(start)</span> working for Office Inc in 2018.</li>
+        <li>She <strong><span data-grammar-input="mpt-p2-q2" data-grammar-acceptable="has been working|'s been working|has worked" style="display: inline-block; min-width: 120px;"></span></strong> <span class="mpt-verb">(work)</span> in her current role since the beginning of 2026.</li>
+        <li>Margaux <strong><span data-grammar-input="mpt-p2-q3" data-grammar-acceptable="was promoted" style="display: inline-block; min-width: 120px;"></span></strong> <span class="mpt-verb">(promote)</span> from senior HR officer to HR business partner in January 2026.</li>
+        <li>Before she joined Office Inc, she <strong><span data-grammar-input="mpt-p2-q4" data-grammar-acceptable="had been|was" style="display: inline-block; min-width: 80px;"></span></strong> unemployed for three months.</li>
+        <li>While she <strong><span data-grammar-input="mpt-p2-q5" data-grammar-acceptable="was preparing|had been preparing" style="display: inline-block; min-width: 120px;"></span></strong> <span class="mpt-verb">(prepare)</span> her labour-law portfolio, she also volunteered at a local career centre.</li>
+        <li>Margaux <strong><span data-grammar-input="mpt-p2-q6" data-grammar-acceptable="has never worked|'s never worked" style="display: inline-block; min-width: 120px;"></span></strong> <span class="mpt-verb">(never/work)</span> in manufacturing; her background is entirely in services.</li>
+        <li>Her previous employer <strong><span data-grammar-input="mpt-p2-q7" data-grammar-acceptable="made|had made" style="display: inline-block; min-width: 80px;"></span></strong> <span class="mpt-verb">(make)</span> twenty staff redundant in November 2017.</li>
+        <li>She <strong><span data-grammar-input="mpt-p2-q8" data-grammar-acceptable="completed" style="display: inline-block; min-width: 100px;"></span></strong> <span class="mpt-verb">(complete)</span> a professional certificate in labour law in 2019.</li>
+        <li>By the time she returned from maternity leave, Office Inc <strong><span data-grammar-input="mpt-p2-q9" data-grammar-acceptable="had already revised|had revised" style="display: inline-block; min-width: 140px;"></span></strong> <span class="mpt-verb">(revise)</span> its parental-leave policy.</li>
+        <li>Margaux <strong><span data-grammar-input="mpt-p2-q10" data-grammar-acceptable="had been coordinating|had coordinated" style="display: inline-block; min-width: 140px;"></span></strong> <span class="mpt-verb">(coordinate)</span> recruitment campaigns for two years before her first promotion.</li>
+        <li>The executive committee <strong><span data-grammar-input="mpt-p2-q11" data-grammar-acceptable="offered" style="display: inline-block; min-width: 100px;"></span></strong> <span class="mpt-verb">(offer)</span> her the HR business partner position after she had led a complex disciplinary case.</li>
+        <li>Since January 2026, she <strong><span data-grammar-input="mpt-p2-q12" data-grammar-acceptable="has been supporting|'s been supporting|has supported" style="display: inline-block; min-width: 140px;"></span></strong> <span class="mpt-verb">(support)</span> both the commercial director and the head of operations.</li>
+      </ol>
     </div>
   </div>
 
