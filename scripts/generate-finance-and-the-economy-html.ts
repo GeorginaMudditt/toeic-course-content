@@ -33,8 +33,8 @@ const VOCAB: ReadonlyArray<{ word: string; french: string; example: string }> = 
 
 const DISCUSSION = [
   'What are the advantages and risks of keeping most of your money in a current account rather than in savings?',
-  'How can a weaker currency affect a country\'s exports, imports, and inflation?',
-  'Why might a government run a budget deficit, and when does it become a serious problem?',
+  'What problems can people face when the value of their country\'s currency falls?',
+  'When is it a good idea to borrow money, and when is it better to save and pay later?',
   'What is the difference between a broker, a trader, and an investor? Which role interests you most, and why?',
   'How do rising interest rates influence household borrowing, business investment, and the stock market?',
   'What signs might suggest that an economy is heading towards recession?',
