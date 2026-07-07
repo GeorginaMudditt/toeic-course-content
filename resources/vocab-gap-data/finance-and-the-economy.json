@@ -5,7 +5,7 @@
     { "number": 3, "parts": ["Paying the full ", { "slot": "gapfill-q3", "answers": ["credit card"] }, " balance each month helps avoid costly interest charges."] },
     { "number": 4, "parts": ["The central bank raised ", { "slot": "gapfill-q4", "answers": ["interest"] }, " rates to slow inflation."] },
     { "number": 5, "parts": ["The firm relied on a short-term ", { "slot": "gapfill-q5", "answers": ["overdraft"] }, " to cover its monthly payroll."] },
-    { "number": 6, "parts": ["Strong household ", { "slot": "gapfill-q6", "answers": ["savings"] }, " can cushion the impact of an economic downturn."] },
+    { "number": 6, "parts": ["Household ", { "slot": "gapfill-q6", "answers": ["savings"] }, " can help families cope when the economy slows down."] },
     { "number": 7, "parts": ["The treasurer checked the account ", { "slot": "gapfill-q7", "answers": ["balance"] }, " before authorising the transfer."] },
     { "number": 8, "parts": ["The start-up had to ", { "slot": "gapfill-q8", "answers": ["borrow"] }, " heavily to finance its overseas expansion."] },
     { "number": 9, "parts": ["The board published a detailed ", { "slot": "gapfill-q9", "answers": ["financial"] }, " statement for shareholders."] },
