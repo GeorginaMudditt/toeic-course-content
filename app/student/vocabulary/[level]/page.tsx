@@ -6,18 +6,11 @@ import { LEVEL_COLORS } from '@/lib/level-colors'
 import VocabularyNav from '@/components/VocabularyNav'
 import Link from 'next/link'
 import { isVocabularyLevel } from '@/lib/vocabulary-levels'
+import { supportsGeneratedVocabularyList } from '@/lib/vocabulary-list-data'
 
 interface Topic {
   name: string
   count: number
-}
-
-// Vocabulary list PDF URLs by level
-const VOCABULARY_LIST_PDFS: Record<string, string> = {
-  'a1': 'https://ulrwcortyhassmytkcij.supabase.co/storage/v1/object/sign/vocab_lists/A1%20vocabulary%20list.pdf?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV84YzZhNjMzNi1iOWJkLTRlNDAtOTNmMS0wNmIzYWNkYmU3Y2IiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJ2b2NhYl9saXN0cy9BMSB2b2NhYnVsYXJ5IGxpc3QucGRmIiwiaWF0IjoxNzY5NjY1Mjc5LCJleHAiOjIwODUwMjUyNzl9.krjVIZxJn0FE5qCiDdYB4mLvm73CqQrnHRKlWyyWzgA'
-  // Add more levels here as they become available:
-  // 'a2': 'https://...',
-  // 'b1': 'https://...',
 }
 
 export default function VocabularyLevelPage() {
@@ -159,6 +152,9 @@ export default function VocabularyLevelPage() {
 
   const levelColor = getLevelColor()
   const levelDisplay = level.toUpperCase()
+  const vocabularyListPdfUrl = supportsGeneratedVocabularyList(level)
+    ? `/api/vocabulary/${level}/vocabulary-list`
+    : null
 
   useEffect(() => {
     const fetchTopics = async () => {
@@ -362,13 +358,12 @@ export default function VocabularyLevelPage() {
             </div>
 
             {/* Download Vocabulary List Button */}
-            {VOCABULARY_LIST_PDFS[level] && (
+            {vocabularyListPdfUrl && (
               <div className="mt-6 pt-6 border-t border-gray-200">
                 <a
-                  href={VOCABULARY_LIST_PDFS[level]}
+                  href={vocabularyListPdfUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  download
                   className="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white transition-colors hover:opacity-90"
                   style={{ backgroundColor: levelColor }}
                 >

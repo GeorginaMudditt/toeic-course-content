@@ -128,6 +128,23 @@ function DougsIcon() {
   return <BrandLogo src="/images/admin-logos/dougs.svg" alt="Dougs" />
 }
 
+function ImpotsIcon() {
+  return (
+    <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" aria-hidden="true">
+      <rect x="3" y="4" width="18" height="16" rx="2" fill="#000091" />
+      <path d="M3 8h18" stroke="#fff" strokeWidth="1.2" opacity="0.35" />
+      <path
+        d="M8 12h8M8 15h5"
+        stroke="#fff"
+        strokeWidth="1.6"
+        strokeLinecap="round"
+      />
+      <circle cx="17" cy="17" r="4" fill="#e1000f" />
+      <path d="M15.8 17l.9.9 1.8-1.8" stroke="#fff" strokeWidth="1.2" strokeLinecap="round" />
+    </svg>
+  )
+}
+
 function BpfIcon() {
   return (
     <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" aria-hidden="true">
@@ -218,6 +235,7 @@ const ICONS = {
   qonto: QontoIcon,
   mollie: MollieIcon,
   dougs: DougsIcon,
+  impots: ImpotsIcon,
   bpf: BpfIcon,
   canva: CanvaIcon,
   maf: MafIcon,

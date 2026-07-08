@@ -11,6 +11,7 @@ export type AdminIcon =
   | 'qonto'
   | 'mollie'
   | 'dougs'
+  | 'impots'
   | 'bpf'
   | 'canva'
   | 'maf'
@@ -122,6 +123,17 @@ export const ADMIN_SECTIONS: AdminSection[] = [
           },
         ],
         icon: 'dougs',
+      },
+      {
+        description:
+          "Use France's main tax administration portal impots.gouv.fr for all business tax obligations, including TVA, IS and CFE.",
+        inlineLinks: [
+          {
+            phrase: 'impots.gouv.fr',
+            href: 'https://cfspro.impots.gouv.fr/mire/accueil.do',
+          },
+        ],
+        icon: 'impots',
       },
       {
         description:
