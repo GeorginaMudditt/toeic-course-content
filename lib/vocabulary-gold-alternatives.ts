@@ -27,6 +27,8 @@ const GOLD_ALTERNATIVES: Record<string, string[]> = {
   'a2|Food & Drink (A)|lunchtime': ['lunch time'],
   'a2|Food & Drink (A)|main course': ['main', 'main meal'],
   'a2|Food & Drink (A)|yoghurt': ['yogurt'],
+  'a2|Food & Drink (B)|soft drink': ['fizzy drink'],
+  'a2|Food & Drink (B)|sweets': ['candy'],
   'a2|Money|half-price': ['half price'],
   'a2|Technology|web page': ['website', 'web site'],
   'a2|Travel (A)|aeroplane': ['plane', 'airplane'],
