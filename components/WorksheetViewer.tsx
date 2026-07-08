@@ -63,6 +63,38 @@ interface GrammarCheckResult {
   status: GrammarCheckStatus
 }
 
+const WORKSHEET_ACTION_BUTTON_STYLE: Partial<CSSStyleDeclaration> = {
+  backgroundColor: '#38438f',
+  color: '#fff',
+  border: 'none',
+  borderRadius: '6px',
+  padding: '8px 16px',
+  fontSize: '14px',
+  cursor: 'pointer',
+}
+
+function applyWorksheetActionButtonStyle(button: HTMLButtonElement) {
+  Object.assign(button.style, WORKSHEET_ACTION_BUTTON_STYLE)
+}
+
+function createWorksheetActionButtonGroup(): HTMLDivElement {
+  const buttonGroup = document.createElement('div')
+  buttonGroup.className = 'grammar-action-button-group'
+  buttonGroup.style.display = 'flex'
+  buttonGroup.style.alignItems = 'center'
+  buttonGroup.style.gap = '8px'
+  buttonGroup.style.flexWrap = 'nowrap'
+  return buttonGroup
+}
+
+function createWorksheetActionButton(label: string): HTMLButtonElement {
+  const button = document.createElement('button')
+  button.type = 'button'
+  button.textContent = label
+  applyWorksheetActionButtonStyle(button)
+  return button
+}
+
 const normalizeAnswerValue = (value: string): string => {
   return value
     .toLowerCase()
@@ -2054,21 +2086,15 @@ export default function WorksheetViewer({
       controls.style.gap = '10px'
       controls.style.marginTop = '10px'
 
-      if (hasSaveSection) {
-        const saveButton = document.createElement('button')
-        saveButton.type = 'button'
-        saveButton.textContent = 'Save'
-        saveButton.style.backgroundColor = '#38438f'
-        saveButton.style.color = '#fff'
-        saveButton.style.border = 'none'
-        saveButton.style.borderRadius = '6px'
-        saveButton.style.padding = '6px 10px'
-        saveButton.style.fontSize = '13px'
-        saveButton.style.cursor = 'pointer'
+      const buttonGroup = createWorksheetActionButtonGroup()
+      let saveFeedback: HTMLSpanElement | null = null
 
-        const saveFeedback = document.createElement('span')
+      if (hasSaveSection) {
+        const saveButton = createWorksheetActionButton('Save')
+
+        saveFeedback = document.createElement('span')
         saveFeedback.className = 'grammar-save-feedback'
-        saveFeedback.style.fontSize = '12px'
+        saveFeedback.style.fontSize = '13px'
         saveFeedback.style.fontWeight = '600'
         saveFeedback.style.color = '#059669'
 
@@ -2079,37 +2105,27 @@ export default function WorksheetViewer({
           saveButton.disabled = false
           saveButton.textContent = 'Save'
           if (ok) {
-            saveFeedback.textContent = '✓ Saved'
-            saveFeedback.style.color = '#059669'
+            saveFeedback!.textContent = '✓ Saved'
+            saveFeedback!.style.color = '#059669'
           } else {
-            saveFeedback.textContent = 'Save failed — please try again'
-            saveFeedback.style.color = '#dc2626'
+            saveFeedback!.textContent = 'Save failed — please try again'
+            saveFeedback!.style.color = '#dc2626'
           }
           window.setTimeout(() => {
-            saveFeedback.textContent = ''
+            saveFeedback!.textContent = ''
           }, 3000)
         }
         saveButton.addEventListener('click', saveClickHandler)
         cleanupFns.push(() => saveButton.removeEventListener('click', saveClickHandler))
 
-        controls.appendChild(saveButton)
-        controls.appendChild(saveFeedback)
+        buttonGroup.appendChild(saveButton)
       }
 
-      const button = document.createElement('button')
-      button.type = 'button'
-      button.textContent = 'Check Answers'
-      button.style.backgroundColor = '#38438f'
-      button.style.color = '#fff'
-      button.style.border = 'none'
-      button.style.borderRadius = '6px'
-      button.style.padding = '6px 10px'
-      button.style.fontSize = '13px'
-      button.style.cursor = 'pointer'
+      const button = createWorksheetActionButton('Check Answers')
 
       const summary = document.createElement('div')
       summary.className = 'grammar-check-summary'
-      summary.style.fontSize = '12px'
+      summary.style.fontSize = '13px'
       summary.style.fontWeight = '600'
       summary.style.color = '#1f2937'
 
@@ -2121,7 +2137,9 @@ export default function WorksheetViewer({
       button.addEventListener('click', clickHandler)
       cleanupFns.push(() => button.removeEventListener('click', clickHandler))
 
-      controls.appendChild(button)
+      buttonGroup.appendChild(button)
+      controls.appendChild(buttonGroup)
+      if (saveFeedback) controls.appendChild(saveFeedback)
       controls.appendChild(summary)
       section.appendChild(controls)
     })
@@ -2278,16 +2296,6 @@ export default function WorksheetViewer({
       contentRef.current.querySelectorAll('[data-grammar-save-section]')
     ) as HTMLElement[]
 
-    const buttonStyle = {
-      backgroundColor: '#38438f',
-      color: '#fff',
-      border: 'none',
-      borderRadius: '6px',
-      padding: '8px 16px',
-      fontSize: '14px',
-      cursor: 'pointer',
-    }
-
     sections.forEach((section) => {
       if (section.querySelector('.grammar-save-controls')) return
       if (section.getAttribute('data-grammar-per-section-check') === 'true') return
@@ -2303,10 +2311,9 @@ export default function WorksheetViewer({
       controls.style.gap = '10px'
       controls.style.marginTop = '10px'
 
-      const saveButton = document.createElement('button')
-      saveButton.type = 'button'
-      saveButton.textContent = 'Save'
-      Object.assign(saveButton.style, buttonStyle)
+      const buttonGroup = createWorksheetActionButtonGroup()
+
+      const saveButton = createWorksheetActionButton('Save')
 
       const saveFeedback = document.createElement('span')
       saveFeedback.className = 'grammar-save-feedback'
@@ -2338,19 +2345,17 @@ export default function WorksheetViewer({
       saveButton.addEventListener('click', saveClickHandler)
       cleanupFns.push(() => saveButton.removeEventListener('click', saveClickHandler))
 
-      controls.appendChild(saveButton)
-      controls.appendChild(saveFeedback)
+      buttonGroup.appendChild(saveButton)
 
       let aiPanel: HTMLElement | null = null
+      let aiStatus: HTMLSpanElement | null = null
 
       if (aiTask) {
-        const aiButton = document.createElement('button')
-        aiButton.type = 'button'
-        aiButton.textContent = 'Get AI Feedback'
-        Object.assign(aiButton.style, { ...buttonStyle, backgroundColor: '#1e40af' })
+        const aiButton = createWorksheetActionButton('Get AI Feedback')
 
-        const aiStatus = document.createElement('span')
-        aiStatus.style.fontSize = '12px'
+        aiStatus = document.createElement('span')
+        aiStatus.style.fontSize = '13px'
+        aiStatus.style.fontWeight = '600'
         aiStatus.style.color = '#64748b'
 
         aiPanel = document.createElement('div')
@@ -2430,8 +2435,7 @@ export default function WorksheetViewer({
         aiButton.addEventListener('click', aiClickHandler)
         cleanupFns.push(() => aiButton.removeEventListener('click', aiClickHandler))
 
-        controls.appendChild(aiButton)
-        controls.appendChild(aiStatus)
+        buttonGroup.appendChild(aiButton)
 
         const host = section.closest('[data-grammar-ai-feedback-host]') as HTMLElement | null
         const mount = getAiFeedbackMount(section, aiTask)
@@ -2471,6 +2475,10 @@ export default function WorksheetViewer({
           /* ignore invalid saved feedback */
         }
       }
+
+      controls.appendChild(buttonGroup)
+      controls.appendChild(saveFeedback)
+      if (aiStatus) controls.appendChild(aiStatus)
 
       section.appendChild(controls)
     })
