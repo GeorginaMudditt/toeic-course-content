@@ -220,6 +220,31 @@ input[type="checkbox"]:focus {
   display: table-cell !important;
 }
 
+/* Worksheet action buttons (Save, Check Answers, Get AI Feedback) */
+#worksheet-content .grammar-action-button-group .grammar-action-button,
+#worksheet-content button.grammar-action-button {
+  background-color: #38438f !important;
+  background-image: none !important;
+  color: #ffffff !important;
+  border: none !important;
+  border-radius: 6px !important;
+  padding: 8px 16px !important;
+  font-size: 14px !important;
+  cursor: pointer !important;
+  box-shadow: none !important;
+}
+
+#worksheet-content .grammar-action-button-group .grammar-action-button:hover:not(:disabled),
+#worksheet-content button.grammar-action-button:hover:not(:disabled) {
+  background-color: #2d3569 !important;
+}
+
+#worksheet-content .grammar-action-button-group .grammar-action-button:disabled,
+#worksheet-content button.grammar-action-button:disabled {
+  opacity: 0.65;
+  cursor: not-allowed !important;
+}
+
 /* Student notes view: force black text when content was saved as white (e.g. dark mode) */
 .student-notes-view [style*="color: white"],
 .student-notes-view [style*="color:white"],

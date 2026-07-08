@@ -74,7 +74,11 @@ const WORKSHEET_ACTION_BUTTON_STYLE: Partial<CSSStyleDeclaration> = {
 }
 
 function applyWorksheetActionButtonStyle(button: HTMLButtonElement) {
+  button.className = 'grammar-action-button'
   Object.assign(button.style, WORKSHEET_ACTION_BUTTON_STYLE)
+  button.style.setProperty('background-color', '#38438f', 'important')
+  button.style.setProperty('background-image', 'none', 'important')
+  button.style.setProperty('color', '#ffffff', 'important')
 }
 
 function createWorksheetActionButtonGroup(): HTMLDivElement {
