@@ -28,3 +28,21 @@ ON "Brizzle_bpf_entries" ("period_slug");
 
 CREATE INDEX IF NOT EXISTS "Brizzle_bpf_entries_start_date_idx"
 ON "Brizzle_bpf_entries" ("start_date" DESC);
+
+ALTER TABLE "public"."Brizzle_bpf_entries" ENABLE ROW LEVEL SECURITY;
+
+DROP POLICY IF EXISTS "Service role can access all bpf entries" ON "public"."Brizzle_bpf_entries";
+CREATE POLICY "Service role can access all bpf entries"
+  ON "public"."Brizzle_bpf_entries"
+  FOR ALL
+  TO service_role
+  USING (true)
+  WITH CHECK (true);
+
+DROP POLICY IF EXISTS "Anon cannot access bpf entries" ON "public"."Brizzle_bpf_entries";
+CREATE POLICY "Anon cannot access bpf entries"
+  ON "public"."Brizzle_bpf_entries"
+  FOR ALL
+  TO anon
+  USING (false)
+  WITH CHECK (false);
