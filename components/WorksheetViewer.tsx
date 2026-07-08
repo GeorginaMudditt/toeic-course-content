@@ -2357,10 +2357,11 @@ export default function WorksheetViewer({
       if (aiTask) {
         const aiButton = createWorksheetActionButton('Get AI Feedback')
 
-        aiStatus = document.createElement('span')
-        aiStatus.style.fontSize = '13px'
-        aiStatus.style.fontWeight = '600'
-        aiStatus.style.color = '#64748b'
+        const statusEl = document.createElement('span')
+        aiStatus = statusEl
+        statusEl.style.fontSize = '13px'
+        statusEl.style.fontWeight = '600'
+        statusEl.style.color = '#64748b'
 
         aiPanel = document.createElement('div')
         aiPanel.className = 'grammar-ai-feedback-panel screen-only'
@@ -2379,15 +2380,15 @@ export default function WorksheetViewer({
 
           const text = getWritingAnswerText(section, inputId)
           if (!text) {
-            aiStatus.textContent = 'Please write your answer first.'
-            aiStatus.style.color = '#dc2626'
+            statusEl.textContent = 'Please write your answer first.'
+            statusEl.style.color = '#dc2626'
             return
           }
 
           aiButton.disabled = true
           aiButton.textContent = 'Getting feedback...'
-          aiStatus.textContent = ''
-          aiStatus.style.color = '#64748b'
+          statusEl.textContent = ''
+          statusEl.style.color = '#64748b'
           showAiFeedbackMessage(panel, 'Analysing your writing… Please wait a moment.', 'loading')
           panel.scrollIntoView({ block: 'nearest', behavior: 'smooth' })
 
@@ -2421,15 +2422,15 @@ export default function WorksheetViewer({
             updateGrammarAnswer(data.rateLimitKey, data.generatedAt)
             await saveProgress()
 
-            aiStatus.textContent = '✓ Feedback ready'
-            aiStatus.style.color = '#059669'
+            statusEl.textContent = '✓ Feedback ready'
+            statusEl.style.color = '#059669'
             window.setTimeout(() => {
-              aiStatus.textContent = ''
+              statusEl.textContent = ''
             }, 3000)
           } catch (err) {
             const msg = err instanceof Error ? err.message : 'Something went wrong'
             showAiFeedbackMessage(panel, msg, 'error')
-            aiStatus.textContent = ''
+            statusEl.textContent = ''
           } finally {
             aiButton.disabled = false
             aiButton.textContent = 'Get AI Feedback'
