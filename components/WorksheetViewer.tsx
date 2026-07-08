@@ -1365,7 +1365,9 @@ export default function WorksheetViewer({
     },
     [assignmentId, flushGrammarInputsToNotes, hasGrammarInputs, notes, preventSave, status]
   )
-  
+  const saveProgressRef = useRef(saveProgress)
+  saveProgressRef.current = saveProgress
+
   // Auto-save placement test answers when notes change
   useEffect(() => {
     if (preventSave) return
@@ -2042,12 +2044,57 @@ export default function WorksheetViewer({
       if (section.getAttribute('data-grammar-check-disabled') === 'true') return
       if (section.querySelector('.grammar-check-controls')) return
 
+      const hasSaveSection = section.getAttribute('data-grammar-save-section') === 'true'
+
       const controls = document.createElement('div')
       controls.className = 'grammar-check-controls screen-only'
       controls.style.display = 'flex'
       controls.style.alignItems = 'center'
+      controls.style.flexWrap = 'wrap'
       controls.style.gap = '10px'
       controls.style.marginTop = '10px'
+
+      if (hasSaveSection) {
+        const saveButton = document.createElement('button')
+        saveButton.type = 'button'
+        saveButton.textContent = 'Save'
+        saveButton.style.backgroundColor = '#38438f'
+        saveButton.style.color = '#fff'
+        saveButton.style.border = 'none'
+        saveButton.style.borderRadius = '6px'
+        saveButton.style.padding = '6px 10px'
+        saveButton.style.fontSize = '13px'
+        saveButton.style.cursor = 'pointer'
+
+        const saveFeedback = document.createElement('span')
+        saveFeedback.className = 'grammar-save-feedback'
+        saveFeedback.style.fontSize = '12px'
+        saveFeedback.style.fontWeight = '600'
+        saveFeedback.style.color = '#059669'
+
+        const saveClickHandler = async () => {
+          saveButton.disabled = true
+          saveButton.textContent = 'Saving...'
+          const ok = await saveProgressRef.current()
+          saveButton.disabled = false
+          saveButton.textContent = 'Save'
+          if (ok) {
+            saveFeedback.textContent = '✓ Saved'
+            saveFeedback.style.color = '#059669'
+          } else {
+            saveFeedback.textContent = 'Save failed — please try again'
+            saveFeedback.style.color = '#dc2626'
+          }
+          window.setTimeout(() => {
+            saveFeedback.textContent = ''
+          }, 3000)
+        }
+        saveButton.addEventListener('click', saveClickHandler)
+        cleanupFns.push(() => saveButton.removeEventListener('click', saveClickHandler))
+
+        controls.appendChild(saveButton)
+        controls.appendChild(saveFeedback)
+      }
 
       const button = document.createElement('button')
       button.type = 'button'
@@ -2243,6 +2290,7 @@ export default function WorksheetViewer({
 
     sections.forEach((section) => {
       if (section.querySelector('.grammar-save-controls')) return
+      if (section.getAttribute('data-grammar-per-section-check') === 'true') return
 
       const aiTaskAttr = section.getAttribute('data-grammar-ai-feedback')
       const aiTask = aiTaskAttr && isWritingTaskType(aiTaskAttr) ? aiTaskAttr : null
