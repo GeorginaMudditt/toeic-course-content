@@ -4,6 +4,8 @@ import { redirect } from 'next/navigation'
 import { supabaseServer } from '@/lib/supabase'
 import Navbar from '@/components/Navbar'
 import Link from 'next/link'
+import { getSavedSectionsForDashboard } from '@/lib/resource-bookmarks'
+import SavedSectionsPanel from '@/components/SavedSectionsPanel'
 import { formatUKDate, formatCourseName } from '@/lib/date-utils'
 
 export default async function StudentDashboard() {
@@ -66,6 +68,8 @@ export default async function StudentDashboard() {
   } catch (error) {
     console.error('Error loading document count:', error)
   }
+
+  const savedSections = await getSavedSectionsForDashboard(session.user.id)
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -167,6 +171,8 @@ export default async function StudentDashboard() {
               </p>
             </Link>
           </div>
+
+          <SavedSectionsPanel sections={savedSections} />
         </div>
       </div>
     </div>

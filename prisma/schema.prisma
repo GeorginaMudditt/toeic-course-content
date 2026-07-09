@@ -71,6 +71,7 @@ model User {
   documents       StudentDocument[]
   onboardingChecklistItems StudentOnboardingChecklistItem[]
   teacherTasks           TeacherTask[]
+  resourceBookmarks      ResourceBookmark[]
 }
 
 model Resource {
@@ -89,6 +90,7 @@ model Resource {
   creator       User         @relation("ResourceCreator", fields: [creatorId], references: [id])
   
   assignments   Assignment[]
+  bookmarks     ResourceBookmark[]
 }
 
 model Course {
@@ -133,6 +135,7 @@ model Assignment {
   resource      Resource   @relation(fields: [resourceId], references: [id])
   
   progress      Progress[]
+  bookmarks     ResourceBookmark[]
   
   @@unique([enrollmentId, resourceId])
 }
@@ -257,4 +260,21 @@ model TeacherTask {
 
   @@index([teacherId, status])
   @@index([teacherId, status, sortOrder])
+}
+
+model ResourceBookmark {
+  id            String   @id @default(cuid())
+  studentId     String
+  assignmentId  String
+  resourceId    String
+  sectionSlug   String
+  sectionLabel  String
+  createdAt     DateTime @default(now())
+
+  student       User       @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  assignment    Assignment @relation(fields: [assignmentId], references: [id], onDelete: Cascade)
+  resource      Resource   @relation(fields: [resourceId], references: [id], onDelete: Cascade)
+
+  @@unique([studentId, assignmentId, sectionSlug])
+  @@index([studentId, createdAt])
 }

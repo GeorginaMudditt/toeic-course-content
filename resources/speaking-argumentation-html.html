@@ -44,34 +44,20 @@
     display: list-item !important;
   }
 
-  .argumentation-lang-table {
-    width: 100%;
-    border-collapse: collapse;
-    font-size: 16px;
-    table-layout: fixed;
+  .language-panels-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 14px;
   }
-  .argumentation-lang-table th,
-  .argumentation-lang-table td {
-    border: 2px solid #94a3b8;
-    padding: 14px 12px;
-    vertical-align: top;
-    text-align: left;
-    background: #ffffff;
+  @media (min-width: 768px) {
+    .language-panels-grid {
+      grid-template-columns: 1fr 1fr;
+    }
   }
-  .argumentation-lang-table th {
-    font-weight: 700;
-    color: #0f172a;
-    background: #f8fafc;
-  }
-  .argumentation-lang-table ul {
-    margin: 8px 0 0 0;
-    padding-left: 18px !important;
-  }
-  .argumentation-lang-table li {
-    margin-bottom: 6px;
-  }
-  .argumentation-lang-table li:last-child {
-    margin-bottom: 0;
+  @media print {
+    .language-panels-grid {
+      grid-template-columns: 1fr 1fr;
+    }
   }
 </style>
 
@@ -150,89 +136,83 @@
 <!-- PAGE 2: Useful Language -->
 <div style="width: 90%; max-width: 100%; margin: 0 auto; padding: 25px; box-sizing: border-box; font-family: Arial, sans-serif; line-height: 1.6; color: #333;" class="page-break">
 
-  <div style="margin-bottom: 25px; padding: 20px; background: linear-gradient(to bottom, #e0e7ff, #ffffff); border-radius: 8px; border-left: 5px solid #6366f1;" class="keep-together">
+  <div data-bookmarkable="language" data-bookmark-label="Useful Language" style="margin-bottom: 25px; padding: 20px; background: linear-gradient(to bottom, #e0e7ff, #ffffff); border-radius: 8px; border-left: 5px solid #6366f1;" class="keep-together">
     <h2 style="font-size: 22px; font-weight: bold; margin-bottom: 14px; color: #3730a3;">Useful Language</h2>
-    <table class="argumentation-lang-table">
-      <thead>
-        <tr>
-          <th scope="col">Claim</th>
-          <th scope="col">Evidence</th>
-          <th scope="col">Reasoning</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>
-            <ul>
-              <li>I strongly believe that...</li>
-              <li>In my opinion,...</li>
-              <li>From my perspective,...</li>
-              <li>As far as I'm concerned,...</li>
-            </ul>
-          </td>
-          <td>
-            <ul>
-              <li>One of the main reasons is...</li>
-              <li>This is because...</li>
-              <li>Another key point is that...</li>
-              <li>The main argument in favour of this is...</li>
-            </ul>
-          </td>
-          <td>
-            <ul>
-              <li>This matters because...</li>
-              <li>What this shows us is...</li>
-              <li>This demonstrates that...</li>
-              <li>It follows that...</li>
-              <li>This leads to...</li>
-              <li>The consequence of this is...</li>
-              <li>This is precisely why...</li>
-              <li>This supports the idea that...</li>
-              <li>The evidence consistently points to...</li>
-            </ul>
-          </td>
-        </tr>
-        <tr>
-          <th scope="col">Agreeing</th>
-          <th scope="col">Acknowledge counterarguments</th>
-          <th scope="col">Conclusion</th>
-        </tr>
-        <tr>
-          <td>
-            <ul>
-              <li>I completely agree with that.</li>
-              <li>That's a good point.</li>
-              <li>I couldn't agree more.</li>
-              <li>That makes sense to me.</li>
-            </ul>
-          </td>
-          <td>
-            <ul>
-              <li>Some people argue that...</li>
-              <li>It is often said that...</li>
-              <li>Others believe that...</li>
-              <li>There is an argument that...</li>
-              <li>I see your point, but...</li>
-              <li>That may be true, however...</li>
-              <li>I understand your view, but...</li>
-              <li>However, I would say that...</li>
-              <li>The problem with that argument is...</li>
-              <li>On the contrary,...</li>
-              <li>On the other hand,...</li>
-            </ul>
-          </td>
-          <td>
-            <ul>
-              <li>Taken together, these points suggest that...</li>
-              <li>As a result, we can see that...</li>
-              <li>It follows that...</li>
-              <li>The evidence consistently points to...</li>
-              <li>Which is exactly the point...</li>
-            </ul>
-          </td>
-        </tr>
-      </tbody>
-    </table>
+
+    <div class="language-panels-grid">
+      <div style="background: white; padding: 16px; border-radius: 8px; border: 2px solid #c7d2fe;">
+        <h3 style="font-size: 18px; font-weight: bold; margin: 0 0 10px 0; color: #4338ca;">Claim</h3>
+        <ul style="margin: 0; padding-left: 20px; font-size: 17px;">
+          <li style="margin-bottom: 6px;">I strongly believe that...</li>
+          <li style="margin-bottom: 6px;">In my opinion,...</li>
+          <li style="margin-bottom: 6px;">From my perspective,...</li>
+          <li style="margin-bottom: 0;">As far as I'm concerned,...</li>
+        </ul>
+      </div>
+
+      <div style="background: white; padding: 16px; border-radius: 8px; border: 2px solid #c7d2fe;">
+        <h3 style="font-size: 18px; font-weight: bold; margin: 0 0 10px 0; color: #4338ca;">Evidence</h3>
+        <ul style="margin: 0; padding-left: 20px; font-size: 17px;">
+          <li style="margin-bottom: 6px;">One of the main reasons is...</li>
+          <li style="margin-bottom: 6px;">This is because...</li>
+          <li style="margin-bottom: 6px;">Another key point is that...</li>
+          <li style="margin-bottom: 0;">The main argument in favour of this is...</li>
+        </ul>
+      </div>
+
+      <div style="background: white; padding: 16px; border-radius: 8px; border: 2px solid #c7d2fe;">
+        <h3 style="font-size: 18px; font-weight: bold; margin: 0 0 10px 0; color: #4338ca;">Reasoning</h3>
+        <ul style="margin: 0; padding-left: 20px; font-size: 17px;">
+          <li style="margin-bottom: 6px;">This matters because...</li>
+          <li style="margin-bottom: 6px;">What this shows us is...</li>
+          <li style="margin-bottom: 6px;">This demonstrates that...</li>
+          <li style="margin-bottom: 6px;">It follows that...</li>
+          <li style="margin-bottom: 6px;">This leads to...</li>
+          <li style="margin-bottom: 6px;">The consequence of this is...</li>
+          <li style="margin-bottom: 6px;">This is precisely why...</li>
+          <li style="margin-bottom: 6px;">This supports the idea that...</li>
+          <li style="margin-bottom: 0;">The evidence consistently points to...</li>
+        </ul>
+      </div>
+
+      <div style="background: white; padding: 16px; border-radius: 8px; border: 2px solid #c7d2fe;">
+        <h3 style="font-size: 18px; font-weight: bold; margin: 0 0 10px 0; color: #4338ca;">Agreeing</h3>
+        <ul style="margin: 0; padding-left: 20px; font-size: 17px;">
+          <li style="margin-bottom: 6px;">I completely agree with that.</li>
+          <li style="margin-bottom: 6px;">That's a good point.</li>
+          <li style="margin-bottom: 6px;">I couldn't agree more.</li>
+          <li style="margin-bottom: 0;">That makes sense to me.</li>
+        </ul>
+      </div>
+
+      <div style="background: white; padding: 16px; border-radius: 8px; border: 2px solid #c7d2fe;">
+        <h3 style="font-size: 18px; font-weight: bold; margin: 0 0 10px 0; color: #4338ca;">Acknowledge counterarguments</h3>
+        <ul style="margin: 0; padding-left: 20px; font-size: 17px;">
+          <li style="margin-bottom: 6px;">Some people argue that...</li>
+          <li style="margin-bottom: 6px;">It is often said that...</li>
+          <li style="margin-bottom: 6px;">Others believe that...</li>
+          <li style="margin-bottom: 6px;">There is an argument that...</li>
+          <li style="margin-bottom: 6px;">I see your point, but...</li>
+          <li style="margin-bottom: 6px;">That may be true, however...</li>
+          <li style="margin-bottom: 6px;">I understand your view, but...</li>
+          <li style="margin-bottom: 6px;">However, I would say that...</li>
+          <li style="margin-bottom: 6px;">The problem with that argument is...</li>
+          <li style="margin-bottom: 6px;">On the contrary,...</li>
+          <li style="margin-bottom: 0;">On the other hand,...</li>
+        </ul>
+      </div>
+
+      <div style="background: white; padding: 16px; border-radius: 8px; border: 2px solid #c7d2fe;">
+        <h3 style="font-size: 18px; font-weight: bold; margin: 0 0 10px 0; color: #4338ca;">Conclusion</h3>
+        <ul style="margin: 0; padding-left: 20px; font-size: 17px;">
+          <li style="margin-bottom: 6px;">Taken together, these points suggest that...</li>
+          <li style="margin-bottom: 6px;">As a result, we can see that...</li>
+          <li style="margin-bottom: 6px;">It follows that...</li>
+          <li style="margin-bottom: 6px;">The evidence consistently points to...</li>
+          <li style="margin-bottom: 0;">Which is exactly the point...</li>
+        </ul>
+      </div>
+    </div>
   </div>
 
 </div>

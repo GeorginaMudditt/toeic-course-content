@@ -7,13 +7,14 @@ export const dynamic = 'force-dynamic' // Always fetch fresh progress when retur
 import Navbar from '@/components/Navbar'
 import WorksheetViewer from '@/components/WorksheetViewer'
 import MarkAsViewed from './MarkAsViewed'
+import { getBookmarksForAssignment } from '@/lib/resource-bookmarks'
 
 export default async function AssignmentPage({
   params,
   searchParams,
 }: {
   params: { id: string }
-  searchParams: { viewAs?: string }
+  searchParams: { viewAs?: string; section?: string }
 }) {
   const session = await getServerSession(authOptions)
   const viewAs = searchParams?.viewAs
@@ -98,6 +99,12 @@ export default async function AssignmentPage({
     redirect('/student/dashboard')
   }
 
+  const bookmarkRows = isTeacherView
+    ? []
+    : await getBookmarksForAssignment(studentId, assignment.id)
+  const initialBookmarkedSlugs = bookmarkRows.map((row) => row.sectionSlug)
+  const scrollToSection = searchParams?.section || null
+
   return (
     <div className="min-h-screen bg-gray-50">
       <Navbar />
@@ -125,6 +132,8 @@ export default async function AssignmentPage({
             backHref={isTeacherView ? `/teacher/students/${viewAs}` : '/student/course'}
             backLabel={isTeacherView ? 'Back to Student' : 'Return to My Course'}
             showStudentNotice={!isTeacherView}
+            initialBookmarkedSlugs={initialBookmarkedSlugs}
+            scrollToSection={scrollToSection}
           />
         </div>
       </div>

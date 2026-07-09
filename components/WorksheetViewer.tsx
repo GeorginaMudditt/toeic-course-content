@@ -17,6 +17,7 @@ import {
   type GiaqActivityPersistence,
 } from '@/lib/worksheetInteractions/givingInformationAnsweringQuestions'
 import { mountPhraseAudioButtons } from '@/lib/worksheetInteractions/phraseAudioButtons'
+import { mountResourceSectionBookmarks } from '@/lib/worksheetInteractions/resourceSectionBookmarks'
 import { mountPresentingServicesProductsActivities } from '@/lib/worksheetInteractions/presentingServicesProductsKeyLanguage'
 import { mountWritingPracticeTimers } from '@/lib/worksheetInteractions/writingPracticeTimers'
 import { mountPlacementTestCheckAnswers } from '@/lib/worksheetInteractions/placementTestCheckAnswers'
@@ -55,6 +56,10 @@ interface WorksheetViewerProps {
   /** Hide toolbars and action buttons — for embedded previews only. */
   compact?: boolean
   showStudentNotice?: boolean
+  /** Section slugs already bookmarked for this assignment. */
+  initialBookmarkedSlugs?: string[]
+  /** Scroll to and highlight a bookmarkable section on load. */
+  scrollToSection?: string | null
 }
 
 type GrammarCheckStatus = 'correct' | 'incorrect' | 'review'
@@ -811,6 +816,8 @@ export default function WorksheetViewer({
   backLabel = 'Return to My Course',
   compact = false,
   showStudentNotice = true,
+  initialBookmarkedSlugs = [],
+  scrollToSection = null,
 }: WorksheetViewerProps) {
   const router = useRouter()
   const [notes, setNotes] = useState(initialProgress?.notes || '')
@@ -860,6 +867,9 @@ export default function WorksheetViewer({
     typeof resource.content === 'string' && resource.content.includes('data-phrase-audio-root')
   const hasWritingTimers =
     typeof resource.content === 'string' && resource.content.includes('data-writing-timer-minutes')
+  const hasBookmarkableSections =
+    typeof resource.content === 'string' && resource.content.includes('data-bookmarkable')
+  const bookmarkedSlugsRef = useRef(new Set(initialBookmarkedSlugs))
 
   /** Per-section Check Answers + live tick/cross (see resources using data-grammar-per-section-check). */
   const enablePerSectionGrammarCheck = useMemo(() => {
@@ -2868,6 +2878,40 @@ export default function WorksheetViewer({
       detach?.()
     }
   }, [resource.content, hasWritingTimers])
+
+  useEffect(() => {
+    bookmarkedSlugsRef.current = new Set(initialBookmarkedSlugs)
+  }, [initialBookmarkedSlugs])
+
+  // Bookmarkable reference sections (e.g. PRO Speaking language panels).
+  useLayoutEffect(() => {
+    if (!hasBookmarkableSections || !isClientMounted) return
+    let detach: (() => void) | undefined
+    const rafId = requestAnimationFrame(() => {
+      const host = contentRef.current
+      if (!host) return
+      detach = mountResourceSectionBookmarks(host, {
+        assignmentId,
+        resourceId: resource.id,
+        preventSave,
+        bookmarkedSlugs: bookmarkedSlugsRef.current,
+        scrollToSection,
+      })
+    })
+    return () => {
+      cancelAnimationFrame(rafId)
+      detach?.()
+    }
+  }, [
+    hasBookmarkableSections,
+    isClientMounted,
+    resource.content,
+    resource.id,
+    assignmentId,
+    preventSave,
+    scrollToSection,
+    initialBookmarkedSlugs,
+  ])
 
   // Past Simple Practice (Army): -ed pronunciation columns.
   useEffect(() => {
