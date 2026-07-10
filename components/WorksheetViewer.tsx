@@ -18,6 +18,17 @@ import {
 } from '@/lib/worksheetInteractions/givingInformationAnsweringQuestions'
 import { mountPhraseAudioButtons } from '@/lib/worksheetInteractions/phraseAudioButtons'
 import { mountResourceSectionBookmarks } from '@/lib/worksheetInteractions/resourceSectionBookmarks'
+import {
+  buildSnapshotFromCheckResult,
+  hasGrammarCheckSnapshot,
+  mergeFirstCheckSnapshotIntoNotes,
+  mountGrammarCheckSnapshotPanels,
+  parseAcceptableAnswersForDisplay,
+  parseAnswerKeyForDisplay,
+  renderGrammarCheckSnapshotPanel,
+  type GrammarCheckRunResult,
+  getQuestionNumberForInput,
+} from '@/lib/worksheetInteractions/grammarCheckSnapshots'
 import { mountPresentingServicesProductsActivities } from '@/lib/worksheetInteractions/presentingServicesProductsKeyLanguage'
 import { mountWritingPracticeTimers } from '@/lib/worksheetInteractions/writingPracticeTimers'
 import { mountPlacementTestCheckAnswers } from '@/lib/worksheetInteractions/placementTestCheckAnswers'
@@ -1099,9 +1110,10 @@ export default function WorksheetViewer({
     return answerMap
   }, [])
 
-  const runGrammarCheckForContainer = useCallback((container: HTMLElement, answerMap: Map<string, string[]>) => {
+  const runGrammarCheckForContainer = useCallback((container: HTMLElement, answerMap: Map<string, string[]>): GrammarCheckRunResult => {
     const inputContainers = Array.from(container.querySelectorAll('[data-grammar-input]')) as HTMLElement[]
-    if (!inputContainers.length) return
+    const runResult: GrammarCheckRunResult = { correct: 0, incorrect: 0, review: 0, items: [] }
+    if (!inputContainers.length) return runResult
 
     let correct = 0
     let incorrect = 0
@@ -1112,6 +1124,8 @@ export default function WorksheetViewer({
       if (!inputId) return
 
       const expected = answerMap.get(inputId) || []
+      const acceptableDisplay = parseAnswerKeyForDisplay(inputContainer)
+      const questionNumber = getQuestionNumberForInput(inputContainer)
       const rawType = inputContainer.getAttribute('data-grammar-input-type')
       const inputType =
         rawType === 'textarea'
@@ -1153,6 +1167,13 @@ export default function WorksheetViewer({
         if (result.status === 'correct') correct += 1
         else if (result.status === 'incorrect') incorrect += 1
         else review += 1
+        runResult.items.push({
+          inputId,
+          status: result.status,
+          studentAnswer: radioValue,
+          acceptableAnswers: acceptableDisplay,
+          questionNumber,
+        })
         return
       }
 
@@ -1163,7 +1184,8 @@ export default function WorksheetViewer({
         | null
       if (!field) return
 
-      const value = normalizeAnswerValue(field.value || '')
+      const rawValue = (field.value || '').trim()
+      const value = normalizeAnswerValue(rawValue)
 
       if (!value) {
         result = { status: 'review' }
@@ -1188,12 +1210,26 @@ export default function WorksheetViewer({
       if (result.status === 'correct') correct += 1
       else if (result.status === 'incorrect') incorrect += 1
       else review += 1
+
+      runResult.items.push({
+        inputId,
+        status: result.status,
+        studentAnswer: rawValue,
+        acceptableAnswers: acceptableDisplay,
+        questionNumber,
+      })
     })
+
+    runResult.correct = correct
+    runResult.incorrect = incorrect
+    runResult.review = review
 
     const resultNode = container.querySelector('.grammar-check-summary') as HTMLElement | null
     if (resultNode) {
       resultNode.textContent = `Checked: ${correct} correct, ${incorrect} to retry${review ? `, ${review} to review` : ''}.`
     }
+
+    return runResult
   }, [applyGrammarResultStyles])
   
   // Memoize writing value to prevent unnecessary re-renders
@@ -2145,8 +2181,31 @@ export default function WorksheetViewer({
 
       const clickHandler = () => {
         const answerMap = buildGrammarAnswerMap()
-        runGrammarCheckForContainer(section, answerMap)
+        const checkResult = runGrammarCheckForContainer(section, answerMap)
         section.setAttribute('data-grammar-live-check', 'true')
+
+        const snapshotKey = section.getAttribute('data-grammar-check-snapshot')
+        if (!snapshotKey || preventSave) return
+        if (hasGrammarCheckSnapshot(notesRef.current, snapshotKey)) return
+
+        const bookmarkSection = section.closest('[data-bookmark-label]') as HTMLElement | null
+        const sectionLabel =
+          bookmarkSection?.getAttribute('data-bookmark-label') ||
+          section.querySelector('h2, h3')?.textContent?.trim() ||
+          snapshotKey
+
+        const snapshot = buildSnapshotFromCheckResult(section, sectionLabel, checkResult)
+        const mergedNotes = mergeFirstCheckSnapshotIntoNotes(
+          notesRef.current,
+          snapshotKey,
+          snapshot
+        )
+        if (!mergedNotes) return
+
+        notesRef.current = mergedNotes
+        setNotes(mergedNotes)
+        renderGrammarCheckSnapshotPanel(section, snapshotKey, snapshot)
+        void saveProgressRef.current(mergedNotes)
       }
       button.addEventListener('click', clickHandler)
       cleanupFns.push(() => button.removeEventListener('click', clickHandler))
@@ -2164,7 +2223,15 @@ export default function WorksheetViewer({
       const controls = contentRef.current.querySelectorAll('.grammar-check-controls')
       controls.forEach((control) => control.remove())
     }
-  }, [hasGrammarInputs, grammarInputsReady, resource.content, resource.title, buildGrammarAnswerMap, runGrammarCheckForContainer, enablePerSectionGrammarCheck])
+  }, [hasGrammarInputs, grammarInputsReady, resource.content, resource.title, buildGrammarAnswerMap, runGrammarCheckForContainer, enablePerSectionGrammarCheck, preventSave])
+
+  useEffect(() => {
+    if (!contentRef.current || !grammarInputsReady) return
+    if (!resource.content.includes('data-grammar-check-snapshot')) return
+
+    const cleanup = mountGrammarCheckSnapshotPanels(contentRef.current, notesRef.current || notes)
+    return cleanup
+  }, [grammarInputsReady, notes, resource.content])
 
   const migrateLegacyAiFeedbackMarkup = useCallback((panel: HTMLElement) => {
     panel.querySelectorAll('.grammar-ai-feedback-scroll-hint').forEach((el) => el.remove())
