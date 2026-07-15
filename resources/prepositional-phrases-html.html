@@ -1,0 +1,733 @@
+<!-- Prepositional Phrases (C1) -->
+<style>
+  :root {
+    --pp-ink: #1e293b;
+    --pp-muted: #475569;
+    --pp-border: #cbd5e1;
+    --pp-accent: #4338ca;
+    --pp-accent-dark: #3730a3;
+    --pp-highlight: #6366f1;
+    --pp-soft: #eef2ff;
+  }
+
+  @media print {
+    @page { margin: 1.5cm; }
+    body { margin: 0; padding: 0; }
+    .page-break { page-break-before: always; }
+    .no-break, .keep-together {
+      page-break-inside: avoid;
+      break-inside: avoid;
+    }
+    h2, h3 { page-break-after: avoid; break-after: avoid; }
+    table { page-break-inside: avoid; break-inside: avoid; }
+    .pp-reveal-btn, .pp-reveal-toggle,
+    .pp-highlight-btn, .pp-highlight-toggle {
+      display: none !important;
+    }
+    .error-correction-item .error-revealed { display: none !important; }
+    .kl-actions, .kl-chip-slot { display: none !important; }
+    .kl-drop {
+      border-color: #d1d5db !important;
+      background: #fff !important;
+    }
+  }
+
+  .pp-wrap {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 22px;
+    font-family: Arial, Helvetica, sans-serif;
+    line-height: 1.55;
+    color: var(--pp-ink);
+  }
+
+  .pp-wrap h2 {
+    font-size: 22px;
+    font-weight: 700;
+    margin: 0 0 10px 0;
+    color: var(--pp-accent-dark);
+  }
+
+  .pp-wrap h3 {
+    font-size: 17px;
+    font-weight: 700;
+    margin: 0 0 8px 0;
+    color: #312e81;
+  }
+
+  .pp-wrap p { margin: 0 0 8px 0; font-size: 16px; }
+
+  .pp-title {
+    text-align: center;
+    margin-bottom: 18px;
+    padding: 16px;
+    background: linear-gradient(135deg, #6366f1 0%, #4338ca 45%, #3730a3 100%);
+    border-radius: 10px;
+  }
+
+  .pp-title h1 {
+    font-size: 28px;
+    font-weight: bold;
+    margin: 0;
+    color: #fff;
+  }
+
+  .pp-title p {
+    margin: 6px 0 0 0;
+    font-size: 15px;
+    color: #e0e7ff;
+    font-weight: 600;
+  }
+
+  .section-block {
+    margin-bottom: 18px;
+    padding: 16px;
+    background: #fff;
+    border-radius: 8px;
+    border: 1px solid #e2e8f0;
+  }
+
+  .pp-ex {
+    color: #4338ca;
+    font-weight: 700;
+  }
+
+  .pp-quiz-phrase {
+    color: inherit;
+    font-weight: inherit;
+    font-style: inherit;
+  }
+
+  .pp-wrap:has(#pp-highlight-quiz:checked) #pp-workplace-quiz .pp-quiz-phrase {
+    color: #4338ca;
+    font-weight: 700;
+  }
+
+  .pp-highlight-toggle {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .pp-highlight-btn {
+    display: inline-block;
+    margin-top: 16px;
+    padding: 10px 16px;
+    border: none;
+    border-radius: 6px;
+    background: var(--pp-accent);
+    color: #ffffff;
+    font-size: 15px;
+    font-weight: 600;
+    font-family: Arial, sans-serif;
+    cursor: pointer;
+  }
+
+  .pp-highlight-btn:hover {
+    background: var(--pp-accent-dark);
+  }
+
+  .pp-wrap:has(#pp-highlight-quiz:checked) .pp-highlight-btn {
+    background: var(--pp-accent-dark);
+  }
+
+  .tip {
+    background: #eef2ff;
+    border: 1px solid #c7d2fe;
+    border-radius: 8px;
+    padding: 10px 12px;
+    margin: 10px 0;
+    font-size: 14px;
+  }
+
+  .grid-2 {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px;
+    margin-bottom: 12px;
+  }
+
+  @media (max-width: 720px) {
+    .grid-2 { grid-template-columns: 1fr; }
+  }
+
+  .card {
+    background: #f8fafc;
+    border: 1px solid var(--pp-border);
+    border-radius: 8px;
+    padding: 12px 14px;
+  }
+
+  .card-accent {
+    border-left: 4px solid var(--pp-accent);
+    background: linear-gradient(to bottom, #eef2ff, #f8fafc);
+  }
+
+  .pp-wrap table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+    margin: 8px 0 12px 0;
+  }
+
+  .pp-wrap th,
+  .pp-wrap td {
+    border: 1px solid var(--pp-border);
+    padding: 8px 10px;
+    text-align: left;
+    vertical-align: top;
+  }
+
+  .pp-wrap th {
+    background: #e0e7ff;
+    font-weight: 700;
+  }
+
+  .pp-wrap ul.disc-list {
+    list-style-type: disc;
+    list-style-position: outside;
+    margin: 0;
+    padding-left: 1.35em;
+    font-size: 15px;
+  }
+
+  .pp-wrap ul.disc-list li {
+    margin-bottom: 6px;
+    display: list-item;
+  }
+
+  .pp-wrap ol.dec-list {
+    padding-left: 1.5em;
+    font-size: 16px;
+    list-style-type: decimal;
+    list-style-position: outside;
+  }
+
+  .pp-wrap ol.dec-list li {
+    margin-bottom: 10px;
+    display: list-item;
+  }
+
+  .quiz-question:first-child {
+    margin-top: 4px;
+    padding-top: 18px;
+    border-top: 1px solid #e2e8f0;
+  }
+
+  .quiz-question {
+    margin-bottom: 22px;
+    padding-bottom: 18px;
+    border-bottom: 1px solid #e2e8f0;
+  }
+
+  .quiz-question:last-child {
+    margin-bottom: 0;
+    padding-bottom: 0;
+    border-bottom: none;
+  }
+
+  .quiz-options {
+    list-style-type: lower-alpha;
+    list-style-position: outside;
+    margin: 8px 0 10px 0;
+    padding-left: 1.5em;
+    font-size: 15px;
+  }
+
+  .quiz-options li {
+    margin-bottom: 6px;
+    display: list-item;
+  }
+
+  @media print {
+    .pp-highlight-btn,
+    .pp-highlight-toggle {
+      display: none !important;
+    }
+  }
+
+  .quiz-choice-row {
+    margin-top: 8px;
+  }
+
+  .pp-reveal-toggle {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .pp-reveal-btn {
+    display: inline-block;
+    margin-top: 14px;
+    padding: 10px 16px;
+    border: none;
+    border-radius: 6px;
+    background: var(--pp-accent);
+    color: #ffffff;
+    font-size: 15px;
+    font-weight: 600;
+    font-family: Arial, sans-serif;
+    cursor: pointer;
+  }
+
+  .pp-reveal-btn:hover {
+    background: var(--pp-accent-dark);
+  }
+
+  .error-correction-item .error-revealed {
+    display: none;
+  }
+
+  .error-correction-item:has(.error-reveal-toggle:checked) .error-student {
+    display: none;
+  }
+
+  .error-correction-item:has(.error-reveal-toggle:checked) .error-revealed {
+    display: block;
+  }
+
+  .err-strike {
+    text-decoration: line-through;
+    color: #b91c1c;
+  }
+
+  .err-fix {
+    color: #166534;
+    font-weight: 600;
+  }
+
+  .kl-board {
+    width: 100%;
+    max-width: 100%;
+    container-type: inline-size;
+    container-name: kl-board;
+  }
+
+  .kl-table {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    margin: 0 0 12px;
+  }
+
+  .kl-table-head,
+  .kl-table-row {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr) minmax(0, 1.2fr);
+    gap: 10px 12px;
+    align-items: stretch;
+  }
+
+  .kl-table-head {
+    font-size: 11px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--pp-muted);
+    padding: 0 6px 6px;
+    border-bottom: 1px solid var(--pp-border);
+  }
+
+  .kl-table-row {
+    padding: 8px 10px;
+    background: #fff;
+    border: 1px solid rgba(67, 56, 202, 0.12);
+    border-radius: 10px;
+    border-left: 4px solid var(--pp-accent);
+  }
+
+  @container kl-board (max-width: 520px) {
+    .kl-table-head,
+    .kl-table-row {
+      grid-template-columns: 1fr;
+      gap: 8px;
+    }
+    .kl-table-head { display: none; }
+    .kl-cell--source { order: -1; }
+  }
+
+  .kl-cell--en {
+    min-width: 0;
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .kl-en-text {
+    display: block;
+    font-size: 14px;
+    font-weight: 700;
+    line-height: 1.35;
+    color: #0f172a;
+  }
+
+  .kl-cell--drop,
+  .kl-cell--source {
+    min-width: 0;
+    display: flex;
+    align-items: stretch;
+  }
+
+  .kl-chip-slot {
+    width: 100%;
+    min-height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+    border: 1px dashed rgba(67, 56, 202, 0.28);
+    background: rgba(238, 242, 255, 0.85);
+    padding: 6px;
+  }
+
+  .kl-drop {
+    width: 100%;
+    min-height: 38px;
+    border-radius: 10px;
+    border: 2px dashed rgba(67, 56, 202, 0.35);
+    background: rgba(238, 242, 255, 0.35);
+    padding: 8px 10px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 8px;
+  }
+
+  .kl-drop.is-over {
+    border-color: rgba(67, 56, 202, 0.7);
+    background: rgba(238, 242, 255, 0.55);
+  }
+
+  .kl-drop.is-correct {
+    border-style: solid;
+    border-color: #15803d;
+    background: #ecfdf5;
+  }
+
+  .kl-drop.is-wrong {
+    border-style: solid;
+    border-color: #b91c1c;
+    background: #fee2e2;
+  }
+
+  .kl-drop-placeholder {
+    font-size: 13px;
+    color: rgba(100, 116, 139, 0.9);
+    font-weight: 600;
+  }
+
+  .kl-chip,
+  .kl-drop .kl-chip {
+    width: 100%;
+    border-radius: 8px;
+    padding: 8px 10px;
+    border: 1px solid rgba(67, 56, 202, 0.22);
+    background: linear-gradient(135deg, #fafafe 0%, #ffffff 100%);
+    font-size: 13px;
+    font-weight: 600;
+    line-height: 1.35;
+    color: #3730a3;
+    box-shadow: 0 1px 2px rgba(67, 56, 202, 0.08);
+    cursor: grab;
+    user-select: none;
+    text-align: left;
+  }
+
+  .kl-chip.is-selected {
+    outline: 3px solid rgba(67, 56, 202, 0.22);
+    border-color: rgba(67, 56, 202, 0.55);
+  }
+
+  .kl-actions {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 4px;
+    padding-top: 12px;
+    border-top: 1px solid var(--pp-border);
+  }
+
+  .kl-btn {
+    appearance: none;
+    border: 1px solid rgba(15, 23, 42, 0.14);
+    border-radius: 10px;
+    padding: 9px 12px;
+    background: var(--pp-accent-dark);
+    color: #fff;
+    font-size: 14px;
+    font-weight: 800;
+    cursor: pointer;
+  }
+
+  .kl-btn--secondary {
+    background: #fff;
+    color: var(--pp-accent-dark);
+  }
+
+  .kl-status {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--pp-muted);
+  }
+
+  [data-grammar-per-section-check] {
+    margin-top: 8px;
+  }
+</style>
+
+<div class="pp-wrap">
+
+  <div class="pp-title no-break">
+    <div style="display:inline-block;margin-bottom:6px;">
+      <img src="/brizzle-logo.png" alt="Brizzle Logo" style="width:48px;height:48px;object-fit:contain;background:#fff;padding:4px;border-radius:50%;" />
+    </div>
+    <h1>Prepositional Phrases</h1>
+    <p>C1 Grammar</p>
+  </div>
+
+  <!-- Speaking: Workplace Quiz -->
+  <div id="pp-workplace-quiz" class="section-block keep-together" data-grammar-save-section="true" data-grammar-check-disabled="true">
+    <h2>Speaking: Workplace Quiz</h2>
+    <p>Read each scenario and choose the option that best describes you. Select <strong>A</strong>, <strong>B</strong>, or <strong>C</strong> for each question. There are no right and wrong answers!</p>
+
+    <div class="quiz-question">
+      <p><strong>1.</strong> If my manager was away, I would &hellip;</p>
+      <ul class="quiz-options">
+        <li><span class="pp-quiz-phrase">fill in for</span> them, making any decisions that can&rsquo;t wait.</li>
+        <li><span class="pp-quiz-phrase">put off</span> anything that carries too much responsibility until they return.</li>
+        <li>feel <span class="pp-quiz-phrase">confident in</span> deciding which issues can wait and which genuinely need immediate attention.</li>
+      </ul>
+      <div class="quiz-choice-row">
+        <span data-grammar-input="quiz-q1" data-grammar-input-type="radio" data-grammar-input-options="A|B|C" style="display:block;"></span>
+      </div>
+    </div>
+
+    <div class="quiz-question">
+      <p><strong>2.</strong> If I realised I&rsquo;d made a mistake in a report, I would &hellip;</p>
+      <ul class="quiz-options">
+        <li><span class="pp-quiz-phrase">own up to</span> it immediately, even if it&rsquo;s embarrassing.</li>
+        <li><span class="pp-quiz-phrase">cover up</span> the mistake and hope nobody notices.</li>
+        <li>accept that I&rsquo;m <span class="pp-quiz-phrase">responsible for</span> fixing it, but only tell people if the mistake is likely to affect them.</li>
+      </ul>
+      <div class="quiz-choice-row">
+        <span data-grammar-input="quiz-q2" data-grammar-input-type="radio" data-grammar-input-options="A|B|C" style="display:block;"></span>
+      </div>
+    </div>
+
+    <div class="quiz-question">
+      <p><strong>3.</strong> By Friday afternoon, I usually &hellip;</p>
+      <ul class="quiz-options">
+        <li><span class="pp-quiz-phrase">catch up on</span> everything that&rsquo;s built up during the week.</li>
+        <li><span class="pp-quiz-phrase">fall behind on</span> less urgent tasks because unexpected work keeps appearing.</li>
+        <li>feel <span class="pp-quiz-phrase">capable of</span> leaving work unfinished if I&rsquo;ve focused on the right priorities.</li>
+      </ul>
+      <div class="quiz-choice-row">
+        <span data-grammar-input="quiz-q3" data-grammar-input-type="radio" data-grammar-input-options="A|B|C" style="display:block;"></span>
+      </div>
+    </div>
+
+    <div class="quiz-question">
+      <p><strong>4.</strong> If I promised to help a colleague, I would &hellip;</p>
+      <ul class="quiz-options">
+        <li><span class="pp-quiz-phrase">follow through on</span> my promise, even if it meant rearranging my own schedule.</li>
+        <li><span class="pp-quiz-phrase">back out of</span> it if my own workload became too heavy.</li>
+        <li>not feel <span class="pp-quiz-phrase">responsible for</span> solving other people&rsquo;s problems unless it was part of my role.</li>
+      </ul>
+      <div class="quiz-choice-row">
+        <span data-grammar-input="quiz-q4" data-grammar-input-type="radio" data-grammar-input-options="A|B|C" style="display:block;"></span>
+      </div>
+    </div>
+
+    <div class="quiz-question">
+      <p><strong>5.</strong> When a project starts going wrong, I think it usually &hellip;</p>
+      <ul class="quiz-options">
+        <li><span class="pp-quiz-phrase">comes down to</span> poor planning at the beginning.</li>
+        <li><span class="pp-quiz-phrase">stems from</span> people avoiding difficult conversations.</li>
+        <li>is <span class="pp-quiz-phrase">dependent on</span> so many different factors that it&rsquo;s rarely possible to blame just one cause.</li>
+      </ul>
+      <div class="quiz-choice-row">
+        <span data-grammar-input="quiz-q5" data-grammar-input-type="radio" data-grammar-input-options="A|B|C" style="display:block;"></span>
+      </div>
+    </div>
+
+    <div class="quiz-question">
+      <p><strong>6.</strong> After an important client meeting, I usually &hellip;</p>
+      <ul class="quiz-options">
+        <li><span class="pp-quiz-phrase">follow up on</span> everything we&rsquo;ve agreed before the end of the day.</li>
+        <li><span class="pp-quiz-phrase">hand over</span> the next steps to whoever owns that part of the project.</li>
+        <li>stay <span class="pp-quiz-phrase">involved in</span> the relationship even after my own work is finished.</li>
+      </ul>
+      <div class="quiz-choice-row">
+        <span data-grammar-input="quiz-q6" data-grammar-input-type="radio" data-grammar-input-options="A|B|C" style="display:block;"></span>
+      </div>
+    </div>
+
+    <div class="quiz-question">
+      <p><strong>7.</strong> If my workload suddenly doubled, I would &hellip;</p>
+      <ul class="quiz-options">
+        <li><span class="pp-quiz-phrase">take on</span> the extra work without complaining.</li>
+        <li>ask for support before the pressure started affecting the quality of my work.</li>
+        <li>stay <span class="pp-quiz-phrase">focused on</span> the tasks that would have the biggest impact and accept that some things would have to wait.</li>
+      </ul>
+      <div class="quiz-choice-row">
+        <span data-grammar-input="quiz-q7" data-grammar-input-type="radio" data-grammar-input-options="A|B|C" style="display:block;"></span>
+      </div>
+    </div>
+
+    <div class="quiz-question">
+      <p><strong>8.</strong> When I receive constructive criticism, I &hellip;</p>
+      <ul class="quiz-options">
+        <li><span class="pp-quiz-phrase">act on</span> it immediately and try to improve.</li>
+        <li><span class="pp-quiz-phrase">brush off</span> feedback if I don&rsquo;t think it&rsquo;s fair.</li>
+        <li>remain <span class="pp-quiz-phrase">open to</span> different opinions, but decide for myself which suggestions are worth following.</li>
+      </ul>
+      <div class="quiz-choice-row">
+        <span data-grammar-input="quiz-q8" data-grammar-input-type="radio" data-grammar-input-options="A|B|C" style="display:block;"></span>
+      </div>
+    </div>
+
+    <div class="quiz-question">
+      <p><strong>9.</strong> During team meetings, I usually &hellip;</p>
+      <ul class="quiz-options">
+        <li><span class="pp-quiz-phrase">speak up</span> whenever I think I have something valuable to add.</li>
+        <li><span class="pp-quiz-phrase">hold back</span> unless someone asks for my opinion directly.</li>
+        <li>feel <span class="pp-quiz-phrase">comfortable with</span> disagreeing respectfully if I think the discussion is heading in the wrong direction.</li>
+      </ul>
+      <div class="quiz-choice-row">
+        <span data-grammar-input="quiz-q9" data-grammar-input-type="radio" data-grammar-input-options="A|B|C" style="display:block;"></span>
+      </div>
+    </div>
+
+    <div class="quiz-question">
+      <p><strong>10.</strong> If my company introduced a major change, I would &hellip;</p>
+      <ul class="quiz-options">
+        <li><span class="pp-quiz-phrase">get to grips with</span> the new system as quickly as possible.</li>
+        <li><span class="pp-quiz-phrase">stick to</span> my existing routine until I was forced to change.</li>
+        <li>become <span class="pp-quiz-phrase">curious about</span> how the change might improve the way we work.</li>
+      </ul>
+      <div class="quiz-choice-row">
+        <span data-grammar-input="quiz-q10" data-grammar-input-type="radio" data-grammar-input-options="A|B|C" style="display:block;"></span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Phrasal Verbs and Dependent Prepositions -->
+  <div class="section-block keep-together page-break">
+    <h2>Phrasal Verbs and Dependent Prepositions</h2>
+
+    <p>A <strong>Phrasal Verb</strong> combines a verb with one or two prepositions to create a meaning that is often quite different from the individual words.</p>
+
+    <p>For example:</p>
+    <ul class="disc-list">
+      <li>Verb: to look (to turn your eyes towards something or someone so that you can see them)</li>
+      <li>Phrasal Verb: to <span class="pp-ex">look up</span> (to find information in a book, on a computer, etc.)</li>
+      <li>Phrasal Verb: to <span class="pp-ex">look forward to</span> (to be excited and happy about something that is going to happen)</li>
+    </ul>
+
+    <p>A <strong>Dependent Preposition</strong> is a preposition that habitually follows a particular adjective or noun.</p>
+
+    <p>For example:</p>
+    <ul class="disc-list">
+      <li>adjective + preposition &mdash; <span class="pp-ex">responsible for</span> (&ldquo;Sabrina is responsible for onboarding new staff.&rdquo;)</li>
+      <li>noun + preposition &mdash; <span class="pp-ex">access to</span> (&ldquo;All employees have access to this database.&rdquo;)</li>
+    </ul>
+
+    <input type="checkbox" id="pp-highlight-quiz" class="pp-highlight-toggle" aria-hidden="true" tabindex="-1" />
+    <label for="pp-highlight-quiz" class="pp-highlight-btn screen-only">Highlight these in the Quiz</label>
+  </div>
+
+  <!-- Vocabulary: Phrasal Verbs -->
+  <div class="section-block keep-together page-break" data-bookmarkable="vocab-phrasal" data-bookmark-label="Vocabulary: Phrasal Verbs">
+    <h2>Vocabulary: Phrasal Verbs</h2>
+    <p>Drag a meaning into the middle column, or tap a meaning and then tap a gap. Use <strong>Check answers</strong> when you are ready.</p>
+    <div data-giaq-match="pp-phrasal-verbs" aria-live="polite">
+      <p style="font-size:14px;color:#64748b;margin:12px 0;">Loading activity&hellip;</p>
+    </div>
+  </div>
+
+  <!-- Vocabulary: Dependent Prepositions -->
+  <div class="section-block keep-together" data-bookmarkable="vocab-dependent" data-bookmark-label="Vocabulary: Dependent Prepositions">
+    <h2>Vocabulary: Dependent Prepositions</h2>
+    <p>Drag a meaning into the middle column, or tap a meaning and then tap a gap.</p>
+    <div data-giaq-match="pp-dependent-prepositions" aria-live="polite">
+      <p style="font-size:14px;color:#64748b;margin:12px 0;">Loading activity&hellip;</p>
+    </div>
+  </div>
+
+  <!-- Gap Fill -->
+  <div class="section-block keep-together" data-bookmarkable="gap-fill" data-bookmark-label="Gap Fill" data-grammar-per-section-check="true">
+    <h2>Gap Fill</h2>
+    <p>Complete each sentence with the correct phrase from the box. Each phrase is used once.</p>
+    <p style="font-size:15px;padding:12px 14px;background:#eef2ff;border-radius:8px;border-left:3px solid #4338ca;margin-bottom:14px;"><strong>Word bank:</strong> access to &bull; back out of &bull; catch up on &bull; come down to &bull; dependent on &bull; fill in for &bull; follow through on &bull; follow up on &bull; get to grips with &bull; open to &bull; own up to &bull; put off &bull; responsible for &bull; stick to</p>
+    <ol class="dec-list">
+      <li>When Elena went on leave, I had to <span data-grammar-input="gap-q1" data-grammar-acceptable="fill in for" style="display:inline-block;min-width:140px;vertical-align:baseline;"></span> her and approve urgent requests.</li>
+      <li>We shouldn&rsquo;t <span data-grammar-input="gap-q2" data-grammar-acceptable="put off" style="display:inline-block;min-width:140px;vertical-align:baseline;"></span> the performance review conversations any longer.</li>
+      <li>He decided to <span data-grammar-input="gap-q3" data-grammar-acceptable="own up to" style="display:inline-block;min-width:140px;vertical-align:baseline;"></span> the error in the budget forecast before the board meeting.</li>
+      <li>After two weeks away, I spent Monday morning trying to <span data-grammar-input="gap-q4" data-grammar-acceptable="catch up on" style="display:inline-block;min-width:140px;vertical-align:baseline;"></span> my emails.</li>
+      <li>If you promise to send the revised proposal, please <span data-grammar-input="gap-q5" data-grammar-acceptable="follow through on" style="display:inline-block;min-width:140px;vertical-align:baseline;"></span> it today.</li>
+      <li>At the last minute, the supplier tried to <span data-grammar-input="gap-q6" data-grammar-acceptable="back out of" style="display:inline-block;min-width:140px;vertical-align:baseline;"></span> the contract.</li>
+      <li>In the end, the delay <span data-grammar-input="gap-q7" data-grammar-acceptable="came down to" style="display:inline-block;min-width:140px;vertical-align:baseline;"></span> poor communication between the two teams.</li>
+      <li>Please <span data-grammar-input="gap-q8" data-grammar-acceptable="follow up on" style="display:inline-block;min-width:140px;vertical-align:baseline;"></span> the action points from yesterday&rsquo;s client call.</li>
+      <li>New managers need time to <span data-grammar-input="gap-q9" data-grammar-acceptable="get to grips with" style="display:inline-block;min-width:140px;vertical-align:baseline;"></span> the company&rsquo;s reporting tools.</li>
+      <li>During the transition, we decided to <span data-grammar-input="gap-q10" data-grammar-acceptable="stick to" style="display:inline-block;min-width:140px;vertical-align:baseline;"></span> our existing workflow until training was complete.</li>
+      <li>As team lead, she is <span data-grammar-input="gap-q11" data-grammar-acceptable="responsible for" style="display:inline-block;min-width:140px;vertical-align:baseline;"></span> onboarding and mentoring new hires.</li>
+      <li>Success is <span data-grammar-input="gap-q12" data-grammar-acceptable="dependent on" style="display:inline-block;min-width:140px;vertical-align:baseline;"></span> how quickly we can resolve the technical issues.</li>
+      <li>All remote staff must have <span data-grammar-input="gap-q13" data-grammar-acceptable="access to" style="display:inline-block;min-width:140px;vertical-align:baseline;"></span> the shared project folder.</li>
+      <li>The director remained <span data-grammar-input="gap-q14" data-grammar-acceptable="open to" style="display:inline-block;min-width:140px;vertical-align:baseline;"></span> alternative solutions, even after the first plan failed.</li>
+    </ol>
+  </div>
+
+  <!-- Error Correction -->
+  <div class="section-block keep-together">
+    <h2>Error Correction</h2>
+    <p>Read the text below. It contains <strong>ten errors</strong> relating to phrasal verbs and dependent prepositions. Find and correct them, then use <strong>Reveal Errors</strong> to check.</p>
+
+    <div class="error-correction-item">
+      <input type="checkbox" id="pp-error-reveal" class="pp-reveal-toggle error-reveal-toggle" aria-hidden="true" tabindex="-1" />
+      <p class="error-student" style="font-size:16px;margin:0;line-height:1.65;">
+        When my manager travelled abroad, I had to fill on for her and quickly get to grips to the new approval system. I fell behind with several reports because I kept putting out difficult conversations with suppliers. When I realised I had made an error, I decided to own up for it immediately rather than try to cover it up. My colleague promised to follow through with the client meeting, but later backed out from the commitment when her workload increased. In the end, the delay come down with poor planning at the start of the project. All staff need access for the shared drive, and managers are responsible to delivering results on time.
+      </p>
+      <p class="error-revealed" style="font-size:16px;margin:0;line-height:1.65;">
+        When my manager travelled abroad, I had to <span class="err-strike">fill on for</span><span class="err-fix">fill in for</span> her and quickly <span class="err-strike">get to grips to</span><span class="err-fix">get to grips with</span> the new approval system. I <span class="err-strike">fell behind with</span><span class="err-fix">fell behind on</span> several reports because I kept <span class="err-strike">putting out</span><span class="err-fix">putting off</span> difficult conversations with suppliers. When I realised I had made an error, I decided to <span class="err-strike">own up for</span><span class="err-fix">own up to</span> it immediately rather than try to cover it up. My colleague promised to <span class="err-strike">follow through with</span><span class="err-fix">follow through on</span> the client meeting, but later <span class="err-strike">backed out from</span><span class="err-fix">backed out of</span> the commitment when her workload increased. In the end, the delay <span class="err-strike">come down with</span><span class="err-fix">came down to</span> poor planning at the start of the project. All staff need <span class="err-strike">access for</span><span class="err-fix">access to</span> the shared drive, and managers are <span class="err-strike">responsible to</span><span class="err-fix">responsible for</span> delivering results on time.
+      </p>
+      <label for="pp-error-reveal" class="pp-reveal-btn">Reveal Errors</label>
+    </div>
+  </div>
+
+</div>
+
+<!-- Answer Key -->
+<div class="pp-wrap page-break">
+  <div class="section-block keep-together">
+    <h2>Answer Key</h2>
+
+    <h3 style="margin-top:14px;">Speaking: Workplace Quiz</h3>
+    <p style="font-size:15px;">Personal reflection &mdash; no fixed answers. Compare your choices with a partner and discuss the phrasal verbs and dependent prepositions in each option.</p>
+
+    <h3 style="margin-top:18px;">Gap Fill</h3>
+    <ol class="dec-list" style="font-size:15px;">
+      <li>fill in for</li>
+      <li>put off</li>
+      <li>own up to</li>
+      <li>catch up on</li>
+      <li>follow through on</li>
+      <li>back out of</li>
+      <li>came down to</li>
+      <li>follow up on</li>
+      <li>get to grips with</li>
+      <li>stick to</li>
+      <li>responsible for</li>
+      <li>dependent on</li>
+      <li>access to</li>
+      <li>open to</li>
+    </ol>
+
+    <h3 style="margin-top:18px;">Vocabulary matching</h3>
+    <p style="font-size:15px;margin-bottom:8px;"><strong>Phrasal verbs:</strong> fill in for &bull; put off &bull; own up to &bull; cover up &bull; catch up on &bull; fall behind on &bull; follow through on &bull; back out of &bull; come down to &bull; stem from</p>
+    <p style="font-size:15px;"><strong>Dependent prepositions:</strong> responsible for &bull; access to &bull; dependent on &bull; confident in &bull; involved in &bull; open to &bull; curious about &bull; capable of &bull; focused on &bull; comfortable with</p>
+
+    <h3 style="margin-top:18px;">Error Correction</h3>
+    <p style="font-size:15px;">fill in for &bull; get to grips with &bull; fell behind on &bull; putting off &bull; own up to &bull; follow through on &bull; backed out of &bull; came down to &bull; access to &bull; responsible for</p>
+  </div>
+</div>

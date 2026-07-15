@@ -115,10 +115,52 @@ const QA_ITEMS: MatchItem[] = [
   },
 ]
 
+const PP_PHRASAL_VERB_ITEMS: MatchItem[] = [
+  { prompt: 'fill in for', answer: 'to temporarily do someone else\u2019s job or duties' },
+  { prompt: 'put off', answer: 'to postpone or delay something' },
+  { prompt: 'own up to', answer: 'to admit to something, especially a mistake' },
+  { prompt: 'cover up', answer: 'to hide or conceal something, especially a mistake' },
+  { prompt: 'catch up on', answer: 'to deal with work that has accumulated' },
+  { prompt: 'fall behind on', answer: 'to fail to keep up with something' },
+  { prompt: 'follow through on', answer: 'to complete what you promised to do' },
+  { prompt: 'back out of', answer: 'to withdraw from a commitment or agreement' },
+  { prompt: 'come down to', answer: 'to be ultimately a matter of; to depend on' },
+  { prompt: 'stem from', answer: 'to originate from or be caused by' },
+]
+
+const PP_DEPENDENT_PREP_ITEMS: MatchItem[] = [
+  { prompt: 'responsible for', answer: 'having a duty to deal with or take care of something' },
+  { prompt: 'access to', answer: 'the right or ability to use or see something' },
+  { prompt: 'dependent on', answer: 'determined or affected by; relying on' },
+  { prompt: 'confident in', answer: 'feeling sure about your ability or judgement' },
+  { prompt: 'involved in', answer: 'taking part in or connected with an activity' },
+  { prompt: 'open to', answer: 'willing to consider or accept something' },
+  { prompt: 'curious about', answer: 'interested in finding out more about something' },
+  { prompt: 'capable of', answer: 'having the ability or qualities to do something' },
+  { prompt: 'focused on', answer: 'giving attention or effort mainly to something' },
+  { prompt: 'comfortable with', answer: 'at ease with a situation or way of behaving' },
+]
+
 const CONFIG: Record<
   string,
   { items: MatchItem[]; labels: MatchLabels; audioBase?: string; chipAudioBase?: string }
 > = {
+  'pp-phrasal-verbs': {
+    items: PP_PHRASAL_VERB_ITEMS,
+    labels: {
+      promptColumn: 'Phrasal verb',
+      answerColumn: 'Meaning \u2014 drag left \u2192',
+      dropPlaceholder: 'Drag meaning here',
+    },
+  },
+  'pp-dependent-prepositions': {
+    items: PP_DEPENDENT_PREP_ITEMS,
+    labels: {
+      promptColumn: 'Expression',
+      answerColumn: 'Meaning \u2014 drag left \u2192',
+      dropPlaceholder: 'Drag meaning here',
+    },
+  },
   directions: {
     items: DIRECTIONS_ITEMS,
     labels: {
