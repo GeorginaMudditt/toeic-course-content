@@ -25,6 +25,7 @@ import {
   mountGrammarCheckSnapshotPanels,
   parseAcceptableAnswersForDisplay,
   parseAnswerKeyForDisplay,
+  parseGrammarCheckSnapshotsFromNotes,
   renderGrammarCheckSnapshotPanel,
   type GrammarCheckRunResult,
   getQuestionNumberForInput,
@@ -1002,26 +1003,28 @@ export default function WorksheetViewer({
   const grammarAnswers = getGrammarAnswers()
 
   const applyGrammarResultStyles = useCallback((field: HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement, result: GrammarCheckStatus) => {
-    field.style.backgroundImage = 'none'
     field.style.backgroundRepeat = 'no-repeat'
     field.style.backgroundSize = '14px 14px'
-    field.style.paddingRight = '24px'
     field.style.backgroundPosition = field.tagName === 'TEXTAREA' ? 'calc(100% - 6px) 8px' : 'calc(100% - 6px) center'
 
     if (result === 'correct') {
       field.style.borderColor = '#16a34a'
       field.style.backgroundColor = '#f0fdf4'
       field.style.backgroundImage = CHECK_ICON_TICK
+      field.style.paddingRight = '24px'
       return
     }
     if (result === 'incorrect') {
       field.style.borderColor = '#dc2626'
       field.style.backgroundColor = '#fef2f2'
       field.style.backgroundImage = CHECK_ICON_CROSS
+      field.style.paddingRight = '24px'
       return
     }
     field.style.borderColor = '#d97706'
     field.style.backgroundColor = '#fffbeb'
+    field.style.backgroundImage = 'none'
+    field.style.paddingRight = ''
   }, [])
 
   const buildGrammarAnswerMap = useCallback((): Map<string, string[]> => {
@@ -1231,6 +1234,32 @@ export default function WorksheetViewer({
 
     return runResult
   }, [applyGrammarResultStyles])
+
+  const scheduleGrammarLiveCheckReapply = useCallback(
+    (sections?: HTMLElement | HTMLElement[]) => {
+      const targets = sections
+        ? Array.isArray(sections)
+          ? sections
+          : [sections]
+        : (Array.from(
+            contentRef.current?.querySelectorAll('[data-grammar-live-check="true"]') || []
+          ) as HTMLElement[])
+
+      if (!targets.length) return
+
+      const reapply = () => {
+        const answerMap = buildGrammarAnswerMap()
+        targets.forEach((sec) => runGrammarCheckForContainer(sec, answerMap))
+      }
+
+      reapply()
+      requestAnimationFrame(reapply)
+      queueMicrotask(reapply)
+      window.setTimeout(reapply, 0)
+      window.setTimeout(reapply, 50)
+    },
+    [buildGrammarAnswerMap, runGrammarCheckForContainer]
+  )
   
   // Memoize writing value to prevent unnecessary re-renders
   const writingAnswerValue = useMemo(() => {
@@ -2068,18 +2097,8 @@ export default function WorksheetViewer({
     }
 
     // Re-apply tick/cross after React re-renders inputs (inline styles from Check Answers are otherwise cleared).
-    const liveSections = Array.from(
-      contentRef.current.querySelectorAll('[data-grammar-live-check="true"]')
-    ) as HTMLElement[]
-    if (liveSections.length > 0) {
-      const answerMap = buildGrammarAnswerMap()
-      const reapplyLiveCheck = () => {
-        liveSections.forEach((sec) => runGrammarCheckForContainer(sec, answerMap))
-      }
-      reapplyLiveCheck()
-      requestAnimationFrame(reapplyLiveCheck)
-    }
-  }, [notes, hasGrammarInputs, updateGrammarAnswer, buildGrammarAnswerMap, runGrammarCheckForContainer])
+    scheduleGrammarLiveCheckReapply()
+  }, [notes, hasGrammarInputs, updateGrammarAnswer, scheduleGrammarLiveCheckReapply])
 
   // Per-section "Check answers" for selected worksheets (e.g. Prepositions #1–#4). Practice blocks
   // can opt out with data-grammar-check-disabled="true" on their .keep-together (e.g. free-text #5).
@@ -2183,10 +2202,18 @@ export default function WorksheetViewer({
         const answerMap = buildGrammarAnswerMap()
         const checkResult = runGrammarCheckForContainer(section, answerMap)
         section.setAttribute('data-grammar-live-check', 'true')
+        scheduleGrammarLiveCheckReapply(section)
 
         const snapshotKey = section.getAttribute('data-grammar-check-snapshot')
         if (!snapshotKey || preventSave) return
-        if (hasGrammarCheckSnapshot(notesRef.current, snapshotKey)) return
+        if (hasGrammarCheckSnapshot(notesRef.current, snapshotKey)) {
+          const snapshots = parseGrammarCheckSnapshotsFromNotes(notesRef.current)
+          const existingSnapshot = snapshots[snapshotKey]
+          if (existingSnapshot) {
+            renderGrammarCheckSnapshotPanel(section, snapshotKey, existingSnapshot)
+          }
+          return
+        }
 
         const bookmarkSection = section.closest('[data-bookmark-label]') as HTMLElement | null
         const sectionLabel =
@@ -2223,7 +2250,7 @@ export default function WorksheetViewer({
       const controls = contentRef.current.querySelectorAll('.grammar-check-controls')
       controls.forEach((control) => control.remove())
     }
-  }, [hasGrammarInputs, grammarInputsReady, resource.content, resource.title, buildGrammarAnswerMap, runGrammarCheckForContainer, enablePerSectionGrammarCheck, preventSave])
+  }, [hasGrammarInputs, grammarInputsReady, resource.content, resource.title, buildGrammarAnswerMap, runGrammarCheckForContainer, scheduleGrammarLiveCheckReapply, enablePerSectionGrammarCheck, preventSave])
 
   useEffect(() => {
     if (!contentRef.current || !grammarInputsReady) return

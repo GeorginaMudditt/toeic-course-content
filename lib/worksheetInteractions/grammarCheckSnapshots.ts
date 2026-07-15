@@ -255,8 +255,11 @@ export function renderGrammarCheckSnapshotPanel(
           ? ' <span style="display:inline-block;margin-left:6px;padding:2px 8px;border-radius:999px;font-size:11px;font-weight:600;background:#dcfce7;color:#15803d;">Now corrected</span>'
           : ''
 
+        const revealId = `reveal-${sectionKey}-${mistake.inputId}`
         return `<li style="margin-bottom:10px;font-size:14px;line-height:1.55;color:#334155;">
-          ${escapeHtml(qLabel)}: you wrote <strong style="color:#b91c1c;font-weight:700;">${escapeHtml(mistake.studentAnswer || '(blank)')}</strong> → ${correctPhrase}${resolvedBadge}
+          ${escapeHtml(qLabel)}: you wrote <strong style="color:#b91c1c;font-weight:700;">${escapeHtml(mistake.studentAnswer || '(blank)')}</strong>
+          <button type="button" data-grammar-reveal-answer="${escapeHtml(revealId)}" style="margin-left:8px;padding:2px 10px;border:1px solid #cbd5e1;border-radius:6px;background:#fff;color:#38438f;font-size:12px;font-weight:600;cursor:pointer;font-family:inherit;line-height:1.4;">Reveal correct answer</button>
+          <span id="${escapeHtml(revealId)}" data-grammar-revealed-answer hidden style="margin-left:4px;"> → ${correctPhrase}</span>${resolvedBadge}
         </li>`
       })
       .join('')
@@ -279,6 +282,17 @@ export function renderGrammarCheckSnapshotPanel(
     ${bodyHtml}
     <p style="margin:12px 0 0 0;font-size:12px;color:#94a3b8;line-height:1.45;">This record stays here even after you correct your answers, so you can review what you got wrong.</p>
   `
+
+  panel.querySelectorAll<HTMLButtonElement>('[data-grammar-reveal-answer]').forEach((button) => {
+    button.addEventListener('click', () => {
+      const targetId = button.getAttribute('data-grammar-reveal-answer')
+      if (!targetId) return
+      const answerEl = panel.querySelector(`#${CSS.escape(targetId)}`) as HTMLElement | null
+      if (!answerEl) return
+      answerEl.hidden = false
+      button.remove()
+    })
+  })
 
   const controls = section.querySelector('.grammar-check-controls')
   if (controls?.parentNode) {
