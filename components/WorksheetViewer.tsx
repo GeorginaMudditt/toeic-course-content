@@ -2857,7 +2857,7 @@ export default function WorksheetViewer({
   }, [resource.content])
 
   useLayoutEffect(() => {
-    if (!hasVocabGapFill) return
+    if (!hasVocabGapFill || !isClientMounted) return
     let detach: (() => void) | undefined
     let cancelled = false
 
@@ -2883,11 +2883,11 @@ export default function WorksheetViewer({
       cancelAnimationFrame(rafId)
       detach?.()
     }
-  }, [hasVocabGapFill, resource.content])
+  }, [hasVocabGapFill, resource.content, isClientMounted])
 
   // Interactive worksheet activities (drag-and-drop, listening, etc.).
   useLayoutEffect(() => {
-    if (!hasMountedWorksheetActivities) return
+    if (!hasMountedWorksheetActivities || !isClientMounted) return
     let detach: (() => void) | undefined
     const giaqCleanups: (() => void)[] = []
     let cancelled = false
@@ -2908,7 +2908,8 @@ export default function WorksheetViewer({
         const giaqEls = Array.from(host.querySelectorAll('[data-giaq-match]')) as HTMLElement[]
         const listeningEl = host.querySelector('[data-giaq-listening]') as HTMLElement | null
         const matchesReady =
-          giaqEls.length === 0 || giaqEls.every((el) => el.getAttribute('data-giaq-mounted') === 'true')
+          giaqEls.length > 0 &&
+          giaqEls.every((el) => el.getAttribute('data-giaq-mounted') === 'true')
         const listeningReady =
           !listeningEl || listeningEl.getAttribute('data-giaq-listening-mounted') === 'true'
         if (!matchesReady || !listeningReady) mountGiaqPanels()
@@ -2944,7 +2945,7 @@ export default function WorksheetViewer({
       giaqCleanups.forEach((fn) => fn())
       detach?.()
     }
-  }, [resource.content, hasMountedWorksheetActivities, hasGiaqActivities])
+  }, [resource.content, hasMountedWorksheetActivities, hasGiaqActivities, isClientMounted])
 
   // Static phrase lists with 🔊 buttons (e.g. Natur'Evasion Vocabulary).
   useLayoutEffect(() => {

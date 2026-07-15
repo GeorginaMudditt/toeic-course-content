@@ -24,6 +24,7 @@
     .pp-highlight-btn, .pp-highlight-toggle {
       display: none !important;
     }
+    .pp-error-correction-actions audio { display: none !important; }
     .error-correction-item .error-revealed { display: none !important; }
     .kl-actions, .kl-chip-slot { display: none !important; }
     .kl-drop {
@@ -303,6 +304,24 @@
 
   .pp-reveal-btn:hover {
     background: var(--pp-accent-dark);
+  }
+
+  .pp-error-correction-actions {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-top: 14px;
+    flex-wrap: wrap;
+  }
+
+  .pp-error-correction-actions .pp-reveal-btn {
+    margin-top: 0;
+  }
+
+  .pp-error-correction-actions audio {
+    max-width: 420px;
+    height: 40px;
+    flex: 1 1 240px;
   }
 
   .error-correction-item .error-revealed {
@@ -730,17 +749,20 @@
   <!-- Error Correction -->
   <div class="section-block keep-together">
     <h2>Error Correction</h2>
-    <p>Read the text below. It contains <strong>ten errors</strong> relating to phrasal verbs and dependent prepositions. Find and correct them, then use <strong>Reveal Errors</strong> to check.</p>
+    <p>Read a manager&rsquo;s speech to welcome new employees. The text contains ten errors. Find and correct the mistakes, then use the <strong>Reveal Errors</strong> button to check.</p>
 
     <div class="error-correction-item">
       <input type="checkbox" id="pp-error-reveal" class="pp-reveal-toggle error-reveal-toggle" aria-hidden="true" tabindex="-1" />
-      <p class="error-student" style="font-size:16px;margin:0;line-height:1.65;">
-        When my manager travelled abroad, I had to fill on for her and quickly get to grips to the new approval system. I fell behind with several reports because I kept putting out difficult conversations with suppliers. When I realised I had made an error, I decided to own up for it immediately rather than try to cover it up. My colleague promised to follow through with the client meeting, but later backed out from the commitment when her workload increased. In the end, the delay come down with poor planning at the start of the project. All staff need access for the shared drive, and managers are responsible to delivering results on time.
-      </p>
-      <p class="error-revealed" style="font-size:16px;margin:0;line-height:1.65;">
-        When my manager travelled abroad, I had to <span class="err-strike">fill on for</span><span class="err-fix">fill in for</span> her and quickly <span class="err-strike">get to grips to</span><span class="err-fix">get to grips with</span> the new approval system. I <span class="err-strike">fell behind with</span><span class="err-fix">fell behind on</span> several reports because I kept <span class="err-strike">putting out</span><span class="err-fix">putting off</span> difficult conversations with suppliers. When I realised I had made an error, I decided to <span class="err-strike">own up for</span><span class="err-fix">own up to</span> it immediately rather than try to cover it up. My colleague promised to <span class="err-strike">follow through with</span><span class="err-fix">follow through on</span> the client meeting, but later <span class="err-strike">backed out from</span><span class="err-fix">backed out of</span> the commitment when her workload increased. In the end, the delay <span class="err-strike">come down with</span><span class="err-fix">came down to</span> poor planning at the start of the project. All staff need <span class="err-strike">access for</span><span class="err-fix">access to</span> the shared drive, and managers are <span class="err-strike">responsible to</span><span class="err-fix">responsible for</span> delivering results on time.
-      </p>
-      <label for="pp-error-reveal" class="pp-reveal-btn">Reveal Errors</label>
+      <p class="error-student" style="font-size:16px;margin:0 0 14px 0;line-height:1.7;font-style:italic;color:#334155;">&ldquo;Welcome to Harbourline Logistics. I want to talk to you briefly about the culture you&rsquo;re joining here at Harbourline, because I truly believe that our success comes down about the people we have working here.</p>
+      <p class="error-student" style="font-size:16px;margin:0 0 14px 0;line-height:1.7;font-style:italic;color:#334155;">Our strong team players are involved at work that sits just outside their formal role. Many of our most effective process changes have stemmed of curiosity. It can lead to innovative ideas when a staff member becomes curious with how another department operates and asks one simple question that gets everyone thinking.</p>
+      <p class="error-student" style="font-size:16px;margin:0;line-height:1.7;font-style:italic;color:#334155;">One of our key values is integrity. When something goes wrong, such as a missed handover or a duplicated shipment note, address it openly instead of trying to cover it over. We want our staff to be comfortable on admitting mistakes and capable to learning from feedback. Stay focused in the standards we agree in together, and please don&rsquo;t hesitate to ask for help if you need it. If your first fortnight feels overwhelming and you fall behind over your onboarding checklist, tell your buddy immediately. We&rsquo;d rather reorganise a deadline than discover a problem too late.&rdquo;</p>
+      <p class="error-revealed" style="font-size:16px;margin:0 0 14px 0;line-height:1.7;font-style:italic;color:#334155;">&ldquo;Welcome to Harbourline Logistics. I want to talk to you briefly about the culture you&rsquo;re joining here at Harbourline, because I truly believe that our success <span class="err-strike">comes down about</span><span class="err-fix">comes down to</span> the people we have working here.</p>
+      <p class="error-revealed" style="font-size:16px;margin:0 0 14px 0;line-height:1.7;font-style:italic;color:#334155;">Our strong team players are <span class="err-strike">involved at</span><span class="err-fix">involved in</span> work that sits just outside their formal role. Many of our most effective process changes have <span class="err-strike">stemmed of</span><span class="err-fix">stemmed from</span> curiosity. It can lead to innovative ideas when a staff member becomes <span class="err-strike">curious with</span><span class="err-fix">curious about</span> how another department operates and asks one simple question that gets everyone thinking.</p>
+      <p class="error-revealed" style="font-size:16px;margin:0;line-height:1.7;font-style:italic;color:#334155;">One of our key values is integrity. When something goes wrong, such as a missed handover or a duplicated shipment note, address it openly instead of trying to <span class="err-strike">cover it over</span><span class="err-fix">cover it up</span>. We want our staff to be <span class="err-strike">comfortable on</span><span class="err-fix">comfortable with</span> admitting mistakes and <span class="err-strike">capable to</span><span class="err-fix">capable of</span> learning from feedback. Stay <span class="err-strike">focused in</span><span class="err-fix">focused on</span> the standards we <span class="err-strike">agree in</span><span class="err-fix">agree on</span> together, and please don&rsquo;t hesitate to ask for help if you need it. If your first fortnight feels overwhelming and you <span class="err-strike">fall behind over</span><span class="err-fix">fall behind on</span> your onboarding checklist, tell your buddy immediately. We&rsquo;d rather reorganise a deadline than discover a problem too late.&rdquo;</p>
+      <div class="pp-error-correction-actions">
+        <label for="pp-error-reveal" class="pp-reveal-btn">Reveal Errors</label>
+        <audio controls preload="metadata" src="/listening-audio/listening-letters-numbers/harbourline-logistics.mp3">Your browser does not support audio playback.</audio>
+      </div>
     </div>
   </div>
 
@@ -777,6 +799,6 @@
     <p style="font-size:15px;"><strong>Dependent prepositions:</strong> responsible for &bull; access to &bull; dependent on &bull; confident in &bull; involved in &bull; open to &bull; curious about &bull; capable of &bull; focused on &bull; comfortable with</p>
 
     <h3 style="margin-top:18px;">Error Correction</h3>
-    <p style="font-size:15px;">fill in for &bull; get to grips with &bull; fell behind on &bull; putting off &bull; own up to &bull; follow through on &bull; backed out of &bull; came down to &bull; access to &bull; responsible for</p>
+    <p style="font-size:15px;">comes down to &bull; involved in &bull; stemmed from &bull; curious about &bull; cover up &bull; comfortable with &bull; capable of &bull; focused on &bull; agree on &bull; fall behind on</p>
   </div>
 </div>
