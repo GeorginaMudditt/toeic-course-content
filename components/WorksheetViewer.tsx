@@ -34,6 +34,10 @@ import { mountPresentingServicesProductsActivities } from '@/lib/worksheetIntera
 import { mountWritingPracticeTimers } from '@/lib/worksheetInteractions/writingPracticeTimers'
 import { mountPlacementTestCheckAnswers } from '@/lib/worksheetInteractions/placementTestCheckAnswers'
 import {
+  mountWordBankTrackers,
+  syncWordBankTrackers,
+} from '@/lib/worksheetInteractions/wordBankTracker'
+import {
   formatFeedbackForDisplay,
   getFeedbackNotesKey,
   getInputIdForTask,
@@ -881,6 +885,8 @@ export default function WorksheetViewer({
     typeof resource.content === 'string' && resource.content.includes('data-writing-timer-minutes')
   const hasBookmarkableSections =
     typeof resource.content === 'string' && resource.content.includes('data-bookmarkable')
+  const hasWordBankTracker =
+    typeof resource.content === 'string' && resource.content.includes('data-word-bank-tracker')
   const bookmarkedSlugsRef = useRef(new Set(initialBookmarkedSlugs))
 
   /** Per-section Check Answers + live tick/cross (see resources using data-grammar-per-section-check). */
@@ -2976,6 +2982,28 @@ export default function WorksheetViewer({
   useEffect(() => {
     bookmarkedSlugsRef.current = new Set(initialBookmarkedSlugs)
   }, [initialBookmarkedSlugs])
+
+  // Word bank auto-strike when gap-fill phrases are typed.
+  useLayoutEffect(() => {
+    if (!hasWordBankTracker || !grammarInputsReady || !isClientMounted) return
+    let detach: (() => void) | undefined
+    const rafId = requestAnimationFrame(() => {
+      const host = contentRef.current
+      if (!host) return
+      detach = mountWordBankTrackers(host)
+    })
+    return () => {
+      cancelAnimationFrame(rafId)
+      detach?.()
+    }
+  }, [hasWordBankTracker, grammarInputsReady, isClientMounted, resource.content])
+
+  useEffect(() => {
+    if (!hasWordBankTracker || !grammarInputsReady) return
+    const host = contentRef.current
+    if (!host) return
+    syncWordBankTrackers(host)
+  }, [notes, hasWordBankTracker, grammarInputsReady])
 
   // Bookmarkable reference sections (e.g. PRO Speaking language panels).
   useLayoutEffect(() => {

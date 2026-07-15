@@ -250,6 +250,37 @@
     margin-top: 8px;
   }
 
+  .pp-word-bank {
+    font-size: 15px;
+    padding: 12px 14px;
+    background: #eef2ff;
+    border-radius: 8px;
+    border-left: 3px solid #4338ca;
+    margin-bottom: 14px;
+  }
+
+  .pp-word-bank-heading {
+    margin: 0 0 8px 0;
+    font-size: 15px;
+  }
+
+  .pp-word-bank-items {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 14px;
+  }
+
+  .pp-word-bank-item {
+    display: inline-block;
+    transition: color 0.15s ease, opacity 0.15s ease;
+  }
+
+  .pp-word-bank-item.word-bank-item--used {
+    text-decoration: line-through;
+    color: #94a3b8;
+    opacity: 0.8;
+  }
+
   .pp-reveal-toggle {
     position: absolute;
     opacity: 0;
@@ -658,8 +689,26 @@
   <!-- Gap Fill -->
   <div class="section-block keep-together" data-bookmarkable="gap-fill" data-bookmark-label="Gap Fill" data-grammar-per-section-check="true">
     <h2>Gap Fill</h2>
-    <p>Complete each sentence with the correct phrase from the box. Each phrase is used once.</p>
-    <p style="font-size:15px;padding:12px 14px;background:#eef2ff;border-radius:8px;border-left:3px solid #4338ca;margin-bottom:14px;"><strong>Word bank:</strong> access to &bull; back out of &bull; catch up on &bull; come down to &bull; dependent on &bull; fill in for &bull; follow through on &bull; follow up on &bull; get to grips with &bull; open to &bull; own up to &bull; put off &bull; responsible for &bull; stick to</p>
+    <p>Complete each sentence with the correct phrase from the box. Each phrase is used once. Phrases strike through in the word bank when you use them.</p>
+    <div class="pp-word-bank" data-word-bank-tracker aria-label="Word bank">
+      <p class="pp-word-bank-heading"><strong>Word bank:</strong></p>
+      <div class="pp-word-bank-items">
+        <span class="pp-word-bank-item" data-word-bank-item="access to">access to</span>
+        <span class="pp-word-bank-item" data-word-bank-item="back out of">back out of</span>
+        <span class="pp-word-bank-item" data-word-bank-item="catch up on">catch up on</span>
+        <span class="pp-word-bank-item" data-word-bank-item="come down to">come down to</span>
+        <span class="pp-word-bank-item" data-word-bank-item="dependent on">dependent on</span>
+        <span class="pp-word-bank-item" data-word-bank-item="fill in for">fill in for</span>
+        <span class="pp-word-bank-item" data-word-bank-item="follow through on">follow through on</span>
+        <span class="pp-word-bank-item" data-word-bank-item="follow up on">follow up on</span>
+        <span class="pp-word-bank-item" data-word-bank-item="get to grips with">get to grips with</span>
+        <span class="pp-word-bank-item" data-word-bank-item="open to">open to</span>
+        <span class="pp-word-bank-item" data-word-bank-item="own up to">own up to</span>
+        <span class="pp-word-bank-item" data-word-bank-item="put off">put off</span>
+        <span class="pp-word-bank-item" data-word-bank-item="responsible for">responsible for</span>
+        <span class="pp-word-bank-item" data-word-bank-item="stick to">stick to</span>
+      </div>
+    </div>
     <ol class="dec-list">
       <li>When Elena went on leave, I had to <span data-grammar-input="gap-q1" data-grammar-acceptable="fill in for" style="display:inline-block;min-width:140px;vertical-align:baseline;"></span> her and approve urgent requests.</li>
       <li>We shouldn&rsquo;t <span data-grammar-input="gap-q2" data-grammar-acceptable="put off" style="display:inline-block;min-width:140px;vertical-align:baseline;"></span> the performance review conversations any longer.</li>
