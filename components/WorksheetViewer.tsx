@@ -31,6 +31,7 @@ import {
   getQuestionNumberForInput,
 } from '@/lib/worksheetInteractions/grammarCheckSnapshots'
 import { mountPresentingServicesProductsActivities } from '@/lib/worksheetInteractions/presentingServicesProductsKeyLanguage'
+import { mountOpinionRankings } from '@/lib/worksheetInteractions/opinionRanking'
 import { mountWritingPracticeTimers } from '@/lib/worksheetInteractions/writingPracticeTimers'
 import { mountPlacementTestCheckAnswers } from '@/lib/worksheetInteractions/placementTestCheckAnswers'
 import {
@@ -887,6 +888,8 @@ export default function WorksheetViewer({
     typeof resource.content === 'string' && resource.content.includes('data-bookmarkable')
   const hasWordBankTracker =
     typeof resource.content === 'string' && resource.content.includes('data-word-bank-tracker')
+  const hasOpinionRanking =
+    typeof resource.content === 'string' && resource.content.includes('data-opinion-ranking')
   const bookmarkedSlugsRef = useRef(new Set(initialBookmarkedSlugs))
 
   /** Per-section Check Answers + live tick/cross (see resources using data-grammar-per-section-check). */
@@ -2946,6 +2949,21 @@ export default function WorksheetViewer({
       detach?.()
     }
   }, [resource.content, hasMountedWorksheetActivities, hasGiaqActivities, isClientMounted])
+
+  // Opinion ranking drag-and-drop (no right/wrong answers).
+  useLayoutEffect(() => {
+    if (!hasOpinionRanking || !isClientMounted) return
+    let detach: (() => void) | undefined
+    const rafId = requestAnimationFrame(() => {
+      const host = contentRef.current
+      if (!host) return
+      detach = mountOpinionRankings(host)
+    })
+    return () => {
+      cancelAnimationFrame(rafId)
+      detach?.()
+    }
+  }, [hasOpinionRanking, resource.content, isClientMounted])
 
   // Static phrase lists with 🔊 buttons (e.g. Natur'Evasion Vocabulary).
   useLayoutEffect(() => {

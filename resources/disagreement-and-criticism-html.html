@@ -1,0 +1,575 @@
+<!-- Listening: Disagreement and Criticism (C1) -->
+<style>
+  @media print {
+    @page {
+      margin: 1.5cm;
+    }
+    body {
+      margin: 0;
+      padding: 0;
+    }
+    .page-break {
+      page-break-before: always;
+    }
+    .no-break {
+      page-break-inside: avoid;
+      break-inside: avoid;
+    }
+    .keep-together {
+      page-break-inside: avoid;
+      break-inside: avoid;
+    }
+    h2, h3 {
+      page-break-after: avoid;
+      break-after: avoid;
+    }
+    ul, ol {
+      page-break-inside: avoid;
+      break-inside: avoid;
+    }
+    .screen-only {
+      display: none !important;
+    }
+    .print-only {
+      display: block !important;
+    }
+  }
+
+  .print-only {
+    display: none;
+  }
+
+  ol {
+    list-style-type: decimal !important;
+    list-style-position: outside !important;
+    padding-left: 24px !important;
+  }
+
+  ul {
+    list-style-type: disc !important;
+    list-style-position: outside !important;
+    padding-left: 22px !important;
+  }
+
+  li {
+    display: list-item !important;
+  }
+
+  .language-panels-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+  @media (min-width: 768px) {
+    .language-panels-grid {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+  @media print {
+    .language-panels-grid {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  .dac-audio-wrap {
+    margin: 0 0 16px 0;
+    padding: 14px 16px;
+    background: #f0f9ff;
+    border: 1px solid #bae6fd;
+    border-radius: 8px;
+  }
+
+  .dac-audio-wrap audio {
+    width: 100%;
+    max-width: 560px;
+    height: 44px;
+    display: block;
+  }
+
+  .dac-audio-placeholder {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    align-items: flex-start;
+  }
+
+  .dac-audio-placeholder-note {
+    margin: 0;
+    font-size: 14px;
+    color: #64748b;
+    font-style: italic;
+  }
+
+  .dac-audio-placeholder audio {
+    opacity: 0.55;
+    pointer-events: none;
+  }
+
+  .dac-gist-row {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    margin-bottom: 12px;
+    flex-wrap: wrap;
+    font-size: 17px;
+  }
+
+  .dac-gist-row:last-child {
+    margin-bottom: 0;
+  }
+
+  .dac-mcq {
+    margin-bottom: 18px;
+    padding-bottom: 14px;
+    border-bottom: 1px solid #e2e8f0;
+  }
+
+  .dac-mcq:last-child {
+    margin-bottom: 0;
+    padding-bottom: 0;
+    border-bottom: none;
+  }
+
+  .dac-mcq-options {
+    margin: 8px 0 10px 0;
+    padding-left: 22px;
+    list-style-type: none !important;
+    font-size: 16px;
+  }
+
+  .dac-mcq-options li {
+    margin-bottom: 4px;
+  }
+
+  /* Opinion ranking (drag-and-drop, no scoring) */
+  [data-opinion-ranking] [data-rank-list] {
+    list-style: none !important;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  [data-opinion-ranking] [data-rank-item] {
+    display: flex !important;
+    align-items: flex-start;
+    gap: 12px;
+    margin: 0 !important;
+    padding: 12px 14px;
+    background: #ffffff;
+    border: 2px solid #c7d2fe;
+    border-radius: 8px;
+    cursor: grab;
+    user-select: none;
+    font-size: 16px;
+    line-height: 1.45;
+    transition: border-color 0.15s, box-shadow 0.15s, transform 0.15s;
+  }
+
+  [data-opinion-ranking] [data-rank-item]:active {
+    cursor: grabbing;
+  }
+
+  [data-opinion-ranking] [data-rank-item].is-dragging {
+    opacity: 0.55;
+    box-shadow: 0 4px 14px rgba(67, 56, 202, 0.18);
+  }
+
+  [data-opinion-ranking] [data-rank-item].is-over {
+    border-color: #6366f1;
+  }
+
+  [data-opinion-ranking] [data-rank-item]:focus {
+    outline: 2px solid #6366f1;
+    outline-offset: 2px;
+  }
+
+  [data-opinion-ranking] [data-rank-number] {
+    flex: 0 0 auto;
+    min-width: 1.75rem;
+    height: 1.75rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 999px;
+    background: #4338ca;
+    color: #ffffff;
+    font-weight: 700;
+    font-size: 14px;
+  }
+
+  [data-opinion-ranking] .rank-handle {
+    flex: 0 0 auto;
+    color: #94a3b8;
+    font-size: 14px;
+    line-height: 1.75rem;
+    letter-spacing: -0.05em;
+  }
+
+  [data-opinion-ranking] .rank-text {
+    flex: 1 1 auto;
+  }
+
+  .dac-audioscript summary,
+  .dac-answer-key summary {
+    cursor: pointer;
+    font-size: 17px;
+    color: #1e3a8a;
+    padding: 8px 0;
+  }
+
+  .dac-audioscript-body {
+    font-size: 16px;
+    line-height: 1.55;
+    color: #334155;
+  }
+
+  .dac-audioscript-body p {
+    margin: 0 0 12px 0;
+  }
+
+  .dac-audioscript-body p:last-child {
+    margin-bottom: 0;
+  }
+</style>
+
+<div style="width: 90%; max-width: 100%; margin: 0 auto; padding: 25px; box-sizing: border-box; font-family: Arial, sans-serif; line-height: 1.6; color: #333;">
+
+  <!-- Title -->
+  <div style="text-align: center; margin-bottom: 20px; padding: 15px; background: linear-gradient(135deg, #0f766e 0%, #115e59 100%); border-radius: 10px;" class="no-break">
+    <div style="display: inline-block; margin-bottom: 8px;">
+      <img src="/brizzle-logo.png" alt="Brizzle Logo" style="width: 50px; height: 50px; object-fit: contain; background: white; padding: 5px; border-radius: 50%;" />
+    </div>
+    <h1 style="font-size: 28px; font-weight: bold; margin: 0; color: #ffffff;">Disagreement and Criticism</h1>
+    <p style="margin: 8px 0 0 0; font-size: 16px; color: #ccfbf1; font-weight: 600;">Listening &middot; C1</p>
+  </div>
+
+  <!-- Speaking -->
+  <div style="margin-bottom: 25px; padding: 20px; background: linear-gradient(to bottom, #ccfbf1, #ffffff); border-radius: 8px; border-left: 5px solid #0d9488;" class="keep-together">
+    <h2 style="font-size: 22px; font-weight: bold; margin-bottom: 12px; color: #134e4a;">Speaking</h2>
+    <p style="font-size: 17px; margin: 0 0 14px 0;">Discuss the following questions.</p>
+    <ul style="margin: 0; padding-left: 24px; font-size: 17px;">
+      <li style="margin-bottom: 12px;">&ldquo;If you don&rsquo;t have anything nice to say, don&rsquo;t say anything at all.&rdquo; How far do you agree with this statement?</li>
+      <li style="margin-bottom: 12px;">How comfortable are you disagreeing with people at work?</li>
+      <li style="margin-bottom: 12px;">Is avoiding conflict usually a good idea in a professional setting? Why / Why not?</li>
+      <li style="margin-bottom: 12px;">What&rsquo;s the difference between criticism and constructive criticism?</li>
+      <li style="margin-bottom: 12px;">Have you ever received criticism at work that was particularly helpful? What made it effective?</li>
+      <li style="margin-bottom: 12px;">Have you ever received criticism at work that upset or offended you?</li>
+      <li style="margin-bottom: 12px;">Can being too polite sometimes create misunderstandings?</li>
+      <li style="margin-bottom: 12px;">Is it easier to disagree with a colleague, a manager or a customer? Why?</li>
+      <li style="margin-bottom: 12px;">How direct do you think people should be when giving negative feedback?</li>
+      <li style="margin-bottom: 0;">In French culture, do you think disagreement and criticism are generally expressed directly or indirectly? How does this compare to other cultures you know?</li>
+    </ul>
+  </div>
+
+  <!-- Vocabulary (bookmarkable) -->
+  <div data-bookmarkable="vocabulary" data-bookmark-label="Vocabulary: Disagreement &amp; Criticism" style="margin-bottom: 25px; padding: 20px; background: linear-gradient(to bottom, #e0e7ff, #ffffff); border-radius: 8px; border-left: 5px solid #6366f1;" class="keep-together">
+    <h2 style="font-size: 22px; font-weight: bold; margin-bottom: 14px; color: #3730a3;">Vocabulary</h2>
+
+    <h3 style="font-size: 18px; font-weight: bold; margin: 0 0 12px 0; color: #4338ca;">A. Disagreement</h3>
+    <div class="language-panels-grid" style="margin-bottom: 18px;">
+      <div style="background: white; padding: 16px; border-radius: 8px; border: 2px solid #c7d2fe;">
+        <h4 style="font-size: 17px; font-weight: bold; margin: 0 0 10px 0; color: #4338ca;">Soft disagreement</h4>
+        <ul style="margin: 0; padding-left: 20px; font-size: 16px;">
+          <li style="margin-bottom: 6px;">I&rsquo;m not entirely convinced by that.</li>
+          <li style="margin-bottom: 6px;">I see your point, but&hellip;</li>
+          <li style="margin-bottom: 6px;">That&rsquo;s a fair point. However&hellip;</li>
+          <li style="margin-bottom: 6px;">I can understand where you&rsquo;re coming from, although&hellip;</li>
+          <li style="margin-bottom: 6px;">I&rsquo;m not sure that&rsquo;s the best approach.</li>
+          <li style="margin-bottom: 6px;">I&rsquo;d look at it slightly differently.</li>
+          <li style="margin-bottom: 6px;">I&rsquo;m afraid I don&rsquo;t quite agree.</li>
+          <li style="margin-bottom: 0;">We may have to agree to disagree.</li>
+        </ul>
+      </div>
+      <div style="background: white; padding: 16px; border-radius: 8px; border: 2px solid #c7d2fe;">
+        <h4 style="font-size: 17px; font-weight: bold; margin: 0 0 10px 0; color: #4338ca;">Firmer disagreement</h4>
+        <ul style="margin: 0; padding-left: 20px; font-size: 16px;">
+          <li style="margin-bottom: 6px;">I don&rsquo;t think that&rsquo;s the right solution.</li>
+          <li style="margin-bottom: 6px;">I have some reservations about that.</li>
+          <li style="margin-bottom: 6px;">I see a few issues with that proposal.</li>
+          <li style="margin-bottom: 6px;">I&rsquo;m concerned that this approach could&hellip;</li>
+          <li style="margin-bottom: 6px;">I&rsquo;d strongly question whether&hellip;</li>
+          <li style="margin-bottom: 0;">I respectfully disagree.</li>
+        </ul>
+      </div>
+    </div>
+
+    <h3 style="font-size: 18px; font-weight: bold; margin: 0 0 12px 0; color: #4338ca;">B. Constructive Criticism</h3>
+    <div class="language-panels-grid">
+      <div style="background: white; padding: 16px; border-radius: 8px; border: 2px solid #c7d2fe;">
+        <h4 style="font-size: 17px; font-weight: bold; margin: 0 0 10px 0; color: #4338ca;">Introducing criticism politely</h4>
+        <ul style="margin: 0; padding-left: 20px; font-size: 16px;">
+          <li style="margin-bottom: 6px;">Could I make one suggestion?</li>
+          <li style="margin-bottom: 6px;">May I offer some feedback?</li>
+          <li style="margin-bottom: 6px;">If I could make one observation&hellip;</li>
+          <li style="margin-bottom: 6px;">One thing that might improve this is&hellip;</li>
+          <li style="margin-bottom: 0;">Have you considered&hellip;?</li>
+        </ul>
+      </div>
+      <div style="background: white; padding: 16px; border-radius: 8px; border: 2px solid #c7d2fe;">
+        <h4 style="font-size: 17px; font-weight: bold; margin: 0 0 10px 0; color: #4338ca;">Giving criticism</h4>
+        <ul style="margin: 0; padding-left: 20px; font-size: 16px;">
+          <li style="margin-bottom: 6px;">The presentation was clear, but it could be more concise.</li>
+          <li style="margin-bottom: 6px;">I think the report would benefit from more data.</li>
+          <li style="margin-bottom: 6px;">The design doesn&rsquo;t fully meet the client&rsquo;s brief.</li>
+          <li style="margin-bottom: 6px;">There are a few areas that could be strengthened.</li>
+          <li style="margin-bottom: 6px;">I&rsquo;m concerned that customers might find this confusing.</li>
+          <li style="margin-bottom: 0;">I think we need to rethink this section.</li>
+        </ul>
+      </div>
+      <div style="background: white; padding: 16px; border-radius: 8px; border: 2px solid #c7d2fe; grid-column: 1 / -1;">
+        <h4 style="font-size: 17px; font-weight: bold; margin: 0 0 10px 0; color: #4338ca;">Ending positively</h4>
+        <ul style="margin: 0; padding-left: 20px; font-size: 16px;">
+          <li style="margin-bottom: 6px;">Overall, it&rsquo;s a strong piece of work.</li>
+          <li style="margin-bottom: 6px;">It&rsquo;s definitely moving in the right direction.</li>
+          <li style="margin-bottom: 6px;">Once we&rsquo;ve addressed those points, I think it&rsquo;ll be much stronger.</li>
+          <li style="margin-bottom: 0;">I really like the overall direction.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- PAGE 2: Rating + Listening -->
+<div style="width: 90%; max-width: 100%; margin: 0 auto; padding: 25px; box-sizing: border-box; font-family: Arial, sans-serif; line-height: 1.6; color: #333;" class="page-break">
+
+  <!-- Rating Activity -->
+  <div style="margin-bottom: 25px; padding: 20px; background: linear-gradient(to bottom, #fef3c7, #ffffff); border-radius: 8px; border-left: 5px solid #f59e0b;" class="keep-together" data-grammar-check-disabled="true">
+    <h2 style="font-size: 22px; font-weight: bold; margin-bottom: 12px; color: #92400e;">Rating Activity</h2>
+    <p style="font-size: 17px; margin: 0 0 10px 0;">You have received customer feedback saying that your company&rsquo;s website is difficult to use.</p>
+    <p style="font-size: 17px; margin: 0 0 8px 0;"><strong>Rank the responses from 1 (most polite) to 6 (least polite).</strong></p>
+    <p class="screen-only" style="font-size: 15px; margin: 0 0 14px 0; color: #78716c;">Drag and drop to rearrange. There are no right or wrong answers — discuss your ranking with a partner.</p>
+    <p class="print-only" style="font-size: 15px; margin: 0 0 14px 0; color: #78716c;">Number each response from 1 (most polite) to 6 (least polite). There are no right or wrong answers.</p>
+
+    <div data-opinion-ranking class="screen-only" style="margin-bottom: 18px;">
+      <ul data-rank-list>
+        <li data-rank-item data-rank-id="A">
+          <span class="rank-handle" aria-hidden="true">⠿</span>
+          <span data-rank-number>1</span>
+          <span class="rank-text"><strong>A.</strong> You may have misunderstood how the website works.</span>
+        </li>
+        <li data-rank-item data-rank-id="B">
+          <span class="rank-handle" aria-hidden="true">⠿</span>
+          <span data-rank-number>2</span>
+          <span class="rank-text"><strong>B.</strong> I can see why you felt that way, although our data suggests most customers find it straightforward.</span>
+        </li>
+        <li data-rank-item data-rank-id="C">
+          <span class="rank-handle" aria-hidden="true">⠿</span>
+          <span data-rank-number>3</span>
+          <span class="rank-text"><strong>C.</strong> Thank you for your feedback. We&rsquo;d like to understand which parts you found difficult.</span>
+        </li>
+        <li data-rank-item data-rank-id="D">
+          <span class="rank-handle" aria-hidden="true">⠿</span>
+          <span data-rank-number>4</span>
+          <span class="rank-text"><strong>D.</strong> I don&rsquo;t think that&rsquo;s a fair assessment of the website.</span>
+        </li>
+        <li data-rank-item data-rank-id="E">
+          <span class="rank-handle" aria-hidden="true">⠿</span>
+          <span data-rank-number>5</span>
+          <span class="rank-text"><strong>E.</strong> With respect, I think that&rsquo;s an exaggeration.</span>
+        </li>
+        <li data-rank-item data-rank-id="F">
+          <span class="rank-handle" aria-hidden="true">⠿</span>
+          <span data-rank-number>6</span>
+          <span class="rank-text"><strong>F.</strong> I appreciate your perspective, but I&rsquo;d have to disagree.</span>
+        </li>
+      </ul>
+    </div>
+
+    <ol class="print-only" style="margin: 0 0 18px 0; padding-left: 28px; font-size: 16px;">
+      <li style="margin-bottom: 8px;"><strong>A.</strong> You may have misunderstood how the website works. &nbsp;&nbsp; Rank: ______</li>
+      <li style="margin-bottom: 8px;"><strong>B.</strong> I can see why you felt that way, although our data suggests most customers find it straightforward. &nbsp;&nbsp; Rank: ______</li>
+      <li style="margin-bottom: 8px;"><strong>C.</strong> Thank you for your feedback. We&rsquo;d like to understand which parts you found difficult. &nbsp;&nbsp; Rank: ______</li>
+      <li style="margin-bottom: 8px;"><strong>D.</strong> I don&rsquo;t think that&rsquo;s a fair assessment of the website. &nbsp;&nbsp; Rank: ______</li>
+      <li style="margin-bottom: 8px;"><strong>E.</strong> With respect, I think that&rsquo;s an exaggeration. &nbsp;&nbsp; Rank: ______</li>
+      <li style="margin-bottom: 0;"><strong>F.</strong> I appreciate your perspective, but I&rsquo;d have to disagree. &nbsp;&nbsp; Rank: ______</li>
+    </ol>
+
+    <h3 style="font-size: 18px; font-weight: bold; margin: 0 0 10px 0; color: #92400e;">Follow-up discussion</h3>
+    <ul style="margin: 0; padding-left: 24px; font-size: 17px;">
+      <li style="margin-bottom: 10px;">Which expressions sound the most diplomatic?</li>
+      <li style="margin-bottom: 10px;">Which ones would you never use with a customer?</li>
+      <li style="margin-bottom: 0;">Which expressions might be acceptable internally but not externally?</li>
+    </ul>
+  </div>
+
+  <!-- Listening for gist -->
+  <div style="margin-bottom: 25px; padding: 20px; background: linear-gradient(to bottom, #dbeafe, #ffffff); border-radius: 8px; border-left: 5px solid #2563eb;" class="keep-together" data-grammar-per-section-check="true">
+    <h2 style="font-size: 22px; font-weight: bold; margin-bottom: 12px; color: #1e40af;">Listening</h2>
+    <p style="font-size: 17px; margin: 0 0 12px 0;">You will hear Emma, Daniel and Ishani discussing the launch of a new product. You will hear the recording twice.</p>
+
+    <div class="dac-audio-wrap screen-only">
+      <p style="margin: 0 0 8px 0; font-size: 14px; font-weight: 600; color: #1e3a8a;">Audio</p>
+      <div class="dac-audio-placeholder" role="status" aria-live="polite">
+        <audio controls preload="none" aria-disabled="true" title="Audio coming soon">
+          Your browser does not support audio playback.
+        </audio>
+        <p class="dac-audio-placeholder-note">Audio coming soon — the recording for this listening will appear here.</p>
+      </div>
+    </div>
+
+    <h3 style="font-size: 18px; font-weight: bold; margin: 0 0 8px 0; color: #1e40af;">Listening for gist (first listening)</h3>
+    <p style="font-size: 16px; margin: 0 0 14px 0;">Who says it? Write <strong>E</strong> (Emma), <strong>D</strong> (Daniel) or <strong>I</strong> (Ishani).</p>
+
+    <div class="dac-gist-row">
+      <span data-grammar-input="dac-gist-1" data-grammar-input-type="text" data-grammar-acceptable="D|Daniel" style="display: inline-block; min-width: 48px;"></span>
+      <span>thinks the launch date is too ambitious.</span>
+    </div>
+    <div class="dac-gist-row">
+      <span data-grammar-input="dac-gist-2" data-grammar-input-type="text" data-grammar-acceptable="D|Daniel" style="display: inline-block; min-width: 48px;"></span>
+      <span>is worried about the customer experience.</span>
+    </div>
+    <div class="dac-gist-row">
+      <span data-grammar-input="dac-gist-3" data-grammar-input-type="text" data-grammar-acceptable="I|Ishani" style="display: inline-block; min-width: 48px;"></span>
+      <span>believes the budget should be reduced.</span>
+    </div>
+    <div class="dac-gist-row">
+      <span data-grammar-input="dac-gist-4" data-grammar-input-type="text" data-grammar-acceptable="I|Ishani" style="display: inline-block; min-width: 48px;"></span>
+      <span>tries to find a compromise.</span>
+    </div>
+    <div class="dac-gist-row">
+      <span data-grammar-input="dac-gist-5" data-grammar-input-type="text" data-grammar-acceptable="I|Ishani" style="display: inline-block; min-width: 48px;"></span>
+      <span>criticises a mistake made during the last launch.</span>
+    </div>
+  </div>
+
+  <!-- Listening for detail -->
+  <div style="margin-bottom: 25px; padding: 20px; background: linear-gradient(to bottom, #e0e7ff, #ffffff); border-radius: 8px; border-left: 5px solid #4f46e5;" class="keep-together" data-grammar-per-section-check="true">
+    <h3 style="font-size: 18px; font-weight: bold; margin: 0 0 8px 0; color: #3730a3;">Listening for detail (second listening)</h3>
+    <p style="font-size: 16px; margin: 0 0 16px 0;">Choose the best answer for each question. The questions follow the order of the recording.</p>
+
+    <div class="dac-mcq">
+      <p style="margin: 0 0 6px 0; font-size: 16px; font-weight: 600; color: #334155;">1. What does Emma propose at the start of the meeting?</p>
+      <ul class="dac-mcq-options">
+        <li>(A) Delaying the launch until sales training is complete</li>
+        <li>(B) Holding the product launch on 15 September</li>
+        <li>(C) Cancelling the large customer event</li>
+        <li>(D) Changing the venue before anything else is decided</li>
+      </ul>
+      <span data-grammar-input="dac-detail-1" data-grammar-input-type="radio" data-correct="B" style="display: block;"></span>
+    </div>
+
+    <div class="dac-mcq">
+      <p style="margin: 0 0 6px 0; font-size: 16px; font-weight: 600; color: #334155;">2. Why is Daniel hesitant about the September date?</p>
+      <ul class="dac-mcq-options">
+        <li>(A) The venue will not be available that day</li>
+        <li>(B) Marketing materials have not been approved</li>
+        <li>(C) The sales team will not have finished their training</li>
+        <li>(D) The budget for the event has already been spent</li>
+      </ul>
+      <span data-grammar-input="dac-detail-2" data-grammar-input-type="radio" data-correct="C" style="display: block;"></span>
+    </div>
+
+    <div class="dac-mcq">
+      <p style="margin: 0 0 6px 0; font-size: 16px; font-weight: 600; color: #334155;">3. What compromise does Ishani initially suggest?</p>
+      <ul class="dac-mcq-options">
+        <li>(A) Cancelling the September launch entirely</li>
+        <li>(B) A smaller launch in September, followed by a larger event a few weeks later</li>
+        <li>(C) Moving the whole launch to December</li>
+        <li>(D) Inviting only internal staff to the first event</li>
+      </ul>
+      <span data-grammar-input="dac-detail-3" data-grammar-input-type="radio" data-correct="B" style="display: block;"></span>
+    </div>
+
+    <div class="dac-mcq">
+      <p style="margin: 0 0 6px 0; font-size: 16px; font-weight: 600; color: #334155;">4. What does Ishani say about last year&rsquo;s guest list?</p>
+      <ul class="dac-mcq-options">
+        <li>(A) Too few people were invited</li>
+        <li>(B) Nearly two hundred guests did not add much value</li>
+        <li>(C) Guests complained about the catering</li>
+        <li>(D) Only partners were invited, not customers</li>
+      </ul>
+      <span data-grammar-input="dac-detail-4" data-grammar-input-type="radio" data-correct="B" style="display: block;"></span>
+    </div>
+
+    <div class="dac-mcq">
+      <p style="margin: 0 0 6px 0; font-size: 16px; font-weight: 600; color: #334155;">5. What does Daniel question about the proposed venue?</p>
+      <ul class="dac-mcq-options">
+        <li>(A) Its location is inconvenient for customers</li>
+        <li>(B) It is bigger than they need</li>
+        <li>(C) It is not impressive enough for the company&rsquo;s image</li>
+        <li>(D) It is unavailable in September</li>
+      </ul>
+      <span data-grammar-input="dac-detail-5" data-grammar-input-type="radio" data-correct="B" style="display: block;"></span>
+    </div>
+
+    <div class="dac-mcq">
+      <p style="margin: 0 0 6px 0; font-size: 16px; font-weight: 600; color: #334155;">6. What organisational problem from last year does Ishani highlight?</p>
+      <ul class="dac-mcq-options">
+        <li>(A) The speeches ran far too long</li>
+        <li>(B) Too many last-minute changes left speakers and guests confused</li>
+        <li>(C) The marketing campaign was ineffective</li>
+        <li>(D) The company spent too little on the event</li>
+      </ul>
+      <span data-grammar-input="dac-detail-6" data-grammar-input-type="radio" data-correct="B" style="display: block;"></span>
+    </div>
+  </div>
+
+</div>
+
+<!-- PAGE 3: Answer Key + Audioscript -->
+<div style="width: 90%; max-width: 100%; margin: 0 auto; padding: 25px; box-sizing: border-box; font-family: Arial, sans-serif; line-height: 1.6; color: #333;" class="page-break">
+
+  <div style="margin-bottom: 25px; padding: 20px; background: linear-gradient(to bottom, #f1f5f9, #ffffff); border-radius: 8px; border-left: 5px solid #475569;" class="keep-together">
+    <h2 style="font-size: 22px; font-weight: bold; margin-bottom: 14px; color: #334155;">Answer Key</h2>
+
+    <details class="dac-answer-key" open>
+      <summary><strong>Listening for gist</strong></summary>
+      <ol style="margin: 10px 0 0 0; padding-left: 28px; font-size: 16px;">
+        <li style="margin-bottom: 6px;"><strong>D</strong> (Daniel) — thinks the launch date is too ambitious</li>
+        <li style="margin-bottom: 6px;"><strong>D</strong> (Daniel) — is worried about the customer experience</li>
+        <li style="margin-bottom: 6px;"><strong>I</strong> (Ishani) — believes the budget should be reduced</li>
+        <li style="margin-bottom: 6px;"><strong>I</strong> (Ishani) — tries to find a compromise</li>
+        <li style="margin-bottom: 0;"><strong>I</strong> (Ishani) — criticises a mistake made during the last launch</li>
+      </ol>
+    </details>
+
+    <details class="dac-answer-key" style="margin-top: 12px;" open>
+      <summary><strong>Listening for detail</strong></summary>
+      <ol style="margin: 10px 0 0 0; padding-left: 28px; font-size: 16px;">
+        <li style="margin-bottom: 6px;"><strong>B</strong></li>
+        <li style="margin-bottom: 6px;"><strong>C</strong></li>
+        <li style="margin-bottom: 6px;"><strong>B</strong></li>
+        <li style="margin-bottom: 6px;"><strong>B</strong></li>
+        <li style="margin-bottom: 6px;"><strong>B</strong></li>
+        <li style="margin-bottom: 0;"><strong>B</strong></li>
+      </ol>
+    </details>
+
+    <p style="font-size: 15px; margin: 16px 0 0 0; color: #64748b;"><em>Rating Activity:</em> no fixed answers — rankings will vary. Typical discussion points: <strong>C</strong> is usually seen as most diplomatic; <strong>D</strong> and <strong>E</strong> are often judged least appropriate with customers.</p>
+  </div>
+
+  <div style="margin-bottom: 0; padding: 20px; background: linear-gradient(to bottom, #ecfdf5, #ffffff); border-radius: 8px; border-left: 5px solid #059669;" class="keep-together">
+    <details class="dac-audioscript">
+      <summary><strong>Audioscript</strong></summary>
+      <div class="dac-audioscript-body" style="margin-top: 12px;">
+        <p><strong>Emma:</strong> Thanks for joining, everyone. I&rsquo;d like us to finalise the plans for the product launch today. My proposal is to hold the event on 15 September.</p>
+        <p><strong>Daniel:</strong> I&rsquo;m not entirely convinced that&rsquo;s the best option.</p>
+        <p><strong>Emma:</strong> Really? What&rsquo;s your concern?</p>
+        <p><strong>Daniel:</strong> Well, I see your point—the earlier we launch, the sooner we can generate publicity. However, the sales team won&rsquo;t have completed their training by then, and I&rsquo;m worried customers will have questions we simply won&rsquo;t be able to answer.</p>
+        <p><strong>Emma:</strong> That&rsquo;s a fair point, but delaying the launch could mean missing an important opportunity.</p>
+        <p><strong>Ishani:</strong> If I could make one suggestion, perhaps we&rsquo;re looking at this as an either-or decision. Have we considered a smaller launch in September, followed by a larger event a few weeks later?</p>
+        <p><strong>Emma:</strong> That&rsquo;s an interesting idea.</p>
+        <p><strong>Daniel:</strong> It certainly has potential, although I&rsquo;m concerned it might increase our costs.</p>
+        <p><strong>Ishani:</strong> Actually, I think we&rsquo;d be better off spending less on the initial event. Last year we invited nearly two hundred people, and, if I&rsquo;m honest, it didn&rsquo;t really add much value.</p>
+        <p><strong>Emma:</strong> Are you suggesting we reduce the guest list?</p>
+        <p><strong>Ishani:</strong> Yes. I think a more focused event would create a better experience for the people who attend.</p>
+        <p><strong>Daniel:</strong> I agree with that. One thing I would question, though, is the proposed venue. It&rsquo;s impressive, but I think it&rsquo;s bigger than we need.</p>
+        <p><strong>Emma:</strong> We chose it because it reflects the company&rsquo;s image.</p>
+        <p><strong>Daniel:</strong> I understand the reasoning, but I don&rsquo;t think customers decide to buy our products because the venue looks expensive.</p>
+        <p><strong>Emma:</strong> Fair enough.</p>
+        <p><strong>Ishani:</strong> Could I offer one piece of feedback about last year&rsquo;s launch?</p>
+        <p><strong>Emma:</strong> Of course.</p>
+        <p><strong>Ishani:</strong> Overall, it was successful, but there were too many last-minute changes. Speakers received updated schedules several times, and some guests weren&rsquo;t sure where they were supposed to be. I think we need a much clearer plan this year.</p>
+        <p><strong>Emma:</strong> I completely agree. We definitely don&rsquo;t want to repeat those mistakes.</p>
+        <p><strong>Daniel:</strong> Exactly. I&rsquo;d rather have a smaller event that&rsquo;s well organised than a large event that feels chaotic.</p>
+        <p><strong>Emma:</strong> So, shall we say this: we hold a smaller launch in September, reduce the guest list, reconsider the venue, and organise a larger customer event later in the autumn?</p>
+        <p><strong>Daniel:</strong> That sounds like a sensible compromise.</p>
+        <p><strong>Ishani:</strong> I agree. Overall, I think we&rsquo;re heading in the right direction.</p>
+      </div>
+    </details>
+  </div>
+
+</div>
