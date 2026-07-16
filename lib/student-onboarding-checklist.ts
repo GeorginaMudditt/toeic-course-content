@@ -282,6 +282,11 @@ export const STUDENT_ONBOARDING_CHECKLIST_ITEMS: OnboardingChecklistItemDefiniti
     type: 'complete-or-na',
   },
   {
+    slug: 'employer-financer-satisfaction-survey',
+    label: 'Employer/Financer Satisfaction Survey',
+    type: 'complete-or-na',
+  },
+  {
     slug: 'trainer-satisfaction-survey',
     label: 'Trainer Satisfaction Survey',
     type: 'complete-or-na',
