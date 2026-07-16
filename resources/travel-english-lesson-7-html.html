@@ -1,0 +1,400 @@
+<!-- Travel English Lesson 7 -->
+<style>
+  :root {
+    --exam-ink: #1f2937;
+    --exam-subtle-ink: #4b5563;
+    --exam-border: #cfd6df;
+    --exam-soft-border: #e5e7eb;
+    --exam-header-bg: #f6f8fb;
+    --exam-panel-bg: #fbfcfe;
+    --exam-accent: #1e3a8a;
+  }
+
+  body {
+    color: var(--exam-ink);
+  }
+
+  .exam-header {
+    border: 1px solid var(--exam-border);
+    background: linear-gradient(to bottom, #ffffff, var(--exam-header-bg));
+    border-radius: 8px;
+    padding: 12px 14px;
+  }
+
+  .keep-together {
+    border: 1px solid var(--exam-soft-border);
+    border-radius: 8px;
+    background: var(--exam-panel-bg);
+    padding: 12px 14px;
+    margin-bottom: 18px;
+  }
+
+  h2 {
+    color: var(--exam-accent) !important;
+    margin-top: 0;
+  }
+
+  h3 {
+    margin-top: 0;
+    color: #0f172a;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    background: #fff;
+  }
+
+  th,
+  td {
+    border: 1px solid #111827;
+    padding: 8px;
+    font-size: 16px;
+    vertical-align: top;
+  }
+
+  th {
+    font-weight: 700;
+    text-align: left;
+    background: #f8fafc;
+  }
+
+  .answer-block {
+    margin-top: 24px;
+    padding-top: 16px;
+    border-top: 2px solid #e5e7eb;
+  }
+
+  .vocab-three-col {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px 24px;
+    font-size: 16px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .vocab-three-col li {
+    margin-bottom: 8px;
+  }
+
+  .write-line {
+    display: inline-block;
+    min-width: 140px;
+    border-bottom: 1px dotted #64748b;
+    vertical-align: bottom;
+  }
+
+  .write-line-long {
+    display: inline-block;
+    min-width: 220px;
+    border-bottom: 1px dotted #64748b;
+    vertical-align: bottom;
+  }
+
+  .dialogue-blank {
+    display: inline-block;
+    min-width: 180px;
+    border-bottom: 1px dotted #64748b;
+    vertical-align: bottom;
+  }
+
+  .role-play-card {
+    border: 1px solid var(--exam-soft-border);
+    border-radius: 8px;
+    background: #fff;
+    padding: 12px 14px;
+    margin-bottom: 14px;
+  }
+
+  .role-play-card:last-child {
+    margin-bottom: 0;
+  }
+
+  .dialogue-list {
+    margin: 0;
+    padding-left: 22px;
+    list-style-type: disc !important;
+    list-style-position: outside !important;
+  }
+
+  .dialogue-list li {
+    display: list-item !important;
+    margin-bottom: 10px;
+    font-size: 16px;
+  }
+
+  .dialogue-separator {
+    text-align: center;
+    letter-spacing: 4px;
+    margin: 14px 0;
+    color: #64748b;
+    font-weight: 700;
+  }
+
+  /* Force visible markers (global app styles can hide them). */
+  ol {
+    list-style-type: decimal !important;
+    list-style-position: outside !important;
+    padding-left: 24px !important;
+  }
+
+  ul {
+    list-style-type: disc !important;
+    list-style-position: outside !important;
+    padding-left: 22px !important;
+  }
+
+  li {
+    display: list-item !important;
+  }
+
+  @media print {
+    @page {
+      margin: 1.5cm;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+    }
+
+    div[style*="max-width: 900px"] {
+      max-width: 100% !important;
+      padding: 5mm 6mm !important;
+      box-sizing: border-box !important;
+      line-height: 1.25 !important;
+      font-size: 14px !important;
+    }
+
+    h1 {
+      font-size: 24px !important;
+      margin-bottom: 2px !important;
+    }
+
+    h2 {
+      font-size: 18px !important;
+      margin-bottom: 6px !important;
+    }
+
+    h3 {
+      font-size: 16px !important;
+      margin-bottom: 6px !important;
+    }
+
+    p,
+    li,
+    th,
+    td {
+      font-size: 14px !important;
+    }
+
+    .keep-together {
+      break-inside: auto;
+      page-break-inside: auto;
+      background: #fff;
+      border-color: #d1d5db;
+      padding: 8px 10px;
+      margin-bottom: 10px;
+    }
+
+    h2,
+    h3 {
+      break-after: avoid;
+      page-break-after: avoid;
+    }
+
+    th,
+    td {
+      padding: 5px;
+    }
+
+    .answer-block {
+      margin-top: 10px;
+      padding-top: 10px;
+    }
+
+    .page-break {
+      break-before: page;
+      page-break-before: always;
+    }
+
+    .section-answers-container {
+      break-before: page;
+      page-break-before: always;
+    }
+
+    .role-play-card {
+      break-inside: avoid;
+      page-break-inside: avoid;
+    }
+  }
+</style>
+
+<div style="max-width: 900px; margin: 0 auto; padding: 20px; font-family: Arial, sans-serif; line-height: 1.45; color: #333;">
+  <div class="exam-header" style="text-align: center; margin-bottom: 18px;">
+    <div style="display: inline-block; margin-bottom: 6px;">
+      <img src="/brizzle-logo.png" alt="Brizzle Logo" style="width: 45px; height: 45px; object-fit: contain;" />
+    </div>
+    <h1 style="font-size: 30px; line-height: 1.2; margin: 0 0 4px; color: #0f172a;">Travel English Lesson 7</h1>
+    <h2 style="font-size: 22px; margin: 0; font-weight: 700;">Theme 4: Food and Drink</h2>
+  </div>
+
+  <div class="keep-together">
+    <h2 style="font-size: 22px; font-weight: 700; margin-bottom: 10px;">Revision: Role Plays</h2>
+    <p style="font-size: 16px; margin: 0 0 14px;">Let&rsquo;s revise everything we have learned so far by doing some role plays.</p>
+
+    <div class="role-play-card">
+      <h3 style="font-size: 18px; font-weight: 700; margin-bottom: 8px;">Situation #1 &mdash; Small Talk</h3>
+      <p style="font-size: 16px; margin: 0;">You are staying in an Airbnb in an English-speaking country. Your host has invited you to have a drink with her family to get to know you.</p>
+    </div>
+
+    <div class="role-play-card">
+      <h3 style="font-size: 18px; font-weight: 700; margin-bottom: 8px;">Situation #2 &mdash; Booking transport</h3>
+      <p style="font-size: 16px; margin: 0;">You want to travel from London to Bristol, but you don&rsquo;t know which is the best option, bus or train. Ask some questions about the two options at the Tourist Information Office, and decide which transport to book.</p>
+    </div>
+
+    <div class="role-play-card">
+      <h3 style="font-size: 18px; font-weight: 700; margin-bottom: 8px;">Situation #3 &mdash; Car rental</h3>
+      <p style="font-size: 16px; margin: 0;">You arrive at Glasgow airport and go to the car rental desk. You made a reservation but they don&rsquo;t have it on their system.</p>
+    </div>
+  </div>
+
+  <div class="keep-together">
+    <h2 style="font-size: 22px; font-weight: 700; margin-bottom: 10px;">Vocabulary: Restaurants and Food</h2>
+
+    <h3 style="font-size: 18px; font-weight: 700; margin-bottom: 8px;">Verbs</h3>
+    <p style="font-size: 16px; margin: 0 0 10px;">What is the difference between the following verbs?</p>
+    <p style="font-size: 16px; margin: 0 0 14px; font-weight: 600;">to book &mdash; to reserve &mdash; to order &mdash; to recommend &mdash; to prepare &mdash; to serve</p>
+    <div style="min-height: 90px; border-bottom: 1px solid #cbd5e1;"></div>
+
+    <h3 style="font-size: 18px; font-weight: 700; margin: 18px 0 8px;">Nouns</h3>
+    <p style="font-size: 16px; margin: 0 0 10px;">Write the French translations of the following nouns:</p>
+    <ul class="vocab-three-col">
+      <li>starter = <span class="write-line"></span></li>
+      <li>main course = <span class="write-line"></span></li>
+      <li>dessert = <span class="write-line"></span></li>
+      <li>menu = <span class="write-line"></span></li>
+      <li>wine list = <span class="write-line"></span></li>
+      <li>side dish = <span class="write-line"></span></li>
+      <li>dish = <span class="write-line"></span></li>
+      <li>(chef&rsquo;s) special = <span class="write-line"></span></li>
+      <li>recommendation = <span class="write-line"></span></li>
+      <li>allergy = <span class="write-line"></span></li>
+      <li>bill = <span class="write-line"></span></li>
+      <li>tip = <span class="write-line"></span></li>
+      <li>service charge = <span class="write-line"></span></li>
+    </ul>
+
+    <h3 style="font-size: 18px; font-weight: 700; margin: 18px 0 8px;">Adjectives</h3>
+    <p style="font-size: 16px; margin: 0 0 10px;">Below is a list of adjectives to describe food. Which words are positive and which are negative? Mark with &#x2705; or &#x274C;.</p>
+    <ul class="vocab-three-col">
+      <li>tasty &nbsp; &#x2705; / &#x274C;</li>
+      <li>delicious &nbsp; &#x2705; / &#x274C;</li>
+      <li>disgusting &nbsp; &#x2705; / &#x274C;</li>
+      <li>undercooked &nbsp; &#x2705; / &#x274C;</li>
+      <li>overcooked &nbsp; &#x2705; / &#x274C;</li>
+      <li>creamy &nbsp; &#x2705; / &#x274C;</li>
+      <li>tender &nbsp; &#x2705; / &#x274C;</li>
+      <li>burnt &nbsp; &#x2705; / &#x274C;</li>
+      <li>bland &nbsp; &#x2705; / &#x274C;</li>
+      <li>spicy &nbsp; &#x2705; / &#x274C;</li>
+      <li>sweet &nbsp; &#x2705; / &#x274C;</li>
+      <li>fresh &nbsp; &#x2705; / &#x274C;</li>
+      <li>too salty &nbsp; &#x2705; / &#x274C;</li>
+    </ul>
+  </div>
+</div>
+
+<div style="max-width: 900px; margin: 0 auto; padding: 20px; font-family: Arial, sans-serif; line-height: 1.45; color: #333;" class="page-break">
+  <div class="keep-together">
+    <h2 style="font-size: 22px; font-weight: 700; margin-bottom: 10px;">Reading / Speaking: At a restaurant</h2>
+    <p style="font-size: 16px; margin: 0 0 14px;"><strong>Read the conversation below and fill in the missing words.</strong></p>
+
+    <ul class="dialogue-list">
+      <li>Good evening. We would like a table for two, please.</li>
+      <li>Do you have a <span class="dialogue-blank"></span>?</li>
+      <li>No, we don&rsquo;t. This restaurant was <span class="dialogue-blank"></span> to us by our hotel, but they didn&rsquo;t have your telephone number.</li>
+      <li>Okay, no problem. We have a table for you &mdash; just here by the window. Here is the <span class="dialogue-blank"></span> and the <span class="dialogue-blank"></span>. We also have a <span class="dialogue-blank"></span> this evening, which is seafood spaghetti in a <span class="dialogue-blank"></span> sauce.</li>
+      <li>Thank you.</li>
+    </ul>
+
+    <p class="dialogue-separator">*****</p>
+
+    <ul class="dialogue-list">
+      <li>Are you ready to <span class="dialogue-blank"></span>?</li>
+      <li>Yes, please. For our <span class="dialogue-blank"></span> we would both like the soup. Then for our <span class="dialogue-blank"></span> I would like the seafood pasta, and my husband will have the steak.</li>
+      <li>How would you like the steak cooked?</li>
+      <li>Medium, please. And just to let you know I have an <span class="dialogue-blank"></span> to mushrooms. Are there any mushrooms in the <span class="dialogue-blank"></span>?</li>
+      <li>The steak is usually <span class="dialogue-blank"></span> with mushrooms, but I will tell the chef that you can&rsquo;t have them. And what would you like to drink?</li>
+    </ul>
+  </div>
+
+  <div class="keep-together">
+    <h2 style="font-size: 22px; font-weight: 700; margin-bottom: 10px;">Speaking: Restaurants and Food</h2>
+    <ul style="font-size: 16px; margin: 0;">
+      <li style="margin-bottom: 8px;">What is your favourite food?</li>
+      <li style="margin-bottom: 8px;">Do you prefer eating in restaurants or cooking at home?</li>
+      <li style="margin-bottom: 8px;">What&rsquo;s the best meal you have ever eaten in a restaurant?</li>
+      <li style="margin-bottom: 8px;">When you go on holiday, do you like trying local food?</li>
+      <li style="margin-bottom: 8px;">Which country has the best food, in your opinion?</li>
+      <li>What do you think about English food?</li>
+    </ul>
+  </div>
+</div>
+
+<div style="max-width: 900px; margin: 0 auto; padding: 20px; font-family: Arial, sans-serif; line-height: 1.45; color: #333;" class="section-answers-container">
+  <div class="answer-block">
+    <h2 style="font-size: 22px; font-weight: 700; margin: 0 0 12px;">Answers</h2>
+
+    <div style="margin-bottom: 14px;">
+      <h3 style="font-size: 18px; margin: 0 0 8px;">Vocabulary: Verbs</h3>
+      <ul style="font-size: 16px; margin: 0;">
+        <li style="margin-bottom: 6px;"><strong>to book / to reserve</strong> &mdash; to arrange something in advance (e.g. a table, a room, a ticket). <em>Book</em> and <em>reserve</em> are often interchangeable.</li>
+        <li style="margin-bottom: 6px;"><strong>to order</strong> &mdash; to tell the waiter what food or drink you want.</li>
+        <li style="margin-bottom: 6px;"><strong>to recommend</strong> &mdash; to suggest something because you think it is good.</li>
+        <li style="margin-bottom: 6px;"><strong>to prepare</strong> &mdash; to make or get food ready (usually done by the chef in the kitchen).</li>
+        <li><strong>to serve</strong> &mdash; to bring food or drink to the customer at the table.</li>
+      </ul>
+    </div>
+
+    <div style="margin-bottom: 14px;">
+      <h3 style="font-size: 18px; margin: 0 0 8px;">Vocabulary: Nouns (French translations)</h3>
+      <ul style="font-size: 16px; margin: 0; columns: 2; column-gap: 28px;">
+        <li style="margin-bottom: 4px;">starter = <strong>entr&eacute;e</strong></li>
+        <li style="margin-bottom: 4px;">main course = <strong>plat principal</strong></li>
+        <li style="margin-bottom: 4px;">dessert = <strong>dessert</strong></li>
+        <li style="margin-bottom: 4px;">menu = <strong>menu / carte</strong></li>
+        <li style="margin-bottom: 4px;">wine list = <strong>carte des vins</strong></li>
+        <li style="margin-bottom: 4px;">side dish = <strong>accompagnement</strong></li>
+        <li style="margin-bottom: 4px;">dish = <strong>plat</strong></li>
+        <li style="margin-bottom: 4px;">(chef&rsquo;s) special = <strong>plat du jour / sp&eacute;cialit&eacute; du chef</strong></li>
+        <li style="margin-bottom: 4px;">recommendation = <strong>recommandation</strong></li>
+        <li style="margin-bottom: 4px;">allergy = <strong>allergie</strong></li>
+        <li style="margin-bottom: 4px;">bill = <strong>addition / note</strong></li>
+        <li style="margin-bottom: 4px;">tip = <strong>pourboire</strong></li>
+        <li>service charge = <strong>frais de service / service</strong></li>
+      </ul>
+    </div>
+
+    <div style="margin-bottom: 14px;">
+      <h3 style="font-size: 18px; margin: 0 0 8px;">Vocabulary: Adjectives</h3>
+      <p style="font-size: 16px; margin: 0 0 6px;"><strong>Positive (&#x2705;):</strong> tasty, delicious, creamy, tender, spicy, sweet, fresh</p>
+      <p style="font-size: 16px; margin: 0;"><strong>Negative (&#x274C;):</strong> disgusting, undercooked, overcooked, burnt, bland, too salty</p>
+    </div>
+
+    <div>
+      <h3 style="font-size: 18px; margin: 0 0 8px;">Reading / Speaking: At a restaurant</h3>
+      <ol style="font-size: 16px; margin: 0;">
+        <li style="margin-bottom: 5px;"><strong>reservation</strong></li>
+        <li style="margin-bottom: 5px;"><strong>recommended</strong></li>
+        <li style="margin-bottom: 5px;"><strong>menu</strong>, <strong>wine list</strong>, <strong>special</strong>, <strong>creamy</strong></li>
+        <li style="margin-bottom: 5px;"><strong>order</strong></li>
+        <li style="margin-bottom: 5px;"><strong>starter</strong>, <strong>main course</strong></li>
+        <li style="margin-bottom: 5px;"><strong>allergy</strong>, <strong>dish</strong></li>
+        <li><strong>served</strong></li>
+      </ol>
+    </div>
+  </div>
+</div>
