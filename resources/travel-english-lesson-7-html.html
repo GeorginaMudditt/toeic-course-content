@@ -79,27 +79,6 @@
     margin-bottom: 8px;
   }
 
-  .write-line {
-    display: inline-block;
-    min-width: 140px;
-    border-bottom: 1px dotted #64748b;
-    vertical-align: bottom;
-  }
-
-  .write-line-long {
-    display: inline-block;
-    min-width: 220px;
-    border-bottom: 1px dotted #64748b;
-    vertical-align: bottom;
-  }
-
-  .dialogue-blank {
-    display: inline-block;
-    min-width: 180px;
-    border-bottom: 1px dotted #64748b;
-    vertical-align: bottom;
-  }
-
   .role-play-card {
     border: 1px solid var(--exam-soft-border);
     border-radius: 8px;
@@ -110,6 +89,31 @@
 
   .role-play-card:last-child {
     margin-bottom: 0;
+  }
+
+  .example-reveal {
+    margin-top: 10px;
+    border: 1px solid #c7d2fe;
+    border-radius: 8px;
+    background: #eef2ff;
+    padding: 8px 10px;
+  }
+
+  .example-reveal summary {
+    cursor: pointer;
+    font-weight: 700;
+    color: #1e3a8a;
+    font-size: 15px;
+  }
+
+  .example-reveal-body {
+    margin-top: 8px;
+    font-size: 15px;
+  }
+
+  .example-reveal-body ul {
+    margin: 0;
+    padding-left: 20px;
   }
 
   .dialogue-list {
@@ -131,6 +135,14 @@
     margin: 14px 0;
     color: #64748b;
     font-weight: 700;
+  }
+
+  .speaking-item {
+    margin-bottom: 14px;
+  }
+
+  .speaking-item:last-child {
+    margin-bottom: 0;
   }
 
   /* Force visible markers (global app styles can hide them). */
@@ -229,6 +241,20 @@
       break-inside: avoid;
       page-break-inside: avoid;
     }
+
+    .example-reveal > summary {
+      display: none;
+    }
+
+    .example-reveal {
+      border: none;
+      background: transparent;
+      padding: 0;
+    }
+
+    .example-reveal-body {
+      display: block !important;
+    }
   }
 </style>
 
@@ -241,68 +267,111 @@
     <h2 style="font-size: 22px; margin: 0; font-weight: 700;">Theme 4: Food and Drink</h2>
   </div>
 
-  <div class="keep-together">
+  <div class="keep-together" data-grammar-check-disabled="true">
     <h2 style="font-size: 22px; font-weight: 700; margin-bottom: 10px;">Revision: Role Plays</h2>
-    <p style="font-size: 16px; margin: 0 0 14px;">Let&rsquo;s revise everything we have learned so far by doing some role plays.</p>
+    <p style="font-size: 16px; margin: 0 0 14px;">Let&rsquo;s revise everything we have learned so far by doing some role plays. Use the notes area under each situation to prepare your ideas.</p>
 
     <div class="role-play-card">
       <h3 style="font-size: 18px; font-weight: 700; margin-bottom: 8px;">Situation #1 &mdash; Small Talk</h3>
-      <p style="font-size: 16px; margin: 0;">You are staying in an Airbnb in an English-speaking country. Your host has invited you to have a drink with her family to get to know you.</p>
+      <p style="font-size: 16px; margin: 0 0 10px;">You are staying in an Airbnb in an English-speaking country. Your host has invited you to have a drink with her family to get to know you.</p>
+      <details class="example-reveal">
+        <summary>Example phrases</summary>
+        <div class="example-reveal-body">
+          <ul>
+            <li>Thank you for inviting me.</li>
+            <li>How long have you lived here?</li>
+            <li>What do you recommend seeing in the area?</li>
+            <li>Is this your first time hosting guests?</li>
+          </ul>
+        </div>
+      </details>
+      <p style="font-size: 15px; margin: 12px 0 6px; color: #4b5563;"><strong>Your notes:</strong></p>
+      <span data-grammar-input="te7-rp1-notes" data-grammar-input-type="textarea" data-grammar-textarea-rows="4" style="display: block; min-height: 88px;"></span>
     </div>
 
     <div class="role-play-card">
       <h3 style="font-size: 18px; font-weight: 700; margin-bottom: 8px;">Situation #2 &mdash; Booking transport</h3>
-      <p style="font-size: 16px; margin: 0;">You want to travel from London to Bristol, but you don&rsquo;t know which is the best option, bus or train. Ask some questions about the two options at the Tourist Information Office, and decide which transport to book.</p>
+      <p style="font-size: 16px; margin: 0 0 10px;">You want to travel from London to Bristol, but you don&rsquo;t know which is the best option, bus or train. Ask some questions about the two options at the Tourist Information Office, and decide which transport to book.</p>
+      <details class="example-reveal">
+        <summary>Example questions</summary>
+        <div class="example-reveal-body">
+          <ul>
+            <li>How long does the journey take by train / by bus?</li>
+            <li>How much does a ticket cost?</li>
+            <li>How often do the trains / buses leave?</li>
+            <li>Which is faster / cheaper?</li>
+            <li>Do I need to book in advance?</li>
+          </ul>
+        </div>
+      </details>
+      <p style="font-size: 15px; margin: 12px 0 6px; color: #4b5563;"><strong>Your notes:</strong></p>
+      <span data-grammar-input="te7-rp2-notes" data-grammar-input-type="textarea" data-grammar-textarea-rows="4" style="display: block; min-height: 88px;"></span>
     </div>
 
     <div class="role-play-card">
       <h3 style="font-size: 18px; font-weight: 700; margin-bottom: 8px;">Situation #3 &mdash; Car rental</h3>
-      <p style="font-size: 16px; margin: 0;">You arrive at Glasgow airport and go to the car rental desk. You made a reservation but they don&rsquo;t have it on their system.</p>
+      <p style="font-size: 16px; margin: 0 0 10px;">You arrive at Glasgow airport and go to the car rental desk. You made a reservation but they don&rsquo;t have it on their system.</p>
+      <details class="example-reveal">
+        <summary>Example phrases</summary>
+        <div class="example-reveal-body">
+          <ul>
+            <li>I have a reservation under the name&hellip;</li>
+            <li>Here is my confirmation email.</li>
+            <li>Can you check again, please?</li>
+            <li>Do you have any other cars available?</li>
+            <li>How much would that cost per day?</li>
+          </ul>
+        </div>
+      </details>
+      <p style="font-size: 15px; margin: 12px 0 6px; color: #4b5563;"><strong>Your notes:</strong></p>
+      <span data-grammar-input="te7-rp3-notes" data-grammar-input-type="textarea" data-grammar-textarea-rows="4" style="display: block; min-height: 88px;"></span>
     </div>
   </div>
 
-  <div class="keep-together">
+  <div class="keep-together" data-grammar-check-disabled="true">
     <h2 style="font-size: 22px; font-weight: 700; margin-bottom: 10px;">Vocabulary: Restaurants and Food</h2>
 
     <h3 style="font-size: 18px; font-weight: 700; margin-bottom: 8px;">Verbs</h3>
     <p style="font-size: 16px; margin: 0 0 10px;">What is the difference between the following verbs?</p>
-    <p style="font-size: 16px; margin: 0 0 14px; font-weight: 600;">to book &mdash; to reserve &mdash; to order &mdash; to recommend &mdash; to prepare &mdash; to serve</p>
-    <div style="min-height: 90px; border-bottom: 1px solid #cbd5e1;"></div>
+    <p style="font-size: 16px; margin: 0 0 10px; font-weight: 600;">to book &mdash; to reserve &mdash; to order &mdash; to recommend &mdash; to prepare &mdash; to serve</p>
+    <span data-grammar-input="te7-v-verbs" data-grammar-input-type="textarea" data-grammar-textarea-rows="6" style="display: block; min-height: 120px;"></span>
+  </div>
 
-    <h3 style="font-size: 18px; font-weight: 700; margin: 18px 0 8px;">Nouns</h3>
+  <div class="keep-together">
+    <h3 style="font-size: 18px; font-weight: 700; margin-bottom: 8px;">Nouns</h3>
     <p style="font-size: 16px; margin: 0 0 10px;">Write the French translations of the following nouns:</p>
     <ul class="vocab-three-col">
-      <li>starter = <span class="write-line"></span></li>
-      <li>main course = <span class="write-line"></span></li>
-      <li>dessert = <span class="write-line"></span></li>
-      <li>menu = <span class="write-line"></span></li>
-      <li>wine list = <span class="write-line"></span></li>
-      <li>side dish = <span class="write-line"></span></li>
-      <li>dish = <span class="write-line"></span></li>
-      <li>(chef&rsquo;s) special = <span class="write-line"></span></li>
-      <li>recommendation = <span class="write-line"></span></li>
-      <li>allergy = <span class="write-line"></span></li>
-      <li>bill = <span class="write-line"></span></li>
-      <li>tip = <span class="write-line"></span></li>
-      <li>service charge = <span class="write-line"></span></li>
+      <li>starter = <span data-grammar-input="te7-v-n1" data-grammar-acceptable="entrée|entree" style="display: inline-block; min-width: 140px; border-bottom: 1px solid #94a3b8;"></span></li>
+      <li>main course = <span data-grammar-input="te7-v-n2" data-grammar-acceptable="plat principal" style="display: inline-block; min-width: 140px; border-bottom: 1px solid #94a3b8;"></span></li>
+      <li>dessert = <span data-grammar-input="te7-v-n3" data-grammar-acceptable="dessert" style="display: inline-block; min-width: 140px; border-bottom: 1px solid #94a3b8;"></span></li>
+      <li>menu = <span data-grammar-input="te7-v-n4" data-grammar-acceptable="menu|carte" style="display: inline-block; min-width: 140px; border-bottom: 1px solid #94a3b8;"></span></li>
+      <li>wine list = <span data-grammar-input="te7-v-n5" data-grammar-acceptable="carte des vins" style="display: inline-block; min-width: 140px; border-bottom: 1px solid #94a3b8;"></span></li>
+      <li>side dish = <span data-grammar-input="te7-v-n6" data-grammar-acceptable="accompagnement" style="display: inline-block; min-width: 140px; border-bottom: 1px solid #94a3b8;"></span></li>
+      <li>dish = <span data-grammar-input="te7-v-n7" data-grammar-acceptable="plat" style="display: inline-block; min-width: 140px; border-bottom: 1px solid #94a3b8;"></span></li>
+      <li>(chef&rsquo;s) special = <span data-grammar-input="te7-v-n8" data-grammar-acceptable="plat du jour|spécialité du chef|specialite du chef|spécialité|specialite" style="display: inline-block; min-width: 140px; border-bottom: 1px solid #94a3b8;"></span></li>
+      <li>recommendation = <span data-grammar-input="te7-v-n9" data-grammar-acceptable="recommandation" style="display: inline-block; min-width: 140px; border-bottom: 1px solid #94a3b8;"></span></li>
+      <li>allergy = <span data-grammar-input="te7-v-n10" data-grammar-acceptable="allergie" style="display: inline-block; min-width: 140px; border-bottom: 1px solid #94a3b8;"></span></li>
+      <li>bill = <span data-grammar-input="te7-v-n11" data-grammar-acceptable="addition|note" style="display: inline-block; min-width: 140px; border-bottom: 1px solid #94a3b8;"></span></li>
+      <li>tip = <span data-grammar-input="te7-v-n12" data-grammar-acceptable="pourboire" style="display: inline-block; min-width: 140px; border-bottom: 1px solid #94a3b8;"></span></li>
+      <li>service charge = <span data-grammar-input="te7-v-n13" data-grammar-acceptable="frais de service|service" style="display: inline-block; min-width: 140px; border-bottom: 1px solid #94a3b8;"></span></li>
     </ul>
 
     <h3 style="font-size: 18px; font-weight: 700; margin: 18px 0 8px;">Adjectives</h3>
     <p style="font-size: 16px; margin: 0 0 10px;">Below is a list of adjectives to describe food. Which words are positive and which are negative? Mark with &#x2705; or &#x274C;.</p>
     <ul class="vocab-three-col">
-      <li>tasty &nbsp; &#x2705; / &#x274C;</li>
-      <li>delicious &nbsp; &#x2705; / &#x274C;</li>
-      <li>disgusting &nbsp; &#x2705; / &#x274C;</li>
-      <li>undercooked &nbsp; &#x2705; / &#x274C;</li>
-      <li>overcooked &nbsp; &#x2705; / &#x274C;</li>
-      <li>creamy &nbsp; &#x2705; / &#x274C;</li>
-      <li>tender &nbsp; &#x2705; / &#x274C;</li>
-      <li>burnt &nbsp; &#x2705; / &#x274C;</li>
-      <li>bland &nbsp; &#x2705; / &#x274C;</li>
-      <li>spicy &nbsp; &#x2705; / &#x274C;</li>
-      <li>sweet &nbsp; &#x2705; / &#x274C;</li>
-      <li>fresh &nbsp; &#x2705; / &#x274C;</li>
-      <li>too salty &nbsp; &#x2705; / &#x274C;</li>
+      <li>tasty <span data-grammar-input="te7-v-a1" data-grammar-input-type="select" data-grammar-input-options="✅|❌" data-grammar-acceptable="✅" style="display: inline-block; min-width: 72px; vertical-align: middle;"></span></li>
+      <li>delicious <span data-grammar-input="te7-v-a2" data-grammar-input-type="select" data-grammar-input-options="✅|❌" data-grammar-acceptable="✅" style="display: inline-block; min-width: 72px; vertical-align: middle;"></span></li>
+      <li>disgusting <span data-grammar-input="te7-v-a3" data-grammar-input-type="select" data-grammar-input-options="✅|❌" data-grammar-acceptable="❌" style="display: inline-block; min-width: 72px; vertical-align: middle;"></span></li>
+      <li>undercooked <span data-grammar-input="te7-v-a4" data-grammar-input-type="select" data-grammar-input-options="✅|❌" data-grammar-acceptable="❌" style="display: inline-block; min-width: 72px; vertical-align: middle;"></span></li>
+      <li>overcooked <span data-grammar-input="te7-v-a5" data-grammar-input-type="select" data-grammar-input-options="✅|❌" data-grammar-acceptable="❌" style="display: inline-block; min-width: 72px; vertical-align: middle;"></span></li>
+      <li>creamy <span data-grammar-input="te7-v-a6" data-grammar-input-type="select" data-grammar-input-options="✅|❌" data-grammar-acceptable="✅" style="display: inline-block; min-width: 72px; vertical-align: middle;"></span></li>
+      <li>tender <span data-grammar-input="te7-v-a7" data-grammar-input-type="select" data-grammar-input-options="✅|❌" data-grammar-acceptable="✅" style="display: inline-block; min-width: 72px; vertical-align: middle;"></span></li>
+      <li>burnt <span data-grammar-input="te7-v-a8" data-grammar-input-type="select" data-grammar-input-options="✅|❌" data-grammar-acceptable="❌" style="display: inline-block; min-width: 72px; vertical-align: middle;"></span></li>
+      <li>bland <span data-grammar-input="te7-v-a9" data-grammar-input-type="select" data-grammar-input-options="✅|❌" data-grammar-acceptable="❌" style="display: inline-block; min-width: 72px; vertical-align: middle;"></span></li>
+      <li>spicy <span data-grammar-input="te7-v-a10" data-grammar-input-type="select" data-grammar-input-options="✅|❌" data-grammar-acceptable="✅" style="display: inline-block; min-width: 72px; vertical-align: middle;"></span></li>
+      <li>sweet <span data-grammar-input="te7-v-a11" data-grammar-input-type="select" data-grammar-input-options="✅|❌" data-grammar-acceptable="✅" style="display: inline-block; min-width: 72px; vertical-align: middle;"></span></li>
+      <li>fresh <span data-grammar-input="te7-v-a12" data-grammar-input-type="select" data-grammar-input-options="✅|❌" data-grammar-acceptable="✅" style="display: inline-block; min-width: 72px; vertical-align: middle;"></span></li>
+      <li>too salty <span data-grammar-input="te7-v-a13" data-grammar-input-type="select" data-grammar-input-options="✅|❌" data-grammar-acceptable="❌" style="display: inline-block; min-width: 72px; vertical-align: middle;"></span></li>
     </ul>
   </div>
 </div>
@@ -314,33 +383,51 @@
 
     <ul class="dialogue-list">
       <li>Good evening. We would like a table for two, please.</li>
-      <li>Do you have a <span class="dialogue-blank"></span>?</li>
-      <li>No, we don&rsquo;t. This restaurant was <span class="dialogue-blank"></span> to us by our hotel, but they didn&rsquo;t have your telephone number.</li>
-      <li>Okay, no problem. We have a table for you &mdash; just here by the window. Here is the <span class="dialogue-blank"></span> and the <span class="dialogue-blank"></span>. We also have a <span class="dialogue-blank"></span> this evening, which is seafood spaghetti in a <span class="dialogue-blank"></span> sauce.</li>
+      <li>Do you have a <span data-grammar-input="te7-d-q1" data-grammar-acceptable="reservation" style="display: inline-block; min-width: 160px; border-bottom: 1px solid #94a3b8;"></span>?</li>
+      <li>No, we don&rsquo;t. This restaurant was <span data-grammar-input="te7-d-q2" data-grammar-acceptable="recommended" style="display: inline-block; min-width: 160px; border-bottom: 1px solid #94a3b8;"></span> to us by our hotel, but they didn&rsquo;t have your telephone number.</li>
+      <li>Okay, no problem. We have a table for you &mdash; just here by the window. Here is the <span data-grammar-input="te7-d-q3a" data-grammar-acceptable="menu" style="display: inline-block; min-width: 120px; border-bottom: 1px solid #94a3b8;"></span> and the <span data-grammar-input="te7-d-q3b" data-grammar-acceptable="wine list" style="display: inline-block; min-width: 120px; border-bottom: 1px solid #94a3b8;"></span>. We also have a <span data-grammar-input="te7-d-q3c" data-grammar-acceptable="special|chef's special|chefs special" style="display: inline-block; min-width: 120px; border-bottom: 1px solid #94a3b8;"></span> this evening, which is seafood spaghetti in a <span data-grammar-input="te7-d-q3d" data-grammar-acceptable="creamy" style="display: inline-block; min-width: 120px; border-bottom: 1px solid #94a3b8;"></span> sauce.</li>
       <li>Thank you.</li>
     </ul>
 
     <p class="dialogue-separator">*****</p>
 
     <ul class="dialogue-list">
-      <li>Are you ready to <span class="dialogue-blank"></span>?</li>
-      <li>Yes, please. For our <span class="dialogue-blank"></span> we would both like the soup. Then for our <span class="dialogue-blank"></span> I would like the seafood pasta, and my husband will have the steak.</li>
+      <li>Are you ready to <span data-grammar-input="te7-d-q4" data-grammar-acceptable="order" style="display: inline-block; min-width: 160px; border-bottom: 1px solid #94a3b8;"></span>?</li>
+      <li>Yes, please. For our <span data-grammar-input="te7-d-q5a" data-grammar-acceptable="starter" style="display: inline-block; min-width: 120px; border-bottom: 1px solid #94a3b8;"></span> we would both like the soup. Then for our <span data-grammar-input="te7-d-q5b" data-grammar-acceptable="main course" style="display: inline-block; min-width: 120px; border-bottom: 1px solid #94a3b8;"></span> I would like the seafood pasta, and my husband will have the steak.</li>
       <li>How would you like the steak cooked?</li>
-      <li>Medium, please. And just to let you know I have an <span class="dialogue-blank"></span> to mushrooms. Are there any mushrooms in the <span class="dialogue-blank"></span>?</li>
-      <li>The steak is usually <span class="dialogue-blank"></span> with mushrooms, but I will tell the chef that you can&rsquo;t have them. And what would you like to drink?</li>
+      <li>Medium, please. And just to let you know I have an <span data-grammar-input="te7-d-q6a" data-grammar-acceptable="allergy" style="display: inline-block; min-width: 120px; border-bottom: 1px solid #94a3b8;"></span> to mushrooms. Are there any mushrooms in the <span data-grammar-input="te7-d-q6b" data-grammar-acceptable="dish" style="display: inline-block; min-width: 120px; border-bottom: 1px solid #94a3b8;"></span>?</li>
+      <li>The steak is usually <span data-grammar-input="te7-d-q7" data-grammar-acceptable="served" style="display: inline-block; min-width: 160px; border-bottom: 1px solid #94a3b8;"></span> with mushrooms, but I will tell the chef that you can&rsquo;t have them. And what would you like to drink?</li>
     </ul>
   </div>
 
-  <div class="keep-together">
+  <div class="keep-together" data-grammar-check-disabled="true">
     <h2 style="font-size: 22px; font-weight: 700; margin-bottom: 10px;">Speaking: Restaurants and Food</h2>
-    <ul style="font-size: 16px; margin: 0;">
-      <li style="margin-bottom: 8px;">What is your favourite food?</li>
-      <li style="margin-bottom: 8px;">Do you prefer eating in restaurants or cooking at home?</li>
-      <li style="margin-bottom: 8px;">What&rsquo;s the best meal you have ever eaten in a restaurant?</li>
-      <li style="margin-bottom: 8px;">When you go on holiday, do you like trying local food?</li>
-      <li style="margin-bottom: 8px;">Which country has the best food, in your opinion?</li>
-      <li>What do you think about English food?</li>
-    </ul>
+    <p style="font-size: 16px; margin: 0 0 12px;">Discuss the questions below. Use the boxes to write your ideas before you speak.</p>
+
+    <div class="speaking-item">
+      <p style="font-size: 16px; margin: 0 0 6px;">What is your favourite food?</p>
+      <span data-grammar-input="te7-s-q1" data-grammar-input-type="textarea" data-grammar-textarea-rows="3" style="display: block; min-height: 72px;"></span>
+    </div>
+    <div class="speaking-item">
+      <p style="font-size: 16px; margin: 0 0 6px;">Do you prefer eating in restaurants or cooking at home?</p>
+      <span data-grammar-input="te7-s-q2" data-grammar-input-type="textarea" data-grammar-textarea-rows="3" style="display: block; min-height: 72px;"></span>
+    </div>
+    <div class="speaking-item">
+      <p style="font-size: 16px; margin: 0 0 6px;">What&rsquo;s the best meal you have ever eaten in a restaurant?</p>
+      <span data-grammar-input="te7-s-q3" data-grammar-input-type="textarea" data-grammar-textarea-rows="3" style="display: block; min-height: 72px;"></span>
+    </div>
+    <div class="speaking-item">
+      <p style="font-size: 16px; margin: 0 0 6px;">When you go on holiday, do you like trying local food?</p>
+      <span data-grammar-input="te7-s-q4" data-grammar-input-type="textarea" data-grammar-textarea-rows="3" style="display: block; min-height: 72px;"></span>
+    </div>
+    <div class="speaking-item">
+      <p style="font-size: 16px; margin: 0 0 6px;">Which country has the best food, in your opinion?</p>
+      <span data-grammar-input="te7-s-q5" data-grammar-input-type="textarea" data-grammar-textarea-rows="3" style="display: block; min-height: 72px;"></span>
+    </div>
+    <div class="speaking-item">
+      <p style="font-size: 16px; margin: 0 0 6px;">What do you think about English food?</p>
+      <span data-grammar-input="te7-s-q6" data-grammar-input-type="textarea" data-grammar-textarea-rows="3" style="display: block; min-height: 72px;"></span>
+    </div>
   </div>
 </div>
 
