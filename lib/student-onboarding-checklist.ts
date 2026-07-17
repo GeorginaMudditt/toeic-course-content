@@ -1,4 +1,5 @@
 import { bpfNdaActivityLogHref } from '@/lib/bpf'
+import { qualiopiDocumentHref } from '@/lib/qualiopi-documents'
 
 export const ONBOARDING_CHECKLIST_STATUS_VALUES = [
   'PENDING',
@@ -57,12 +58,12 @@ export type OnboardingChecklistItemDefinition = {
   allowNotApplicable?: boolean
   /** Mark complete + note only — no optional file upload (complete-or-na items only). */
   completeNoteOnly?: boolean
-  /** Link to an admin tool (complete-or-na items only). */
-  externalLink?: {
+  /** Links to admin / Qualiopi tools (complete-or-na items only). */
+  externalLinks?: {
     label: string
     /** Built-in route key — resolved at render time. */
-    route: 'bpf-nda-activity'
-  }
+    route: 'bpf-nda-activity' | 'qualiopi-indicator-2' | 'qualiopi-indicator-32'
+  }[]
   /** Pre-stored PDF options to publish (template-pick-upload only). */
   templatePickOptions?: ChecklistTemplatePickOption[]
 }
@@ -131,21 +132,30 @@ export function parseLanguageAssessmentWorkflowState(value: unknown): TemplateWo
   return parseTemplateWorkflowState(value)
 }
 
-export function resolveChecklistExternalLink(
-  item: Pick<OnboardingChecklistItemDefinition, 'externalLink'>
-): { href: string; label: string } | undefined {
-  if (!item.externalLink) {
-    return undefined
+function resolveChecklistExternalLinkRoute(
+  route: NonNullable<OnboardingChecklistItemDefinition['externalLinks']>[number]['route']
+): string {
+  switch (route) {
+    case 'bpf-nda-activity':
+      return bpfNdaActivityLogHref()
+    case 'qualiopi-indicator-2':
+      return qualiopiDocumentHref('indicator-2')
+    case 'qualiopi-indicator-32':
+      return qualiopiDocumentHref('indicator-32')
+  }
+}
+
+export function resolveChecklistExternalLinks(
+  item: Pick<OnboardingChecklistItemDefinition, 'externalLinks'>
+): { href: string; label: string }[] {
+  if (!item.externalLinks?.length) {
+    return []
   }
 
-  if (item.externalLink.route === 'bpf-nda-activity') {
-    return {
-      href: bpfNdaActivityLogHref(),
-      label: item.externalLink.label,
-    }
-  }
-
-  return undefined
+  return item.externalLinks.map((link) => ({
+    href: resolveChecklistExternalLinkRoute(link.route),
+    label: link.label,
+  }))
 }
 
 export const STUDENT_ONBOARDING_CHECKLIST_ITEMS: OnboardingChecklistItemDefinition[] = [
@@ -271,15 +281,27 @@ export const STUDENT_ONBOARDING_CHECKLIST_ITEMS: OnboardingChecklistItemDefiniti
     label: 'Log NDA-related activity for BPF',
     type: 'complete-or-na',
     completeNoteOnly: true,
-    externalLink: {
-      label: 'Open BPF activity log',
-      route: 'bpf-nda-activity',
-    },
+    externalLinks: [
+      {
+        label: 'Open BPF activity log',
+        route: 'bpf-nda-activity',
+      },
+    ],
   },
   {
     slug: 'student-satisfaction-survey',
     label: 'Student Satisfaction Survey',
     type: 'complete-or-na',
+    externalLinks: [
+      {
+        label: 'Student satisfaction indicators',
+        route: 'qualiopi-indicator-2',
+      },
+      {
+        label: 'Continuous improvement suggestions',
+        route: 'qualiopi-indicator-32',
+      },
+    ],
   },
   {
     slug: 'employer-financer-satisfaction-survey',

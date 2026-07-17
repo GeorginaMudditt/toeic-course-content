@@ -149,6 +149,10 @@ export function getQualiopiDocument(slug: string) {
   return qualiopiDocuments.find((document) => document.slug === slug)
 }
 
+export function qualiopiDocumentHref(slug: string): string {
+  return `/teacher/qualiopi/${slug}`
+}
+
 export function getQualiopiFolder(indicatorSlug: string, folderSlug: string) {
   const document = getQualiopiDocument(indicatorSlug)
   return document?.folders?.find((folder) => folder.slug === folderSlug)

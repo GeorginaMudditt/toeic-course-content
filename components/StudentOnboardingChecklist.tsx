@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation'
 import { supabase } from '@/lib/supabase'
 import { formatUKDate } from '@/lib/date-utils'
 import {
-  resolveChecklistExternalLink,
+  resolveChecklistExternalLinks,
   type OnboardingChecklistItemView,
 } from '@/lib/student-onboarding-checklist'
 import LanguageAssessmentChecklistCard from '@/components/LanguageAssessmentChecklistCard'
@@ -456,7 +456,7 @@ export default function StudentOnboardingChecklist({
           const showCompleteOrNaNotePanel =
             isExpanded && isCompleteOrNa && expandedMode === 'note'
           const showCompletePanel = isExpanded && isCompleteOrNa && expandedMode === 'complete'
-          const externalLink = resolveChecklistExternalLink(item)
+          const externalLinks = resolveChecklistExternalLinks(item)
 
           return (
             <li
@@ -544,14 +544,16 @@ export default function StudentOnboardingChecklist({
                 </div>
 
                 <div className="flex shrink-0 flex-wrap gap-2 sm:justify-end">
-                  {externalLink && !isNotApplicable && (
-                    <Link
-                      href={externalLink.href}
-                      className="rounded-md border border-[#38438f] bg-white px-3 py-1.5 text-sm font-medium text-[#38438f] transition-colors hover:bg-[#e8eaf6]"
-                    >
-                      {externalLink.label}
-                    </Link>
-                  )}
+                  {!isNotApplicable &&
+                    externalLinks.map((externalLink) => (
+                      <Link
+                        key={externalLink.label}
+                        href={externalLink.href}
+                        className="rounded-md border border-[#38438f] bg-white px-3 py-1.5 text-sm font-medium text-[#38438f] transition-colors hover:bg-[#e8eaf6]"
+                      >
+                        {externalLink.label}
+                      </Link>
+                    ))}
 
                   {isStudentDocument && !isUploaded && !isExpanded && (
                     <button
