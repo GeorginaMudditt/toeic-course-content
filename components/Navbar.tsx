@@ -52,6 +52,9 @@ export default function Navbar() {
     if (path === '/student/toeic-info' || path === '/student/vocabulary' || path === '/student/course' || path === '/student/notes' || path === '/student/docs') {
       return pathname === path
     }
+    if (path === '/student/writing') {
+      return pathname === path || pathname.startsWith('/student/writing/')
+    }
     return pathname.startsWith(path)
   }
 
@@ -209,6 +212,17 @@ export default function Navbar() {
                     style={isActive('/student/docs') ? { borderColor: '#38438f' } : {}}
                   >
                     Docs
+                  </Link>
+                  <Link
+                    href="/student/writing"
+                    className={`inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium transition-colors ${
+                      isActive('/student/writing')
+                        ? 'text-gray-900'
+                        : 'border-transparent text-gray-500 hover:text-[#38438f] hover:border-[#38438f]'
+                    }`}
+                    style={isActive('/student/writing') ? { borderColor: '#38438f' } : {}}
+                  >
+                    Writing
                   </Link>
                   <Link
                     href="/student/toeic-info"

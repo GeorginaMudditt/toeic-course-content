@@ -145,6 +145,19 @@ export default async function StudentDashboard() {
               </div>
             </Link>
 
+            {/* My Writing Card */}
+            <Link
+              href="/student/writing"
+              className="bg-white shadow rounded-lg p-6 hover:shadow-lg transition-shadow"
+            >
+              <h2 className="text-xl font-semibold text-gray-900 mb-2" style={{ color: '#38438f' }}>
+                My Writing
+              </h2>
+              <p className="text-gray-600 text-sm">
+                Submit writing for marking and view your teacher&apos;s corrections.
+              </p>
+            </Link>
+
             {/* About the TOEIC® 4-Skills Test Card */}
             <Link
               href="/student/toeic-info"

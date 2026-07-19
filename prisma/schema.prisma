@@ -72,6 +72,9 @@ model User {
   onboardingChecklistItems StudentOnboardingChecklistItem[]
   teacherTasks           TeacherTask[]
   resourceBookmarks      ResourceBookmark[]
+  writingSubmissions     WritingSubmission[] @relation("WritingStudent")
+  writingMarked          WritingSubmission[] @relation("WritingMarkedBy")
+  writingUploaded        WritingSubmission[] @relation("WritingUploadedBy")
 }
 
 model Resource {
@@ -277,4 +280,39 @@ model ResourceBookmark {
 
   @@unique([studentId, assignmentId, sectionSlug])
   @@index([studentId, createdAt])
+}
+
+/// Writing homework submitted by a student (or uploaded by a teacher on their behalf).
+model WritingSubmission {
+  id              String    @id @default(cuid())
+  studentId       String
+  title           String
+  /// Student's original typed text (may be empty if only a file was uploaded).
+  originalText    String    @default("")
+  fileUrl         String?
+  fileName        String?
+  mimeType        String?
+  fileSize        Int?
+  /// SUBMITTED | MARKED
+  status          String    @default("SUBMITTED")
+  /// HTML with red tracked corrections (teacher markup).
+  markedHtml      String?
+  /// General teacher feedback shown to the student.
+  teacherComments String?
+  score           Float?
+  submittedAt     DateTime  @default(now())
+  markedAt        DateTime?
+  markedById      String?
+  /// Set when a teacher uploads/creates the submission on the student's behalf.
+  uploadedById    String?
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  student         User      @relation("WritingStudent", fields: [studentId], references: [id], onDelete: Cascade)
+  markedBy        User?     @relation("WritingMarkedBy", fields: [markedById], references: [id], onDelete: SetNull)
+  uploadedBy      User?     @relation("WritingUploadedBy", fields: [uploadedById], references: [id], onDelete: SetNull)
+
+  @@index([studentId, status])
+  @@index([studentId, submittedAt])
+  @@index([status, submittedAt])
 }

@@ -10,9 +10,16 @@ import Link from 'next/link'
 import { ClientLocalLastSeenLine } from '@/components/ClientLocalDateTime'
 import StudentNotesManager from '@/components/StudentNotesManager'
 import StudentDocumentManager from '@/components/StudentDocumentManager'
+import WritingSubmissionsManager from '@/components/WritingSubmissionsManager'
 import Tabs from '@/components/Tabs'
 
-export default async function StudentDetailPage({ params }: { params: { id: string } }) {
+export default async function StudentDetailPage({
+  params,
+  searchParams,
+}: {
+  params: { id: string }
+  searchParams?: { tab?: string }
+}) {
   const session = await getServerSession(authOptions)
   
   if (!session || session.user.role !== 'TEACHER') {
@@ -23,6 +30,14 @@ export default async function StudentDetailPage({ params }: { params: { id: stri
   let allResources: any[] = []
   let courses: any[] = []
   let documents: any[] = []
+  let writingSubmissions: any[] = []
+  const defaultTab =
+    searchParams?.tab === 'writing' ||
+    searchParams?.tab === 'notes' ||
+    searchParams?.tab === 'documents' ||
+    searchParams?.tab === 'assignments'
+      ? searchParams.tab
+      : 'assignments'
 
   try {
     // Fetch the student
@@ -174,6 +189,19 @@ export default async function StudentDetailPage({ params }: { params: { id: stri
     } else {
       documents = documentsData || []
     }
+
+    // Fetch writing submissions for this student
+    const { data: writingData, error: writingError } = await supabaseServer
+      .from('WritingSubmission')
+      .select('*')
+      .eq('studentId', params.id)
+      .order('submittedAt', { ascending: false })
+
+    if (writingError) {
+      console.error('Error fetching writing submissions:', writingError)
+    } else {
+      writingSubmissions = writingData || []
+    }
   } catch (error) {
     console.error('Error loading student detail page:', error)
     redirect('/teacher/students')
@@ -252,9 +280,19 @@ export default async function StudentDetailPage({ params }: { params: { id: stri
                     documents={documents}
                   />
                 )
+              },
+              {
+                id: 'writing',
+                label: 'Writing',
+                content: (
+                  <WritingSubmissionsManager
+                    studentId={student.id}
+                    submissions={writingSubmissions}
+                  />
+                )
               }
             ]}
-            defaultTab="assignments"
+            defaultTab={defaultTab}
           />
         </div>
       </div>
