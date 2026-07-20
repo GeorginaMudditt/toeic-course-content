@@ -38,6 +38,31 @@ function getAcceptAttribute(allowedMimeTypes?: string[]) {
 
 type ExpandedMode = 'upload' | 'note' | 'complete'
 
+const externalLinkClassName =
+  'rounded-md border border-[#38438f] bg-white px-3 py-1.5 text-sm font-medium text-[#38438f] transition-colors hover:bg-[#e8eaf6]'
+
+function renderExternalLink(link: { href: string; label: string; external: boolean }) {
+  if (link.external) {
+    return (
+      <a
+        key={link.label}
+        href={link.href}
+        target="_blank"
+        rel="noopener noreferrer"
+        className={externalLinkClassName}
+      >
+        {link.label}
+      </a>
+    )
+  }
+
+  return (
+    <Link key={link.label} href={link.href} className={externalLinkClassName}>
+      {link.label}
+    </Link>
+  )
+}
+
 export default function StudentOnboardingChecklist({
   studentId,
   initialItems,
@@ -457,6 +482,96 @@ export default function StudentOnboardingChecklist({
             isExpanded && isCompleteOrNa && expandedMode === 'note'
           const showCompletePanel = isExpanded && isCompleteOrNa && expandedMode === 'complete'
           const externalLinks = resolveChecklistExternalLinks(item)
+          const hasExternalLinks = externalLinks.length > 0
+
+          const actionButtons = (
+            <>
+              {isStudentDocument && !isUploaded && !isExpanded && (
+                <button
+                  type="button"
+                  onClick={() => openUploadForm(item)}
+                  className="rounded-md px-3 py-1.5 text-sm font-medium text-white transition-colors hover:bg-[#2d3569]"
+                  style={{ backgroundColor: '#38438f' }}
+                >
+                  Upload
+                </button>
+              )}
+
+              {isStudentDocument && isUploaded && !isExpanded && (
+                <>
+                  <button
+                    type="button"
+                    onClick={() => openNoteForm(item)}
+                    className="rounded-md border border-gray-300 bg-white px-3 py-1.5 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-50"
+                  >
+                    {item.note ? 'Edit note' : 'Add note'}
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => openUploadForm(item)}
+                    className="rounded-md border border-gray-300 bg-white px-3 py-1.5 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-50"
+                  >
+                    Replace
+                  </button>
+                </>
+              )}
+
+              {isCompleteOrNa && item.status === 'PENDING' && !isExpanded && (
+                <>
+                  <button
+                    type="button"
+                    onClick={() => openCompleteForm(item)}
+                    className="rounded-md px-3 py-1.5 text-sm font-medium text-white transition-colors hover:bg-[#2d3569]"
+                    style={{ backgroundColor: '#38438f' }}
+                  >
+                    Mark complete
+                  </button>
+                  {showNotApplicable && (
+                    <button
+                      type="button"
+                      onClick={() => handleMarkNotApplicable(item.slug)}
+                      disabled={isSaving}
+                      className="rounded-md border border-gray-300 bg-white px-3 py-1.5 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-50 disabled:opacity-50"
+                    >
+                      N/A
+                    </button>
+                  )}
+                </>
+              )}
+
+              {isCompleteOrNa && (isUploaded || isNotApplicable) && (
+                <button
+                  type="button"
+                  onClick={() => handleReset(item.slug)}
+                  disabled={isSaving}
+                  className="rounded-md border border-gray-300 bg-white px-3 py-1.5 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-50 disabled:opacity-50"
+                >
+                  Undo
+                </button>
+              )}
+
+              {isCompleteOrNa && isUploaded && !isExpanded && (
+                <>
+                  <button
+                    type="button"
+                    onClick={() => openNoteForm(item)}
+                    className="rounded-md border border-gray-300 bg-white px-3 py-1.5 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-50"
+                  >
+                    {item.note ? 'Edit note' : 'Add note'}
+                  </button>
+                  {!isNoteOnlyComplete && (
+                    <button
+                      type="button"
+                      onClick={() => openCompleteForm(item)}
+                      className="rounded-md border border-gray-300 bg-white px-3 py-1.5 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-50"
+                    >
+                      Edit
+                    </button>
+                  )}
+                </>
+              )}
+            </>
+          )
 
           return (
             <li
@@ -469,7 +584,13 @@ export default function StudentOnboardingChecklist({
                     : 'border-gray-200'
               }`}
             >
-              <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+              <div
+                className={
+                  hasExternalLinks
+                    ? 'space-y-3'
+                    : 'flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between'
+                }
+              >
                 <div className="min-w-0 flex-1">
                   <div className="flex items-start gap-3">
                     {renderStatusBadge(item, index, isUploaded, isNotApplicable)}
@@ -543,104 +664,17 @@ export default function StudentOnboardingChecklist({
                   </div>
                 </div>
 
-                <div className="flex shrink-0 flex-wrap gap-2 sm:justify-end">
-                  {!isNotApplicable &&
-                    externalLinks.map((externalLink) => (
-                      <Link
-                        key={externalLink.label}
-                        href={externalLink.href}
-                        className="rounded-md border border-[#38438f] bg-white px-3 py-1.5 text-sm font-medium text-[#38438f] transition-colors hover:bg-[#e8eaf6]"
-                      >
-                        {externalLink.label}
-                      </Link>
-                    ))}
-
-                  {isStudentDocument && !isUploaded && !isExpanded && (
-                    <button
-                      type="button"
-                      onClick={() => openUploadForm(item)}
-                      className="rounded-md px-3 py-1.5 text-sm font-medium text-white transition-colors hover:bg-[#2d3569]"
-                      style={{ backgroundColor: '#38438f' }}
-                    >
-                      Upload
-                    </button>
-                  )}
-
-                  {isStudentDocument && isUploaded && !isExpanded && (
-                    <>
-                      <button
-                        type="button"
-                        onClick={() => openNoteForm(item)}
-                        className="rounded-md border border-gray-300 bg-white px-3 py-1.5 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-50"
-                      >
-                        {item.note ? 'Edit note' : 'Add note'}
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => openUploadForm(item)}
-                        className="rounded-md border border-gray-300 bg-white px-3 py-1.5 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-50"
-                      >
-                        Replace
-                      </button>
-                    </>
-                  )}
-
-                  {isCompleteOrNa && item.status === 'PENDING' && !isExpanded && (
-                    <>
-                      <button
-                        type="button"
-                        onClick={() => openCompleteForm(item)}
-                        className="rounded-md px-3 py-1.5 text-sm font-medium text-white transition-colors hover:bg-[#2d3569]"
-                        style={{ backgroundColor: '#38438f' }}
-                      >
-                        Mark complete
-                      </button>
-                      {showNotApplicable && (
-                        <button
-                          type="button"
-                          onClick={() => handleMarkNotApplicable(item.slug)}
-                          disabled={isSaving}
-                          className="rounded-md border border-gray-300 bg-white px-3 py-1.5 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-50 disabled:opacity-50"
-                        >
-                          N/A
-                        </button>
-                      )}
-                    </>
-                  )}
-
-                  {isCompleteOrNa && (isUploaded || isNotApplicable) && (
-                    <button
-                      type="button"
-                      onClick={() => handleReset(item.slug)}
-                      disabled={isSaving}
-                      className="rounded-md border border-gray-300 bg-white px-3 py-1.5 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-50 disabled:opacity-50"
-                    >
-                      Undo
-                    </button>
-                  )}
-
-                  {isCompleteOrNa && isUploaded && !isExpanded && (
-                    <>
-                      <button
-                        type="button"
-                        onClick={() => openNoteForm(item)}
-                        className="rounded-md border border-gray-300 bg-white px-3 py-1.5 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-50"
-                      >
-                        {item.note ? 'Edit note' : 'Add note'}
-                      </button>
-                      {!isNoteOnlyComplete && (
-                        <button
-                          type="button"
-                          onClick={() => openCompleteForm(item)}
-                          className="rounded-md border border-gray-300 bg-white px-3 py-1.5 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-50"
-                        >
-                          Edit
-                        </button>
-                      )}
-                    </>
-                  )}
-                </div>
+                {!hasExternalLinks && (
+                  <div className="flex shrink-0 flex-wrap gap-2 sm:justify-end">{actionButtons}</div>
+                )}
               </div>
+
+              {hasExternalLinks && (
+                <div className="flex flex-wrap gap-2 pl-9">
+                  {!isNotApplicable && externalLinks.map(renderExternalLink)}
+                  {actionButtons}
+                </div>
+              )}
 
               {showUploadPanel && (
                 <div className="mt-4 border-t border-gray-100 pt-4">

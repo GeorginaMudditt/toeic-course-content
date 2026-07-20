@@ -58,12 +58,18 @@ export type OnboardingChecklistItemDefinition = {
   allowNotApplicable?: boolean
   /** Mark complete + note only — no optional file upload (complete-or-na items only). */
   completeNoteOnly?: boolean
-  /** Links to admin / Qualiopi tools (complete-or-na items only). */
-  externalLinks?: {
-    label: string
-    /** Built-in route key — resolved at render time. */
-    route: 'bpf-nda-activity' | 'qualiopi-indicator-2' | 'qualiopi-indicator-32'
-  }[]
+  /** Links to admin / Qualiopi tools or external forms (complete-or-na items only). */
+  externalLinks?: (
+    | {
+        label: string
+        /** Built-in route key — resolved at render time. */
+        route: 'bpf-nda-activity' | 'qualiopi-indicator-2' | 'qualiopi-indicator-32'
+      }
+    | {
+        label: string
+        href: string
+      }
+  )[]
   /** Pre-stored PDF options to publish (template-pick-upload only). */
   templatePickOptions?: ChecklistTemplatePickOption[]
 }
@@ -133,7 +139,10 @@ export function parseLanguageAssessmentWorkflowState(value: unknown): TemplateWo
 }
 
 function resolveChecklistExternalLinkRoute(
-  route: NonNullable<OnboardingChecklistItemDefinition['externalLinks']>[number]['route']
+  route: Extract<
+    NonNullable<OnboardingChecklistItemDefinition['externalLinks']>[number],
+    { route: string }
+  >['route']
 ): string {
   switch (route) {
     case 'bpf-nda-activity':
@@ -147,15 +156,22 @@ function resolveChecklistExternalLinkRoute(
 
 export function resolveChecklistExternalLinks(
   item: Pick<OnboardingChecklistItemDefinition, 'externalLinks'>
-): { href: string; label: string }[] {
+): { href: string; label: string; external: boolean }[] {
   if (!item.externalLinks?.length) {
     return []
   }
 
-  return item.externalLinks.map((link) => ({
-    href: resolveChecklistExternalLinkRoute(link.route),
-    label: link.label,
-  }))
+  return item.externalLinks.map((link) => {
+    if ('href' in link) {
+      return { href: link.href, label: link.label, external: true }
+    }
+
+    return {
+      href: resolveChecklistExternalLinkRoute(link.route),
+      label: link.label,
+      external: false,
+    }
+  })
 }
 
 export const STUDENT_ONBOARDING_CHECKLIST_ITEMS: OnboardingChecklistItemDefinition[] = [
@@ -312,6 +328,12 @@ export const STUDENT_ONBOARDING_CHECKLIST_ITEMS: OnboardingChecklistItemDefiniti
     slug: 'trainer-satisfaction-survey',
     label: 'Trainer Satisfaction Survey',
     type: 'complete-or-na',
+    externalLinks: [
+      {
+        label: 'Complete',
+        href: 'https://tally.so/r/aQzljE',
+      },
+    ],
   },
   {
     slug: 'three-month-follow-up',
