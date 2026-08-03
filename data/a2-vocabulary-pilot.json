@@ -470,14 +470,14 @@
       "icon_file": "media.png",
       "words": [
         { "word_english": "album", "translation_french": "album" },
-        { "word_english": "advertisement", "translation_french": "publicité" },
+        { "word_english": "advertisement", "translation_french": "publicité", "gold_alternatives": ["advert"] },
         { "word_english": "channel", "translation_french": "chaîne" },
         { "word_english": "digital camera", "translation_french": "appareil photo numérique" },
         { "word_english": "download", "translation_french": "téléchargement" },
         { "word_english": "magazine", "translation_french": "magazine" },
         { "word_english": "email", "translation_french": "e-mail" },
         { "word_english": "poster", "translation_french": "affiche" },
-        { "word_english": "programme", "translation_french": "programme" },
+        { "word_english": "programme", "translation_french": "programme", "gold_alternatives": ["program"] },
         { "word_english": "screen", "translation_french": "écran" },
         { "word_english": "video", "translation_french": "vidéo" }
       ]

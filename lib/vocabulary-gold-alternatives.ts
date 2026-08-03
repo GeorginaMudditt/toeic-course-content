@@ -35,6 +35,8 @@ const GOLD_ALTERNATIVES: Record<string, string[]> = {
   'a2|Home (B)|sitting room': ['living room'],
   'a2|Jobs (A)|writer': ['author'],
   'a2|Jobs (B)|occupation': ['profession', 'job'],
+  'a2|Media|advertisement': ['advert'],
+  'a2|Media|programme': ['program'],
   'a2|Money|half-price': ['half price'],
   'a2|Technology|web page': ['website', 'web site'],
   'a2|Travel (A)|aeroplane': ['plane', 'airplane'],
