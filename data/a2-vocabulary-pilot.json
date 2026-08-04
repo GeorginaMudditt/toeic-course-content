@@ -553,7 +553,7 @@
         { "word_english": "battery", "translation_french": "pile" },
         { "word_english": "envelope", "translation_french": "enveloppe" },
         { "word_english": "balloon", "translation_french": "ballon" },
-        { "word_english": "blackboard", "translation_french": "tableau" },
+        { "word_english": "blackboard", "translation_french": "tableau", "gold_alternatives": ["board", "whiteboard"] },
         { "word_english": "blanket", "translation_french": "couverture" },
         { "word_english": "calendar", "translation_french": "calendrier" },
         { "word_english": "mug", "translation_french": "tasse" }

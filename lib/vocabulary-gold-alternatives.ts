@@ -41,6 +41,7 @@ const GOLD_ALTERNATIVES: Record<string, string[]> = {
   'a2|Money|half-price': ['half price'],
   'a2|Natural World|area': ['region'],
   'a2|Natural World|storm': ['thunderstorm'],
+  'a2|Nouns (A)|blackboard': ['board', 'whiteboard'],
   'a2|Technology|web page': ['website', 'web site'],
   'a2|Travel (A)|aeroplane': ['plane', 'airplane'],
   'a2|Travel (A)|bicycle': ['bike'],
