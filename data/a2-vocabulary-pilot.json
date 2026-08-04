@@ -488,7 +488,7 @@
       "icon_file": "money.png",
       "words": [
         { "word_english": "cheque", "translation_french": "chèque" },
-        { "word_english": "discount", "translation_french": "réduction" },
+        { "word_english": "discount", "translation_french": "réduction", "gold_alternatives": ["reduction"] },
         { "word_english": "gold", "translation_french": "or" },
         { "word_english": "half-price", "translation_french": "à moitié prix" },
         { "word_english": "on sale", "translation_french": "en solde" },
@@ -509,13 +509,13 @@
         ["north", "east", "south", "west"],
         ["countryside", "area", "field", "wood", "forest"],
         ["island", "lake", "desert"],
-        ["sky", "cloud", "fog", "sunny", "storm", "thunderstorm"],
+        ["sky", "cloud", "fog", "sunny", "storm"],
         ["moon", "star"]
       ],
       "words": [
         { "word_english": "countryside", "translation_french": "campagne" },
         { "word_english": "desert", "translation_french": "désert" },
-        { "word_english": "area", "translation_french": "région" },
+        { "word_english": "area", "translation_french": "région", "gold_alternatives": ["region"] },
         { "word_english": "summer", "translation_french": "été" },
         { "word_english": "autumn", "translation_french": "automne" },
         { "word_english": "winter", "translation_french": "hiver" },
@@ -533,10 +533,9 @@
         { "word_english": "lake", "translation_french": "lac" },
         { "word_english": "sky", "translation_french": "ciel" },
         { "word_english": "star", "translation_french": "étoile" },
-        { "word_english": "storm", "translation_french": "tempête" },
+        { "word_english": "storm", "translation_french": "orage", "gold_alternatives": ["thunderstorm"] },
         { "word_english": "sunny", "translation_french": "ensoleillé(e)" },
-        { "word_english": "moon", "translation_french": "lune" },
-        { "word_english": "thunderstorm", "translation_french": "orage" }
+        { "word_english": "moon", "translation_french": "lune" }
       ]
     },
     {
