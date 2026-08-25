@@ -8,6 +8,23 @@ import { brizzleBlue, brizzleBlueHover, brizzleRed, brizzleRedHover } from '@/li
 import { parseCourseDurationHours } from '@/lib/course-notes-lessons'
 import { ClientLocalLastOpenedLine } from '@/components/ClientLocalDateTime'
 
+type ProgressStatusKey = 'NOT_STARTED' | 'IN_PROGRESS' | 'COMPLETED'
+
+const ASSIGNED_SKILL_FILTER_OPTIONS: { value: string; label: string }[] = [
+  { value: 'All', label: 'All skills' },
+  { value: 'GRAMMAR', label: 'Grammar' },
+  { value: 'VOCABULARY', label: 'Vocabulary' },
+  { value: 'READING', label: 'Reading' },
+  { value: 'WRITING', label: 'Writing' },
+  { value: 'SPEAKING', label: 'Speaking' },
+  { value: 'LISTENING', label: 'Listening' },
+  { value: 'TESTS', label: 'Tests' },
+  { value: 'REFERENCE', label: 'Reference' },
+  { value: 'TRAVEL_ENGLISH', label: 'Travel English' },
+  { value: 'BUSINESS_ENGLISH', label: 'Business English' },
+  { value: 'EVERYDAY_ENGLISH', label: 'Everyday English' },
+]
+
 interface Resource {
   id: string
   title: string
@@ -69,6 +86,15 @@ const PRESET_COURSE_OPTIONS: PresetCourseOption[] = [
 
 const OTHER_OPTION_VALUE = '__OTHER__'
 
+function getAssignmentProgressStatus(assignment: Assignment): ProgressStatusKey {
+  const progress = Array.isArray(assignment.progress) ? assignment.progress[0] : null
+  const raw = progress?.status as string | undefined
+  if (raw === 'IN_PROGRESS' || raw === 'COMPLETED') {
+    return raw
+  }
+  return 'NOT_STARTED'
+}
+
 function AssignmentProgressMeta({ progress }: { progress?: { status: string; updatedAt?: string | null } }) {
   if (!progress) {
     return <p className="text-sm text-gray-400 mt-1">Not yet opened</p>
@@ -106,6 +132,40 @@ export default function StudentAssignmentManager({ student, resources, courses }
   const [selectedSkills, setSelectedSkills] = useState<string[]>(['All'])
   const [titleSearch, setTitleSearch] = useState('')
   const [showOnlyUnassigned, setShowOnlyUnassigned] = useState<Record<string, boolean>>({})
+  const [assignedListSelectedSkill, setAssignedListSelectedSkill] = useState<
+    Record<string, string>
+  >({})
+  const [assignedListShowStatuses, setAssignedListShowStatuses] = useState<
+    Record<string, Record<ProgressStatusKey, boolean>>
+  >({})
+
+  const getAssignedListSkill = (enrollmentId: string) =>
+    assignedListSelectedSkill[enrollmentId] ?? 'All'
+
+  const getAssignedListStatuses = (enrollmentId: string): Record<ProgressStatusKey, boolean> =>
+    assignedListShowStatuses[enrollmentId] ?? {
+      NOT_STARTED: true,
+      IN_PROGRESS: true,
+      COMPLETED: true,
+    }
+
+  const setAssignedListSkill = (enrollmentId: string, skill: string) => {
+    setAssignedListSelectedSkill((prev) => ({ ...prev, [enrollmentId]: skill }))
+  }
+
+  const toggleAssignedListStatus = (enrollmentId: string, key: ProgressStatusKey) => {
+    setAssignedListShowStatuses((prev) => {
+      const current = prev[enrollmentId] ?? {
+        NOT_STARTED: true,
+        IN_PROGRESS: true,
+        COMPLETED: true,
+      }
+      return {
+        ...prev,
+        [enrollmentId]: { ...current, [key]: !current[key] },
+      }
+    })
+  }
 
   // Use the utility function directly - it handles all cleaning
   const formatCourseName = formatCourseNameUtil
@@ -197,6 +257,36 @@ export default function StudentAssignmentManager({ student, resources, courses }
         return newSkills.length === 0 ? ['All'] : newSkills
       })
     }
+  }
+
+  const getFilteredAssignedAssignments = (
+    enrollmentId: string,
+    assignments: Assignment[],
+  ) => {
+    const showStatuses = getAssignedListStatuses(enrollmentId)
+    const selectedSkill = getAssignedListSkill(enrollmentId)
+    const anyStatusSelected =
+      showStatuses.NOT_STARTED || showStatuses.IN_PROGRESS || showStatuses.COMPLETED
+
+    if (!anyStatusSelected) return []
+
+    return assignments.filter((assignment) => {
+      if (!showStatuses[getAssignmentProgressStatus(assignment)]) return false
+      if (selectedSkill !== 'All' && assignment.resource?.skill !== selectedSkill) {
+        return false
+      }
+      return true
+    })
+  }
+
+  const getAssignedSkillOptions = (assignments: Assignment[]) => {
+    const skillsInAssignments = new Set<string>()
+    assignments.forEach((assignment) => {
+      if (assignment.resource?.skill) skillsInAssignments.add(assignment.resource.skill)
+    })
+    return ASSIGNED_SKILL_FILTER_OPTIONS.filter(
+      (option) => option.value === 'All' || skillsInAssignments.has(option.value),
+    )
   }
 
   const handleEnroll = async () => {
@@ -604,7 +694,67 @@ export default function StudentAssignmentManager({ student, resources, courses }
 
             {/* Current Assignments */}
             <div>
-              <h3 className="font-semibold mb-3 text-gray-900">Assigned Resources</h3>
+              <div className="flex flex-col gap-4 mb-3 sm:flex-row sm:justify-between sm:items-start">
+                <h3 className="font-semibold text-gray-900 shrink-0">Assigned Resources</h3>
+                {enrollment.assignments.length > 0 && (
+                  <div className="flex flex-col gap-3 w-full sm:w-auto sm:items-end">
+                    <div className="w-full sm:w-56">
+                      <label
+                        htmlFor={`assigned-skill-filter-${enrollment.id}`}
+                        className="block text-sm font-medium text-gray-700 mb-2"
+                      >
+                        Skill
+                      </label>
+                      <select
+                        id={`assigned-skill-filter-${enrollment.id}`}
+                        value={getAssignedListSkill(enrollment.id)}
+                        onChange={(e) => setAssignedListSkill(enrollment.id, e.target.value)}
+                        className="border border-gray-300 rounded-md px-3 py-2 focus:outline-none w-full text-sm bg-white"
+                        onFocus={(e) => (e.currentTarget.style.borderColor = '#38438f')}
+                        onBlur={(e) => (e.currentTarget.style.borderColor = '#d1d5db')}
+                      >
+                        {getAssignedSkillOptions(enrollment.assignments).map((option) => (
+                          <option key={option.value} value={option.value}>
+                            {option.label}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                    <fieldset className="w-full sm:min-w-[280px] border border-gray-200 rounded-md p-3 bg-gray-50/50">
+                      <legend className="text-sm font-medium text-gray-700 px-1">Status</legend>
+                      <div className="flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:gap-x-4 sm:gap-y-2">
+                        <label className="inline-flex items-center gap-2 text-sm text-gray-700 cursor-pointer">
+                          <input
+                            type="checkbox"
+                            className="rounded border-gray-300 text-indigo-900 focus:ring-offset-0 focus:ring-[#38438f]"
+                            checked={getAssignedListStatuses(enrollment.id).NOT_STARTED}
+                            onChange={() => toggleAssignedListStatus(enrollment.id, 'NOT_STARTED')}
+                          />
+                          Not yet opened
+                        </label>
+                        <label className="inline-flex items-center gap-2 text-sm text-gray-700 cursor-pointer">
+                          <input
+                            type="checkbox"
+                            className="rounded border-gray-300 text-indigo-900 focus:ring-offset-0 focus:ring-[#38438f]"
+                            checked={getAssignedListStatuses(enrollment.id).IN_PROGRESS}
+                            onChange={() => toggleAssignedListStatus(enrollment.id, 'IN_PROGRESS')}
+                          />
+                          In progress
+                        </label>
+                        <label className="inline-flex items-center gap-2 text-sm text-gray-700 cursor-pointer">
+                          <input
+                            type="checkbox"
+                            className="rounded border-gray-300 text-indigo-900 focus:ring-offset-0 focus:ring-[#38438f]"
+                            checked={getAssignedListStatuses(enrollment.id).COMPLETED}
+                            onChange={() => toggleAssignedListStatus(enrollment.id, 'COMPLETED')}
+                          />
+                          Completed
+                        </label>
+                      </div>
+                    </fieldset>
+                  </div>
+                )}
+              </div>
               {enrollment.assignments.length === 0 ? (
                 <div className="text-center py-6 bg-gray-50 rounded-lg border border-dashed border-gray-300">
                   <p className="text-sm text-gray-500">No resources assigned yet.</p>
@@ -613,7 +763,19 @@ export default function StudentAssignmentManager({ student, resources, courses }
               ) : (
               <div className="space-y-2">
                 {(() => {
-                  // Separate reference and non-reference assignments
+                  const showStatuses = getAssignedListStatuses(enrollment.id)
+                  const selectedSkill = getAssignedListSkill(enrollment.id)
+                  const anyStatusSelected =
+                    showStatuses.NOT_STARTED ||
+                    showStatuses.IN_PROGRESS ||
+                    showStatuses.COMPLETED
+                  const hasActiveFilters =
+                    selectedSkill !== 'All' ||
+                    !showStatuses.NOT_STARTED ||
+                    !showStatuses.IN_PROGRESS ||
+                    !showStatuses.COMPLETED
+
+                  // Separate reference and non-reference assignments (full list for stable lesson numbers)
                   const referenceAssignments = enrollment.assignments.filter(
                     (assignment) => assignment.resource?.skill === 'REFERENCE'
                   )
@@ -624,16 +786,54 @@ export default function StudentAssignmentManager({ student, resources, courses }
                   // Sort both by order
                   const sortedLessonAssignments = [...lessonAssignments].sort((a, b) => a.order - b.order)
                   const sortedReferenceAssignments = [...referenceAssignments].sort((a, b) => a.order - b.order)
-                  
-                  // Calculate lesson numbers only for non-reference resources
-                  let lessonNumber = 0
-                  
+
+                  // Stable lesson numbers from the full ordered list
+                  const lessonNumberById = new Map<string, number>()
+                  sortedLessonAssignments.forEach((assignment, index) => {
+                    lessonNumberById.set(assignment.id, index + 1)
+                  })
+
+                  const filteredLessonAssignments = getFilteredAssignedAssignments(
+                    enrollment.id,
+                    sortedLessonAssignments,
+                  )
+                  const filteredReferenceAssignments = getFilteredAssignedAssignments(
+                    enrollment.id,
+                    sortedReferenceAssignments,
+                  )
+                  const filteredCount =
+                    filteredLessonAssignments.length + filteredReferenceAssignments.length
+
+                  if (!anyStatusSelected) {
+                    return (
+                      <p className="text-sm text-gray-500">
+                        Tick at least one status to see assigned resources.
+                      </p>
+                    )
+                  }
+
+                  if (filteredCount === 0) {
+                    return (
+                      <p className="text-sm text-gray-500">
+                        {hasActiveFilters
+                          ? 'No assigned resources match the selected status or skill filters.'
+                          : 'No resources assigned yet.'}
+                      </p>
+                    )
+                  }
+
                   return (
                     <>
+                      {hasActiveFilters && (
+                        <p className="text-sm text-gray-500 mb-1">
+                          Showing {filteredCount} of {enrollment.assignments.length} resource
+                          {enrollment.assignments.length === 1 ? '' : 's'}
+                        </p>
+                      )}
                       {/* Display lesson assignments with lesson numbers */}
-                      {sortedLessonAssignments.map((assignment) => {
-                        lessonNumber++
+                      {filteredLessonAssignments.map((assignment) => {
                         const progress = assignment.progress[0]
+                        const lessonNumber = lessonNumberById.get(assignment.id)
                         return (
                           <div
                             key={assignment.id}
@@ -670,7 +870,7 @@ export default function StudentAssignmentManager({ student, resources, courses }
                       })}
                       
                       {/* Display reference assignments without lesson numbers */}
-                      {sortedReferenceAssignments.map((assignment) => {
+                      {filteredReferenceAssignments.map((assignment) => {
                         const progress = assignment.progress[0]
                         return (
                           <div

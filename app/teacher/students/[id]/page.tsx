@@ -252,7 +252,7 @@ export default async function StudentDetailPage({
             tabs={[
               {
                 id: 'assignments',
-                label: 'Assignments',
+                label: 'Resources',
                 content: (
                   <StudentAssignmentManager
                     student={student}
