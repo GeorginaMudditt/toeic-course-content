@@ -1,0 +1,349 @@
+<!-- Writing Clearly -->
+<style>
+  @media print {
+    @page { margin: 1.5cm; }
+    body { margin: 0; padding: 0; }
+    .wc-page-break { page-break-before: always; }
+    .wc-keep-together { page-break-inside: avoid; break-inside: avoid; }
+    .screen-only { display: none !important; }
+    .wc-reveal-btn,
+    .wc-reveal-toggle { display: none !important; }
+    .wc-reveal-content { display: block !important; }
+  }
+  .wc-keep-together { page-break-inside: avoid; break-inside: avoid; }
+  @media screen {
+    .wc-keep-together {
+      page-break-inside: auto;
+      break-inside: auto;
+    }
+  }
+  .grammar-ai-feedback-scroll-hint {
+    display: none !important;
+  }
+  .grammar-ai-feedback-panel {
+    display: none;
+    box-sizing: border-box;
+    height: min(38vh, 300px);
+    max-height: min(38vh, 300px);
+    min-height: 200px;
+    overflow-x: hidden;
+    overflow-y: scroll;
+    overscroll-behavior: contain;
+    scrollbar-gutter: stable;
+    -webkit-overflow-scrolling: touch;
+    padding: 14px 16px 18px 16px;
+    border: 2px solid #818cf8 !important;
+    border-radius: 8px;
+    background: #f8fafc;
+    box-shadow: 0 4px 14px rgba(79, 70, 229, 0.15);
+    position: relative;
+    z-index: 2;
+  }
+  .grammar-ai-feedback-panel::-webkit-scrollbar {
+    width: 14px;
+  }
+  .grammar-ai-feedback-panel::-webkit-scrollbar-track {
+    background: #e0e7ff;
+    border-radius: 8px;
+  }
+  .grammar-ai-feedback-panel::-webkit-scrollbar-thumb {
+    background: #4f46e5;
+    border-radius: 8px;
+    border: 3px solid #e0e7ff;
+  }
+  .grammar-ai-feedback-mount {
+    margin-top: 14px;
+    overflow: visible;
+  }
+  .grammar-save-controls + .grammar-ai-feedback-panel {
+    margin-top: 16px;
+  }
+  [data-grammar-save-section],
+  [data-grammar-ai-feedback-host] {
+    overflow: visible;
+  }
+  .wc-writing-host {
+    break-inside: auto;
+    page-break-inside: auto;
+    overflow: visible;
+    position: relative;
+    z-index: 1;
+  }
+  .wc-writing-timer-host {
+    margin-bottom: 12px;
+  }
+  .itw-writing-timer {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  .itw-writing-timer-start {
+    padding: 10px 16px;
+    font-size: 14px;
+    font-weight: 600;
+    color: #ffffff;
+    background: linear-gradient(135deg, #4338ca 0%, #6366f1 100%);
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    box-shadow: 0 2px 6px rgba(67, 56, 202, 0.35);
+  }
+  .itw-writing-timer-start:hover {
+    filter: brightness(1.05);
+  }
+  .itw-writing-timer-display {
+    font-size: 28px;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+    color: #1e3a8a;
+    padding: 8px 16px;
+    background: #eef2ff;
+    border: 2px solid #818cf8;
+    border-radius: 8px;
+    min-width: 110px;
+    text-align: center;
+  }
+  .itw-writing-timer-display.itw-writing-timer-expired {
+    color: #b91c1c;
+    background: #fef2f2;
+    border-color: #f87171;
+  }
+  @keyframes itw-timer-shake {
+    0%, 100% { transform: translateX(0); }
+    10%, 30%, 50%, 70%, 90% { transform: translateX(-6px); }
+    20%, 40%, 60%, 80% { transform: translateX(6px); }
+  }
+  .itw-writing-timer-shake {
+    animation: itw-timer-shake 0.6s ease-in-out;
+  }
+  @media print {
+    .wc-writing-timer-host { display: none !important; }
+  }
+  .wc-example-quote {
+    margin: 0;
+    padding: 14px 16px;
+    background: #f8fafc;
+    border-left: 4px solid #6366f1;
+    border-radius: 0 8px 8px 0;
+    font-size: 14px;
+    line-height: 1.7;
+    color: #334155;
+    font-style: italic;
+  }
+  .wc-meta {
+    margin: 8px 0 0 0;
+    font-size: 13px;
+    color: #64748b;
+    font-style: normal;
+  }
+  .wc-tip-card {
+    margin-bottom: 18px;
+    padding: 16px 18px;
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+  }
+  .wc-tip-card:last-child {
+    margin-bottom: 0;
+  }
+  .wc-reveal-toggle {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+  }
+  .wc-reveal-btn {
+    display: inline-block;
+    margin-top: 10px;
+    padding: 8px 14px;
+    border: none;
+    border-radius: 6px;
+    background: #4338ca;
+    color: #ffffff;
+    font-size: 13px;
+    font-weight: 600;
+    font-family: Arial, sans-serif;
+    cursor: pointer;
+  }
+  .wc-reveal-btn:hover {
+    filter: brightness(1.05);
+  }
+  .wc-reveal-content {
+    display: none;
+    margin-top: 12px;
+    padding: 12px 14px;
+    background: #eef2ff;
+    border: 1px solid #c7d2fe;
+    border-radius: 8px;
+    font-size: 14px;
+    line-height: 1.65;
+    color: #312e81;
+  }
+  .wc-reveal-host:has(.wc-reveal-toggle:checked) .wc-reveal-content {
+    display: block;
+  }
+  .wc-discussion {
+    margin: 12px 0 0 0;
+    padding: 12px 14px;
+    background: #fffbeb;
+    border: 1px solid #fde68a;
+    border-radius: 8px;
+    font-size: 14px;
+    color: #78350f;
+  }
+  .wc-discussion p {
+    margin: 0 0 6px 0;
+  }
+  .wc-discussion p:last-child {
+    margin-bottom: 0;
+  }
+</style>
+
+<div style="max-width: 820px; margin: 0 auto; padding: 24px; font-family: Arial, sans-serif; line-height: 1.6; color: #1e293b; background: linear-gradient(to bottom, #eef2ff, #ffffff);">
+
+  <div style="text-align: center; margin-bottom: 24px; padding: 20px 22px; background: linear-gradient(135deg, #1e3a8a 0%, #312e81 100%); border-radius: 12px; box-shadow: 0 4px 14px rgba(30, 58, 138, 0.35);" class="wc-keep-together">
+    <div style="display: inline-block; margin-bottom: 8px;">
+      <img src="/brizzle-logo.png" alt="Brizzle Logo" style="width: 50px; height: 50px; object-fit: contain; background: white; padding: 5px; border-radius: 50%;" />
+    </div>
+    <h1 style="font-size: 26px; font-weight: bold; margin: 0; color: #ffffff; text-shadow: 0 2px 4px rgba(0,0,0,0.2);">Writing Clearly</h1>
+  </div>
+
+  <div style="margin-bottom: 24px; padding: 20px 22px; background: #ffffff; border-radius: 10px; border: 1px solid #c7d2fe; box-shadow: 0 2px 8px rgba(0,0,0,0.05);" class="wc-keep-together">
+    <p style="font-size: 15px; margin: 0 0 12px 0; color: #334155;">Professional writing does not have to be overly complicated. In fact, the aim is to communicate complex information in a way that is easy to follow. Clear writing helps your reader understand and act quickly, and it often sounds more confident than long, dense sentences.</p>
+    <p style="font-size: 15px; margin: 0; color: #334155;">In this lesson you will spot unclear writing, practise rewriting it, and complete three timed challenges that you can submit for teacher marking.</p>
+  </div>
+
+  <div style="margin-bottom: 24px; padding: 20px 22px; background: #ffffff; border-radius: 10px; border: 1px solid #c7d2fe; box-shadow: 0 2px 8px rgba(0,0,0,0.05);" class="wc-keep-together">
+    <h2 style="font-size: 20px; font-weight: bold; margin: 0 0 16px 0; color: #1e3a8a; border-bottom: 3px solid #6366f1; padding-bottom: 8px;">Warm-up: Spot the problems</h2>
+
+    <p style="font-size: 15px; margin: 0 0 12px 0; color: #475569;">Consider this example:</p>
+    <blockquote class="wc-example-quote">
+      &ldquo;Due to the fact that the implementation of the new authentication system has resulted in a number of issues relating to user access, it has been deemed necessary to undertake an investigation into the potential causes of these issues in order to ascertain whether or not any further action may be required.&rdquo;
+      <p class="wc-meta">1 sentence &middot; 52 words &middot; level B2+</p>
+    </blockquote>
+
+    <div class="wc-reveal-host" style="margin-top: 14px;">
+      <p style="font-size: 15px; margin: 0; color: #334155;"><strong>Can you see any issues with the example?</strong></p>
+      <div class="wc-discussion">
+        <p>Discuss with your teacher before revealing the answer.</p>
+      </div>
+      <input type="checkbox" id="wc-reveal-issues" class="wc-reveal-toggle" />
+      <label for="wc-reveal-issues" class="wc-reveal-btn screen-only">Reveal answer</label>
+      <div class="wc-reveal-content">
+        Look for: unnecessary words, vague language, repetition, overly complex wording, one very long sentence, and a lack of clarity about what actually happened or what the call to action is.
+      </div>
+    </div>
+
+    <div style="margin-top: 20px;">
+      <p style="font-size: 15px; margin: 0 0 12px 0; color: #334155;"><strong>Can you rewrite the example, making it clearer?</strong></p>
+      <span data-grammar-input="writing-clearly-rewrite" data-grammar-input-type="textarea" data-grammar-textarea-rows="4" style="display: block; min-height: 96px;"></span>
+      <div class="wc-reveal-host" style="margin-top: 8px;">
+        <input type="checkbox" id="wc-reveal-improved" class="wc-reveal-toggle" />
+        <label for="wc-reveal-improved" class="wc-reveal-btn screen-only">Reveal improved example</label>
+        <div class="wc-reveal-content">
+          &ldquo;The new authentication system is preventing some users from logging in. We are investigating the cause and will decide what action is needed.&rdquo;
+          <p class="wc-meta" style="color: #4338ca;">2 sentences &middot; 23 words &middot; level B2</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div style="margin-bottom: 24px; padding: 20px 22px; background: #ffffff; border-radius: 10px; border: 1px solid #c7d2fe; box-shadow: 0 2px 8px rgba(0,0,0,0.05);" class="wc-writing-host" data-grammar-ai-feedback-host="clearly1">
+    <h2 style="font-size: 20px; font-weight: bold; margin: 0 0 16px 0; color: #1e3a8a; border-bottom: 3px solid #6366f1; padding-bottom: 8px;">Writing Challenge #1</h2>
+    <p style="font-size: 15px; margin: 0 0 14px 0; color: #334155;">Describe your current role. Write the job description as if you are explaining to a group of high school students who have no knowledge of your industry, or indeed the workplace in general.</p>
+    <div class="wc-writing-timer-host" data-writing-timer-minutes="10" data-writing-timer-label="Start the ten minute timer"></div>
+    <div data-grammar-save-section="true" data-grammar-ai-feedback="clearly1">
+      <span data-grammar-input="writing-clearly-challenge1" data-grammar-input-type="textarea" data-grammar-textarea-rows="12" style="display: block; min-height: 220px;"></span>
+    </div>
+    <div class="grammar-ai-feedback-mount" data-for="clearly1"></div>
+  </div>
+
+  <div style="margin-bottom: 24px; padding: 20px 22px; background: #ffffff; border-radius: 10px; border: 1px solid #c7d2fe; box-shadow: 0 2px 8px rgba(0,0,0,0.05);" class="wc-keep-together wc-page-break">
+    <h2 style="font-size: 20px; font-weight: bold; margin: 0 0 16px 0; color: #1e3a8a; border-bottom: 3px solid #6366f1; padding-bottom: 8px;">Tips for Writing Clearly</h2>
+
+    <div class="wc-tip-card wc-keep-together">
+      <h3 style="font-size: 16px; font-weight: bold; margin: 0 0 10px 0; color: #4338ca;">Avoid vague language</h3>
+      <p style="font-size: 14px; margin: 0 0 8px 0; color: #475569;">For example:</p>
+      <blockquote class="wc-example-quote" style="font-size: 14px;">&ldquo;There seems to be a fairly significant issue with some of the figures.&rdquo;</blockquote>
+      <div class="wc-discussion">
+        <p><strong>Discuss:</strong> What&apos;s wrong with it? How could it be improved?</p>
+      </div>
+      <div class="wc-reveal-host">
+        <input type="checkbox" id="wc-reveal-vague" class="wc-reveal-toggle" />
+        <label for="wc-reveal-vague" class="wc-reveal-btn screen-only">Reveal suggestion</label>
+        <div class="wc-reveal-content">
+          &ldquo;The Q2 figures contain a €12,450 discrepancy.&rdquo;
+        </div>
+      </div>
+    </div>
+
+    <div class="wc-tip-card wc-keep-together">
+      <h3 style="font-size: 16px; font-weight: bold; margin: 0 0 10px 0; color: #4338ca;">Avoid wordiness</h3>
+      <p style="font-size: 14px; margin: 0 0 8px 0; color: #475569;">For example:</p>
+      <blockquote class="wc-example-quote" style="font-size: 14px;">&ldquo;In light of the recent changes that have been made to the procedures relating to the submission and subsequent approval of requests for annual leave, all members of staff are kindly requested to familiarise themselves with the updated process, which will come into effect from 1 September, and to ensure that any future requests for holiday leave are submitted via the new online system in accordance with the revised procedure.&rdquo;</blockquote>
+      <div class="wc-discussion">
+        <p><strong>Discuss:</strong> What&apos;s wrong with it? How could it be improved?</p>
+      </div>
+      <div class="wc-reveal-host">
+        <input type="checkbox" id="wc-reveal-wordy" class="wc-reveal-toggle" />
+        <label for="wc-reveal-wordy" class="wc-reveal-btn screen-only">Reveal suggestion</label>
+        <div class="wc-reveal-content">
+          &ldquo;From 1 September, please book all holidays through the new online system. See the updated procedure before making your next request.&rdquo;
+        </div>
+      </div>
+      <div class="wc-discussion" style="margin-top: 14px;">
+        <p><strong>Discuss:</strong> Why do some people write like this? What do you think about the misconception that &ldquo;longer = more professional&rdquo;?</p>
+      </div>
+    </div>
+
+    <div class="wc-tip-card wc-keep-together">
+      <h3 style="font-size: 16px; font-weight: bold; margin: 0 0 10px 0; color: #4338ca;">Avoid overuse of passive structures</h3>
+      <div class="wc-discussion">
+        <p><strong>Discuss:</strong> What is the passive structure? When is it useful?</p>
+      </div>
+      <p style="font-size: 14px; margin: 12px 0 8px 0; color: #334155;">Sometimes we need to use the passive, but it can become heavy if overused. For example:</p>
+      <blockquote class="wc-example-quote" style="font-size: 14px;">&ldquo;The report was prepared by our team and was reviewed by the manager before being submitted.&rdquo;</blockquote>
+      <p style="font-size: 14px; margin: 12px 0 0 0; color: #334155;">can be rewritten much more clearly as:</p>
+      <blockquote class="wc-example-quote" style="font-size: 14px; border-left-color: #059669; margin-top: 8px;">&ldquo;Our team prepared the report, then the manager reviewed it before submission.&rdquo;</blockquote>
+    </div>
+  </div>
+
+  <div style="margin-bottom: 24px; padding: 20px 22px; background: #ffffff; border-radius: 10px; border: 1px solid #c7d2fe; box-shadow: 0 2px 8px rgba(0,0,0,0.05);" class="wc-keep-together">
+    <h2 style="font-size: 20px; font-weight: bold; margin: 0 0 8px 0; color: #1e3a8a; border-bottom: 3px solid #6366f1; padding-bottom: 8px;">Vocabulary</h2>
+    <p style="font-size: 15px; margin: 14px 0 16px 0; color: #334155;">What could you use instead of these wordy phrases? Drag (or tap) a simpler alternative into each slot.</p>
+    <div data-wc-phrase-match></div>
+  </div>
+
+  <div style="margin-bottom: 24px; padding: 20px 22px; background: #ffffff; border-radius: 10px; border: 1px solid #c7d2fe; box-shadow: 0 2px 8px rgba(0,0,0,0.05);" class="wc-writing-host wc-page-break" data-grammar-ai-feedback-host="clearly2">
+    <h2 style="font-size: 20px; font-weight: bold; margin: 0 0 16px 0; color: #1e3a8a; border-bottom: 3px solid #6366f1; padding-bottom: 8px;">Writing Challenge #2</h2>
+    <p style="font-size: 15px; margin: 0 0 12px 0; color: #334155;">You have discovered a problem at work. Write an email to a non-specialist manager explaining:</p>
+    <ul style="margin: 0 0 14px 0; padding-left: 28px; font-size: 15px; color: #334155; list-style-type: disc; list-style-position: outside;">
+      <li style="margin-bottom: 6px; display: list-item; list-style-type: disc;">What has happened</li>
+      <li style="margin-bottom: 6px; display: list-item; list-style-type: disc;">The impact on the business</li>
+      <li style="margin-bottom: 6px; display: list-item; list-style-type: disc;">What actions have been taken</li>
+      <li style="margin-bottom: 0; display: list-item; list-style-type: disc;">What still needs to happen</li>
+    </ul>
+    <div class="wc-writing-timer-host" data-writing-timer-minutes="15" data-writing-timer-label="Start the fifteen minute timer"></div>
+    <div data-grammar-save-section="true" data-grammar-ai-feedback="clearly2">
+      <span data-grammar-input="writing-clearly-challenge2" data-grammar-input-type="textarea" data-grammar-textarea-rows="14" style="display: block; min-height: 260px;"></span>
+      <div class="wc-word-count screen-only" data-writing-word-count-for="writing-clearly-challenge2">0 words</div>
+    </div>
+    <div class="grammar-ai-feedback-mount" data-for="clearly2"></div>
+  </div>
+
+  <div style="margin-bottom: 24px; padding: 20px 22px; background: #ffffff; border-radius: 10px; border: 1px solid #c7d2fe; box-shadow: 0 2px 8px rgba(0,0,0,0.05);" class="wc-writing-host">
+    <h2 style="font-size: 20px; font-weight: bold; margin: 0 0 16px 0; color: #1e3a8a; border-bottom: 3px solid #6366f1; padding-bottom: 8px;">Writing Challenge #3</h2>
+    <p style="font-size: 15px; margin: 0 0 14px 0; color: #334155;">Copy and paste the email from Challenge #2. Try to reduce the word count by 25% without removing any essential information.</p>
+    <div class="wc-writing-timer-host" data-writing-timer-minutes="5" data-writing-timer-label="Start the five minute timer"></div>
+    <div data-grammar-save-section="true">
+      <span data-grammar-input="writing-clearly-challenge3" data-grammar-input-type="textarea" data-grammar-textarea-rows="12" style="display: block; min-height: 220px;"></span>
+      <div class="wc-word-count screen-only" data-writing-word-count-for="writing-clearly-challenge3">0 words</div>
+    </div>
+  </div>
+
+  <div style="margin-bottom: 8px; padding: 20px 22px; background: #ffffff; border-radius: 10px; border: 2px solid #818cf8; box-shadow: 0 2px 8px rgba(0,0,0,0.05);" class="wc-keep-together screen-only" data-writing-clearly-submit>
+    <h2 style="font-size: 18px; font-weight: bold; margin: 0 0 8px 0; color: #1e3a8a;">Submit for marking</h2>
+    <p style="font-size: 14px; margin: 0 0 14px 0; color: #475569;">When you have finished Challenges #1, #2 and #3, submit them together for your teacher to mark. This collects your three writing tasks into one document titled <strong>Writing Clearly</strong>.</p>
+  </div>
+
+</div>

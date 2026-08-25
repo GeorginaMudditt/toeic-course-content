@@ -1,4 +1,10 @@
-export type WritingTaskType = 'email1' | 'email2' | 'essay' | 'writing1'
+export type WritingTaskType =
+  | 'email1'
+  | 'email2'
+  | 'essay'
+  | 'writing1'
+  | 'clearly1'
+  | 'clearly2'
 
 export interface StructuralCheckItem {
   ok: boolean
@@ -14,6 +20,8 @@ const TASK_INPUT_IDS: Record<WritingTaskType, string> = {
   email2: 'writing-response-email2',
   essay: 'writing-essay',
   writing1: 'writing1-q1',
+  clearly1: 'writing-clearly-challenge1',
+  clearly2: 'writing-clearly-challenge2',
 }
 
 export function getInputIdForTask(task: WritingTaskType): string {
@@ -25,7 +33,14 @@ export function getFeedbackNotesKey(task: WritingTaskType): string {
 }
 
 export function isWritingTaskType(value: string): value is WritingTaskType {
-  return value === 'email1' || value === 'email2' || value === 'essay' || value === 'writing1'
+  return (
+    value === 'email1' ||
+    value === 'email2' ||
+    value === 'essay' ||
+    value === 'writing1' ||
+    value === 'clearly1' ||
+    value === 'clearly2'
+  )
 }
 
 function countTenseSignals(text: string): {
@@ -249,6 +264,45 @@ function assessTaskRelevance(
     }
   }
 
+  if (task === 'clearly1') {
+    const rolePatterns = [
+      /\b(job|role|position|work|career|responsibilit|duties|tasks?|team|company|colleague|customer|client|manager|office|project)\b/i,
+      /\b(I am|I'm|I work|my (job|role|work))\b/i,
+    ]
+    const roleScore = countPatternMatches(t, rolePatterns)
+    if (roleScore < 1) {
+      return {
+        ok: false,
+        message:
+          'Topic: describe your current role in clear language suitable for high school students.',
+      }
+    }
+    return {
+      ok: true,
+      message: 'Topic: your text appears to describe a job or professional role.',
+    }
+  }
+
+  if (task === 'clearly2') {
+    const problemPatterns = [
+      /\b(problem|issue|error|fault|delay|outage|incident|bug|failure|discrepanc|mistake)\b/i,
+      /\b(impact|affect|delay|cost|customer|client|business|team|system)\b/i,
+      /\b(action|fix|investigat|resolv|next step|need to|will|have)\b/i,
+    ]
+    const score = countPatternMatches(t, problemPatterns)
+    if (score < 2) {
+      return {
+        ok: false,
+        message:
+          'Topic: write an email explaining a workplace problem — what happened, the impact, actions taken, and what still needs to happen.',
+      }
+    }
+    return {
+      ok: true,
+      message: 'Topic: your email appears to address a workplace problem and next steps.',
+    }
+  }
+
   return { ok: true, message: 'Topic: answer appears related to the task.' }
 }
 
@@ -403,6 +457,66 @@ export function runStructuralChecks(task: WritingTaskType, text: string): Struct
     })
   }
 
+  if (task === 'clearly1') {
+    items.push({
+      ok: words >= 60,
+      message:
+        words >= 60
+          ? `Length: about ${words} words — reasonable for a clear role description.`
+          : `Length: about ${words} words — try to write a fuller description (aim for at least 60 words).`,
+    })
+    const longSentence = trimmed.split(/[.!?]+/).some((s) => wordCount(s) > 35)
+    items.push({
+      ok: !longSentence,
+      message: longSentence
+        ? 'Clarity: at least one sentence looks very long — try shorter sentences for high school readers.'
+        : 'Clarity: your sentences look reasonably short — good for a non-specialist audience.',
+    })
+    items.push({
+      ok: !/\b(due to the fact that|at this point in time|in the event that|in spite of the fact that)\b/i.test(
+        trimmed
+      ),
+      message: !/\b(due to the fact that|at this point in time|in the event that|in spite of the fact that)\b/i.test(
+        trimmed
+      )
+        ? 'Style: you avoid common wordy phrases — good.'
+        : 'Style: replace wordy phrases (e.g. "due to the fact that" → "because") with simpler alternatives.',
+    })
+  }
+
+  if (task === 'clearly2') {
+    items.push({
+      ok: words >= 80,
+      message:
+        words >= 80
+          ? `Length: about ${words} words — reasonable for a problem email.`
+          : `Length: about ${words} words — try to cover all four points more fully (aim for at least 80 words).`,
+    })
+    items.push({
+      ok: hasGreeting(trimmed),
+      message: hasGreeting(trimmed)
+        ? 'Opening: you include a greeting.'
+        : 'Opening: add a greeting (e.g. "Dear …," or "Hi …,").',
+    })
+    items.push({
+      ok: hasClosing(trimmed),
+      message: hasClosing(trimmed)
+        ? 'Closing: you include a sign-off.'
+        : 'Closing: add a short closing (e.g. "Best regards,").',
+    })
+    const coversImpact = /\b(impact|affect|delay|cost|customer|client|risk|business)\b/i.test(trimmed)
+    const coversNext = /\b(need|next|will|should|recommend|propose|still|follow[- ]?up)\b/i.test(
+      trimmed
+    )
+    items.push({
+      ok: coversImpact && coversNext,
+      message:
+        coversImpact && coversNext
+          ? 'Task: your email appears to cover impact and next steps.'
+          : 'Task: make sure you cover what happened, business impact, actions taken, and what still needs to happen.',
+    })
+  }
+
   return { items }
 }
 
@@ -416,6 +530,10 @@ The Welcome Committee e-mailed new Dale City residents. The student writes AS a 
 Minimum 300 words. The essay must be about careers / staying at one employer — NOT another topic (e.g. art, history, environment) even if well written.`,
   writing1: `ASSIGNED TASK (Writing #1 — Mixed Tenses) — the student's answer MUST match this:
 Write a professional LinkedIn-style "About" profile summarising their career so far. They should use a variety of tenses (past simple, present simple, present perfect, present continuous, etc.) to describe background, current role, and achievements. This is grammar practice, not a TOEIC exam task.`,
+  clearly1: `ASSIGNED TASK (Writing Clearly — Challenge #1) — the student's answer MUST match this:
+Describe their current role as if explaining to high school students with no knowledge of the industry or the workplace. Prioritise clarity, plain language, short sentences, and concrete examples. Avoid jargon and wordy phrases.`,
+  clearly2: `ASSIGNED TASK (Writing Clearly — Challenge #2) — the student's answer MUST match this:
+Write an email to a non-specialist manager about a workplace problem. The email must cover: (1) what has happened, (2) the impact on the business, (3) what actions have been taken, and (4) what still needs to happen. Prioritise clear, concise professional English.`,
 }
 
 const AI_FEEDBACK_RULES = `CRITICAL RULES:
@@ -476,6 +594,51 @@ Respond in English with this exact structure (use markdown headings):
 
 ## Language notes
 - Comment on tense choice and accuracy; quote short phrases and suggest improvements (up to 4 bullets). Highlight where a different tense might work better.`
+  }
+
+  if (task === 'clearly1' || task === 'clearly2') {
+    return `You are a supportive business English writing tutor focused on clarity and plain language. This is practice feedback — not an official exam score.
+
+${TASK_PROMPTS[task]}
+
+${AI_FEEDBACK_RULES}
+
+Extra focus for this lesson:
+- Prefer clear, concrete language over vague or wordy phrasing.
+- Flag jargon that a non-specialist reader might not understand.
+- Suggest shorter alternatives where sentences are dense.
+- Do NOT rewrite the whole answer; give targeted notes.
+
+Automated checks already ran:
+${structuralSummary}${topicHint}
+
+Student's writing:
+---
+${studentText.trim()}
+---
+
+Respond in English with this exact structure (use markdown headings):
+
+## Task relevance
+(State clearly: ON-TOPIC / PARTIALLY ON-TOPIC / OFF-TOPIC for the assigned task above. 2–3 sentences.)
+
+## Overall
+(1–2 sentences on clarity and suitability for the audience)
+
+## Task completion
+(1–2 sentences on whether the prompt requirements are met)
+
+## Strengths
+- (bullet 1)
+- (bullet 2)
+
+## Areas to improve
+- (bullet 1)
+- (bullet 2)
+- (optional bullet 3)
+
+## Language notes
+- Quote short unclear or wordy phrases and suggest clearer alternatives (up to 4 bullets).`
   }
 
   return `You are a supportive TOEIC Writing tutor. This is practice feedback generated by AI — not an official TOEIC score.
@@ -696,6 +859,16 @@ export function generateTemplateFeedback(
       'Use **present perfect** for experience up to now (e.g. *I have managed…*, *I have worked in…*).',
       'Use **present simple** or **present continuous** for your current role.',
       'Keep a professional LinkedIn tone — clear, positive, and focused on achievements.',
+    ],
+    clearly1: [
+      'Explain your role as if speaking to **high school students** — define jargon or avoid it.',
+      'Prefer **short, concrete sentences** over long abstract ones.',
+      'Replace wordy phrases (*due to the fact that* → *because*).',
+    ],
+    clearly2: [
+      'Cover all four points: what happened, business impact, actions taken, and what still needs to happen.',
+      'Write for a **non-specialist manager** — keep language clear and concrete.',
+      'Use a clear email structure: greeting, body paragraphs, closing.',
     ],
   }
 

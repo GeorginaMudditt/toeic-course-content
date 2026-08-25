@@ -33,6 +33,9 @@ import {
 import { mountPresentingServicesProductsActivities } from '@/lib/worksheetInteractions/presentingServicesProductsKeyLanguage'
 import { mountOpinionRankings } from '@/lib/worksheetInteractions/opinionRanking'
 import { mountWritingPracticeTimers } from '@/lib/worksheetInteractions/writingPracticeTimers'
+import { mountWritingClearlyPhraseMatch } from '@/lib/worksheetInteractions/writingClearlyPhraseMatch'
+import { mountWritingClearlySubmit } from '@/lib/worksheetInteractions/writingClearlySubmit'
+import { mountWritingWordCounts } from '@/lib/worksheetInteractions/writingWordCounts'
 import { mountPlacementTestCheckAnswers } from '@/lib/worksheetInteractions/placementTestCheckAnswers'
 import {
   mountWordBankTrackers,
@@ -884,6 +887,12 @@ export default function WorksheetViewer({
     typeof resource.content === 'string' && resource.content.includes('data-phrase-audio-root')
   const hasWritingTimers =
     typeof resource.content === 'string' && resource.content.includes('data-writing-timer-minutes')
+  const hasWritingClearlyPhraseMatch =
+    typeof resource.content === 'string' && resource.content.includes('data-wc-phrase-match')
+  const hasWritingClearlySubmit =
+    typeof resource.content === 'string' && resource.content.includes('data-writing-clearly-submit')
+  const hasWritingWordCounts =
+    typeof resource.content === 'string' && resource.content.includes('data-writing-word-count-for')
   const hasBookmarkableSections =
     typeof resource.content === 'string' && resource.content.includes('data-bookmarkable')
   const hasWordBankTracker =
@@ -2997,6 +3006,53 @@ export default function WorksheetViewer({
       detach?.()
     }
   }, [resource.content, hasWritingTimers])
+
+  // Writing Clearly — wordy phrase matching.
+  useEffect(() => {
+    if (!hasWritingClearlyPhraseMatch) return
+    let detach: (() => void) | undefined
+    const rafId = requestAnimationFrame(() => {
+      const host = contentRef.current
+      if (!host) return
+      const el = host.querySelector('[data-wc-phrase-match]') as HTMLElement | null
+      if (el) detach = mountWritingClearlyPhraseMatch(el)
+    })
+    return () => {
+      cancelAnimationFrame(rafId)
+      detach?.()
+    }
+  }, [resource.content, hasWritingClearlyPhraseMatch])
+
+  // Writing Clearly — gather challenges and submit for teacher marking.
+  useEffect(() => {
+    if (!hasWritingClearlySubmit || !grammarInputsReady) return
+    let detach: (() => void) | undefined
+    const rafId = requestAnimationFrame(() => {
+      const host = contentRef.current
+      if (!host) return
+      const el = host.querySelector('[data-writing-clearly-submit]') as HTMLElement | null
+      if (el) detach = mountWritingClearlySubmit(el, { preventSave })
+    })
+    return () => {
+      cancelAnimationFrame(rafId)
+      detach?.()
+    }
+  }, [resource.content, hasWritingClearlySubmit, grammarInputsReady, preventSave])
+
+  // Live word counts under writing practice textareas.
+  useEffect(() => {
+    if (!hasWritingWordCounts || !grammarInputsReady) return
+    let detach: (() => void) | undefined
+    const rafId = requestAnimationFrame(() => {
+      const host = contentRef.current
+      if (!host) return
+      detach = mountWritingWordCounts(host)
+    })
+    return () => {
+      cancelAnimationFrame(rafId)
+      detach?.()
+    }
+  }, [resource.content, hasWritingWordCounts, grammarInputsReady])
 
   useEffect(() => {
     bookmarkedSlugsRef.current = new Set(initialBookmarkedSlugs)
