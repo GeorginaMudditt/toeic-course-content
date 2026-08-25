@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
 import { supabaseServer } from '@/lib/supabase'
+import { sendWritingMarkedEmail } from '@/lib/email'
 
 async function loadSubmission(id: string) {
   const { data, error } = await supabaseServer
@@ -118,7 +119,52 @@ export async function PATCH(
       return NextResponse.json({ error: 'Failed to update submission' }, { status: 500 })
     }
 
-    return NextResponse.json({ success: true, submission: data })
+    let studentNotified = false
+    let notifyError: string | null = null
+
+    if (body.notifyStudent === true) {
+      const markedSubmission = data?.status === 'MARKED' ? data : null
+      if (!markedSubmission) {
+        notifyError = 'Submission must be marked before notifying the student'
+      } else {
+        try {
+          const { data: student, error: studentError } = await supabaseServer
+            .from('User')
+            .select('id, name, email')
+            .eq('id', markedSubmission.studentId)
+            .eq('role', 'STUDENT')
+            .maybeSingle()
+
+          if (studentError || !student?.email) {
+            notifyError = 'Could not find the student email address'
+            console.error('Error loading student for writing marked email:', studentError)
+          } else {
+            const emailResult = await sendWritingMarkedEmail({
+              userEmail: student.email,
+              userName: student.name || 'Student',
+              title: markedSubmission.title || 'Writing',
+              submissionId: markedSubmission.id,
+            })
+            if (emailResult.error) {
+              notifyError = emailResult.error
+            } else {
+              studentNotified = true
+            }
+          }
+        } catch (emailError) {
+          notifyError =
+            emailError instanceof Error ? emailError.message : 'Failed to send student email'
+          console.error('Error sending writing marked email:', emailError)
+        }
+      }
+    }
+
+    return NextResponse.json({
+      success: true,
+      submission: data,
+      studentNotified,
+      ...(notifyError ? { notifyError } : {}),
+    })
   } catch (error) {
     console.error('Error in PATCH /api/writing-submissions/[id]:', error)
     return NextResponse.json({ error: 'Failed to update submission' }, { status: 500 })

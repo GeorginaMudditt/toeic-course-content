@@ -117,6 +117,24 @@ export async function sendPasswordResetEmail(data: PasswordResetEmail) {
 }
 
 const ADMIN_NOTIFY_EMAIL = 'hello@brizzle-english.com'
+const FROM_EMAIL = 'Brizzle TOEIC® <noreply@brizzle-english.com>'
+
+function getSiteUrl() {
+  return (
+    process.env.NEXTAUTH_URL ||
+    (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : null) ||
+    'https://www.brizzle-courses.com'
+  )
+}
+
+function escapeHtml(value: string) {
+  return value
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;')
+}
 
 export async function sendCourseMidpointNotificationEmail(data: {
   studentName: string
@@ -131,12 +149,11 @@ export async function sendCourseMidpointNotificationEmail(data: {
     return { error: 'Email service not configured' }
   }
 
-  const fromEmail = 'Brizzle TOEIC® <noreply@brizzle-english.com>'
   const threshold = Math.ceil(data.courseDurationHours / 2)
 
   try {
     await resend.emails.send({
-      from: fromEmail,
+      from: FROM_EMAIL,
       to: ADMIN_NOTIFY_EMAIL,
       subject: `Course midpoint reached — ${data.studentName}`,
       html: `
@@ -145,9 +162,9 @@ export async function sendCourseMidpointNotificationEmail(data: {
           <head><meta charset="utf-8" /></head>
           <body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333;">
             <p>Hello,</p>
-            <p><strong>${data.studentName}</strong> has reached the midpoint of their training package.</p>
+            <p><strong>${escapeHtml(data.studentName)}</strong> has reached the midpoint of their training package.</p>
             <ul>
-              <li><strong>Course:</strong> ${data.courseName}</li>
+              <li><strong>Course:</strong> ${escapeHtml(data.courseName)}</li>
               <li><strong>Hours completed:</strong> ${data.hoursLogged} (midpoint at ${threshold} hours)</li>
             </ul>
             <p>You may want to follow up on a second invoice, the midpoint questionnaire, or other admin steps.</p>
@@ -161,6 +178,109 @@ export async function sendCourseMidpointNotificationEmail(data: {
   } catch (error: unknown) {
     const message = error instanceof Error ? error.message : 'Failed to send email'
     console.error('Error sending course midpoint email:', error)
+    return { error: message }
+  }
+}
+
+export async function sendWritingSubmissionNotificationEmail(data: {
+  studentName: string
+  studentEmail: string
+  title: string
+  submissionId: string
+  studentId: string
+  hasFile: boolean
+}) {
+  const resend = getResendClient()
+
+  if (!resend) {
+    console.warn('⚠️  RESEND_API_KEY not found. Writing submission email not sent.')
+    return { error: 'Email service not configured' }
+  }
+
+  const markUrl = `${getSiteUrl()}/teacher/students/${data.studentId}/writing/${data.submissionId}`
+
+  try {
+    await resend.emails.send({
+      from: FROM_EMAIL,
+      to: ADMIN_NOTIFY_EMAIL,
+      subject: `New writing submission — ${data.studentName}: ${data.title}`,
+      html: `
+        <!DOCTYPE html>
+        <html>
+          <head><meta charset="utf-8" /></head>
+          <body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333;">
+            <p>Hello,</p>
+            <p><strong>${escapeHtml(data.studentName)}</strong> (${escapeHtml(data.studentEmail)}) has submitted a writing assignment.</p>
+            <ul>
+              <li><strong>Title:</strong> ${escapeHtml(data.title)}</li>
+              <li><strong>Attachment:</strong> ${data.hasFile ? 'Yes' : 'No'}</li>
+            </ul>
+            <p style="margin: 24px 0;">
+              <a href="${markUrl}" style="display:inline-block;padding:12px 24px;background:#38438f;color:#ffffff !important;text-decoration:none;border-radius:5px;font-weight:600;">
+                Open and mark
+              </a>
+            </p>
+            <p style="word-break:break-all;color:#666;font-size:12px;">${markUrl}</p>
+            <p style="color:#666;font-size:12px;">This message was sent automatically from the Brizzle portal when a student submitted writing.</p>
+          </body>
+        </html>
+      `,
+    })
+    console.log('Writing submission notification sent to', ADMIN_NOTIFY_EMAIL)
+    return { success: true }
+  } catch (error: unknown) {
+    const message = error instanceof Error ? error.message : 'Failed to send email'
+    console.error('Error sending writing submission email:', error)
+    return { error: message }
+  }
+}
+
+export async function sendWritingMarkedEmail(data: {
+  userEmail: string
+  userName: string
+  title: string
+  submissionId: string
+}) {
+  const resend = getResendClient()
+
+  if (!resend) {
+    console.warn('⚠️  RESEND_API_KEY not found. Writing marked email not sent.')
+    return { error: 'Email service not configured' }
+  }
+
+  const viewUrl = `${getSiteUrl()}/student/writing/${data.submissionId}`
+  const fromEmail = 'Brizzle English School <noreply@brizzle-english.com>'
+
+  try {
+    await resend.emails.send({
+      from: fromEmail,
+      to: data.userEmail,
+      subject: `Your writing “${data.title}” has been marked`,
+      html: `
+        <!DOCTYPE html>
+        <html>
+          <head><meta charset="utf-8" /></head>
+          <body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333;">
+            <p>Hello ${escapeHtml(data.userName)},</p>
+            <p>Your writing <strong>“${escapeHtml(data.title)}”</strong> has been marked.</p>
+            <p>Please log in to see the corrections.</p>
+            <p style="margin: 24px 0;">
+              <a href="${viewUrl}" style="display:inline-block;padding:12px 24px;background:#38438f;color:#ffffff !important;text-decoration:none;border-radius:5px;font-weight:600;">
+                View marked writing
+              </a>
+            </p>
+            <p style="word-break:break-all;color:#666;font-size:12px;">${viewUrl}</p>
+            <p>If you have any questions, please contact us at hello@brizzle-english.com</p>
+            <p>Best regards,<br>Georgina</p>
+          </body>
+        </html>
+      `,
+    })
+    console.log('Writing marked email sent to', data.userEmail)
+    return { success: true }
+  } catch (error: unknown) {
+    const message = error instanceof Error ? error.message : 'Failed to send email'
+    console.error('Error sending writing marked email:', error)
     return { error: message }
   }
 }

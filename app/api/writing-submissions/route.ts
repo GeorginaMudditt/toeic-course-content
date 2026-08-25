@@ -7,20 +7,21 @@ import {
   WRITING_ALLOWED_MIME_TYPES,
   WRITING_MAX_UPLOAD_BYTES,
 } from '@/lib/writing-submissions'
+import { sendWritingSubmissionNotificationEmail } from '@/lib/email'
 
-async function assertStudentExists(studentId: string) {
+async function getStudentProfile(studentId: string) {
   const { data, error } = await supabaseServer
     .from('User')
-    .select('id, role')
+    .select('id, name, email, role')
     .eq('id', studentId)
     .eq('role', 'STUDENT')
-    .limit(1)
+    .maybeSingle()
 
   if (error) {
     console.error('Error checking student:', error)
-    return false
+    return null
   }
-  return !!(data && data.length > 0)
+  return data
 }
 
 export async function GET(request: NextRequest) {
@@ -104,8 +105,8 @@ export async function POST(request: NextRequest) {
       if (!studentId) {
         return NextResponse.json({ error: 'studentId is required' }, { status: 400 })
       }
-      const exists = await assertStudentExists(studentId)
-      if (!exists) {
+      const student = await getStudentProfile(studentId)
+      if (!student) {
         return NextResponse.json({ error: 'Student not found' }, { status: 404 })
       }
       uploadedById = session.user.id
@@ -173,6 +174,32 @@ export async function POST(request: NextRequest) {
         { error: `Failed to save submission: ${error.message || 'Unknown error'}` },
         { status: 500 }
       )
+    }
+
+    // Notify teacher when a student submits (skip teacher-on-behalf uploads)
+    if (!uploadedById) {
+      try {
+        const student =
+          (await getStudentProfile(studentId)) ||
+          ({
+            name: session.user.name || 'Student',
+            email: session.user.email || '',
+          } as { name: string; email: string })
+
+        const emailResult = await sendWritingSubmissionNotificationEmail({
+          studentName: student.name || 'Student',
+          studentEmail: student.email || session.user.email || '',
+          title,
+          submissionId: data.id,
+          studentId,
+          hasFile: Boolean(fileUrl),
+        })
+        if (emailResult.error) {
+          console.warn('Writing submission saved but admin email failed:', emailResult.error)
+        }
+      } catch (emailError) {
+        console.error('Writing submission saved but admin email threw:', emailError)
+      }
     }
 
     return NextResponse.json({ success: true, submission: data })

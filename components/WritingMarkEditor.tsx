@@ -59,6 +59,13 @@ export default function WritingMarkEditor({ submission, studentId }: Props) {
       return
     }
 
+    let notifyStudent = false
+    if (publish) {
+      notifyStudent = window.confirm(
+        'Would you like to let the student know you have marked their work?',
+      )
+    }
+
     try {
       const response = await fetch(`/api/writing-submissions/${submission.id}`, {
         method: 'PATCH',
@@ -68,6 +75,7 @@ export default function WritingMarkEditor({ submission, studentId }: Props) {
           teacherComments,
           score: parsedScore,
           publish,
+          notifyStudent,
         }),
       })
 
@@ -76,7 +84,21 @@ export default function WritingMarkEditor({ submission, studentId }: Props) {
         throw new Error(errorData.error || 'Failed to save')
       }
 
-      setMessage(publish ? 'Marked and shared with the student.' : 'Draft corrections saved.')
+      const result = await response.json().catch(() => ({}))
+
+      if (!publish) {
+        setMessage('Draft corrections saved.')
+      } else if (notifyStudent && result.studentNotified) {
+        setMessage('Marked and shared with the student. Notification email sent.')
+      } else if (notifyStudent && result.notifyError) {
+        setMessage(
+          `Marked and shared with the student, but the notification email could not be sent (${result.notifyError}).`,
+        )
+      } else if (notifyStudent) {
+        setMessage('Marked and shared with the student, but the notification email could not be sent.')
+      } else {
+        setMessage('Marked and shared with the student. No email sent.')
+      }
       router.refresh()
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to save')
