@@ -31,6 +31,7 @@ input[type="text"],
 input[type="email"],
 input[type="password"],
 input[type="number"],
+input[type="search"],
 textarea,
 select {
   background-color: #e0f2fe !important; /* Light blue */
@@ -41,6 +42,7 @@ input[type="text"]:focus,
 input[type="email"]:focus,
 input[type="password"]:focus,
 input[type="number"]:focus,
+input[type="search"]:focus,
 textarea:focus,
 select:focus {
   background-color: #bae6fd !important; /* Slightly darker blue on focus */
