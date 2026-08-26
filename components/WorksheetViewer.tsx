@@ -1413,12 +1413,36 @@ export default function WorksheetViewer({
         const textInput = container.querySelector('input[type="text"]')
         const select = container.querySelector('select')
         const checkedRadio = container.querySelector('input[type="radio"]:checked')
+        const anyRadio = container.querySelector('input[type="radio"]')
+
+        // Input not mounted yet (or already unmounted on leave) — keep existing notes value.
+        if (!textarea && !textInput && !select && !anyRadio) {
+          return
+        }
 
         let value = ''
         if (textarea) value = textarea.value
         else if (select) value = (select as HTMLSelectElement).value
         else if (checkedRadio) value = (checkedRadio as HTMLInputElement).value
         else if (textInput) value = (textInput as HTMLInputElement).value
+
+        // Guard against transient empty DOM during remount wiping saved long-form writing.
+        if (
+          !value.trim() &&
+          textarea &&
+          document.activeElement !== textarea
+        ) {
+          const existing = isPlacementTest
+            ? (currentData.grammarAnswers as Record<string, string> | undefined)?.[inputId]
+            : currentData[inputId]
+          if (
+            typeof existing === 'string' &&
+            existing.trim() &&
+            (inputId.includes('writing-') || existing.trim().length > 40)
+          ) {
+            value = existing
+          }
+        }
 
         if (isPlacementTest) {
           if (!currentData.grammarAnswers || typeof currentData.grammarAnswers !== 'object') {
@@ -2454,7 +2478,9 @@ export default function WorksheetViewer({
         }
         saveButton.disabled = true
         saveButton.textContent = 'Saving...'
-        const ok = await saveProgress()
+        // Use ref — this effect intentionally omits saveProgress from deps so AI
+        // panels are not torn down; calling the closure directly would be stale.
+        const ok = await saveProgressRef.current()
         saveButton.disabled = false
         saveButton.textContent = 'Save'
         if (ok) {
@@ -2542,7 +2568,7 @@ export default function WorksheetViewer({
               })
             )
             updateGrammarAnswer(data.rateLimitKey, data.generatedAt)
-            await saveProgress()
+            await saveProgressRef.current()
 
             statusEl.textContent = '✓ Feedback ready'
             statusEl.style.color = '#059669'

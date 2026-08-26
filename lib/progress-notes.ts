@@ -22,7 +22,50 @@ export function hasMeaningfulNotes(notes: string | null | undefined): boolean {
   }
 }
 
-/** Never replace stored answers with an empty payload (e.g. MarkAsViewed race). */
+function tryParseNotesObject(
+  notes: string | null | undefined
+): Record<string, unknown> | null {
+  if (notes == null || !String(notes).trim()) return null
+  try {
+    const parsed = JSON.parse(String(notes)) as unknown
+    if (parsed === null || typeof parsed !== 'object' || Array.isArray(parsed)) {
+      return null
+    }
+    return parsed as Record<string, unknown>
+  } catch {
+    return null
+  }
+}
+
+/**
+ * Prefer keeping a previously saved non-empty string when an incoming save
+ * would replace it with "". Protects long-form writing from flush/beacon races
+ * (e.g. textareas unmounted on leave while AI-feedback keys keep the payload "meaningful").
+ */
+function shouldPreserveExistingString(
+  key: string,
+  existingValue: unknown,
+  incomingValue: unknown
+): boolean {
+  if (typeof incomingValue !== 'string' || incomingValue.trim().length > 0) return false
+  if (typeof existingValue !== 'string' || existingValue.trim().length === 0) return false
+
+  const isWritingKey =
+    key.includes('writing-') ||
+    key.includes('writing_') ||
+    key.endsWith('-ai-feedback') ||
+    key === 'writing' ||
+    key === 'essay'
+
+  // Short grammar gap answers may be intentionally cleared; only protect longer text / writing keys.
+  return isWritingKey || existingValue.trim().length > 40
+}
+
+/**
+ * Never replace stored answers with an empty payload (e.g. MarkAsViewed race).
+ * Also merge field-by-field so empty strings cannot wipe longer saved writing when
+ * other keys (AI feedback, etc.) make the incoming payload look meaningful.
+ */
 export function resolveNotesForSave(
   existingNotes: string | null | undefined,
   incomingNotes: string | null | undefined
@@ -31,7 +74,33 @@ export function resolveNotesForSave(
   if (!hasMeaningfulNotes(incoming) && hasMeaningfulNotes(existingNotes)) {
     return existingNotes!
   }
-  return incoming
+
+  const existingObj = tryParseNotesObject(existingNotes)
+  const incomingObj = tryParseNotesObject(incoming)
+  if (!existingObj || !incomingObj) {
+    return incoming
+  }
+
+  const merged: Record<string, unknown> = { ...existingObj }
+  let changed = false
+
+  for (const [key, value] of Object.entries(incomingObj)) {
+    if (shouldPreserveExistingString(key, existingObj[key], value)) {
+      merged[key] = existingObj[key]
+      changed = true
+      continue
+    }
+    if (merged[key] !== value) {
+      merged[key] = value
+      changed = true
+    }
+  }
+
+  if (!changed && Object.keys(incomingObj).length === Object.keys(existingObj).length) {
+    return incoming
+  }
+
+  return JSON.stringify(merged, null, 2)
 }
 
 const STATUS_ORDER: Record<string, number> = {
