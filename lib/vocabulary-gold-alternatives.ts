@@ -1,5 +1,7 @@
 /** Extra accepted English answers for gold challenge typing (beyond word_english). */
 const GOLD_ALTERNATIVES: Record<string, string[]> = {
+  'a1|Food & Drink (B)|ice-cream': ['ice cream', 'icecream'],
+  'a1|Food & Drink (B)|ice cream': ['ice-cream', 'icecream'],
   'a2|Activities (B)|spare time': ['free time'],
   'a2|Adjectives (B)|amazing': ['incredible'],
   'a2|Adjectives (B)|good-looking': ['good looking'],
