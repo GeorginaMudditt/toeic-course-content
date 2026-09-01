@@ -6,6 +6,7 @@ import Link from 'next/link'
 import { formatUKDate, formatCourseName as formatCourseNameUtil } from '@/lib/date-utils'
 import { brizzleBlue, brizzleBlueHover, brizzleRed, brizzleRedHover } from '@/lib/brand-colors'
 import { parseCourseDurationHours } from '@/lib/course-notes-lessons'
+import { buildResourceStudiedLessonsMap } from '@/lib/course-notes-resource-lessons'
 import { ClientLocalLastOpenedLine } from '@/components/ClientLocalDateTime'
 
 type ProgressStatusKey = 'NOT_STARTED' | 'IN_PROGRESS' | 'COMPLETED'
@@ -52,6 +53,7 @@ interface Enrollment {
   course: Course
   assignments: Assignment[]
   enrolledAt: string | Date
+  courseNoteContent?: string | null
 }
 
 interface Student {
@@ -119,6 +121,31 @@ function AssignmentProgressMeta({ progress }: { progress?: { status: string; upd
       {progress.updatedAt && <ClientLocalLastOpenedLine iso={progress.updatedAt} />}
     </>
   )
+}
+
+function StudiedLessonBadges({ lessonNumbers }: { lessonNumbers: number[] }) {
+  if (lessonNumbers.length === 0) return null
+
+  return (
+    <span className="inline-flex flex-wrap items-center gap-1">
+      {lessonNumbers.map((num) => (
+        <span
+          key={num}
+          className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-[#e8eaf6] text-[#38438f]"
+          title={`Studied in lesson ${num}`}
+        >
+          Lesson {num}
+        </span>
+      ))}
+    </span>
+  )
+}
+
+function getStudiedLessonsForEnrollment(enrollment: Enrollment): Map<string, number[]> {
+  const refs = enrollment.assignments
+    .filter((a) => a.resource?.id && a.resource?.title)
+    .map((a) => ({ id: a.resource.id, title: a.resource.title }))
+  return buildResourceStudiedLessonsMap(enrollment.courseNoteContent, refs)
 }
 
 export default function StudentAssignmentManager({ student, resources, courses }: Props) {
@@ -500,7 +527,10 @@ export default function StudentAssignmentManager({ student, resources, courses }
           </div>
         </div>
       ) : (
-        student.enrollments.map((enrollment) => (
+        student.enrollments.map((enrollment) => {
+          const studiedLessonsByResourceId = getStudiedLessonsForEnrollment(enrollment)
+
+          return (
           <div key={enrollment.id} className="bg-white shadow rounded-lg p-6">
             <div className="flex justify-between items-start mb-6">
               <div>
@@ -637,6 +667,7 @@ export default function StudentAssignmentManager({ student, resources, courses }
                       getFilteredResources(enrollment).map((resource) => {
                         const assignedResourceIds = getAssignedResourceIds(enrollment)
                         const isAssigned = assignedResourceIds.includes(resource.id)
+                        const studiedLessons = studiedLessonsByResourceId.get(resource.id) ?? []
                         return (
                           <label 
                             key={resource.id} 
@@ -657,8 +688,11 @@ export default function StudentAssignmentManager({ student, resources, courses }
                               className="cursor-pointer"
                               disabled={isAssigned}
                             />
-                            <span className="text-sm text-gray-700 flex-1 flex items-center gap-2">
+                            <span className="text-sm text-gray-700 flex-1 flex items-center gap-2 flex-wrap">
                               <span className="font-medium">{resource.title}</span>
+                              {isAssigned && studiedLessons.length > 0 && (
+                                <StudiedLessonBadges lessonNumbers={studiedLessons} />
+                              )}
                               {isAssigned && (
                                 <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-green-100 text-green-800">
                                   <svg className="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
@@ -695,7 +729,9 @@ export default function StudentAssignmentManager({ student, resources, courses }
             {/* Current Assignments */}
             <div>
               <div className="flex flex-col gap-4 mb-3 sm:flex-row sm:justify-between sm:items-start">
-                <h3 className="font-semibold text-gray-900 shrink-0">Assigned Resources</h3>
+                <h3 className="font-semibold text-gray-900 shrink-0">
+                  Assigned Resources ({enrollment.assignments.length})
+                </h3>
                 {enrollment.assignments.length > 0 && (
                   <div className="flex flex-col gap-3 w-full sm:w-auto sm:items-end">
                     <div className="w-full sm:w-56">
@@ -775,7 +811,7 @@ export default function StudentAssignmentManager({ student, resources, courses }
                     !showStatuses.IN_PROGRESS ||
                     !showStatuses.COMPLETED
 
-                  // Separate reference and non-reference assignments (full list for stable lesson numbers)
+                  // Separate reference and non-reference assignments
                   const referenceAssignments = enrollment.assignments.filter(
                     (assignment) => assignment.resource?.skill === 'REFERENCE'
                   )
@@ -786,12 +822,6 @@ export default function StudentAssignmentManager({ student, resources, courses }
                   // Sort both by order
                   const sortedLessonAssignments = [...lessonAssignments].sort((a, b) => a.order - b.order)
                   const sortedReferenceAssignments = [...referenceAssignments].sort((a, b) => a.order - b.order)
-
-                  // Stable lesson numbers from the full ordered list
-                  const lessonNumberById = new Map<string, number>()
-                  sortedLessonAssignments.forEach((assignment, index) => {
-                    lessonNumberById.set(assignment.id, index + 1)
-                  })
 
                   const filteredLessonAssignments = getFilteredAssignedAssignments(
                     enrollment.id,
@@ -833,15 +863,17 @@ export default function StudentAssignmentManager({ student, resources, courses }
                       {/* Display lesson assignments with lesson numbers */}
                       {filteredLessonAssignments.map((assignment) => {
                         const progress = assignment.progress[0]
-                        const lessonNumber = lessonNumberById.get(assignment.id)
+                        const studiedLessons =
+                          studiedLessonsByResourceId.get(assignment.resource.id) ?? []
                         return (
                           <div
                             key={assignment.id}
                             className="flex justify-between items-start p-3 border rounded-lg bg-white"
                           >
                             <div className="flex-1 min-w-0">
-                              <div className="font-medium text-gray-900">
-                                Lesson {lessonNumber} : {assignment.resource.title}
+                              <div className="font-medium text-gray-900 flex flex-wrap items-center gap-2">
+                                <span>{assignment.resource.title}</span>
+                                <StudiedLessonBadges lessonNumbers={studiedLessons} />
                               </div>
                               <AssignmentProgressMeta progress={progress} />
                             </div>
@@ -872,14 +904,18 @@ export default function StudentAssignmentManager({ student, resources, courses }
                       {/* Display reference assignments without lesson numbers */}
                       {filteredReferenceAssignments.map((assignment) => {
                         const progress = assignment.progress[0]
+                        const studiedLessons =
+                          studiedLessonsByResourceId.get(assignment.resource.id) ?? []
                         return (
                           <div
                             key={assignment.id}
                             className="flex justify-between items-start p-3 border rounded-lg bg-white"
                           >
                             <div className="flex-1 min-w-0">
-                              <div className="font-medium text-gray-900">
-                                Reference : {assignment.resource.title}
+                              <div className="font-medium text-gray-900 flex flex-wrap items-center gap-2">
+                                <span className="text-gray-500 text-sm font-normal">Reference</span>
+                                <span>{assignment.resource.title}</span>
+                                <StudiedLessonBadges lessonNumbers={studiedLessons} />
                               </div>
                               <AssignmentProgressMeta progress={progress} />
                             </div>
@@ -913,7 +949,8 @@ export default function StudentAssignmentManager({ student, resources, courses }
             )}
             </div>
           </div>
-        ))
+        )
+        })
       )}
     </div>
   )

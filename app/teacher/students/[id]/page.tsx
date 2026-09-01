@@ -130,11 +130,27 @@ export default async function StudentDetailPage({
       }
     }
 
+    // Fetch course notes (for studied-resource badges on the Resources tab)
+    let courseNotesData: any[] = []
+    if (enrollmentIds.length > 0) {
+      const { data: notesData, error: notesError } = await supabaseServer
+        .from('CourseNote')
+        .select('enrollmentId, content')
+        .in('enrollmentId', enrollmentIds)
+      if (notesError) {
+        console.error('Error fetching course notes:', notesError)
+      } else {
+        courseNotesData = notesData || []
+      }
+    }
+
     // Combine the data to match the expected structure
     const enrollments = (enrollmentData || []).map(enrollment => ({
       ...enrollment,
       enrolledAt: new Date(enrollment.enrolledAt),
       course: courseData.find(c => c.id === enrollment.courseId) || null,
+      courseNoteContent:
+        courseNotesData.find((n) => n.enrollmentId === enrollment.id)?.content ?? null,
       assignments: assignmentData
         .filter(a => a.enrollmentId === enrollment.id)
         .map(assignment => ({
