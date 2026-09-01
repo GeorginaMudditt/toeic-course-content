@@ -2,6 +2,9 @@
 const GOLD_ALTERNATIVES: Record<string, string[]> = {
   'a1|Food & Drink (B)|ice-cream': ['ice cream', 'icecream'],
   'a1|Food & Drink (B)|ice cream': ['ice-cream', 'icecream'],
+  'a1|Travel & Transport|aeroplane': ['airplane', 'plane'],
+  'a1|Travel & Transport|airplane': ['aeroplane', 'plane'],
+  'a1|Travel & Transport|plane': ['aeroplane', 'airplane'],
   'a2|Activities (B)|spare time': ['free time'],
   'a2|Adjectives (B)|amazing': ['incredible'],
   'a2|Adjectives (B)|good-looking': ['good looking'],
