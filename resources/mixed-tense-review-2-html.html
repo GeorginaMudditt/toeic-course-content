@@ -23,6 +23,115 @@
       page-break-inside: avoid;
       break-inside: avoid;
     }
+    .mtr2-reveal-btn,
+    .mtr2-reveal-toggle {
+      display: none !important;
+    }
+    .mtr2-ex1-answers,
+    .mtr2-ex2-answer {
+      display: block !important;
+    }
+    .mtr2-ex3-original {
+      display: none !important;
+    }
+    .mtr2-ex3-corrected {
+      display: block !important;
+    }
+  }
+
+  .mtr2-reveal-toggle {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .mtr2-ex1-answers {
+    display: none;
+    margin-top: 14px;
+    padding-top: 14px;
+    border-top: 2px solid #c7d2fe;
+  }
+
+  .mtr2-follow-up:has(#ex1-tenses-reveal:checked) .mtr2-ex1-answers {
+    display: block;
+  }
+
+  .mtr2-reveal-btn {
+    display: inline-block;
+    margin-top: 12px;
+    padding: 10px 16px;
+    border: none;
+    border-radius: 6px;
+    background: #38438f;
+    color: #ffffff;
+    font-size: 15px;
+    font-weight: 600;
+    font-family: Arial, sans-serif;
+    cursor: pointer;
+    transition: background-color 0.2s;
+  }
+
+  .mtr2-reveal-btn:hover {
+    background: #2d3569;
+  }
+
+  .mtr2-follow-up:has(#ex1-tenses-reveal:checked) .mtr2-reveal-btn {
+    display: none;
+  }
+
+  .mtr2-ex2-set {
+    margin-bottom: 18px;
+    padding: 14px;
+    background: #f0fdf4;
+    border: 1px solid #bbf7d0;
+    border-radius: 6px;
+  }
+
+  .mtr2-ex2-set:last-child {
+    margin-bottom: 0;
+  }
+
+  .mtr2-ex2-answer {
+    display: none;
+    margin-top: 12px;
+    padding-top: 12px;
+    border-top: 1px solid #bbf7d0;
+    font-size: 18px;
+    color: #14532d;
+  }
+
+  .mtr2-ex2-set:has(.mtr2-reveal-toggle:checked) .mtr2-ex2-answer {
+    display: block;
+  }
+
+  .mtr2-ex2-set:has(.mtr2-reveal-toggle:checked) > .mtr2-reveal-btn {
+    display: none;
+  }
+
+  .mtr2-ex3-corrected {
+    display: none;
+  }
+
+  .mtr2-ex3-wrap:has(#ex3-reveal-errors:checked) .mtr2-ex3-original {
+    display: none;
+  }
+
+  .mtr2-ex3-wrap:has(#ex3-reveal-errors:checked) .mtr2-ex3-corrected {
+    display: block;
+  }
+
+  .mtr2-ex3-wrap:has(#ex3-reveal-errors:checked) > .mtr2-reveal-btn {
+    display: none;
+  }
+
+  .mtr2-err-strike {
+    text-decoration: line-through;
+    color: #991b1b;
+  }
+
+  .mtr2-err-fix {
+    color: #b91c1c;
+    font-weight: bold;
   }
 </style>
 
@@ -46,38 +155,145 @@
       <li style="margin-bottom: 8px;">What was your first job when you finished your studies?</li>
       <li style="margin-bottom: 8px;">Have you ever worked in another country?</li>
       <li style="margin-bottom: 8px;">What has been your biggest professional achievement so far?</li>
-      <li style="margin-bottom: 0;">What has been the biggest challenge you have faced in your career so far?</li>
+      <li style="margin-bottom: 8px;">What has been the biggest challenge you have faced in your career so far?</li>
+      <li style="margin-bottom: 8px;">Where do you see your career in five years?</li>
+      <li style="margin-bottom: 0;">If you won millions of euros on the lottery, would you still work?</li>
     </ol>
-    <div style="margin-top: 14px; padding: 12px; background: #eef2ff; border: 2px solid #c7d2fe; border-radius: 6px;">
+    <div class="mtr2-follow-up" style="margin-top: 14px; padding: 12px; background: #eef2ff; border: 2px solid #c7d2fe; border-radius: 6px;">
       <p style="font-size: 19px; margin: 0; font-weight: 600; color: #3730a3;">➡️ Follow-up: Which tenses did you use to answer each of those questions? Why?</p>
+      <input type="checkbox" id="ex1-tenses-reveal" class="mtr2-reveal-toggle" aria-hidden="true" tabindex="-1" />
+      <label for="ex1-tenses-reveal" class="mtr2-reveal-btn">Reveal tenses</label>
+      <div class="mtr2-ex1-answers">
+        <h3 style="font-size: 20px; font-weight: bold; margin: 0 0 10px 0; color: #4338ca;">Exercise 1: Speaking (Questions 1–10)</h3>
+        <ol style="padding-left: 24px; font-size: 18px; margin: 0; list-style-type: decimal; list-style-position: outside;">
+          <li style="margin-bottom: 10px;">
+            <strong>What do you do?</strong> &gt; Present Simple (habit, routine, things that are permanent).<br />
+            Examples: I am an English teacher. I teach adults and children.
+          </li>
+          <li style="margin-bottom: 10px;">
+            <strong>How would you describe your role to someone who has no knowledge of the industry you work in?</strong> &gt; Present Simple (habit, routine, things that are permanent).<br />
+            Examples: I teach English to students from different backgrounds. They do not speak in their native language in class.
+          </li>
+          <li style="margin-bottom: 10px;">
+            <strong>Describe your typical workday.</strong> &gt; Present Simple (habit, routine, things that are permanent) / Present Continuous (temporary projects, things happening at the moment).<br />
+            Examples: I mostly work from home. I start work at 8am. At the moment, I am working towards Qualiopi certification, so I am writing lots of policy documents and dealing with lots of administration.
+          </li>
+          <li style="margin-bottom: 10px;">
+            <strong>Did you go to university? If so, what did you study?</strong> &gt; Past Simple (in the past, finished).<br />
+            Examples: I went to Edith Cowan University in Perth. I graduated in 2016.
+          </li>
+          <li style="margin-bottom: 10px;">
+            <strong>What was your first job when you finished your studies?</strong> &gt; Past Simple (in the past, finished).<br />
+            Examples: I worked in a shop. I didn't like my first job.
+          </li>
+          <li style="margin-bottom: 10px;">
+            <strong>Have you ever worked in another country?</strong> &gt; Present Perfect (life experience, until now).<br />
+            Examples: I have never worked in another country. I have worked as a teacher in Brazil and Japan.
+          </li>
+          <li style="margin-bottom: 10px;">
+            <strong>What has been your biggest professional achievement so far?</strong> &gt; Present Perfect (life experience, until now).<br />
+            Examples: My biggest professional achievement has been leading a project that has increased our customer base by 30%. One of my biggest achievements has been developing a new marketing strategy that has improved our brand visibility.
+          </li>
+          <li style="margin-bottom: 10px;">
+            <strong>What has been the biggest challenge you have faced in your career so far?</strong> &gt; Present Perfect (life experience, until now).<br />
+            Examples: The biggest challenge I have faced so far has been managing a team under tight deadlines. One of the biggest challenges I have faced has been adapting to rapid changes in a startup environment.
+          </li>
+          <li style="margin-bottom: 10px;">
+            <strong>Where do you see your career in five years?</strong> &gt; Future forms (plans and predictions: <em>will</em>, <em>going to</em>, Present Continuous for fixed arrangements).<br />
+            Examples: In five years, I see myself managing a team. I'm going to qualify as a trainer. I will probably still be working in education.
+          </li>
+          <li style="margin-bottom: 0;">
+            <strong>If you won millions of euros on the lottery, would you still work?</strong> &gt; Second Conditional (hypothetical present/future: <em>if</em> + Past Simple, <em>would</em> + infinitive).<br />
+            Examples: If I won millions, I would still work, but I would choose projects I'm passionate about. No, I wouldn't work full-time — I would volunteer instead.
+          </li>
+        </ol>
+      </div>
     </div>
   </div>
 
   <!-- Exercise 2 -->
   <div style="margin-bottom: 25px; padding: 20px; background: linear-gradient(to bottom, #dcfce7, #ffffff); border-radius: 8px; border-left: 5px solid #22c55e;" class="keep-together">
-    <h2 style="font-size: 22px; font-weight: bold; margin-bottom: 12px; color: #166534;">Exercise 2: Grammar Definitions</h2>    <p style="font-size: 19px; margin: 0 0 12px 0; font-weight: 600;">➡️ What's the difference?</p>
-    <ul style="padding-left: 24px; font-size: 19px; margin: 0; list-style-type: disc; list-style-position: outside;">
-      <li style="margin-bottom: 8px;">"We launch four new training courses every year."</li>
-      <li style="margin-bottom: 8px;">"We launched the first Business English course last year."</li>
-      <li style="margin-bottom: 0;">"We have launched two courses this year."</li>
-    </ul>
+    <h2 style="font-size: 22px; font-weight: bold; margin-bottom: 12px; color: #166534;">Exercise 2: Grammar Definitions</h2>
+    <p style="font-size: 19px; margin: 0 0 16px 0; font-weight: 600;">➡️ What's the difference?</p>
+
+    <div class="mtr2-ex2-set">
+      <ul style="padding-left: 24px; font-size: 19px; margin: 0; list-style-type: none; list-style-position: outside;">
+        <li style="margin-bottom: 8px;"><strong>1A:</strong> "We launch four new training courses every year."</li>
+        <li style="margin-bottom: 8px;"><strong>1B:</strong> "We launched the first Business English course last year."</li>
+        <li style="margin-bottom: 0;"><strong>1C:</strong> "We have launched two courses this year."</li>
+      </ul>
+      <input type="checkbox" id="ex2-reveal-1" class="mtr2-reveal-toggle" aria-hidden="true" tabindex="-1" />
+      <label for="ex2-reveal-1" class="mtr2-reveal-btn">Reveal answer</label>
+      <div class="mtr2-ex2-answer">
+        <p style="margin: 0 0 10px 0;"><strong>1A</strong> uses the <strong>Present Simple</strong> for a habit or routine — something that happens regularly.</p>
+        <p style="margin: 0 0 10px 0;"><strong>1B</strong> uses the <strong>Past Simple</strong> for a finished action at a specific time in the past (<em>last year</em>).</p>
+        <p style="margin: 0;"><strong>1C</strong> uses the <strong>Present Perfect</strong> to connect a past action to the present — the time period is unfinished (<em>this year</em>).</p>
+      </div>
+    </div>
+
+    <div class="mtr2-ex2-set">
+      <ul style="padding-left: 24px; font-size: 19px; margin: 0; list-style-type: none; list-style-position: outside;">
+        <li style="margin-bottom: 8px;"><strong>2A:</strong> "If sales increase for three consecutive months, we hire new staff."</li>
+        <li style="margin-bottom: 8px;"><strong>2B:</strong> "If sales increase for three consecutive months, we will hire new staff."</li>
+        <li style="margin-bottom: 0;"><strong>2C:</strong> "If sales increased for three consecutive months, we would hire new staff."</li>
+      </ul>
+      <input type="checkbox" id="ex2-reveal-2" class="mtr2-reveal-toggle" aria-hidden="true" tabindex="-1" />
+      <label for="ex2-reveal-2" class="mtr2-reveal-btn">Reveal answer</label>
+      <div class="mtr2-ex2-answer">
+        <p style="margin: 0 0 10px 0;"><strong>2A</strong> is the <strong>Zero Conditional</strong> (<em>if</em> + Present Simple, Present Simple) — a general rule or company policy that is always true.</p>
+        <p style="margin: 0 0 10px 0;"><strong>2B</strong> is the <strong>First Conditional</strong> (<em>if</em> + Present Simple, <em>will</em> + infinitive) — a real, likely future consequence.</p>
+        <p style="margin: 0;"><strong>2C</strong> is the <strong>Second Conditional</strong> (<em>if</em> + Past Simple, <em>would</em> + infinitive) — a hypothetical or less likely situation.</p>
+      </div>
+    </div>
+
+    <div class="mtr2-ex2-set">
+      <ul style="padding-left: 24px; font-size: 19px; margin: 0; list-style-type: none; list-style-position: outside;">
+        <li style="margin-bottom: 8px;"><strong>3A:</strong> "When I arrived, Martin started the presentation."</li>
+        <li style="margin-bottom: 8px;"><strong>3B:</strong> "When I arrived, Martin had started the presentation."</li>
+        <li style="margin-bottom: 0;"><strong>3C:</strong> "When I arrived, Martin was starting the presentation."</li>
+      </ul>
+      <input type="checkbox" id="ex2-reveal-3" class="mtr2-reveal-toggle" aria-hidden="true" tabindex="-1" />
+      <label for="ex2-reveal-3" class="mtr2-reveal-btn">Reveal answer</label>
+      <div class="mtr2-ex2-answer">
+        <p style="margin: 0 0 10px 0;"><strong>3A</strong> uses the <strong>Past Simple</strong> in both clauses — Martin started the presentation when I arrived (the two actions happen at the same time, or one immediately follows the other).</p>
+        <p style="margin: 0 0 10px 0;"><strong>3B</strong> uses the <strong>Past Perfect</strong> (<em>had started</em>) — Martin started the presentation <em>before</em> I arrived; the Past Perfect shows the earlier of the two past actions.</p>
+        <p style="margin: 0;"><strong>3C</strong> uses the <strong>Past Continuous</strong> (<em>was starting</em>) — Martin was in the middle of starting the presentation when I arrived.</p>
+      </div>
+    </div>
   </div>
 
   <!-- Exercise 3 -->
   <div style="margin-bottom: 25px; padding: 20px; background: linear-gradient(to bottom, #fee2e2, #ffffff); border-radius: 8px; border-left: 5px solid #ef4444;" class="keep-together">
-    <h2 style="font-size: 22px; font-weight: bold; margin-bottom: 12px; color: #991b1b;">Exercise 3: Error Correction</h2>    <p style="font-size: 19px; margin: 0 0 12px 0;">Correct the mistakes:</p>
-    <ol style="padding-left: 24px; font-size: 19px; margin: 0; list-style-type: decimal; list-style-position: outside;">
-      <li style="margin-bottom: 8px;">We have launch the new feature yesterday.</li>
-      <li style="margin-bottom: 8px;">I have saw that problem before.</li>
-      <li style="margin-bottom: 8px;">She has send the email an hour ago.</li>
-      <li style="margin-bottom: 8px;">We didn't received any feedback yet.</li>
-      <li style="margin-bottom: 8px;">Have you ever worked in a startup last year?</li>
-      <li style="margin-bottom: 8px;">We have finalised the deal yesterday after weeks of negotiation.</li>
-      <li style="margin-bottom: 8px;">I have been in charge of this project since three months.</li>
-      <li style="margin-bottom: 8px;">She has wrote several reports but none of them were approved yet.</li>
-      <li style="margin-bottom: 8px;">Have you ever managed a team when you worked at your previous company?</li>
-      <li style="margin-bottom: 0;">The company has grew significantly since it was founded.</li>
-    </ol>
+    <h2 style="font-size: 22px; font-weight: bold; margin-bottom: 12px; color: #991b1b;">Exercise 3: Error Correction</h2>
+    <p style="font-size: 19px; margin: 0 0 12px 0;">Correct the mistakes:</p>
+    <div class="mtr2-ex3-wrap">
+      <ol class="mtr2-ex3-original" style="padding-left: 24px; font-size: 19px; margin: 0; list-style-type: decimal; list-style-position: outside;">
+        <li style="margin-bottom: 8px;">We have launch the new feature yesterday.</li>
+        <li style="margin-bottom: 8px;">I have saw that problem before.</li>
+        <li style="margin-bottom: 8px;">She has send the email an hour ago.</li>
+        <li style="margin-bottom: 8px;">We didn't received any feedback yet.</li>
+        <li style="margin-bottom: 8px;">Have you ever worked in a startup last year?</li>
+        <li style="margin-bottom: 8px;">We have finalised the deal yesterday after weeks of negotiation.</li>
+        <li style="margin-bottom: 8px;">I have been in charge of this project since three months.</li>
+        <li style="margin-bottom: 8px;">She has wrote several reports but none of them were approved yet.</li>
+        <li style="margin-bottom: 8px;">Have you ever managed a team when you worked at your previous company?</li>
+        <li style="margin-bottom: 0;">The company has grew significantly since it was founded.</li>
+      </ol>
+      <ol class="mtr2-ex3-corrected" style="padding-left: 24px; font-size: 19px; margin: 0; list-style-type: decimal; list-style-position: outside;">
+        <li style="margin-bottom: 8px;">We <span class="mtr2-err-strike">have launch</span> <span class="mtr2-err-fix">launched</span> the new feature yesterday.</li>
+        <li style="margin-bottom: 8px;">I have <span class="mtr2-err-strike">saw</span> <span class="mtr2-err-fix">seen</span> that problem before.</li>
+        <li style="margin-bottom: 8px;">She <span class="mtr2-err-strike">has send</span> <span class="mtr2-err-fix">sent</span> the email an hour ago.</li>
+        <li style="margin-bottom: 8px;">We <span class="mtr2-err-strike">didn't received</span> <span class="mtr2-err-fix">haven't received</span> any feedback yet.</li>
+        <li style="margin-bottom: 8px;"><span class="mtr2-err-strike">Have you ever worked</span> <span class="mtr2-err-fix">Did you work</span> in a startup last year?</li>
+        <li style="margin-bottom: 8px;">We <span class="mtr2-err-strike">have finalised</span> <span class="mtr2-err-fix">finalised</span> the deal yesterday after weeks of negotiation.</li>
+        <li style="margin-bottom: 8px;">I have been in charge of this project <span class="mtr2-err-strike">since</span> <span class="mtr2-err-fix">for</span> three months.</li>
+        <li style="margin-bottom: 8px;">She has <span class="mtr2-err-strike">wrote</span> <span class="mtr2-err-fix">written</span> several reports but none of them <span class="mtr2-err-strike">were</span> <span class="mtr2-err-fix">have been</span> approved yet.</li>
+        <li style="margin-bottom: 8px;"><span class="mtr2-err-strike">Have you ever managed</span> <span class="mtr2-err-fix">Did you manage</span> a team when you worked at your previous company?</li>
+        <li style="margin-bottom: 0;">The company has <span class="mtr2-err-strike">grew</span> <span class="mtr2-err-fix">grown</span> significantly since it was founded.</li>
+      </ol>
+      <input type="checkbox" id="ex3-reveal-errors" class="mtr2-reveal-toggle" aria-hidden="true" tabindex="-1" />
+      <label for="ex3-reveal-errors" class="mtr2-reveal-btn">Reveal errors</label>
+    </div>
   </div>
 
   <!-- Exercise 4 -->
@@ -91,45 +307,6 @@
       <li style="margin-bottom: 8px;">What you haven't finished yet</li>
       <li style="margin-bottom: 0;">What you have learned recently</li>
     </ul>
-  </div>
-
-  <!-- Answers -->
-  <div style="margin-bottom: 20px; padding: 20px; background: linear-gradient(to bottom, #ede9fe, #ffffff); border-radius: 8px; border-left: 5px solid #8b5cf6;" class="keep-together">
-    <h2 style="font-size: 22px; font-weight: bold; margin-bottom: 12px; color: #5b21b6;">Answers</h2>
-    <h3 style="font-size: 20px; font-weight: bold; margin-bottom: 10px; color: #6d28d9;">Exercise 1: Speaking (Questions 1-8)</h3>    <ol style="padding-left: 24px; font-size: 18px; margin: 0; list-style-type: decimal; list-style-position: outside;">
-      <li style="margin-bottom: 10px;">
-        <strong>What do you do?</strong> &gt; Present Simple (habit, routine, things that are permanent).<br />
-        Examples: I am an English teacher. I teach adults and children.
-      </li>
-      <li style="margin-bottom: 10px;">
-        <strong>How would you describe your role to someone who has no knowledge of the industry you work in?</strong> &gt; Present Simple (habit, routine, things that are permanent).<br />
-        Examples: I teach English to students from different backgrounds. They do not speak in their native language in class.
-      </li>
-      <li style="margin-bottom: 10px;">
-        <strong>Describe your typical workday.</strong> &gt; Present Simple (habit, routine, things that are permanent) / Present Continuous (temporary projects, things happening at the moment).<br />
-        Examples: I mostly work from home. I start work at 8am. At the moment, I am working towards Qualiopi certification, so I am writing lots of policy documents and dealing with lots of administration.
-      </li>
-      <li style="margin-bottom: 10px;">
-        <strong>Did you go to university? If so, what did you study?</strong> &gt; Past Simple (in the past, finished).<br />
-        Examples: I went to Edith Cowan University in Perth. I graduated in 2016.
-      </li>
-      <li style="margin-bottom: 10px;">
-        <strong>What was your first job when you finished your studies?</strong> &gt; Past Simple (in the past, finished).<br />
-        Examples: I worked in a shop. I didn't like my first job.
-      </li>
-      <li style="margin-bottom: 10px;">
-        <strong>Have you ever worked in another country?</strong> &gt; Present Perfect (life experience, until now).<br />
-        Examples: I have never worked in another country. I have worked as a teacher in Brazil and Japan.
-      </li>
-      <li style="margin-bottom: 10px;">
-        <strong>What has been your biggest professional achievement so far?</strong> &gt; Present Perfect (life experience, until now).<br />
-        Examples: My biggest professional achievement has been leading a project that has increased our customer base by 30%. One of my biggest achievements has been developing a new marketing strategy that has improved our brand visibility.
-      </li>
-      <li style="margin-bottom: 0;">
-        <strong>What has been the biggest challenge you have faced in your career so far?</strong> &gt; Present Perfect (life experience, until now).<br />
-        Examples: The biggest challenge I have faced so far has been managing a team under tight deadlines. One of the biggest challenges I have faced has been adapting to rapid changes in a startup environment.
-      </li>
-    </ol>
   </div>
 
 </div>
