@@ -12,6 +12,10 @@ import {
   getGoldSlotCorrectness,
   isGoldChallengeCorrect,
 } from '@/lib/vocabulary-gold-alternatives'
+import {
+  getSilverSlotCorrectness,
+  isSilverChallengeCorrect,
+} from '@/lib/vocabulary-silver-matching'
 import { orderWordsForBronze } from '@/lib/vocabulary-bronze-order'
 import { shuffleForVocabularyChallenge } from '@/lib/vocabulary-shuffle'
 
@@ -21,29 +25,6 @@ interface Word {
   translation_french: string
   created_at?: string
   id?: string | number
-}
-
-/** Silver challenge: slots are keyed by word index. Same French twice (e.g. femme → woman/wife) shares one object key if we key by French — this validates by multiset per French string so answers are interchangeable within those slots. */
-function isSilverChallengeCorrect(words: Word[], positions: Record<number, string>): boolean {
-  if (!words.length) return false
-  for (let i = 0; i < words.length; i++) {
-    if (!positions[i]?.trim()) return false
-  }
-  const byFrench = new Map<string, number[]>()
-  words.forEach((w, i) => {
-    const f = w.translation_french
-    if (!byFrench.has(f)) byFrench.set(f, [])
-    byFrench.get(f)!.push(i)
-  })
-  for (const indices of byFrench.values()) {
-    const expected = [...indices].map((i) => words[i].word_english).sort()
-    const actual = [...indices].map((i) => positions[i]).sort()
-    if (expected.length !== actual.length) return false
-    for (let j = 0; j < expected.length; j++) {
-      if (expected[j] !== actual[j]) return false
-    }
-  }
-  return true
 }
 
 export default function ChallengePage() {
@@ -475,38 +456,6 @@ export default function ChallengePage() {
       }
       return newPositions
     })
-  }
-
-  function getSilverSlotCorrectness(words: Word[], positions: Record<number, string>): Record<number, boolean> {
-    const correctness: Record<number, boolean> = {}
-    const byFrench = new Map<string, number[]>()
-    words.forEach((w, i) => {
-      const f = w.translation_french
-      if (!byFrench.has(f)) byFrench.set(f, [])
-      byFrench.get(f)!.push(i)
-    })
-
-    for (const indices of byFrench.values()) {
-      const expected = indices.map((i) => words[i].word_english)
-      const unmatched = [...expected]
-
-      for (const idx of indices) {
-        const assigned = positions[idx]
-        if (!assigned) {
-          correctness[idx] = false
-          continue
-        }
-        const matchAt = unmatched.findIndex((w) => w === assigned)
-        if (matchAt >= 0) {
-          correctness[idx] = true
-          unmatched.splice(matchAt, 1)
-        } else {
-          correctness[idx] = false
-        }
-      }
-    }
-
-    return correctness
   }
 
   const completeChallenge = async () => {
