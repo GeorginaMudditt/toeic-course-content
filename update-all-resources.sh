@@ -79,6 +79,7 @@ npm run update:resource:supabase "Speaking: Remote Work" "speaking-remote-work-h
 npm run update:resource:supabase "Speaking: The Workplace" "speaking-the-workplace-html.html"
 npm run update:resource:supabase "Speaking: Work-Life Balance" "speaking-work-life-balance-html.html"
 npm run update:resource:supabase "Speaking: Customer Service" "speaking-customer-service-html.html"
+npm run update:resource:supabase "Speaking: Environmental Responsibility" "speaking-environmental-responsibility-html.html"
 npm run update:resource:supabase "Speaking Workplace" "speaking-workplace-html.html"
 npm run update:resource:supabase "Meetings" "speaking-meetings-html.html"
 npm run update:resource:supabase "PRO Speaking: Presentations" "speaking-presentations-html.html"
