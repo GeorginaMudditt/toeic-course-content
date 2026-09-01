@@ -28,7 +28,8 @@
       display: none !important;
     }
     .mtr2-ex1-answers,
-    .mtr2-ex2-answer {
+    .mtr2-ex2-answer,
+    .mtr2-ex4-sample {
       display: block !important;
     }
     .mtr2-ex3-original {
@@ -133,6 +134,44 @@
     color: #b91c1c;
     font-weight: bold;
   }
+
+  .mtr2-ex4-sample-wrap {
+    margin-top: 16px;
+  }
+
+  .mtr2-ex4-sample {
+    display: none;
+    margin-top: 14px;
+    padding: 14px;
+    background: #fffbeb;
+    border: 1px solid #fcd34d;
+    border-radius: 6px;
+  }
+
+  .mtr2-ex4-sample-wrap:has(#ex4-sample-reveal:checked) .mtr2-ex4-sample {
+    display: block;
+  }
+
+  .mtr2-ex4-sample-wrap:has(#ex4-sample-reveal:checked) > .mtr2-reveal-btn {
+    display: none;
+  }
+
+  .mtr2-ex4-sample audio {
+    display: block;
+    width: 100%;
+    max-width: 480px;
+    margin-bottom: 14px;
+  }
+
+  .mtr2-ex4-sample-text p {
+    margin: 0 0 12px 0;
+    font-size: 18px;
+    color: #78350f;
+  }
+
+  .mtr2-ex4-sample-text p:last-child {
+    margin-bottom: 0;
+  }
 </style>
 
 <div style="max-width: 800px; margin: 0 auto; padding: 25px; font-family: Arial, sans-serif; line-height: 1.6; color: #333;">
@@ -168,43 +207,43 @@
         <ol style="padding-left: 24px; font-size: 18px; margin: 0; list-style-type: decimal; list-style-position: outside;">
           <li style="margin-bottom: 10px;">
             <strong>What do you do?</strong> &gt; Present Simple (habit, routine, things that are permanent).<br />
-            Examples: I am an English teacher. I teach adults and children.
+            Examples: I am an English teacher / I drive a taxi
           </li>
           <li style="margin-bottom: 10px;">
             <strong>How would you describe your role to someone who has no knowledge of the industry you work in?</strong> &gt; Present Simple (habit, routine, things that are permanent).<br />
-            Examples: I teach English to students from different backgrounds. They do not speak in their native language in class.
+            Examples: I teach English to adults / I work in a shop that sells children's clothes
           </li>
           <li style="margin-bottom: 10px;">
             <strong>Describe your typical workday.</strong> &gt; Present Simple (habit, routine, things that are permanent) / Present Continuous (temporary projects, things happening at the moment).<br />
-            Examples: I mostly work from home. I start work at 8am. At the moment, I am working towards Qualiopi certification, so I am writing lots of policy documents and dealing with lots of administration.
+            Examples: I work from home / I start work at 8am / This week I am working from the head office in Singapore
           </li>
           <li style="margin-bottom: 10px;">
             <strong>Did you go to university? If so, what did you study?</strong> &gt; Past Simple (in the past, finished).<br />
-            Examples: I went to Edith Cowan University in Perth. I graduated in 2016.
+            Examples: I went to Cambridge University / I graduated in 2016 / I studied Marketing
           </li>
           <li style="margin-bottom: 10px;">
             <strong>What was your first job when you finished your studies?</strong> &gt; Past Simple (in the past, finished).<br />
-            Examples: I worked in a shop. I didn't like my first job.
+            Examples: I worked in a shop / I didn't like my first job
           </li>
           <li style="margin-bottom: 10px;">
             <strong>Have you ever worked in another country?</strong> &gt; Present Perfect (life experience, until now).<br />
-            Examples: I have never worked in another country. I have worked as a teacher in Brazil and Japan.
+            Examples: I have never worked in another country / I have worked as a teacher in Brazil and Japan.
           </li>
           <li style="margin-bottom: 10px;">
             <strong>What has been your biggest professional achievement so far?</strong> &gt; Present Perfect (life experience, until now).<br />
-            Examples: My biggest professional achievement has been leading a project that has increased our customer base by 30%. One of my biggest achievements has been developing a new marketing strategy that has improved our brand visibility.
+            Examples: I have increased our customer base by 30% / We have developed a new marketing strategy that has improved our brand visibility.
           </li>
           <li style="margin-bottom: 10px;">
             <strong>What has been the biggest challenge you have faced in your career so far?</strong> &gt; Present Perfect (life experience, until now).<br />
-            Examples: The biggest challenge I have faced so far has been managing a team under tight deadlines. One of the biggest challenges I have faced has been adapting to rapid changes in a startup environment.
+            Examples: I have managed a team with tight deadlines / I have adapted to rapid changes in a startup environment
           </li>
           <li style="margin-bottom: 10px;">
-            <strong>Where do you see your career in five years?</strong> &gt; Future forms (plans and predictions: <em>will</em>, <em>going to</em>, Present Continuous for fixed arrangements).<br />
-            Examples: In five years, I see myself managing a team. I'm going to qualify as a trainer. I will probably still be working in education.
+            <strong>Where do you see your career in five years?</strong> &gt; Future forms (plans and predictions: will, going to, Present Continuous for fixed arrangements).<br />
+            Examples: I'm going to qualify as a personal trainer / I will probably still be working in insurance.
           </li>
           <li style="margin-bottom: 0;">
-            <strong>If you won millions of euros on the lottery, would you still work?</strong> &gt; Second Conditional (hypothetical present/future: <em>if</em> + Past Simple, <em>would</em> + infinitive).<br />
-            Examples: If I won millions, I would still work, but I would choose projects I'm passionate about. No, I wouldn't work full-time — I would volunteer instead.
+            <strong>If you won millions of euros on the lottery, would you still work?</strong> &gt; Second Conditional (hypothetical present/future: if + Past Simple, would + infinitive).<br />
+            Examples: If I won millions, I would not work full-time / I would volunteer for a charity instead.
           </li>
         </ol>
       </div>
@@ -297,16 +336,32 @@
   </div>
 
   <!-- Exercise 4 -->
+  <!-- Audio file: public/listening-audio/listening-letters-numbers/rebranding.mp3 -->
   <div style="margin-bottom: 25px; padding: 20px; background: linear-gradient(to bottom, #fef3c7, #ffffff); border-radius: 8px; border-left: 5px solid #f59e0b;" class="keep-together">
     <h2 style="font-size: 22px; font-weight: bold; margin-bottom: 12px; color: #92400e;">Exercise 4: Speaking</h2>    <p style="font-size: 19px; margin: 0 0 10px 0;">Tell me about a project you are working on at the moment.</p>
     <p style="font-size: 19px; margin: 0 0 10px 0; font-weight: 600;">Discuss:</p>
-    <ul style="padding-left: 24px; font-size: 19px; margin: 0; list-style-type: disc; list-style-position: outside;">
-      <li style="margin-bottom: 8px;">What you have achieved this week</li>
-      <li style="margin-bottom: 8px;">What problems you have faced</li>
-      <li style="margin-bottom: 8px;">What you did yesterday</li>
+    <ul style="padding-left: 24px; font-size: 19px; margin: 0 0 16px 0; list-style-type: disc; list-style-position: outside;">
+      <li style="margin-bottom: 8px;">What you have achieved so far</li>
       <li style="margin-bottom: 8px;">What you haven't finished yet</li>
-      <li style="margin-bottom: 0;">What you have learned recently</li>
+      <li style="margin-bottom: 8px;">What problems you have faced</li>
+      <li style="margin-bottom: 8px;">What you have learned recently</li>
+      <li style="margin-bottom: 0;">What you are going to do next</li>
     </ul>
+    <div class="mtr2-ex4-sample-wrap">
+      <input type="checkbox" id="ex4-sample-reveal" class="mtr2-reveal-toggle" aria-hidden="true" tabindex="-1" />
+      <label for="ex4-sample-reveal" class="mtr2-reveal-btn">Sample answer</label>
+      <div class="mtr2-ex4-sample">
+        <audio controls preload="metadata" src="/listening-audio/listening-letters-numbers/rebranding.mp3">Your browser does not support audio playback.</audio>
+        <div class="mtr2-ex4-sample-text">
+          <p>At the moment, I'm working on rebranding my company. I've been working on it for the past few months because I wanted to give the business a more modern and professional image.</p>
+          <p>So far, I've redesigned the logo, updated the website and created a new visual identity for the company. I've also started using the new branding on social media and in my marketing materials.</p>
+          <p>However, I haven't finished everything yet. I still need to update some of my older documents and make sure that the new branding is consistent across all of my platforms.</p>
+          <p>I've faced a few problems along the way. For example, it's been quite difficult to decide exactly how I want the new brand to look, and I've had to make several changes to the original design. I've also found that rebranding takes much more time than I initially expected.</p>
+          <p>Through this project, I've learned a lot about how important consistency is when you're building a brand. I've also realised that it's important to think carefully about how you want customers to perceive your company.</p>
+          <p>Next, I'm going to finish updating the remaining materials and launch the new branding officially. I'm also planning to announce the rebrand on social media and ask my customers for feedback.</p>
+        </div>
+      </div>
+    </div>
   </div>
 
 </div>
