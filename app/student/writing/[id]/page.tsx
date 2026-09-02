@@ -171,6 +171,9 @@ export default async function StudentWritingDetailPage({
         dangerouslySetInnerHTML={{
           __html: `
             .writing-marked-view p { margin: 0 0 0.75em; }
+            .writing-marked-view .wc-ins { color: #dc2626; }
+            .writing-marked-view .wc-del,
+            .writing-marked-view .wc-del s,
             .writing-marked-view strike,
             .writing-marked-view s { color: #dc2626; }
           `,

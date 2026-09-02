@@ -1,8 +1,12 @@
 'use client'
 
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { plainTextToEditableHtml, type WritingSubmissionRow } from '@/lib/writing-submissions'
+import {
+  diffToMarkedHtml,
+  parseRevisedFromMarkedHtml,
+} from '@/lib/writing-mark-diff'
+import type { WritingSubmissionRow } from '@/lib/writing-submissions'
 
 type Props = {
   submission: WritingSubmissionRow
@@ -11,47 +15,36 @@ type Props = {
 
 export default function WritingMarkEditor({ submission, studentId }: Props) {
   const router = useRouter()
-  const editorRef = useRef<HTMLDivElement>(null)
+  const baselineText = submission.originalText || ''
+  const [revisedText, setRevisedText] = useState(baselineText)
   const [teacherComments, setTeacherComments] = useState(submission.teacherComments || '')
   const [score, setScore] = useState(
-    submission.score != null && Number.isFinite(submission.score) ? String(submission.score) : ''
+    submission.score != null && Number.isFinite(submission.score) ? String(submission.score) : '',
   )
   const [saving, setSaving] = useState(false)
   const [message, setMessage] = useState<string | null>(null)
   const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
-    const el = editorRef.current
-    if (!el) return
     if (submission.markedHtml) {
-      el.innerHTML = submission.markedHtml
+      setRevisedText(parseRevisedFromMarkedHtml(submission.markedHtml))
     } else {
-      el.innerHTML = plainTextToEditableHtml(submission.originalText || '')
+      setRevisedText(baselineText)
     }
-  }, [submission.id, submission.markedHtml, submission.originalText])
+  }, [submission.id, submission.markedHtml, baselineText])
 
-  const runCommand = (command: string, value?: string) => {
-    editorRef.current?.focus()
-    document.execCommand(command, false, value)
-  }
+  const markedHtml = useMemo(
+    () => diffToMarkedHtml(baselineText, revisedText),
+    [baselineText, revisedText],
+  )
 
-  const markDeletion = () => {
-    editorRef.current?.focus()
-    document.execCommand('strikeThrough')
-    document.execCommand('foreColor', false, '#dc2626')
-  }
-
-  const markInsertion = () => {
-    editorRef.current?.focus()
-    document.execCommand('foreColor', false, '#dc2626')
-  }
+  const hasCorrections = baselineText !== revisedText
 
   const save = async (publish: boolean) => {
     setSaving(true)
     setError(null)
     setMessage(null)
 
-    const markedHtml = editorRef.current?.innerHTML || ''
     const parsedScore = score.trim() === '' ? null : Number(score)
     if (score.trim() !== '' && !Number.isFinite(parsedScore)) {
       setError('Score must be a number')
@@ -112,9 +105,9 @@ export default function WritingMarkEditor({ submission, studentId }: Props) {
       <div className="bg-white shadow rounded-lg p-6 space-y-4">
         <div>
           <h2 className="text-lg font-semibold text-gray-900">Original writing</h2>
-          {submission.originalText ? (
+          {baselineText ? (
             <div className="mt-2 whitespace-pre-wrap rounded-md border border-gray-200 bg-gray-50 p-4 text-sm leading-relaxed text-gray-800 font-serif">
-              {submission.originalText}
+              {baselineText}
             </div>
           ) : (
             <p className="mt-2 text-sm text-gray-500 italic">No typed text — see attached file below.</p>
@@ -138,68 +131,49 @@ export default function WritingMarkEditor({ submission, studentId }: Props) {
         <div>
           <h2 className="text-lg font-semibold text-gray-900">Mark with tracked corrections</h2>
           <p className="text-sm text-gray-600 mt-1">
-            Edit the copy below. Use <span className="text-red-600 line-through">red strikethrough</span> for
-            deletions and <span className="text-red-600 font-medium">red text</span> for insertions / corrections.
+            Edit the text below as you would in a word processor. Deletions and insertions are
+            tracked automatically —{' '}
+            <span className="text-red-600 line-through">red strikethrough</span> for removed words
+            and <span className="text-red-600 font-medium">red text</span> for additions /
+            corrections. No manual highlighting needed.
           </p>
         </div>
 
-        <div className="flex flex-wrap gap-2 border-b border-gray-200 pb-3">
-          <button
-            type="button"
-            onClick={() => runCommand('bold')}
-            className="px-2 py-1 text-sm border border-gray-300 rounded hover:bg-gray-50 font-bold"
-            title="Bold"
-          >
-            B
-          </button>
-          <button
-            type="button"
-            onClick={() => runCommand('italic')}
-            className="px-2 py-1 text-sm border border-gray-300 rounded hover:bg-gray-50 italic"
-            title="Italic"
-          >
-            I
-          </button>
-          <button
-            type="button"
-            onClick={markDeletion}
-            className="px-2 py-1 text-sm border border-gray-300 rounded hover:bg-gray-50 text-red-600 line-through"
-            title="Mark selection as deletion (red strikethrough)"
-          >
-            Delete
-          </button>
-          <button
-            type="button"
-            onClick={markInsertion}
-            className="px-2 py-1 text-sm border border-gray-300 rounded hover:bg-gray-50 text-red-600 font-medium"
-            title="Mark selection / typing as insertion (red)"
-          >
-            Insert / correct
-          </button>
-          <button
-            type="button"
-            onClick={() => runCommand('foreColor', '#000000')}
-            className="px-2 py-1 text-sm border border-gray-300 rounded hover:bg-gray-50"
-            title="Black text"
-          >
-            Black
-          </button>
-          <button
-            type="button"
-            onClick={() => runCommand('removeFormat')}
-            className="px-2 py-1 text-sm border border-gray-300 rounded hover:bg-gray-50"
-            title="Clear formatting"
-          >
-            Clear format
-          </button>
-        </div>
+        {baselineText ? (
+          <>
+            <div>
+              <label htmlFor="writing-revised-text" className="block text-sm font-medium text-gray-700 mb-1">
+                Your corrected version
+              </label>
+              <textarea
+                id="writing-revised-text"
+                value={revisedText}
+                onChange={(e) => setRevisedText(e.target.value)}
+                rows={12}
+                className="w-full rounded-md border border-gray-300 p-4 text-sm leading-relaxed font-serif focus:outline-none focus:ring-2 focus:ring-[#38438f]"
+                spellCheck
+              />
+            </div>
 
-        <div
-          ref={editorRef}
-          contentEditable
-          suppressContentEditableWarning
-          className="min-h-[240px] rounded-md border border-gray-300 p-4 text-sm leading-relaxed font-serif focus:outline-none focus:ring-2 focus:ring-[#38438f] writing-mark-editor"
-        />
+            <div>
+              <p className="text-sm font-medium text-gray-700 mb-1">
+                Preview — what the student will see
+                {!hasCorrections && (
+                  <span className="font-normal text-gray-500"> (no changes yet)</span>
+                )}
+              </p>
+              <div
+                className="min-h-[120px] rounded-md border border-indigo-200 bg-indigo-50/40 p-4 text-sm leading-relaxed font-serif writing-mark-preview"
+                dangerouslySetInnerHTML={{ __html: markedHtml }}
+              />
+            </div>
+          </>
+        ) : (
+          <p className="text-sm text-gray-500 italic">
+            This submission has no typed text to mark inline. Use overall comments below and refer to
+            the attached file.
+          </p>
+        )}
 
         <div>
           <label htmlFor="teacher-comments" className="block text-sm font-medium text-gray-700 mb-1">
@@ -270,9 +244,12 @@ export default function WritingMarkEditor({ submission, studentId }: Props) {
       <style
         dangerouslySetInnerHTML={{
           __html: `
-            .writing-mark-editor p { margin: 0 0 0.75em; }
-            .writing-mark-editor strike,
-            .writing-mark-editor s { color: #dc2626; }
+            .writing-mark-preview p { margin: 0 0 0.75em; }
+            .writing-mark-preview .wc-ins { color: #dc2626; }
+            .writing-mark-preview .wc-del,
+            .writing-mark-preview .wc-del s,
+            .writing-mark-preview strike,
+            .writing-mark-preview s { color: #dc2626; }
           `,
         }}
       />
