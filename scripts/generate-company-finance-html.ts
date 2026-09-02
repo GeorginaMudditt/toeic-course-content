@@ -32,12 +32,12 @@ const VOCAB: ReadonlyArray<{ word: string; french: string; example: string }> = 
 ]
 
 const DISCUSSION = [
-  'What is the difference between a balance sheet and a profit and loss account?',
-  'Why might a profitable company still experience cashflow problems?',
-  'What rights and responsibilities do shareholders typically have?',
-  'How do credit terms and credit periods affect the relationship between a business and its suppliers?',
-  'What factors might cause a company\'s market value to differ from the value of its assets on the balance sheet?',
-  'Why do investors compare dividend payments with earnings and yield when evaluating a company?',
+  'What kinds of expenses does a typical company have? Which are the biggest in a business you know?',
+  'What does a shareholder gain from owning part of a company?',
+  'Why might a supplier offer a 30-day credit period instead of asking for immediate payment?',
+  'What is the difference between turnover and profit? Try explaining with a simple example, such as a shop or café.',
+  'A company reports strong earnings, but employees say their salaries have barely increased. What questions might you ask?',
+  'Why do companies publish their results at the end of each financial year?',
 ]
 
 const ANSWER_KEY: ReadonlyArray<{ sentence: string; answer: string }> = [
@@ -58,9 +58,9 @@ const ANSWER_KEY: ReadonlyArray<{ sentence: string; answer: string }> = [
   { sentence: 'Wholesale customers were granted a 90-day __________, giving them three months to settle invoices.', answer: 'credit period' },
   { sentence: 'The __________ offered by the manufacturer included a 5% discount for early payment.', answer: 'credit terms' },
   { sentence: 'The board\'s decision to approve a major __________ in automation was welcomed by the production team.', answer: 'investment' },
-  { sentence: 'In the annual accounts, the figure labelled \'__________\' represents profit after tax and all other charges.', answer: 'net income' },
+  { sentence: 'In the annual accounts, the figure labelled "__________" represents profit after tax and all other charges.', answer: 'net income' },
   { sentence: 'Investors comparing fixed-income products often look at the __________ offered by each bond.', answer: 'yield' },
-  { sentence: 'Institutional investors trade heavily in the days before an __________ announcement.', answer: 'earnings' },
+  { sentence: 'House prices have risen by 48%, while average __________ have increased by only 5% over the same period.', answer: 'earnings' },
 ]
 
 function slug(word: string): string {

@@ -17,8 +17,8 @@
     { "number": 15, "parts": ["Wholesale customers were granted a 90-day ", { "slot": "gapfill-q15", "answers": ["credit period"] }, ", giving them three months to settle invoices."] },
     { "number": 16, "parts": ["The ", { "slot": "gapfill-q16", "answers": ["credit terms"] }, " offered by the manufacturer included a 5% discount for early payment."] },
     { "number": 17, "parts": ["The board's decision to approve a major ", { "slot": "gapfill-q17", "answers": ["investment"] }, " in automation was welcomed by the production team."] },
-    { "number": 18, "parts": ["In the annual accounts, the figure labelled '", { "slot": "gapfill-q18", "answers": ["net income"] }, "' represents profit after tax and all other charges."] },
+    { "number": 18, "parts": ["In the annual accounts, the figure labelled \"", { "slot": "gapfill-q18", "answers": ["net income"] }, "\" represents profit after tax and all other charges."] },
     { "number": 19, "parts": ["Investors comparing fixed-income products often look at the ", { "slot": "gapfill-q19", "answers": ["yield"] }, " offered by each bond."] },
-    { "number": 20, "parts": ["Institutional investors trade heavily in the days before an ", { "slot": "gapfill-q20", "answers": ["earnings"] }, " announcement."] }
+    { "number": 20, "parts": ["House prices have risen by 48%, while average ", { "slot": "gapfill-q20", "answers": ["earnings"] }, " have increased by only 5% over the same period."] }
   ]
 }
