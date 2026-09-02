@@ -32,12 +32,12 @@ const VOCAB: ReadonlyArray<{ word: string; french: string; example: string }> = 
 ]
 
 const DISCUSSION = [
-  'What kinds of expenses does a typical company have? Which are the biggest in a business you know?',
-  'What does a shareholder gain from owning part of a company?',
-  'Why might a supplier offer a 30-day credit period instead of asking for immediate payment?',
-  'What is the difference between turnover and profit? Try explaining with a simple example, such as a shop or café.',
+  'What kinds of expenses do many companies have? How are these typical expenses changing over the years?',
   'A company reports strong earnings, but employees say their salaries have barely increased. What questions might you ask?',
-  'Why do companies publish their results at the end of each financial year?',
+  'What financial results do you think a company should have to publish at the end of each financial year and why? Should this differ depending on the sector or the size of the company?',
+  'What are the advantages and disadvantages for the supplier and the customer when a supplier offers a 30-day or 90-day credit period instead of asking for immediate payment?',
+  'What is the difference between turnover and profit? How would you explain this to a high school student who wants to run their own business in the future? Try explaining with a simple example, such as a shop or café.',
+  'What can we learn about managing our own money from the way companies manage theirs - and how should we go about teaching this to teenagers?',
 ]
 
 const ANSWER_KEY: ReadonlyArray<{ sentence: string; answer: string }> = [
