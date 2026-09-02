@@ -44,7 +44,7 @@ const WORDS: ReadonlyArray<{ word: string; tts_text?: string; trim_prefix?: stri
   { word: 'credit terms' },
   { word: 'investment' },
   { word: 'net income' },
-  { word: 'yield' },
+  { word: 'yield', tts_text: 'yield.' },
   { word: 'earnings', tts_text: 'earnings.' },
 ]
 
