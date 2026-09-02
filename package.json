@@ -32,6 +32,8 @@
     "generate:customer-service-vocab-tts": "tsx scripts/generate-customer-service-vocab-tts.ts",
     "generate:money-html": "tsx scripts/generate-money-html.ts",
     "generate:money-vocab-tts": "tsx scripts/generate-money-vocab-tts.ts",
+    "generate:company-finance-html": "tsx scripts/generate-company-finance-html.ts",
+    "generate:company-finance-vocab-tts": "tsx scripts/generate-company-finance-vocab-tts.ts",
     "migrate:add-skill": "tsx scripts/migrate-add-skill.ts"
   },
   "dependencies": {

@@ -1,0 +1,24 @@
+{
+  "sentences": [
+    { "number": 1, "parts": ["Before the board meeting, the CFO analysed the latest ", { "slot": "gapfill-q1", "answers": ["profit and loss"] }, " statement to compare revenue with costs."] },
+    { "number": 2, "parts": ["Any ", { "slot": "gapfill-q2", "answers": ["shareholder"] }, " who owns more than 3% of the voting shares must disclose their holding to the regulator."] },
+    { "number": 3, "parts": ["Because its ", { "slot": "gapfill-q3", "answers": ["financial year"] }, " ends in March, the company publishes its annual results in May."] },
+    { "number": 4, "parts": ["Rather than reinvesting all the profits, the firm chose to pay higher ", { "slot": "gapfill-q4", "answers": ["dividends"] }, " to its investors."] },
+    { "number": 5, "parts": ["International ", { "slot": "gapfill-q5", "answers": ["accounting"] }, " rules require subsidiaries to be included in the parent company's consolidated figures."] },
+    { "number": 6, "parts": ["The audit revealed that several personal ", { "slot": "gapfill-q6", "answers": ["expenses"] }, " had wrongly been charged to the company account."] },
+    { "number": 7, "parts": ["Despite losing one major client, the group's ", { "slot": "gapfill-q7", "answers": ["turnover"] }, " still grew by 3% last year."] },
+    { "number": 8, "parts": ["Each year, ", { "slot": "gapfill-q8", "answers": ["depreciation"] }, " is charged against the value of the firm's buildings and equipment."] },
+    { "number": 9, "parts": ["At the year-end, the auditor verified every figure on the ", { "slot": "gapfill-q9", "answers": ["balance sheet"] }, " before signing off the accounts."] },
+    { "number": 10, "parts": ["The company's ", { "slot": "gapfill-q10", "answers": ["assets"] }, " were valued at €120 million, including property, stock, and cash."] },
+    { "number": 11, "parts": ["After the takeover bid was announced, the ", { "slot": "gapfill-q11", "answers": ["market value"] }, " of the company's shares jumped by 25%."] },
+    { "number": 12, "parts": ["Total ", { "slot": "gapfill-q12", "answers": ["liabilities"] }, " had risen to €80 million, mainly due to new borrowing and unpaid supplier invoices."] },
+    { "number": 13, "parts": ["The founders retained a 40% ", { "slot": "gapfill-q13", "answers": ["equity"] }, " stake in the business after the private investment round."] },
+    { "number": 14, "parts": ["The business was profitable on paper, but weak ", { "slot": "gapfill-q14", "answers": ["cashflow"] }, " made it difficult to meet payroll each month."] },
+    { "number": 15, "parts": ["Wholesale customers were granted a 90-day ", { "slot": "gapfill-q15", "answers": ["credit period"] }, ", giving them three months to settle invoices."] },
+    { "number": 16, "parts": ["The ", { "slot": "gapfill-q16", "answers": ["credit terms"] }, " offered by the manufacturer included a 5% discount for early payment."] },
+    { "number": 17, "parts": ["The board's decision to approve a major ", { "slot": "gapfill-q17", "answers": ["investment"] }, " in automation was welcomed by the production team."] },
+    { "number": 18, "parts": ["In the annual accounts, the figure labelled '", { "slot": "gapfill-q18", "answers": ["net income"] }, "' represents profit after tax and all other charges."] },
+    { "number": 19, "parts": ["Investors comparing fixed-income products often look at the ", { "slot": "gapfill-q19", "answers": ["yield"] }, " offered by each bond."] },
+    { "number": 20, "parts": ["Institutional investors trade heavily in the days before an ", { "slot": "gapfill-q20", "answers": ["earnings"] }, " announcement."] }
+  ]
+}

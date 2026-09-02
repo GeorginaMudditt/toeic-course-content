@@ -144,6 +144,11 @@ const PATCHES: Array<{
     jsonFile: 'finance-and-the-economy.json',
     audioDir: '/vocab-audio/finance-and-the-economy-vocab-audio/',
   },
+  {
+    htmlFile: 'company-finance-vocabulary-html.html',
+    jsonFile: 'company-finance.json',
+    audioDir: '/vocab-audio/company-finance-vocab-audio/',
+  },
 ]
 
 function patchFile(htmlFile: string, jsonFile: string, audioDir: string) {
