@@ -71,6 +71,7 @@ model User {
   documents       StudentDocument[]
   onboardingChecklistItems StudentOnboardingChecklistItem[]
   teacherTasks           TeacherTask[]
+  teacherSocialPosts     TeacherSocialPost[]
   resourceBookmarks      ResourceBookmark[]
   writingSubmissions     WritingSubmission[] @relation("WritingStudent")
   writingMarked          WritingSubmission[] @relation("WritingMarkedBy")
@@ -263,6 +264,26 @@ model TeacherTask {
 
   @@index([teacherId, status])
   @@index([teacherId, status, sortOrder])
+}
+
+/// Social media post ideas planned by the teacher (What's Next planner).
+model TeacherSocialPost {
+  id          String    @id @default(cuid())
+  teacherId   String
+  title       String
+  /// Planned publish date (date-only; stored as midnight UTC).
+  plannedDate DateTime
+  status      String    @default("OPEN") // OPEN | DONE
+  sortOrder   Int       @default(0)
+  completedAt DateTime?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  teacher     User      @relation(fields: [teacherId], references: [id], onDelete: Cascade)
+
+  @@index([teacherId, status])
+  @@index([teacherId, status, sortOrder])
+  @@index([teacherId, status, plannedDate])
 }
 
 model ResourceBookmark {

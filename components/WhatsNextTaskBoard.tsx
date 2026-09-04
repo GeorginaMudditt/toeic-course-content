@@ -355,7 +355,6 @@ export default function WhatsNextTaskBoard() {
       </form>
 
       <section>
-        <h2 className="mb-4 text-xl font-semibold text-gray-900">To do</h2>
         {openTasks.length === 0 ? (
           <p className="rounded-lg border border-dashed border-gray-300 bg-white px-4 py-8 text-center text-sm text-gray-500">
             No open tasks yet. Add one above to get started.
