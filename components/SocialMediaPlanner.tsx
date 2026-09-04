@@ -265,7 +265,7 @@ export default function SocialMediaPlanner() {
     const updateList = (posts: TeacherSocialPost[]) =>
       posts.map((post) =>
         post.id === postId
-          ? { ...post, title, plannedDate: `${editingDate}T00:00:00.000Z` }
+          ? { ...post, title, plannedDate: `${editingDate}T12:00:00.000Z` }
           : post
       )
 

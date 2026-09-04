@@ -16,22 +16,36 @@ export function isTeacherSocialPostStatus(value: unknown): value is TeacherSocia
   return value === 'OPEN' || value === 'DONE'
 }
 
-/** Normalize an HTML date input (YYYY-MM-DD) to an ISO timestamp at UTC midnight. */
+/**
+ * Extract the calendar date (YYYY-MM-DD) from a stored value without timezone shifts.
+ * Supabase may return timestamps without a Z, which JS would otherwise treat as local time.
+ */
+export function extractCalendarDate(value: string): string {
+  const match = value.trim().match(/^(\d{4}-\d{2}-\d{2})/)
+  return match ? match[1] : ''
+}
+
+/**
+ * Normalize an HTML date input (YYYY-MM-DD) for storage.
+ * Noon UTC avoids midnight edge cases if a client ever formats via local timezone.
+ */
 export function plannedDateToIso(value: string): string | null {
   if (!/^\d{4}-\d{2}-\d{2}$/.test(value)) return null
-  return `${value}T00:00:00.000Z`
+  return `${value}T12:00:00.000Z`
 }
 
 /** Format stored plannedDate for an HTML date input. */
 export function plannedDateToInputValue(value: string): string {
-  const date = new Date(value)
-  if (Number.isNaN(date.getTime())) return ''
-  return date.toISOString().slice(0, 10)
+  return extractCalendarDate(value)
 }
 
 export function formatPlannedDate(value: string): string {
-  const date = new Date(value)
-  if (Number.isNaN(date.getTime())) return '—'
+  const ymd = extractCalendarDate(value)
+  if (!ymd) return '—'
+
+  const [year, month, day] = ymd.split('-').map(Number)
+  const date = new Date(Date.UTC(year, month - 1, day, 12, 0, 0))
+
   return date.toLocaleDateString('en-GB', {
     day: 'numeric',
     month: 'short',
