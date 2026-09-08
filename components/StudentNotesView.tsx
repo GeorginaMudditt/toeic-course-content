@@ -1,6 +1,12 @@
 'use client'
 
 import { computePackageProgress, normalizeLessonDurationHours, type LessonDurationHours } from '@/lib/course-notes-lessons'
+import {
+  correctionPairsHaveContent,
+  parseCorrectionPairs,
+  type CorrectionPair,
+} from '@/lib/correction-pairs'
+import { CorrectionPairsView } from '@/components/CorrectionPairDisplay'
 
 interface Props {
   content: string
@@ -16,6 +22,7 @@ interface LessonRow {
   attendance: AttendanceOption
   lessonTopic: string
   corrections: string
+  correctionPairs?: CorrectionPair[]
   notes: string
 }
 
@@ -24,8 +31,31 @@ interface NotesDataV1 {
   rows: LessonRow[]
 }
 
+function normalizeStudentLessonRow(raw: unknown): LessonRow {
+  const o = raw && typeof raw === 'object' ? (raw as Record<string, unknown>) : {}
+  const att = o.attendance
+  const attendance: AttendanceOption =
+    att === 'YES_ONLINE' || att === 'YES_IN_PERSON' || att === 'NO_NOT_INFORMED' ? att : ''
+  return {
+    date: typeof o.date === 'string' ? o.date : '',
+    durationHours: normalizeLessonDurationHours(o.durationHours),
+    attendance,
+    lessonTopic: typeof o.lessonTopic === 'string' ? o.lessonTopic : '',
+    corrections: typeof o.corrections === 'string' ? o.corrections : '',
+    correctionPairs: parseCorrectionPairs(o.correctionPairs),
+    notes: typeof o.notes === 'string' ? o.notes : '',
+  }
+}
+
 const hasContent = (row: LessonRow) =>
-  !!(row.date || row.attendance || row.lessonTopic || row.corrections || row.notes)
+  !!(
+    row.date ||
+    row.attendance ||
+    row.lessonTopic ||
+    row.corrections ||
+    row.notes ||
+    correctionPairsHaveContent(row.correctionPairs)
+  )
 
 const formatAttendance = (value: AttendanceOption) => {
   switch (value) {
@@ -49,8 +79,11 @@ export default function StudentNotesView({ content, courseDurationHours = null }
     try {
       const parsed = JSON.parse(content) as NotesDataV1
       if (parsed && parsed.version === 1 && Array.isArray(parsed.rows)) {
-        fullParsed = parsed
-        structuredRows = parsed.rows.filter(hasContent)
+        fullParsed = {
+          version: 1,
+          rows: parsed.rows.map(normalizeStudentLessonRow),
+        }
+        structuredRows = fullParsed.rows.filter(hasContent)
         if (structuredRows.length === 0) {
           structuredRows = null
           fullParsed = null
@@ -146,11 +179,11 @@ export default function StudentNotesView({ content, courseDurationHours = null }
           }}
         >
           <colgroup>
+            <col style={{ width: '12%' }} />
             <col style={{ width: '13%' }} />
-            <col style={{ width: '15%' }} />
-            <col style={{ width: '19%' }} />
-            <col style={{ width: '26.5%' }} />
-            <col style={{ width: '26.5%' }} />
+            <col style={{ width: '16%' }} />
+            <col style={{ width: '34%' }} />
+            <col style={{ width: '25%' }} />
           </colgroup>
           <thead>
             <tr style={{ backgroundColor: '#f3f4f6' }}>
@@ -186,10 +219,14 @@ export default function StudentNotesView({ content, courseDurationHours = null }
                   {row.lessonTopic}
                 </td>
                 <td style={{ padding: '8px', border: '1px solid #d1d5db', verticalAlign: 'top' }}>
-                  <div
-                    style={{ whiteSpace: 'pre-wrap', overflowWrap: 'anywhere', wordBreak: 'break-word' }}
-                    dangerouslySetInnerHTML={{ __html: row.corrections }}
-                  />
+                  {correctionPairsHaveContent(row.correctionPairs) ? (
+                    <CorrectionPairsView pairs={row.correctionPairs ?? []} />
+                  ) : (
+                    <div
+                      style={{ whiteSpace: 'pre-wrap', overflowWrap: 'anywhere', wordBreak: 'break-word' }}
+                      dangerouslySetInnerHTML={{ __html: row.corrections }}
+                    />
+                  )}
                 </td>
                 <td style={{ padding: '8px', border: '1px solid #d1d5db', verticalAlign: 'top' }}>
                   <div

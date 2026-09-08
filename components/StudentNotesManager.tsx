@@ -16,6 +16,12 @@ import {
   parseLessonDateDisplay,
   type LessonDurationHours,
 } from '@/lib/course-notes-lessons'
+import {
+  correctionPairsHaveContent,
+  parseCorrectionPairs,
+  type CorrectionPair,
+} from '@/lib/correction-pairs'
+import LessonCorrectionPairsEditor from '@/components/LessonCorrectionPairsEditor'
 
 interface Enrollment {
   id: string
@@ -51,6 +57,8 @@ interface LessonRow {
   attendance: AttendanceOption
   lessonTopic: string
   corrections: string
+  /** Phrase pairs for the French-style student view. Older notes keep HTML in `corrections` only. */
+  correctionPairs: CorrectionPair[]
   notes: string
 }
 
@@ -83,11 +91,19 @@ const createEmptyRow = (): LessonRow => ({
   attendance: '',
   lessonTopic: '',
   corrections: '',
+  correctionPairs: [],
   notes: '',
 })
 
 const hasContent = (row: LessonRow) =>
-  !!(row.date || row.attendance || row.lessonTopic || row.corrections || row.notes)
+  !!(
+    row.date ||
+    row.attendance ||
+    row.lessonTopic ||
+    row.corrections ||
+    row.notes ||
+    correctionPairsHaveContent(row.correctionPairs)
+  )
 
 /** True if rich-text HTML has visible text (not empty tags / br only). */
 function htmlHasVisibleText(html: string): boolean {
@@ -180,6 +196,7 @@ function lessonRowFromStored(raw: unknown): LessonRow {
     attendance,
     lessonTopic: typeof o.lessonTopic === 'string' ? o.lessonTopic : '',
     corrections: typeof o.corrections === 'string' ? o.corrections : '',
+    correctionPairs: parseCorrectionPairs(o.correctionPairs),
     notes: typeof o.notes === 'string' ? o.notes : '',
   }
 }
@@ -252,7 +269,11 @@ export default function StudentNotesManager({ student, enrollments }: Props) {
     notesDetailsElementsRef.current.forEach((el, i) => {
       const row = snap[i]
       if (!row) return
-      if (htmlHasVisibleText(row.corrections) || htmlHasVisibleText(row.notes)) {
+      if (
+        htmlHasVisibleText(row.corrections) ||
+        htmlHasVisibleText(row.notes) ||
+        correctionPairsHaveContent(row.correctionPairs)
+      ) {
         el.open = true
       }
     })
@@ -1384,7 +1405,9 @@ export default function StudentNotesManager({ student, enrollments }: Props) {
                           >
                             Corrections & notes{' '}
                             <span className="font-normal text-gray-500">(optional)</span>
-                            {(htmlHasVisibleText(row.corrections) || htmlHasVisibleText(row.notes)) && (
+                            {(htmlHasVisibleText(row.corrections) ||
+                              htmlHasVisibleText(row.notes) ||
+                              correctionPairsHaveContent(row.correctionPairs)) && (
                               <span className="ml-2 text-xs font-normal text-[#38438f]">
                                 · saved content
                               </span>
@@ -1393,47 +1416,64 @@ export default function StudentNotesManager({ student, enrollments }: Props) {
                           <div className={lessonStripDetailsInnerClass(lessonNum)}>
                             <div>
                               <div className="text-xs font-medium text-gray-600 mb-1">Corrections</div>
-                              <div
-                                ref={(el) => {
-                                  if (el) editorRefs.current[`${index}-corrections`] = el
-                                  if (
-                                    el &&
-                                    !(focusedEditor?.rowIndex === index && focusedEditor?.field === 'corrections')
-                                  ) {
-                                    if (el.innerHTML !== row.corrections) el.innerHTML = row.corrections
-                                  }
-                                }}
-                                contentEditable
-                                suppressContentEditableWarning
-                                onFocus={() => setFocusedEditor({ rowIndex: index, field: 'corrections' })}
-                                onInput={(e) => {
-                                  const html = (e.currentTarget as HTMLElement).innerHTML
-                                  setRows((prev) => {
-                                    const updated = [...prev]
-                                    updated[index] = { ...updated[index], corrections: html }
-                                    const normalized = ensureLeadingEmptyRow(updated)
-                                    const payload: NotesDataV1 = { version: 1, rows: normalized }
-                                    setContent(JSON.stringify(payload))
-                                    return normalized
-                                  })
-                                }}
-                                onBlur={(e) => {
-                                  setFocusedEditor(null)
-                                  const html = (e.currentTarget as HTMLElement).innerHTML
-                                  setRows((prev) => {
-                                    const updated = [...prev]
-                                    updated[index] = { ...updated[index], corrections: html }
-                                    const normalized = ensureLeadingEmptyRow(updated)
-                                    const payload: NotesDataV1 = { version: 1, rows: normalized }
-                                    setContent(JSON.stringify(payload))
-                                    return normalized
-                                  })
-                                }}
-                                data-notes-editor="true"
-                                data-row-index={index}
-                                data-field="corrections"
-                                className={lessonStripEditorClass(lessonNum)}
-                              />
+                              {htmlHasVisibleText(row.corrections) &&
+                              !correctionPairsHaveContent(row.correctionPairs) ? (
+                                <div
+                                  ref={(el) => {
+                                    if (el) editorRefs.current[`${index}-corrections`] = el
+                                    if (
+                                      el &&
+                                      !(focusedEditor?.rowIndex === index && focusedEditor?.field === 'corrections')
+                                    ) {
+                                      if (el.innerHTML !== row.corrections) el.innerHTML = row.corrections
+                                    }
+                                  }}
+                                  contentEditable
+                                  suppressContentEditableWarning
+                                  onFocus={() => setFocusedEditor({ rowIndex: index, field: 'corrections' })}
+                                  onInput={(e) => {
+                                    const html = (e.currentTarget as HTMLElement).innerHTML
+                                    setRows((prev) => {
+                                      const updated = [...prev]
+                                      updated[index] = { ...updated[index], corrections: html }
+                                      const normalized = ensureLeadingEmptyRow(updated)
+                                      const payload: NotesDataV1 = { version: 1, rows: normalized }
+                                      setContent(JSON.stringify(payload))
+                                      return normalized
+                                    })
+                                  }}
+                                  onBlur={(e) => {
+                                    setFocusedEditor(null)
+                                    const html = (e.currentTarget as HTMLElement).innerHTML
+                                    setRows((prev) => {
+                                      const updated = [...prev]
+                                      updated[index] = { ...updated[index], corrections: html }
+                                      const normalized = ensureLeadingEmptyRow(updated)
+                                      const payload: NotesDataV1 = { version: 1, rows: normalized }
+                                      setContent(JSON.stringify(payload))
+                                      return normalized
+                                    })
+                                  }}
+                                  data-notes-editor="true"
+                                  data-row-index={index}
+                                  data-field="corrections"
+                                  className={lessonStripEditorClass(lessonNum)}
+                                />
+                              ) : (
+                                <LessonCorrectionPairsEditor
+                                  pairs={row.correctionPairs ?? []}
+                                  onChange={(pairs) => {
+                                    setRows((prev) => {
+                                      const updated = [...prev]
+                                      updated[index] = { ...updated[index], correctionPairs: pairs }
+                                      const normalized = ensureLeadingEmptyRow(updated)
+                                      const payload: NotesDataV1 = { version: 1, rows: normalized }
+                                      setContent(JSON.stringify(payload))
+                                      return normalized
+                                    })
+                                  }}
+                                />
+                              )}
                             </div>
                             <div>
                               <div className="text-xs font-medium text-gray-600 mb-1">Notes</div>
