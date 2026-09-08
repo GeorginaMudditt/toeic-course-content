@@ -53,6 +53,7 @@ npm run update:resource:supabase "Present Perfect Simple" "present-perfect-simpl
 npm run update:resource:supabase "Present Simple: other verbs" "present-simple-other-verbs-html.html"
 npm run update:resource:supabase 'Present Simple: the verb "to be"' "present-simple-the-verb-to-be-html.html"
 npm run update:resource:supabase "Present Simple to be" "present-simple-to-be-html.html"
+npm run update:resource:supabase "Pronouns and Possessives" "pronouns-and-possessives-html.html"
 npm run update:resource:supabase "Reflexive Pronouns" "reflexive-pronouns-html.html"
 npm run update:resource:supabase "Relative Clauses" "relative-clauses-html.html"
 npm run update:resource:supabase "Reported Speech" "reported-speech-html.html"

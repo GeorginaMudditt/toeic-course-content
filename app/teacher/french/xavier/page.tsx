@@ -3,7 +3,7 @@ import { authOptions } from '@/lib/auth'
 import { redirect } from 'next/navigation'
 import Link from 'next/link'
 import Navbar from '@/components/Navbar'
-import { FRENCH_XAVIER_RESOURCES } from '@/lib/french-content'
+import FrenchXavierResourcesManager from '@/components/FrenchXavierResourcesManager'
 
 export default async function FrenchXavierResourcesPage() {
   const session = await getServerSession(authOptions)
@@ -23,26 +23,8 @@ export default async function FrenchXavierResourcesPage() {
           >
             ← Back to French
           </Link>
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">Xavier resources</h1>
-          <p className="mb-8 text-sm text-gray-600">
-            PDFs from your Adomlingua work with Xavier. Open any file to revise or print.
-          </p>
-
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-            {FRENCH_XAVIER_RESOURCES.map((resource) => (
-              <a
-                key={resource.href}
-                href={resource.href}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="rounded-lg border border-amber-200 bg-amber-50 p-5 shadow-sm transition-colors hover:border-amber-300"
-              >
-                <h2 className="text-lg font-semibold text-amber-950">{resource.title}</h2>
-                <p className="mt-1 text-sm text-gray-600">{resource.description}</p>
-                <p className="mt-3 text-sm font-medium text-[#38438f]">Open PDF →</p>
-              </a>
-            ))}
-          </div>
+          <h1 className="text-3xl font-bold text-gray-900 mb-6">Xavier resources</h1>
+          <FrenchXavierResourcesManager />
         </div>
       </div>
     </div>

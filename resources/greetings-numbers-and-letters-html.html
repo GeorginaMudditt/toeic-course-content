@@ -455,15 +455,55 @@
     }
 
     .keep-together {
-      break-inside: auto;
-      page-break-inside: auto;
+      break-inside: avoid;
+      page-break-inside: avoid;
       background: #fff;
       border-color: #d1d5db;
       padding: 8px 10px;
       margin-bottom: 10px;
     }
 
+    .print-page-start {
+      break-before: page;
+      page-break-before: always;
+    }
+
+    .collecting-information {
+      break-inside: auto;
+      page-break-inside: auto;
+      border: none;
+      background: transparent;
+      padding: 0;
+      margin-bottom: 0;
+    }
+
+    .print-section {
+      break-inside: avoid;
+      page-break-inside: avoid;
+      break-before: auto;
+      page-break-before: auto;
+      border: 1px solid #d1d5db;
+      border-radius: 8px;
+      background: #fff;
+      padding: 8px 10px;
+      margin-bottom: 10px;
+    }
+
+    .print-section h3 {
+      margin-top: 0 !important;
+    }
+
+    .print-section img {
+      max-height: 160mm;
+      width: auto;
+      max-width: 100%;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
     .key-lang-card {
+      break-inside: avoid;
+      page-break-inside: avoid;
       background: #fff !important;
     }
 
@@ -495,6 +535,14 @@
 
     .symbol-chip-char {
       font-size: 28px !important;
+    }
+
+    .alphabet-video-wrap,
+    .count-audio-wrap,
+    .symbol-answer-audio,
+    video,
+    audio {
+      display: none !important;
     }
   }
 </style>
@@ -570,10 +618,16 @@
 
   <div class="keep-together">
     <h2 style="font-size: 22px; font-weight: 700; margin-bottom: 10px;">Role Play</h2>
-    <p style="font-size: 16px; margin: 0;">In English, greet a customer who arrives at your workplace.</p>
+    <p style="font-size: 16px; margin: 0 0 8px;">Choose the situation that best matches your job:</p>
+    <ol style="margin: 0; font-size: 16px;">
+      <li style="margin-bottom: 6px;">In English, greet a customer who arrives at your workplace.</li>
+      <li style="margin-bottom: 6px;">In English, greet a customer who telephones your workplace for information.</li>
+      <li style="margin-bottom: 0;">In English, present what you do in your job every day.</li>
+    </ol>
   </div>
 
-  <div class="keep-together">
+  <div class="keep-together collecting-information print-page-start">
+    <div class="print-section">
     <h2 style="font-size: 22px; font-weight: 700; margin-bottom: 10px;">Collecting Information</h2>
 
     <h3 style="font-size: 20px; font-weight: 700; margin: 0 0 8px;">Words</h3>
@@ -592,7 +646,9 @@
     <div class="note-box">
       <p style="margin: 0; font-size: 16px;"><strong>💬 Note:</strong> English speakers will always write their first name before their surname, and usually only capitalise the first letter. So, Peter Allan = first name Peter, surname Allan.</p>
     </div>
+    </div>
 
+    <div class="print-section">
     <h3 style="font-size: 20px; font-weight: 700; margin: 18px 0 8px;">Email/web addresses</h3>
     <p class="symbol-prompt">What do you call these?</p>
     <div class="symbol-grid" aria-label="Email and web address symbols">
@@ -675,7 +731,9 @@
     <ul class="reflection-list" style="font-size: 16px; border-color: rgba(30, 58, 138, 0.25);">
       <li>What is your email address?</li>
     </ul>
+    </div>
 
+    <div class="print-section">
     <h3 style="font-size: 20px; font-weight: 700; margin: 18px 0 8px;">Numbers</h3>
     <p style="font-size: 16px; margin: 0 0 8px;">Count to 50 in English.</p>
     <div class="count-audio-wrap">
@@ -692,7 +750,9 @@
     <div class="note-box">
       <p style="margin: 0; font-size: 16px;"><strong>💬 Note:</strong> English speakers will usually give their phone number digit by digit (not in pairs like French speakers do). So, 0787 145527 would be "oh" seven eight seven one four five five two seven (or "double five").</p>
     </div>
+    </div>
 
+    <div class="print-section">
     <h3 style="font-size: 20px; font-weight: 700; margin: 18px 0 8px;">Times</h3>
     <div style="border: 1px solid var(--exam-soft-border); border-radius: 10px; background: #fff; padding: 10px;">
       <img
@@ -700,6 +760,7 @@
         alt="Telling the time in English"
         style="width: 100%; height: auto; display: block;"
       />
+    </div>
     </div>
   </div>
 </div>
