@@ -128,7 +128,7 @@ export default async function StudentWritingDetailPage({
                 </p>
                 {row.markedHtml ? (
                   <div
-                    className="prose max-w-none text-sm leading-relaxed font-serif writing-marked-view"
+                    className="prose max-w-none text-sm leading-relaxed font-serif text-gray-900 writing-marked-view"
                     dangerouslySetInnerHTML={{ __html: row.markedHtml }}
                   />
                 ) : (
@@ -170,12 +170,16 @@ export default async function StudentWritingDetailPage({
       <style
         dangerouslySetInnerHTML={{
           __html: `
+            .writing-marked-view,
+            .writing-marked-view p {
+              color: #111827 !important;
+            }
             .writing-marked-view p { margin: 0 0 0.75em; }
-            .writing-marked-view .wc-ins { color: #dc2626; }
+            .writing-marked-view .wc-ins { color: #dc2626 !important; }
             .writing-marked-view .wc-del,
             .writing-marked-view .wc-del s,
             .writing-marked-view strike,
-            .writing-marked-view s { color: #dc2626; }
+            .writing-marked-view s { color: #dc2626 !important; }
           `,
         }}
       />

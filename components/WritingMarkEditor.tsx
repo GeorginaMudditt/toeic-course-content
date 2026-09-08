@@ -163,7 +163,7 @@ export default function WritingMarkEditor({ submission, studentId }: Props) {
                 )}
               </p>
               <div
-                className="min-h-[120px] rounded-md border border-indigo-200 bg-indigo-50/40 p-4 text-sm leading-relaxed font-serif writing-mark-preview"
+                className="min-h-[120px] rounded-md border border-indigo-200 bg-indigo-50/40 p-4 text-sm leading-relaxed font-serif text-gray-900 writing-mark-preview"
                 dangerouslySetInnerHTML={{ __html: markedHtml }}
               />
             </div>
@@ -244,12 +244,16 @@ export default function WritingMarkEditor({ submission, studentId }: Props) {
       <style
         dangerouslySetInnerHTML={{
           __html: `
+            .writing-mark-preview,
+            .writing-mark-preview p {
+              color: #111827 !important;
+            }
             .writing-mark-preview p { margin: 0 0 0.75em; }
-            .writing-mark-preview .wc-ins { color: #dc2626; }
+            .writing-mark-preview .wc-ins { color: #dc2626 !important; }
             .writing-mark-preview .wc-del,
             .writing-mark-preview .wc-del s,
             .writing-mark-preview strike,
-            .writing-mark-preview s { color: #dc2626; }
+            .writing-mark-preview s { color: #dc2626 !important; }
           `,
         }}
       />
