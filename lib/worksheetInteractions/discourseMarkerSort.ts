@@ -1,9 +1,7 @@
 /**
  * Drag-and-drop discourse markers into category columns, with Check answers.
- * Mounted from WorksheetViewer when HTML contains [data-discourse-marker-sort].
- *
- * Category columns are declared as:
- *   <div data-dm-category="Adding information" data-dm-items="Furthermore|In addition"></div>
+ * Enhances existing HTML ([data-dm-drop] + .mie-dm-chip). Falls back to
+ * building from [data-dm-category] templates if the table is not in the markup.
  */
 
 type Cleanup = () => void
@@ -38,41 +36,34 @@ function expectedCategory(categories: Category[], label: string): string | null 
   return found ? found.name : null
 }
 
+function on<K extends keyof HTMLElementEventMap>(
+  el: HTMLElement,
+  type: K,
+  handler: (e: HTMLElementEventMap[K]) => void
+): Cleanup {
+  el.addEventListener(type, handler)
+  return () => el.removeEventListener(type, handler)
+}
+
 export function mountDiscourseMarkerSort(root: HTMLElement): Cleanup {
   if (root.getAttribute('data-discourse-marker-sort-mounted') === 'true') {
     return () => {}
   }
 
-  function readCategoryDefs(): { name: string; items: string[] }[] {
-    const stored = root.getAttribute('data-dm-config')
-    if (stored) {
-      try {
-        const parsed = JSON.parse(stored) as { name: string; items: string[] }[]
-        if (Array.isArray(parsed) && parsed.length > 0) return parsed
-      } catch {
-        /* fall through and read templates */
-      }
-    }
-    const templates = Array.from(root.querySelectorAll('[data-dm-category]')) as HTMLElement[]
-    const defs = templates
-      .map((el) => ({
-        name: el.getAttribute('data-dm-category') || '',
-        items: parseItems(el.getAttribute('data-dm-items')),
-      }))
-      .filter((def) => def.name && def.items.length > 0)
-    if (defs.length > 0) {
-      root.setAttribute('data-dm-config', JSON.stringify(defs))
-    }
-    return defs
-  }
-
-  const categoryDefs = readCategoryDefs()
-  if (categoryDefs.length === 0) return () => {}
-  Array.from(root.querySelectorAll('[data-dm-category]')).forEach((el) => el.remove())
-
+  const cleanups: Cleanup[] = []
   let selectedChip: HTMLElement | null = null
-  let bankEl: HTMLElement | null = null
-  const categories: Category[] = []
+  const bankEl =
+    (root.querySelector('[data-dm-bank]') as HTMLElement | null) ||
+    (root.querySelector('.mie-dm-bank-items') as HTMLElement | null)
+
+  const dropEls = Array.from(root.querySelectorAll('[data-dm-drop]')) as HTMLElement[]
+  const categories: Category[] = dropEls.map((drop) => ({
+    name: drop.getAttribute('data-dm-drop') || '',
+    items: parseItems(drop.getAttribute('data-dm-accept')),
+    drop,
+  })).filter((cat) => cat.name)
+
+  if (categories.length === 0) return () => {}
 
   function clearSelection() {
     if (selectedChip) {
@@ -81,79 +72,113 @@ export function mountDiscourseMarkerSort(root: HTMLElement): Cleanup {
     }
   }
 
-  function makeChip(label: string): HTMLElement {
-    const chip = document.createElement('button')
-    chip.type = 'button'
-    chip.className = 'mie-dm-chip'
-    chip.textContent = label
-    chip.dataset.marker = label
-    chip.setAttribute('draggable', 'true')
-    chip.setAttribute('aria-label', label)
-
-    chip.addEventListener('dragstart', (e) => {
-      e.dataTransfer?.setData('text/plain', label)
-      if (e.dataTransfer) e.dataTransfer.effectAllowed = 'move'
-      chip.classList.add('is-dragging')
-      clearSelection()
-    })
-    chip.addEventListener('dragend', () => chip.classList.remove('is-dragging'))
-
-    chip.addEventListener('click', (e) => {
-      e.preventDefault()
-      e.stopPropagation()
-      if (chip.parentElement === bankEl) {
-        if (selectedChip === chip) {
-          clearSelection()
-          return
-        }
-        clearSelection()
-        selectedChip = chip
-        chip.classList.add('is-selected')
-        return
-      }
-      if (bankEl) {
-        bankEl.appendChild(chip)
-        chip.classList.remove('is-correct', 'is-wrong')
-        clearSelection()
-      }
-    })
-
-    return chip
-  }
-
   function placeInDrop(drop: HTMLElement, chip: HTMLElement) {
     drop.appendChild(chip)
     chip.classList.remove('is-selected', 'is-correct', 'is-wrong')
     clearSelection()
   }
 
+  function returnToBank(chip: HTMLElement) {
+    if (!bankEl) return
+    bankEl.appendChild(chip)
+    chip.classList.remove('is-correct', 'is-wrong', 'is-selected')
+    clearSelection()
+  }
+
+  function bindChip(chip: HTMLElement) {
+    const label = chip.dataset.marker || chip.textContent?.trim() || ''
+    chip.dataset.marker = label
+    chip.setAttribute('draggable', 'true')
+    if (!chip.getAttribute('type') && chip.tagName === 'BUTTON') {
+      chip.setAttribute('type', 'button')
+    }
+
+    cleanups.push(
+      on(chip, 'dragstart', (e) => {
+        e.dataTransfer?.setData('text/plain', label)
+        if (e.dataTransfer) e.dataTransfer.effectAllowed = 'move'
+        chip.classList.add('is-dragging')
+        clearSelection()
+      })
+    )
+    cleanups.push(on(chip, 'dragend', () => chip.classList.remove('is-dragging')))
+
+    cleanups.push(
+      on(chip, 'click', (e) => {
+        e.preventDefault()
+        e.stopPropagation()
+        if (bankEl && chip.parentElement === bankEl) {
+          if (selectedChip === chip) {
+            clearSelection()
+            return
+          }
+          clearSelection()
+          selectedChip = chip
+          chip.classList.add('is-selected')
+          return
+        }
+        returnToBank(chip)
+      })
+    )
+  }
+
   function bindDrop(drop: HTMLElement) {
-    drop.addEventListener('dragover', (e) => {
-      e.preventDefault()
-      drop.classList.add('is-over')
-    })
-    drop.addEventListener('dragleave', () => drop.classList.remove('is-over'))
-    drop.addEventListener('drop', (e) => {
-      e.preventDefault()
-      drop.classList.remove('is-over')
-      const label = e.dataTransfer?.getData('text/plain')
-      if (!label || !bankEl) return
-      const chips = Array.from(root.querySelectorAll('.mie-dm-chip')) as HTMLElement[]
-      const chip = chips.find((c) => c.dataset.marker === label)
-      if (chip) placeInDrop(drop, chip)
-    })
-    drop.addEventListener('click', () => {
-      if (selectedChip && selectedChip.parentElement === bankEl) {
-        placeInDrop(drop, selectedChip)
-      }
+    cleanups.push(
+      on(drop, 'dragover', (e) => {
+        e.preventDefault()
+        drop.classList.add('is-over')
+      })
+    )
+    cleanups.push(on(drop, 'dragleave', () => drop.classList.remove('is-over')))
+    cleanups.push(
+      on(drop, 'drop', (e) => {
+        e.preventDefault()
+        drop.classList.remove('is-over')
+        const word = e.dataTransfer?.getData('text/plain')
+        if (!word) return
+        const chips = Array.from(root.querySelectorAll('.mie-dm-chip')) as HTMLElement[]
+        const chip = chips.find((c) => c.dataset.marker === word)
+        if (chip) placeInDrop(drop, chip)
+      })
+    )
+    cleanups.push(
+      on(drop, 'click', () => {
+        if (selectedChip && bankEl && selectedChip.parentElement === bankEl) {
+          placeInDrop(drop, selectedChip)
+        }
+      })
+    )
+  }
+
+  const chips = Array.from(root.querySelectorAll('.mie-dm-chip')) as HTMLElement[]
+  chips.forEach(bindChip)
+  categories.forEach((cat) => bindDrop(cat.drop))
+
+  if (bankEl && chips.length > 0) {
+    shuffle(chips).forEach((chip) => {
+      if (!chip.closest('[data-dm-drop]')) bankEl.appendChild(chip)
     })
   }
+
+  const feedbackEl =
+    (root.querySelector('[data-dm-feedback]') as HTMLElement | null) ||
+    (() => {
+      const el = document.createElement('p')
+      el.setAttribute('data-dm-feedback', '')
+      el.setAttribute('role', 'status')
+      el.style.cssText =
+        'margin: 0; font-size: 14px; font-weight: 600; min-height: 22px; color: #4338ca;'
+      const toolbar = root.querySelector('.mie-dm-toolbar')
+      if (toolbar) toolbar.appendChild(el)
+      else root.appendChild(el)
+      return el
+    })()
 
   function checkAnswers() {
     let correct = 0
     let placed = 0
-    const chips = Array.from(root.querySelectorAll('.mie-dm-chip')) as HTMLElement[]
-    chips.forEach((chip) => {
+    const allChips = Array.from(root.querySelectorAll('.mie-dm-chip')) as HTMLElement[]
+    allChips.forEach((chip) => {
       chip.classList.remove('is-correct', 'is-wrong')
       const label = chip.dataset.marker || ''
       const parentDrop = chip.closest('[data-dm-drop]') as HTMLElement | null
@@ -167,113 +192,50 @@ export function mountDiscourseMarkerSort(root: HTMLElement): Cleanup {
         chip.classList.add('is-wrong')
       }
     })
-    const total = chips.length
-    if (feedbackEl) {
-      if (placed < total) {
-        feedbackEl.textContent = `Place every marker first — ${placed} / ${total} placed, ${correct} correct so far.`
-        feedbackEl.style.color = '#92400e'
-      } else if (correct === total) {
-        feedbackEl.textContent = `Excellent — all ${total} discourse markers are in the right category.`
-        feedbackEl.style.color = '#15803d'
-      } else {
-        feedbackEl.textContent = `${correct} / ${total} correct. Green chips are right; move the red ones.`
-        feedbackEl.style.color = '#92400e'
-      }
+    const total = allChips.length
+    if (placed < total) {
+      feedbackEl.textContent = `Place every marker first — ${placed} / ${total} placed, ${correct} correct so far.`
+      feedbackEl.style.color = '#92400e'
+    } else if (correct === total) {
+      feedbackEl.textContent = `Excellent — all ${total} discourse markers are in the right category.`
+      feedbackEl.style.color = '#15803d'
+    } else {
+      feedbackEl.textContent = `${correct} / ${total} correct. Green chips are right; move the red ones.`
+      feedbackEl.style.color = '#92400e'
     }
   }
 
   function reset() {
     if (!bankEl) return
-    const chips = Array.from(root.querySelectorAll('.mie-dm-chip')) as HTMLElement[]
-    shuffle(chips).forEach((chip) => {
+    const allChips = Array.from(root.querySelectorAll('.mie-dm-chip')) as HTMLElement[]
+    shuffle(allChips).forEach((chip) => {
       chip.classList.remove('is-correct', 'is-wrong', 'is-selected')
-      bankEl!.appendChild(chip)
+      bankEl.appendChild(chip)
     })
     clearSelection()
-    if (feedbackEl) {
-      feedbackEl.textContent = ''
-      feedbackEl.style.color = '#4338ca'
-    }
+    feedbackEl.textContent = ''
+    feedbackEl.style.color = '#4338ca'
   }
 
-  const layout = document.createElement('div')
-  layout.className = 'mie-dm-layout'
+  const checkBtn = root.querySelector('[data-dm-check]') as HTMLButtonElement | null
+  const resetBtn = root.querySelector('[data-dm-reset]') as HTMLButtonElement | null
+  if (checkBtn) {
+    cleanups.push(on(checkBtn, 'click', checkAnswers))
+  }
+  if (resetBtn) {
+    cleanups.push(on(resetBtn, 'click', reset))
+  }
 
-  const table = document.createElement('div')
-  table.className = 'mie-dm-table'
-
-  categoryDefs.forEach((def) => {
-    const col = document.createElement('div')
-    col.className = 'mie-dm-col'
-
-    const heading = document.createElement('h4')
-    heading.className = 'mie-dm-heading'
-    heading.textContent = def.name
-
-    const drop = document.createElement('div')
-    drop.className = 'mie-dm-drop'
-    drop.setAttribute('data-dm-drop', def.name)
-    drop.setAttribute('aria-label', `${def.name} drop zone`)
-    bindDrop(drop)
-
-    col.appendChild(heading)
-    col.appendChild(drop)
-    table.appendChild(col)
-    categories.push({ name: def.name, items: def.items, drop })
-  })
-
-  const bank = document.createElement('div')
-  bankEl = bank
-  bank.className = 'mie-dm-bank'
-
-  const bankTitle = document.createElement('p')
-  bankTitle.className = 'mie-dm-bank-title'
-  bankTitle.textContent = 'Word bank — drag a marker, or tap it and then tap a column'
-  bank.appendChild(bankTitle)
-
-  const bankInner = document.createElement('div')
-  bankInner.className = 'mie-dm-bank-items'
-  const allLabels = shuffle(categoryDefs.flatMap((def) => def.items))
-  allLabels.forEach((label) => bankInner.appendChild(makeChip(label)))
-  bank.appendChild(bankInner)
-
-  layout.appendChild(table)
-  layout.appendChild(bank)
-
-  const toolbar = document.createElement('div')
-  toolbar.className = 'mie-dm-toolbar screen-only'
-
-  const checkBtn = document.createElement('button')
-  checkBtn.type = 'button'
-  checkBtn.textContent = 'Check answers'
-  checkBtn.className = 'mie-btn mie-btn-primary'
-  checkBtn.addEventListener('click', checkAnswers)
-
-  const resetBtn = document.createElement('button')
-  resetBtn.type = 'button'
-  resetBtn.textContent = 'Shuffle & reset'
-  resetBtn.className = 'mie-btn mie-btn-secondary'
-  resetBtn.addEventListener('click', reset)
-
-  const feedbackEl = document.createElement('p')
-  feedbackEl.setAttribute('role', 'status')
-  feedbackEl.className = 'mie-dm-feedback'
-  feedbackEl.style.cssText =
-    'margin: 0; font-size: 14px; font-weight: 600; min-height: 22px; color: #4338ca;'
-
-  toolbar.appendChild(checkBtn)
-  toolbar.appendChild(resetBtn)
-  toolbar.appendChild(feedbackEl)
-
-  root.appendChild(layout)
-  root.appendChild(toolbar)
   root.setAttribute('data-discourse-marker-sort-mounted', 'true')
 
   return () => {
-    root.innerHTML = ''
+    cleanups.forEach((fn) => fn())
     root.removeAttribute('data-discourse-marker-sort-mounted')
     selectedChip = null
-    bankEl = null
+    Array.from(root.querySelectorAll('.mie-dm-chip')).forEach((chip) => {
+      chip.classList.remove('is-dragging', 'is-selected', 'is-correct', 'is-wrong')
+    })
+    categories.forEach((cat) => cat.drop.classList.remove('is-over'))
   }
 }
 

@@ -3037,7 +3037,7 @@ export default function WorksheetViewer({
       cancelAnimationFrame(rafId)
       detach?.()
     }
-  }, [hasDiscourseMarkerSort, resource.content, isClientMounted])
+  }, [hasDiscourseMarkerSort, resource.content, isClientMounted, grammarInputsReady])
 
   // Static phrase lists with 🔊 buttons (e.g. Natur'Evasion Vocabulary).
   useLayoutEffect(() => {

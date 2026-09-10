@@ -29,10 +29,8 @@ function currentOrder(root: HTMLElement): string[] {
   return getItems(root).map((item) => item.getAttribute('data-paragraph-id') || '')
 }
 
-function renumber(root: HTMLElement) {
-  getItems(root).forEach((item, index) => {
-    const badge = item.querySelector('[data-paragraph-number]') as HTMLElement | null
-    if (badge) badge.textContent = String(index + 1)
+function clearMarks(root: HTMLElement) {
+  getItems(root).forEach((item) => {
     item.classList.remove('is-correct', 'is-wrong')
   })
 }
@@ -104,7 +102,7 @@ export function mountParagraphReorder(root: HTMLElement): Cleanup {
     })
     selected = null
     clearSelection(root)
-    renumber(root)
+    clearMarks(root)
     resetHighlights()
   }
 
@@ -132,7 +130,7 @@ export function mountParagraphReorder(root: HTMLElement): Cleanup {
         item.classList.remove('is-dragging')
         getItems(root).forEach((el) => el.classList.remove('is-over'))
         dragging = null
-        renumber(root)
+        clearMarks(root)
         resetHighlights()
       })
     )
@@ -146,7 +144,7 @@ export function mountParagraphReorder(root: HTMLElement): Cleanup {
         const mid = rect.top + rect.height / 2
         const placeAfter = (e as DragEvent).clientY > mid
         moveBefore(list, dragging, placeAfter ? (item.nextElementSibling as HTMLElement | null) : item)
-        renumber(root)
+        clearMarks(root)
       })
     )
 
@@ -156,7 +154,7 @@ export function mountParagraphReorder(root: HTMLElement): Cleanup {
       on(item, 'drop', (e) => {
         e.preventDefault()
         item.classList.remove('is-over')
-        renumber(root)
+        clearMarks(root)
         resetHighlights()
       })
     )
@@ -178,7 +176,7 @@ export function mountParagraphReorder(root: HTMLElement): Cleanup {
         moveBefore(list, selected, item)
         selected.classList.remove('is-selected')
         selected = null
-        renumber(root)
+        clearMarks(root)
         resetHighlights()
       })
     )
@@ -199,7 +197,7 @@ export function mountParagraphReorder(root: HTMLElement): Cleanup {
         }
         selected = null
         clearSelection(root)
-        renumber(root)
+        clearMarks(root)
         resetHighlights()
         item.focus()
       })
@@ -228,7 +226,6 @@ export function mountParagraphReorder(root: HTMLElement): Cleanup {
   toolbar.appendChild(feedback)
   root.appendChild(toolbar)
 
-  renumber(root)
   root.setAttribute('data-paragraph-reorder-mounted', 'true')
 
   return () => {
