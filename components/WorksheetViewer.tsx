@@ -32,9 +32,12 @@ import {
 } from '@/lib/worksheetInteractions/grammarCheckSnapshots'
 import { mountPresentingServicesProductsActivities } from '@/lib/worksheetInteractions/presentingServicesProductsKeyLanguage'
 import { mountOpinionRankings } from '@/lib/worksheetInteractions/opinionRanking'
+import { mountParagraphReorders } from '@/lib/worksheetInteractions/paragraphReorder'
+import { mountDiscourseMarkerSorts } from '@/lib/worksheetInteractions/discourseMarkerSort'
 import { mountWritingPracticeTimers } from '@/lib/worksheetInteractions/writingPracticeTimers'
 import { mountWritingClearlyPhraseMatch } from '@/lib/worksheetInteractions/writingClearlyPhraseMatch'
 import { mountWritingClearlySubmit } from '@/lib/worksheetInteractions/writingClearlySubmit'
+import { mountWritingTaskSubmits } from '@/lib/worksheetInteractions/writingTaskSubmit'
 import { mountWritingWordCounts } from '@/lib/worksheetInteractions/writingWordCounts'
 import { mountPlacementTestCheckAnswers } from '@/lib/worksheetInteractions/placementTestCheckAnswers'
 import {
@@ -899,6 +902,12 @@ export default function WorksheetViewer({
     typeof resource.content === 'string' && resource.content.includes('data-word-bank-tracker')
   const hasOpinionRanking =
     typeof resource.content === 'string' && resource.content.includes('data-opinion-ranking')
+  const hasParagraphReorder =
+    typeof resource.content === 'string' && resource.content.includes('data-paragraph-reorder')
+  const hasDiscourseMarkerSort =
+    typeof resource.content === 'string' && resource.content.includes('data-discourse-marker-sort')
+  const hasWritingTaskSubmit =
+    typeof resource.content === 'string' && resource.content.includes('data-writing-task-submit')
   const bookmarkedSlugsRef = useRef(new Set(initialBookmarkedSlugs))
 
   /** Per-section Check Answers + live tick/cross (see resources using data-grammar-per-section-check). */
@@ -3000,6 +3009,36 @@ export default function WorksheetViewer({
     }
   }, [hasOpinionRanking, resource.content, isClientMounted])
 
+  // Skim-reading paragraph reorder with Check answers.
+  useLayoutEffect(() => {
+    if (!hasParagraphReorder || !isClientMounted) return
+    let detach: (() => void) | undefined
+    const rafId = requestAnimationFrame(() => {
+      const host = contentRef.current
+      if (!host) return
+      detach = mountParagraphReorders(host)
+    })
+    return () => {
+      cancelAnimationFrame(rafId)
+      detach?.()
+    }
+  }, [hasParagraphReorder, resource.content, isClientMounted])
+
+  // Discourse marker category sort.
+  useLayoutEffect(() => {
+    if (!hasDiscourseMarkerSort || !isClientMounted) return
+    let detach: (() => void) | undefined
+    const rafId = requestAnimationFrame(() => {
+      const host = contentRef.current
+      if (!host) return
+      detach = mountDiscourseMarkerSorts(host)
+    })
+    return () => {
+      cancelAnimationFrame(rafId)
+      detach?.()
+    }
+  }, [hasDiscourseMarkerSort, resource.content, isClientMounted])
+
   // Static phrase lists with 🔊 buttons (e.g. Natur'Evasion Vocabulary).
   useLayoutEffect(() => {
     if (!hasPhraseAudioRoot) return
@@ -3064,6 +3103,21 @@ export default function WorksheetViewer({
       detach?.()
     }
   }, [resource.content, hasWritingClearlySubmit, grammarInputsReady, preventSave])
+
+  // Generic writing task submit for teacher marking (e.g. internship reference).
+  useEffect(() => {
+    if (!hasWritingTaskSubmit || !grammarInputsReady) return
+    let detach: (() => void) | undefined
+    const rafId = requestAnimationFrame(() => {
+      const host = contentRef.current
+      if (!host) return
+      detach = mountWritingTaskSubmits(host, { preventSave })
+    })
+    return () => {
+      cancelAnimationFrame(rafId)
+      detach?.()
+    }
+  }, [resource.content, hasWritingTaskSubmit, grammarInputsReady, preventSave])
 
   // Live word counts under writing practice textareas.
   useEffect(() => {

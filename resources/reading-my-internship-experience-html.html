@@ -1,0 +1,573 @@
+<!-- Reading: My Internship Experience (C1) -->
+<style>
+  @media print {
+    @page { margin: 1.5cm; }
+    body { margin: 0; padding: 0; }
+    .page-break { page-break-before: always; }
+    .no-break { page-break-inside: avoid; break-inside: avoid; }
+    .keep-together { page-break-inside: avoid; break-inside: avoid; }
+    h2, h3, h4 { page-break-after: avoid; break-after: avoid; }
+    .screen-only { display: none !important; }
+    .print-only { display: block !important; }
+    .mie-suggestions { display: table-cell !important; }
+    .mie-reveal-btn, .mie-highlight-btn, .mie-highlight-toggle, .mie-reveal-toggle { display: none !important; }
+    .mie-para-handle { display: none !important; }
+    [data-paragraph-id] { cursor: default; }
+  }
+
+  .print-only { display: none; }
+
+  .mie-wrap {
+    width: 90%;
+    max-width: 880px;
+    margin: 0 auto;
+    padding: 25px;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+    line-height: 1.6;
+    color: #1e293b;
+  }
+
+  .mie-highlight-toggle,
+  .mie-reveal-toggle {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .mie-btn,
+  .mie-highlight-btn,
+  .mie-reveal-btn {
+    display: inline-block;
+    padding: 10px 16px;
+    border: none;
+    border-radius: 8px;
+    background: linear-gradient(135deg, #4338ca 0%, #6366f1 100%);
+    color: #ffffff;
+    font-size: 14px;
+    font-weight: 600;
+    font-family: Arial, sans-serif;
+    cursor: pointer;
+    box-shadow: 0 2px 6px rgba(67, 56, 202, 0.28);
+  }
+  .mie-btn:hover,
+  .mie-highlight-btn:hover,
+  .mie-reveal-btn:hover { filter: brightness(1.05); }
+
+  .mie-btn-secondary {
+    background: #ffffff;
+    color: #4338ca;
+    border: 2px solid #4338ca;
+    box-shadow: none;
+  }
+
+  .mie-reorder-toolbar,
+  .mie-dm-toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    align-items: center;
+    margin-top: 14px;
+  }
+
+  [data-paragraph-list] {
+    list-style: none !important;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  [data-paragraph-id] {
+    display: flex !important;
+    align-items: flex-start;
+    gap: 12px;
+    margin: 0 !important;
+    padding: 14px 16px;
+    background: #ffffff;
+    border: 2px solid #c7d2fe;
+    border-radius: 8px;
+    cursor: grab;
+    user-select: none;
+    font-size: 15px;
+    line-height: 1.55;
+    color: #334155;
+  }
+  [data-paragraph-id]:active { cursor: grabbing; }
+  [data-paragraph-id].is-dragging { opacity: 0.55; box-shadow: 0 4px 14px rgba(67, 56, 202, 0.18); }
+  [data-paragraph-id].is-over { border-color: #6366f1; }
+  [data-paragraph-id].is-selected { border-color: #4338ca; box-shadow: 0 0 0 3px rgba(67, 56, 202, 0.25); }
+  [data-paragraph-id].is-correct { border-color: #22c55e; background: #f0fdf4; }
+  [data-paragraph-id].is-wrong { border-color: #f87171; background: #fef2f2; }
+  [data-paragraph-id]:focus { outline: 2px solid #6366f1; outline-offset: 2px; }
+
+  [data-paragraph-number] {
+    flex: 0 0 auto;
+    min-width: 1.75rem;
+    height: 1.75rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 999px;
+    background: #4338ca;
+    color: #ffffff;
+    font-weight: 700;
+    font-size: 14px;
+  }
+
+  .mie-para-handle {
+    flex: 0 0 auto;
+    color: #94a3b8;
+    font-size: 16px;
+    line-height: 1.75rem;
+  }
+
+  .mie-article p {
+    font-size: 16px;
+    margin: 0 0 16px 0;
+    color: #334155;
+  }
+  .mie-article p:last-child { margin-bottom: 0; }
+
+  .mie-vocab {
+    border-radius: 3px;
+    padding: 0 1px;
+    transition: background 0.15s, box-shadow 0.15s;
+  }
+  .mie-vocab sup {
+    font-size: 10px;
+    font-weight: 700;
+    margin-left: 1px;
+    color: #64748b;
+  }
+
+  .mie-wrap:has(#mie-highlight-vocab:checked) .mie-vocab.mie-good {
+    background: #d1fae5;
+    box-shadow: 0 0 0 3px #d1fae5;
+    font-weight: 700;
+    color: #065f46;
+  }
+  .mie-wrap:has(#mie-highlight-vocab:checked) .mie-vocab.mie-good sup { color: #047857; }
+  .mie-wrap:has(#mie-highlight-vocab:checked) .mie-vocab.mie-bad {
+    background: #fee2e2;
+    box-shadow: 0 0 0 3px #fee2e2;
+    font-weight: 700;
+    color: #991b1b;
+  }
+  .mie-wrap:has(#mie-highlight-vocab:checked) .mie-vocab.mie-bad sup { color: #b91c1c; }
+
+  .mie-highlight-off { display: none; }
+  .mie-wrap:has(#mie-highlight-vocab:checked) .mie-highlight-on { display: none; }
+  .mie-wrap:has(#mie-highlight-vocab:checked) .mie-highlight-off { display: inline; }
+  .mie-wrap:has(#mie-highlight-vocab:checked) .mie-highlight-btn {
+    background: #312e81;
+  }
+
+  .mie-legend {
+    display: none;
+    margin: 12px 0 0 0;
+    font-size: 13px;
+    color: #475569;
+  }
+  .mie-wrap:has(#mie-highlight-vocab:checked) .mie-legend { display: block; }
+  .mie-legend-good { background: #d1fae5; color: #065f46; font-weight: 700; padding: 1px 6px; border-radius: 4px; }
+  .mie-legend-bad { background: #fee2e2; color: #991b1b; font-weight: 700; padding: 1px 6px; border-radius: 4px; }
+
+  .mie-dm-layout {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+  .mie-dm-table {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+  @media (min-width: 720px) {
+    .mie-dm-table { grid-template-columns: 1fr 1fr; }
+  }
+  @media (min-width: 980px) {
+    .mie-dm-table { grid-template-columns: 1fr 1fr 1fr 1fr; }
+  }
+
+  .mie-dm-col {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    padding: 10px;
+    min-height: 180px;
+  }
+  .mie-dm-heading {
+    margin: 0 0 8px 0;
+    font-size: 13px;
+    font-weight: 700;
+    color: #1e3a8a;
+    line-height: 1.35;
+  }
+  .mie-dm-drop {
+    min-height: 140px;
+    border: 2px dashed #94a3b8;
+    border-radius: 8px;
+    background: rgba(255,255,255,0.8);
+    padding: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .mie-dm-drop.is-over {
+    border-color: #4338ca;
+    background: rgba(67, 56, 202, 0.08);
+  }
+
+  .mie-dm-bank {
+    padding: 12px 14px;
+    border-radius: 10px;
+    background: linear-gradient(135deg, #312e81 0%, #1e3a8a 100%);
+  }
+  .mie-dm-bank-title {
+    margin: 0 0 10px 0;
+    font-size: 12px;
+    font-weight: 600;
+    color: #eef2ff;
+    line-height: 1.35;
+  }
+  .mie-dm-bank-items {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .mie-dm-chip {
+    appearance: none;
+    -webkit-appearance: none;
+    font: 600 13px Arial, sans-serif;
+    padding: 7px 10px;
+    border-radius: 8px;
+    border: 2px solid #4338ca;
+    background: linear-gradient(180deg, #eef2ff 0%, #e0e7ff 100%);
+    color: #1e293b;
+    cursor: grab;
+    box-shadow: 0 2px 4px rgba(67, 56, 202, 0.12);
+    user-select: none;
+    text-align: left;
+  }
+  .mie-dm-chip.is-dragging { opacity: 0.65; }
+  .mie-dm-chip.is-selected { box-shadow: 0 0 0 3px rgba(67, 56, 202, 0.35); border-color: #4338ca; }
+  .mie-dm-chip.is-correct { border-color: #22c55e; background: #f0fdf4; }
+  .mie-dm-chip.is-wrong { border-color: #f87171; background: #fef2f2; }
+
+  .mie-vocab-scroll { overflow-x: auto; }
+  .mie-vocab-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+    margin: 8px 0 12px 0;
+  }
+  .mie-vocab-table th,
+  .mie-vocab-table td {
+    border: 1px solid #e2e8f0;
+    padding: 8px 10px;
+    text-align: left;
+    vertical-align: top;
+  }
+  .mie-vocab-table th {
+    background: #eef2ff;
+    color: #1e3a8a;
+    font-size: 13px;
+  }
+  .mie-vocab-table .mie-suggestions {
+    display: none;
+    color: #312e81;
+    font-weight: 600;
+    background: #eef2ff;
+  }
+  .mie-wrap:has(#mie-reveal-suggestions:checked) .mie-suggestions {
+    display: table-cell;
+  }
+  .mie-wrap:has(#mie-reveal-suggestions:checked) .mie-reveal-btn {
+    background: #312e81;
+  }
+
+  .mie-tip {
+    margin: 0 0 14px 0;
+    padding: 12px 14px;
+    background: #eef2ff;
+    border-left: 4px solid #6366f1;
+    border-radius: 0 8px 8px 0;
+    font-size: 15px;
+    color: #312e81;
+  }
+  .mie-tip p { margin: 0 0 8px 0; }
+  .mie-tip p:last-child { margin-bottom: 0; }
+
+  .mie-checklist {
+    margin: 0 0 14px 0;
+    padding-left: 22px;
+    font-size: 15px;
+    color: #334155;
+  }
+  .mie-checklist li { margin-bottom: 6px; }
+</style>
+
+<div class="mie-wrap">
+  <input type="checkbox" id="mie-highlight-vocab" class="mie-highlight-toggle" aria-hidden="true" tabindex="-1" />
+  <input type="checkbox" id="mie-reveal-suggestions" class="mie-reveal-toggle" aria-hidden="true" tabindex="-1" />
+
+  <div style="text-align: center; margin-bottom: 22px; padding: 18px 20px; background: linear-gradient(135deg, #1e3a8a 0%, #312e81 100%); border-radius: 12px; box-shadow: 0 4px 14px rgba(30, 58, 138, 0.35);" class="no-break">
+    <div style="display: inline-block; margin-bottom: 8px;">
+      <img src="/brizzle-logo.png" alt="Brizzle Logo" style="width: 50px; height: 50px; object-fit: contain; background: white; padding: 5px; border-radius: 50%;" />
+    </div>
+    <h1 style="font-size: 26px; font-weight: bold; margin: 0; color: #ffffff;">Reading: My Internship Experience</h1>
+    <p style="margin: 8px 0 0 0; font-size: 15px; color: #c7d2fe; font-weight: 600;">C1 &middot; Antonio Pinelli</p>
+  </div>
+
+  <!-- Warm-up -->
+  <div style="margin-bottom: 24px; padding: 20px 22px; background: linear-gradient(to bottom, #eef2ff, #ffffff); border-radius: 10px; border-left: 5px solid #4338ca;" class="keep-together">
+    <h2 style="font-size: 22px; font-weight: bold; margin: 0 0 12px 0; color: #1e3a8a;">Warm-up</h2>
+    <p style="font-size: 16px; margin: 0 0 12px 0; color: #475569;">Discuss these questions with a partner.</p>
+    <ol style="margin: 0; padding-left: 26px; font-size: 16px; color: #334155;">
+      <li style="margin-bottom: 10px;">Have you ever done an internship or work placement? What was it like?</li>
+      <li style="margin-bottom: 10px;">What do you think makes an internship successful &mdash; for the intern and for the company?</li>
+      <li style="margin-bottom: 10px;">What challenges might someone face during their first experience of professional life?</li>
+      <li style="margin-bottom: 10px;">Would you rather have a highly structured internship, or one that gives you more independence? Why?</li>
+      <li style="margin-bottom: 0;">When you describe a work experience, how do you balance positive and negative points without sounding either naive or ungrateful?</li>
+    </ol>
+  </div>
+
+  <!-- Skim reading -->
+  <div style="margin-bottom: 24px; padding: 20px 22px; background: #ffffff; border-radius: 10px; border: 1px solid #c7d2fe; box-shadow: 0 2px 8px rgba(0,0,0,0.05);" class="keep-together" data-bookmarkable="skim" data-bookmark-label="Skim reading">
+    <h2 style="font-size: 22px; font-weight: bold; margin: 0 0 8px 0; color: #1e3a8a; border-bottom: 3px solid #6366f1; padding-bottom: 8px;">Skim reading</h2>
+    <p style="font-size: 16px; margin: 12px 0 10px 0; color: #334155;">Antonio Pinelli wrote about his three-month internship at a technology consultancy in Bristol. The paragraphs below are in the wrong order.</p>
+    <p class="screen-only" style="font-size: 15px; margin: 0 0 14px 0; color: #64748b;">Skim the text &mdash; do not worry about every word. Drag the paragraphs into a logical order (or tap one, then tap where it should go), then click <strong>Check answers</strong>.</p>
+    <p class="print-only" style="font-size: 15px; margin: 0 0 14px 0; color: #64748b;">Number the paragraphs from 1 (introduction) to 6 (conclusion).</p>
+    <div class="mie-tip">
+      <p><strong>Tip:</strong> Look for the introduction, the positive points, the negative points, and the conclusion. Discourse markers such as <em>Nevertheless</em>, <em>On balance</em> and <em>That said</em> often signal a change of direction.</p>
+    </div>
+
+    <div data-paragraph-reorder data-correct-order="intro|work|people|pressure|facilities|conclusion">
+      <ol data-paragraph-list>
+        <li data-paragraph-id="pressure">
+          <span class="mie-para-handle" aria-hidden="true">⠿</span>
+          <span data-paragraph-number>1</span>
+          <span>Nevertheless, the experience was not entirely good. As the end of my placement approached, the workload increased considerably because the team was working towards an important deadline. At times, the amount of work became bad enough that I struggled to complete everything within normal working hours. Although I understood that this was partly due to the temporary pressure of the project, I occasionally felt that expectations were unrealistic for an intern who was still learning the company&rsquo;s systems. On a few occasions, I was also given urgent tasks without much explanation, meaning that I had to spend time working out what was expected before I could actually begin. In hindsight, better planning would have made this period considerably less stressful.</span>
+        </li>
+        <li data-paragraph-id="work">
+          <span class="mie-para-handle" aria-hidden="true">⠿</span>
+          <span data-paragraph-number>2</span>
+          <span>One of the strongest aspects of the internship was the work itself. Rather than being given a series of routine administrative tasks, I was involved in several good projects that required me to think independently and apply what I had learned at university. My responsibilities gradually became more demanding, which I found both motivating and rewarding. The workload was generally good: there was enough work to keep me occupied without leaving me feeling overwhelmed. Furthermore, my manager made a point of explaining why particular tasks mattered, which gave me a much clearer understanding of how individual pieces of work contributed to the company&rsquo;s wider objectives. As a result, even when I made mistakes, I felt that I was learning from them rather than simply being criticised.</span>
+        </li>
+        <li data-paragraph-id="conclusion">
+          <span class="mie-para-handle" aria-hidden="true">⠿</span>
+          <span data-paragraph-number>3</span>
+          <span>On balance, however, I would describe the internship as a good experience and would certainly recommend the company to other students looking for their first taste of professional life. The opportunity to work on meaningful projects, receive support from experienced colleagues and gradually take on more responsibility was particularly valuable. Despite the bad periods of pressure and the occasional organisational problems, I came away with a much better understanding of both the realities and expectations of the workplace. More importantly, the placement helped me identify the skills I still need to develop before entering full-time employment. If I were offered the opportunity to do the internship again, I would accept without hesitation.</span>
+        </li>
+        <li data-paragraph-id="intro">
+          <span class="mie-para-handle" aria-hidden="true">⠿</span>
+          <span data-paragraph-number>4</span>
+          <span>Last summer, I completed a three-month internship at a medium-sized technology consultancy in Bristol. I had hoped that the placement would give me a clearer idea of what it was like to work in a professional environment, rather than simply allowing me to observe other people doing their jobs. Overall, the experience was very good, although it was not without its challenges. I was particularly impressed by the variety of tasks I was given and by how quickly I was treated as a member of the team. That said, there were also a few aspects of the placement that I found bad, particularly towards the busiest stages of the project.</span>
+        </li>
+        <li data-paragraph-id="facilities">
+          <span class="mie-para-handle" aria-hidden="true">⠿</span>
+          <span data-paragraph-number>5</span>
+          <span>Another aspect that could have been improved was communication between different members of the organisation. While my immediate team was good at keeping me informed, information from other departments was sometimes less clear. There were also a few bad experiences with the office facilities. The meeting rooms were frequently fully booked, and the internet connection was occasionally unreliable when several people were working remotely. These issues were relatively minor, but they became more frustrating when deadlines were approaching. Similarly, some of the internal procedures were unnecessarily complicated, and I initially found it bad that I had to seek approval from several different people before being able to carry out fairly straightforward tasks. Although none of these problems seriously affected my internship, they did highlight some areas where the company could become more efficient.</span>
+        </li>
+        <li data-paragraph-id="people">
+          <span class="mie-para-handle" aria-hidden="true">⠿</span>
+          <span data-paragraph-number>6</span>
+          <span>Equally importantly, the people I worked with made the experience considerably more enjoyable. My supervisor was approachable and supportive, and I never felt that asking questions would be interpreted as a sign of incompetence. The wider team was also good at communicating, particularly when several people were working on the same project. In addition, the office itself was good: there were comfortable workstations, several quiet areas for meetings and a well-equipped kitchen. I was also pleasantly surprised by the company&rsquo;s flexibility. Although interns were expected to be in the office most of the time, I was occasionally allowed to work remotely when I needed to concentrate on a particularly demanding task. This relatively good balance between independence and supervision helped me become much more confident in managing my own time.</span>
+        </li>
+      </ol>
+    </div>
+  </div>
+
+  <!-- Full article -->
+  <div style="margin-bottom: 24px; padding: 20px 22px; background: #ffffff; border-radius: 10px; border: 1px solid #c7d2fe; box-shadow: 0 2px 8px rgba(0,0,0,0.05);" class="keep-together" data-bookmarkable="article" data-bookmark-label="The article">
+    <h2 style="font-size: 22px; font-weight: bold; margin: 0 0 4px 0; color: #1e3a8a; border-bottom: 3px solid #6366f1; padding-bottom: 8px;">My Internship Experience</h2>
+    <p style="font-size: 14px; margin: 8px 0 16px 0; color: #64748b; font-style: italic;">Antonio Pinelli</p>
+    <div class="mie-article">
+      <p>Last summer, I completed a three-month internship at a medium-sized technology consultancy in Bristol. I had hoped that the placement would give me a clearer idea of what it was like to work in a professional environment, rather than simply allowing me to observe other people doing their jobs. Overall, the experience was very <span class="mie-vocab mie-good">good<sup>1</sup></span>, although it was not without its challenges. I was particularly impressed by the variety of tasks I was given and by how quickly I was treated as a member of the team. That said, there were also a few aspects of the placement that I found <span class="mie-vocab mie-bad">bad<sup>1</sup></span>, particularly towards the busiest stages of the project.</p>
+      <p>One of the strongest aspects of the internship was the work itself. Rather than being given a series of routine administrative tasks, I was involved in several <span class="mie-vocab mie-good">good<sup>2</sup></span> projects that required me to think independently and apply what I had learned at university. My responsibilities gradually became more demanding, which I found both motivating and rewarding. The workload was generally <span class="mie-vocab mie-good">good<sup>3</sup></span>: there was enough work to keep me occupied without leaving me feeling overwhelmed. Furthermore, my manager made a point of explaining why particular tasks mattered, which gave me a much clearer understanding of how individual pieces of work contributed to the company&rsquo;s wider objectives. As a result, even when I made mistakes, I felt that I was learning from them rather than simply being criticised.</p>
+      <p>Equally importantly, the people I worked with made the experience considerably more enjoyable. My supervisor was approachable and supportive, and I never felt that asking questions would be interpreted as a sign of incompetence. The wider team was also <span class="mie-vocab mie-good">good<sup>4</sup></span> at communicating, particularly when several people were working on the same project. In addition, the office itself was <span class="mie-vocab mie-good">good<sup>5</sup></span>: there were comfortable workstations, several quiet areas for meetings and a well-equipped kitchen. I was also pleasantly surprised by the company&rsquo;s flexibility. Although interns were expected to be in the office most of the time, I was occasionally allowed to work remotely when I needed to concentrate on a particularly demanding task. This relatively <span class="mie-vocab mie-good">good<sup>6</sup></span> balance between independence and supervision helped me become much more confident in managing my own time.</p>
+      <p>Nevertheless, the experience was not entirely <span class="mie-vocab mie-good">good<sup>7</sup></span>. As the end of my placement approached, the workload increased considerably because the team was working towards an important deadline. At times, the amount of work became <span class="mie-vocab mie-bad">bad<sup>2</sup></span> enough that I struggled to complete everything within normal working hours. Although I understood that this was partly due to the temporary pressure of the project, I occasionally felt that expectations were unrealistic for an intern who was still learning the company&rsquo;s systems. On a few occasions, I was also given urgent tasks without much explanation, meaning that I had to spend time working out what was expected before I could actually begin. In hindsight, better planning would have made this period considerably less stressful.</p>
+      <p>Another aspect that could have been improved was communication between different members of the organisation. While my immediate team was <span class="mie-vocab mie-good">good<sup>8</sup></span> at keeping me informed, information from other departments was sometimes less clear. There were also a few <span class="mie-vocab mie-bad">bad<sup>3</sup></span> experiences with the office facilities. The meeting rooms were frequently fully booked, and the internet connection was occasionally unreliable when several people were working remotely. These issues were relatively minor, but they became more frustrating when deadlines were approaching. Similarly, some of the internal procedures were unnecessarily complicated, and I initially found it <span class="mie-vocab mie-bad">bad<sup>4</sup></span> that I had to seek approval from several different people before being able to carry out fairly straightforward tasks. Although none of these problems seriously affected my internship, they did highlight some areas where the company could become more efficient.</p>
+      <p>On balance, however, I would describe the internship as a <span class="mie-vocab mie-good">good<sup>9</sup></span> experience and would certainly recommend the company to other students looking for their first taste of professional life. The opportunity to work on meaningful projects, receive support from experienced colleagues and gradually take on more responsibility was particularly valuable. Despite the <span class="mie-vocab mie-bad">bad<sup>5</sup></span> periods of pressure and the occasional organisational problems, I came away with a much better understanding of both the realities and expectations of the workplace. More importantly, the placement helped me identify the skills I still need to develop before entering full-time employment. If I were offered the opportunity to do the internship again, I would accept without hesitation.</p>
+    </div>
+    <p class="mie-legend"><span class="mie-legend-good">good</span> = numbered positive examples &nbsp;&nbsp; <span class="mie-legend-bad">bad</span> = numbered negative examples</p>
+  </div>
+
+  <!-- Discourse markers -->
+  <div style="margin-bottom: 24px; padding: 20px 22px; background: #ffffff; border-radius: 10px; border: 1px solid #c7d2fe; box-shadow: 0 2px 8px rgba(0,0,0,0.05);" class="keep-together" data-bookmarkable="discourse" data-bookmark-label="Discourse markers">
+    <h2 style="font-size: 22px; font-weight: bold; margin: 0 0 8px 0; color: #1e3a8a; border-bottom: 3px solid #6366f1; padding-bottom: 8px;">Discourse markers</h2>
+    <p style="font-size: 16px; margin: 12px 0 12px 0; color: #334155;"><strong>Discourse markers</strong> are words and phrases that show how ideas are connected. They do not usually carry the main meaning of a sentence; instead, they tell the reader what the writer is <em>doing</em> with the next idea &mdash; adding a point, contrasting it, showing a result, looking back, and so on.</p>
+    <p style="font-size: 16px; margin: 0 0 12px 0; color: #334155;">They help you in two ways. When you <strong>read</strong>, they let you predict the direction of a paragraph before you process every word, which is essential for efficient C1 reading. When you <strong>write</strong>, they make your argument easier to follow and stop a text from sounding like a list of disconnected opinions.</p>
+    <p style="font-size: 16px; margin: 0 0 16px 0; color: #334155;">Antonio&rsquo;s article is full of them. <em>That said</em> warns you that a reservation is coming; <em>Nevertheless</em> introduces the first real criticism; <em>On balance</em> signals that he is about to weigh everything up.</p>
+    <p class="screen-only" style="font-size: 15px; margin: 0 0 14px 0; color: #64748b;">Drag each marker into the correct column, or tap a marker and then tap a column. All of these phrases appear in the article. Click <strong>Check answers</strong> when you are ready.</p>
+
+    <div data-discourse-marker-sort class="screen-only">
+      <div data-dm-category="Adding information" data-dm-items="Furthermore|In addition|Equally importantly"></div>
+      <div data-dm-category="Adding contradictory information" data-dm-items="That said|Nevertheless|Despite"></div>
+      <div data-dm-category="Showing result or summing up" data-dm-items="As a result|Overall|On balance"></div>
+      <div data-dm-category="Time and reflection" data-dm-items="In hindsight|At times|On a few occasions"></div>
+    </div>
+
+    <div class="print-only">
+      <p style="font-size: 15px; margin: 0 0 10px 0;">Write each marker under the correct heading: Furthermore, In addition, Equally importantly, That said, Nevertheless, Despite, As a result, Overall, On balance, In hindsight, At times, On a few occasions.</p>
+      <table class="mie-vocab-table">
+        <thead>
+          <tr>
+            <th>Adding information</th>
+            <th>Adding contradictory information</th>
+            <th>Showing result or summing up</th>
+            <th>Time and reflection</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td style="height: 72px;"></td>
+            <td></td>
+            <td></td>
+            <td></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Vocabulary -->
+  <div style="margin-bottom: 24px; padding: 20px 22px; background: #ffffff; border-radius: 10px; border: 1px solid #c7d2fe; box-shadow: 0 2px 8px rgba(0,0,0,0.05);" class="keep-together" data-bookmarkable="vocabulary" data-bookmark-label="Vocabulary">
+    <h2 style="font-size: 22px; font-weight: bold; margin: 0 0 8px 0; color: #1e3a8a; border-bottom: 3px solid #6366f1; padding-bottom: 8px;">Vocabulary: beyond &ldquo;good&rdquo; and &ldquo;bad&rdquo;</h2>
+    <p style="font-size: 16px; margin: 12px 0 12px 0; color: #334155;">Antonio&rsquo;s article is clear, but it overuses two very general adjectives. At C1, you are expected to choose words that fit the exact meaning: a workload can be <em>manageable</em>, a project can be <em>stimulating</em>, a period of pressure can be <em>unreasonable</em>.</p>
+    <p class="screen-only" style="font-size: 15px; margin: 0 0 14px 0; color: #64748b;">Click the button to highlight every numbered instance of <strong>good</strong> and <strong>bad</strong> in the article above. Then write a richer alternative for each one. When you have finished, reveal three possible suggestions &mdash; your own ideas may be just as strong.</p>
+    <p class="print-only" style="font-size: 15px; margin: 0 0 14px 0; color: #64748b;">The numbered words in the article are <strong>good</strong> and <strong>bad</strong>. Write a more precise alternative for each instance.</p>
+    <p class="screen-only" style="margin: 0 0 16px 0;">
+      <label for="mie-highlight-vocab" class="mie-highlight-btn">
+        <span class="mie-highlight-on">Highlight &ldquo;good&rdquo; and &ldquo;bad&rdquo; in the article</span>
+        <span class="mie-highlight-off">Hide highlights</span>
+      </label>
+    </p>
+
+    <div class="mie-vocab-scroll">
+    <table class="mie-vocab-table">
+      <thead>
+        <tr>
+          <th style="width: 72px;">No.</th>
+          <th>Original</th>
+          <th>Your alternative</th>
+          <th class="mie-suggestions">Suggestions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Good 1</td>
+          <td>a very <em>good</em> experience</td>
+          <td><span data-grammar-input="mie-g1" data-grammar-input-type="textarea" data-grammar-textarea-rows="2" style="display: block; min-height: 48px;"></span></td>
+          <td class="mie-suggestions">valuable, worthwhile, rewarding</td>
+        </tr>
+        <tr>
+          <td>Good 2</td>
+          <td><em>good</em> projects</td>
+          <td><span data-grammar-input="mie-g2" data-grammar-input-type="textarea" data-grammar-textarea-rows="2" style="display: block; min-height: 48px;"></span></td>
+          <td class="mie-suggestions">challenging, stimulating, worthwhile</td>
+        </tr>
+        <tr>
+          <td>Good 3</td>
+          <td>a <em>good</em> workload</td>
+          <td><span data-grammar-input="mie-g3" data-grammar-input-type="textarea" data-grammar-textarea-rows="2" style="display: block; min-height: 48px;"></span></td>
+          <td class="mie-suggestions">manageable, reasonable, balanced</td>
+        </tr>
+        <tr>
+          <td>Good 4</td>
+          <td><em>good</em> at communicating</td>
+          <td><span data-grammar-input="mie-g4" data-grammar-input-type="textarea" data-grammar-textarea-rows="2" style="display: block; min-height: 48px;"></span></td>
+          <td class="mie-suggestions">effective, proficient, competent</td>
+        </tr>
+        <tr>
+          <td>Good 5</td>
+          <td>a <em>good</em> office</td>
+          <td><span data-grammar-input="mie-g5" data-grammar-input-type="textarea" data-grammar-textarea-rows="2" style="display: block; min-height: 48px;"></span></td>
+          <td class="mie-suggestions">well-equipped, comfortable, modern</td>
+        </tr>
+        <tr>
+          <td>Good 6</td>
+          <td>a <em>good</em> balance</td>
+          <td><span data-grammar-input="mie-g6" data-grammar-input-type="textarea" data-grammar-textarea-rows="2" style="display: block; min-height: 48px;"></span></td>
+          <td class="mie-suggestions">healthy, effective, appropriate</td>
+        </tr>
+        <tr>
+          <td>Good 7</td>
+          <td>not entirely <em>good</em></td>
+          <td><span data-grammar-input="mie-g7" data-grammar-input-type="textarea" data-grammar-textarea-rows="2" style="display: block; min-height: 48px;"></span></td>
+          <td class="mie-suggestions">positive, straightforward, ideal</td>
+        </tr>
+        <tr>
+          <td>Good 8</td>
+          <td><em>good</em> at keeping me informed</td>
+          <td><span data-grammar-input="mie-g8" data-grammar-input-type="textarea" data-grammar-textarea-rows="2" style="display: block; min-height: 48px;"></span></td>
+          <td class="mie-suggestions">effective, proactive, efficient</td>
+        </tr>
+        <tr>
+          <td>Good 9</td>
+          <td>a <em>good</em> experience</td>
+          <td><span data-grammar-input="mie-g9" data-grammar-input-type="textarea" data-grammar-textarea-rows="2" style="display: block; min-height: 48px;"></span></td>
+          <td class="mie-suggestions">valuable, rewarding, enriching</td>
+        </tr>
+        <tr>
+          <td>Bad 1</td>
+          <td>aspects that I found <em>bad</em></td>
+          <td><span data-grammar-input="mie-b1" data-grammar-input-type="textarea" data-grammar-textarea-rows="2" style="display: block; min-height: 48px;"></span></td>
+          <td class="mie-suggestions">negative, problematic, disappointing</td>
+        </tr>
+        <tr>
+          <td>Bad 2</td>
+          <td><em>bad</em> enough that I struggled</td>
+          <td><span data-grammar-input="mie-b2" data-grammar-input-type="textarea" data-grammar-textarea-rows="2" style="display: block; min-height: 48px;"></span></td>
+          <td class="mie-suggestions">unmanageable, excessive, overwhelming</td>
+        </tr>
+        <tr>
+          <td>Bad 3</td>
+          <td><em>bad</em> experiences with the facilities</td>
+          <td><span data-grammar-input="mie-b3" data-grammar-input-type="textarea" data-grammar-textarea-rows="2" style="display: block; min-height: 48px;"></span></td>
+          <td class="mie-suggestions">negative, frustrating, inconvenient</td>
+        </tr>
+        <tr>
+          <td>Bad 4</td>
+          <td>I found it <em>bad</em> that&hellip;</td>
+          <td><span data-grammar-input="mie-b4" data-grammar-input-type="textarea" data-grammar-textarea-rows="2" style="display: block; min-height: 48px;"></span></td>
+          <td class="mie-suggestions">frustrating, disappointing, problematic</td>
+        </tr>
+        <tr>
+          <td>Bad 5</td>
+          <td><em>bad</em> periods of pressure</td>
+          <td><span data-grammar-input="mie-b5" data-grammar-input-type="textarea" data-grammar-textarea-rows="2" style="display: block; min-height: 48px;"></span></td>
+          <td class="mie-suggestions">demanding, stressful, challenging</td>
+        </tr>
+      </tbody>
+    </table>
+    </div>
+    <p class="screen-only" style="margin: 8px 0 0 0;">
+      <label for="mie-reveal-suggestions" class="mie-reveal-btn">Reveal suggestions</label>
+    </p>
+  </div>
+
+  <!-- Writing -->
+  <div style="margin-bottom: 24px; padding: 20px 22px; background: #ffffff; border-radius: 10px; border: 1px solid #c7d2fe; box-shadow: 0 2px 8px rgba(0,0,0,0.05);" class="keep-together" data-bookmarkable="writing" data-bookmark-label="Writing">
+    <h2 style="font-size: 22px; font-weight: bold; margin: 0 0 8px 0; color: #1e3a8a; border-bottom: 3px solid #6366f1; padding-bottom: 8px;">Writing</h2>
+    <p style="font-size: 16px; margin: 12px 0 12px 0; color: #334155;">You were Antonio&rsquo;s supervisor during his internship. Write him a professional reference that another employer could use.</p>
+    <ul class="mie-checklist">
+      <li>Draw on what you know from his account: the work, the team, the pressure at the end, and his overall performance.</li>
+      <li>Do <strong>not</strong> use the words <strong>good</strong> or <strong>bad</strong>.</li>
+      <li>Include at least <strong>three discourse markers</strong> (for example: <em>Furthermore</em>, <em>That said</em>, <em>On balance</em>, <em>Nevertheless</em>, <em>In addition</em>).</li>
+    </ul>
+    <div data-grammar-save-section="true">
+      <span data-grammar-input="internship-reference" data-grammar-input-type="textarea" data-grammar-textarea-rows="16" style="display: block; min-height: 280px;"></span>
+      <div class="screen-only" data-writing-word-count-for="internship-reference" style="margin-top: 8px; font-size: 13px; color: #64748b;">0 words</div>
+    </div>
+  </div>
+
+  <div style="margin-bottom: 8px; padding: 20px 22px; background: #ffffff; border-radius: 10px; border: 2px solid #818cf8; box-shadow: 0 2px 8px rgba(0,0,0,0.05);" class="keep-together screen-only" data-writing-task-submit data-writing-submit-title="Reading: My Internship Experience" data-writing-submit-input="internship-reference" data-writing-submit-forbid="good|bad" data-writing-submit-min-markers="3" data-writing-submit-markers="Furthermore|In addition|Equally importantly|That said|Nevertheless|Despite|As a result|Overall|On balance|In hindsight|At times|On a few occasions|However|Although|Similarly|More importantly|While|Moreover|Consequently|Therefore|On the other hand|In contrast">
+    <h2 style="font-size: 18px; font-weight: bold; margin: 0 0 8px 0; color: #1e3a8a;">Submit for marking</h2>
+    <p style="font-size: 14px; margin: 0 0 14px 0; color: #475569;">When you have finished your reference, submit it for your teacher to mark. You will be reminded if the text still contains <em>good</em> or <em>bad</em>, or if fewer than three discourse markers are used.</p>
+  </div>
+
+</div>

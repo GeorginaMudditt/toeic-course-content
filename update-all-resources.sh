@@ -94,6 +94,7 @@ npm run update:resource:supabase "Introduction to TOEICⓇ Reading" "introductio
 npm run update:resource:supabase "Introduction to TOEICⓇ Writing" "introduction-toeic-writing-html.html"
 npm run update:resource:supabase "Introduction to TOEICⓇ Listening" "introduction-toeic-listening-html.html"
 npm run update:resource:supabase "Listening: Disagreement and Criticism" "disagreement-and-criticism-html.html"
+npm run update:resource:supabase "Reading: My Internship Experience" "reading-my-internship-experience-html.html"
 
 # Tests
 npm run update:resource:supabase "Placement Test" "placement-test-html.html"
