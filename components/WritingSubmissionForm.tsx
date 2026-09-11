@@ -167,24 +167,30 @@ export default function WritingSubmissionForm({ studentId, onSubmitted, compact 
       </div>
 
       <div>
-        <label
-          htmlFor={isTeacherUpload ? `writing-file-${studentId}` : 'writing-file-student'}
-          className="block text-sm font-medium text-gray-700 mb-1"
-        >
+        <p className="block text-sm font-medium text-gray-700 mb-1">
           File upload (optional) — PDF, PNG, or JPEG, max 10MB
-        </label>
-        <input
-          id={isTeacherUpload ? `writing-file-${studentId}` : 'writing-file-student'}
-          type="file"
-          accept="application/pdf,image/png,image/jpeg,image/jpg"
-          onChange={(e) => setSelectedFile(e.target.files?.[0] || null)}
-          className="block w-full text-sm text-gray-600 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-medium file:bg-[#38438f] file:text-white hover:file:opacity-90"
-        />
-        {selectedFile && (
-          <p className="text-xs text-gray-500 mt-1">
-            Selected: {selectedFile.name} ({(selectedFile.size / 1024).toFixed(1)} KB)
-          </p>
-        )}
+        </p>
+        <div className="flex flex-wrap items-center gap-3">
+          <input
+            id={isTeacherUpload ? `writing-file-${studentId}` : 'writing-file-student'}
+            type="file"
+            accept="application/pdf,image/png,image/jpeg,image/jpg"
+            onChange={(e) => setSelectedFile(e.target.files?.[0] || null)}
+            className="sr-only"
+          />
+          <label
+            htmlFor={isTeacherUpload ? `writing-file-${studentId}` : 'writing-file-student'}
+            className="inline-flex cursor-pointer items-center rounded-md px-4 py-2 text-sm font-medium text-white"
+            style={{ backgroundColor: '#38438f' }}
+          >
+            Choose file
+          </label>
+          <span className="text-sm text-gray-600">
+            {selectedFile
+              ? `${selectedFile.name} (${(selectedFile.size / 1024).toFixed(1)} KB)`
+              : 'No file chosen'}
+          </span>
+        </div>
       </div>
 
       {error && (

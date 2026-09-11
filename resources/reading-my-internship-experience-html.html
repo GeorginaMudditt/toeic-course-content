@@ -18,6 +18,7 @@
     .mie-order-details > *:not(summary) { display: block !important; }
     .mie-order-details summary { cursor: default; }
     .mie-order-details summary::after { display: none !important; }
+    .mie-vocab sup { display: inline !important; }
   }
 
   .print-only { display: none; }
@@ -333,10 +334,14 @@
     transition: background 0.15s, box-shadow 0.15s;
   }
   .mie-vocab sup {
+    display: none;
     font-size: 10px;
     font-weight: 700;
     margin-left: 1px;
     color: #64748b;
+  }
+  .mie-wrap:has(#mie-highlight-vocab:checked) .mie-vocab sup {
+    display: inline;
   }
 
   .mie-wrap:has(#mie-highlight-vocab:checked) .mie-vocab.mie-good {
