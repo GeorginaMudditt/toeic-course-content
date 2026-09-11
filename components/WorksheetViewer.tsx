@@ -3013,16 +3013,30 @@ export default function WorksheetViewer({
   useLayoutEffect(() => {
     if (!hasParagraphReorder || !isClientMounted) return
     let detach: (() => void) | undefined
-    const rafId = requestAnimationFrame(() => {
+    let cancelled = false
+
+    const tryMount = (): boolean => {
+      if (cancelled) return false
       const host = contentRef.current
-      if (!host) return
+      if (!host) return false
+      const el = host.querySelector('[data-paragraph-reorder]') as HTMLElement | null
+      if (!el) return false
+      if (el.getAttribute('data-paragraph-reorder-mounted') === 'true') return true
+      detach?.()
       detach = mountParagraphReorders(host)
+      return el.getAttribute('data-paragraph-reorder-mounted') === 'true'
+    }
+
+    tryMount()
+    const rafId = requestAnimationFrame(() => {
+      tryMount()
     })
     return () => {
+      cancelled = true
       cancelAnimationFrame(rafId)
       detach?.()
     }
-  }, [hasParagraphReorder, resource.content, isClientMounted])
+  }, [hasParagraphReorder, resource.content, isClientMounted, grammarInputsReady])
 
   // Discourse marker category sort.
   useLayoutEffect(() => {

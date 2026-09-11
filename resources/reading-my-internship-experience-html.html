@@ -11,7 +11,9 @@
     .print-only { display: block !important; }
     .mie-suggestions { display: table-cell !important; }
     .mie-reveal-btn, .mie-highlight-btn, .mie-highlight-toggle, .mie-reveal-toggle { display: none !important; }
-    .mie-para-handle { display: none !important; }
+    .mie-para-handle, .mie-para-expand, .mie-para-slots, .mie-para-bank-title { display: none !important; }
+    .mie-para-preview { display: none !important; }
+    .mie-para-full { display: block !important; padding: 0 !important; }
     [data-paragraph-id] { cursor: default; }
     .mie-order-details > *:not(summary) { display: block !important; }
     .mie-order-details summary { cursor: default; }
@@ -44,6 +46,16 @@
   .mie-highlight-toggle,
   .mie-reveal-toggle {
     position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 1px;
+    height: 1px;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    clip-path: inset(50%);
+    border: 0;
     opacity: 0;
     pointer-events: none;
   }
@@ -51,6 +63,7 @@
   .mie-btn,
   .mie-highlight-btn,
   .mie-reveal-btn {
+    position: relative;
     display: inline-block;
     padding: 10px 16px;
     border: none;
@@ -83,37 +96,136 @@
     margin-top: 14px;
   }
 
-  [data-paragraph-list] {
+  .mie-para-slots {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 10px;
+    margin: 0 0 16px 0;
+  }
+  @media (min-width: 560px) {
+    .mie-para-slots { grid-template-columns: 1fr 1fr; }
+  }
+  @media (min-width: 820px) {
+    .mie-para-slots { grid-template-columns: 1fr 1fr 1fr; }
+  }
+
+  .mie-para-slot {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    min-width: 0;
+  }
+  .mie-para-slot-num {
+    font-size: 13px;
+    font-weight: 700;
+    color: #1e3a8a;
+  }
+  .mie-para-slot-drop {
+    min-height: 78px;
+    border: 2px dashed #94a3b8;
+    border-radius: 8px;
+    background: #f8fafc;
+    padding: 6px;
+    display: flex;
+    align-items: stretch;
+  }
+  .mie-para-slot-drop:empty::after {
+    content: "Drop here";
+    margin: auto;
+    color: #94a3b8;
+    font-size: 13px;
+    font-weight: 600;
+  }
+  .mie-para-slot-drop.is-over {
+    border-color: #4338ca;
+    background: rgba(67, 56, 202, 0.08);
+  }
+  .mie-para-slot-drop:not(:empty) {
+    border-style: solid;
+    border-color: #c7d2fe;
+    background: #ffffff;
+  }
+  .mie-para-slot-drop.is-correct { border-color: #22c55e; }
+  .mie-para-slot-drop.is-wrong { border-color: #f87171; }
+
+  .mie-para-bank-title {
+    margin: 0 0 8px 0;
+    font-size: 14px;
+    font-weight: 700;
+    color: #1e3a8a;
+  }
+  [data-paragraph-list],
+  [data-paragraph-bank] {
     list-style: none !important;
     margin: 0;
     padding: 0;
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap: 10px;
+    min-height: 48px;
+    border-radius: 8px;
+  }
+  [data-paragraph-bank].is-over,
+  [data-paragraph-list].is-over {
+    outline: 2px dashed #4338ca;
+    outline-offset: 4px;
   }
 
+  .mie-para-card,
   [data-paragraph-id] {
-    display: flex !important;
-    align-items: flex-start;
-    gap: 12px;
+    display: block;
     margin: 0 !important;
-    padding: 14px 16px;
     background: #ffffff;
     border: 2px solid #c7d2fe;
     border-radius: 8px;
     cursor: grab;
     user-select: none;
+    touch-action: none;
+    width: 100%;
+  }
+  .mie-para-card:active { cursor: grabbing; }
+  .mie-para-card.is-dragging { opacity: 0.55; box-shadow: 0 4px 14px rgba(67, 56, 202, 0.18); }
+  .mie-para-card.is-selected { border-color: #4338ca; box-shadow: 0 0 0 3px rgba(67, 56, 202, 0.25); }
+  .mie-para-card.is-correct { border-color: #22c55e; background: #f0fdf4; }
+  .mie-para-card.is-wrong { border-color: #f87171; background: #fef2f2; }
+  .mie-para-card:focus { outline: 2px solid #6366f1; outline-offset: 2px; }
+
+  .mie-para-card-bar {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 12px;
+  }
+  .mie-para-preview {
+    flex: 1;
+    min-width: 0;
+    font-size: 14px;
+    line-height: 1.4;
+    color: #334155;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .mie-para-full {
+    display: none;
+    padding: 0 12px 12px 42px;
     font-size: 15px;
     line-height: 1.55;
     color: #334155;
   }
-  [data-paragraph-id]:active { cursor: grabbing; }
-  [data-paragraph-id].is-dragging { opacity: 0.55; box-shadow: 0 4px 14px rgba(67, 56, 202, 0.18); }
-  [data-paragraph-id].is-over { border-color: #6366f1; }
-  [data-paragraph-id].is-selected { border-color: #4338ca; box-shadow: 0 0 0 3px rgba(67, 56, 202, 0.25); }
-  [data-paragraph-id].is-correct { border-color: #22c55e; background: #f0fdf4; }
-  [data-paragraph-id].is-wrong { border-color: #f87171; background: #fef2f2; }
-  [data-paragraph-id]:focus { outline: 2px solid #6366f1; outline-offset: 2px; }
+  .mie-para-card.is-expanded .mie-para-full { display: block; }
+  .mie-para-expand {
+    flex: 0 0 auto;
+    appearance: none;
+    -webkit-appearance: none;
+    border: 1px solid #4338ca;
+    background: #eef2ff;
+    color: #3730a3;
+    font: 600 12px Arial, sans-serif;
+    padding: 5px 9px;
+    border-radius: 6px;
+    cursor: pointer;
+  }
 
   [data-paragraph-letter] {
     flex: 0 0 auto;
@@ -346,9 +458,6 @@
 </style>
 
 <div class="mie-wrap">
-  <input type="checkbox" id="mie-highlight-vocab" class="mie-highlight-toggle" aria-hidden="true" tabindex="-1" />
-  <input type="checkbox" id="mie-reveal-suggestions" class="mie-reveal-toggle" aria-hidden="true" tabindex="-1" />
-
   <div style="text-align: center; margin-bottom: 22px; padding: 18px 20px; background: linear-gradient(135deg, #1e3a8a 0%, #312e81 100%); border-radius: 12px; box-shadow: 0 4px 14px rgba(30, 58, 138, 0.35);" class="no-break">
     <div style="display: inline-block; margin-bottom: 8px;">
       <img src="/brizzle-logo.png" alt="Brizzle Logo" style="width: 50px; height: 50px; object-fit: contain; background: white; padding: 5px; border-radius: 50%;" />
@@ -362,7 +471,7 @@
     <p style="font-size: 16px; margin: 0 0 12px 0; color: #475569;">Discuss these questions.</p>
     <ol class="mie-numbered" style="margin: 0; padding-left: 28px; font-size: 16px; color: #334155; list-style-type: decimal; list-style-position: outside;">
       <li style="margin-bottom: 10px;">Have you ever done an internship or work placement? What was it like?</li>
-      <li style="margin-bottom: 10px;">What do you think makes an internship successful &mdash; for the intern and for the company?</li>
+      <li style="margin-bottom: 10px;">What do you think makes an internship successful, for the intern and for the company?</li>
       <li style="margin-bottom: 10px;">What challenges might someone face during their first experience of professional life?</li>
       <li style="margin-bottom: 10px;">Would you rather have a highly structured internship, or one that gives you more independence? Why?</li>
       <li style="margin-bottom: 0;">When you describe a work experience, how do you balance positive and negative points without sounding either naive or ungrateful?</li>
@@ -373,42 +482,99 @@
   <div style="margin-bottom: 24px; padding: 20px 22px; background: #ffffff; border-radius: 10px; border: 1px solid #c7d2fe; box-shadow: 0 2px 8px rgba(0,0,0,0.05);" class="keep-together" data-bookmarkable="skim" data-bookmark-label="Skim reading">
     <h2 style="font-size: 22px; font-weight: bold; margin: 0 0 8px 0; color: #1e3a8a; border-bottom: 3px solid #6366f1; padding-bottom: 8px;">Skim reading</h2>
     <p style="font-size: 16px; margin: 12px 0 10px 0; color: #334155;">Antonio Pinelli wrote about his three-month internship at a technology consultancy in Bristol. The paragraphs below are in the wrong order.</p>
-    <p class="screen-only" style="font-size: 15px; margin: 0 0 14px 0; color: #64748b;">Skim the text &mdash; do not worry about every word. Drag the paragraphs into a logical order (or tap one, then tap where it should go), then click <strong>Check answers</strong>.</p>
+    <p class="screen-only" style="font-size: 15px; margin: 0 0 14px 0; color: #64748b;">Skim the paragraphs &mdash; do not worry about every word. Use <strong>Read</strong> if you need the full text, then drag each compact card into a numbered box (or tap a paragraph, then tap a box). Click <strong>Check answers</strong> when you are ready.</p>
     <p class="print-only" style="font-size: 15px; margin: 0 0 14px 0; color: #64748b;">The paragraphs are labelled A to F. Write the correct order.</p>
 
-    <div data-paragraph-reorder data-correct-order="intro|work|people|pressure|facilities|conclusion">
-      <ol data-paragraph-list>
-        <li data-paragraph-id="pressure">
-          <span class="mie-para-handle" aria-hidden="true">⠿</span>
-          <span data-paragraph-letter>A</span>
-          <span>Nevertheless, the experience was not entirely good. As the end of my placement approached, the workload increased considerably because the team was working towards an important deadline. At times, the amount of work became bad enough that I struggled to complete everything within normal working hours. Although I understood that this was partly due to the temporary pressure of the project, I occasionally felt that expectations were unrealistic for an intern who was still learning the company&rsquo;s systems. On a few occasions, I was also given urgent tasks without much explanation, meaning that I had to spend time working out what was expected before I could actually begin. In hindsight, better planning would have made this period considerably less stressful.</span>
-        </li>
-        <li data-paragraph-id="work">
-          <span class="mie-para-handle" aria-hidden="true">⠿</span>
-          <span data-paragraph-letter>B</span>
-          <span>One of the strongest aspects of the internship was the work itself. Rather than being given a series of routine administrative tasks, I was involved in several good projects that required me to think independently and apply what I had learned at university. My responsibilities gradually became more demanding, which I found both motivating and rewarding. The workload was generally good: there was enough work to keep me occupied without leaving me feeling overwhelmed. Furthermore, my manager made a point of explaining why particular tasks mattered, which gave me a much clearer understanding of how individual pieces of work contributed to the company&rsquo;s wider objectives. As a result, even when I made mistakes, I felt that I was learning from them rather than simply being criticised.</span>
-        </li>
-        <li data-paragraph-id="conclusion">
-          <span class="mie-para-handle" aria-hidden="true">⠿</span>
-          <span data-paragraph-letter>C</span>
-          <span>On balance, however, I would describe the internship as a good experience and would certainly recommend the company to other students looking for their first taste of professional life. The opportunity to work on meaningful projects, receive support from experienced colleagues and gradually take on more responsibility was particularly valuable. Despite the bad periods of pressure and the occasional organisational problems, I came away with a much better understanding of both the realities and expectations of the workplace. More importantly, the placement helped me identify the skills I still need to develop before entering full-time employment. If I were offered the opportunity to do the internship again, I would accept without hesitation.</span>
-        </li>
-        <li data-paragraph-id="intro">
-          <span class="mie-para-handle" aria-hidden="true">⠿</span>
-          <span data-paragraph-letter>D</span>
-          <span>Last summer, I completed a three-month internship at a medium-sized technology consultancy in Bristol. I had hoped that the placement would give me a clearer idea of what it was like to work in a professional environment, rather than simply allowing me to observe other people doing their jobs. Overall, the experience was very good, although it was not without its challenges. I was particularly impressed by the variety of tasks I was given and by how quickly I was treated as a member of the team. That said, there were also a few aspects of the placement that I found bad, particularly towards the busiest stages of the project.</span>
-        </li>
-        <li data-paragraph-id="facilities">
-          <span class="mie-para-handle" aria-hidden="true">⠿</span>
-          <span data-paragraph-letter>E</span>
-          <span>Another aspect that could have been improved was communication between different members of the organisation. While my immediate team was good at keeping me informed, information from other departments was sometimes less clear. There were also a few bad experiences with the office facilities. The meeting rooms were frequently fully booked, and the internet connection was occasionally unreliable when several people were working remotely. These issues were relatively minor, but they became more frustrating when deadlines were approaching. Similarly, some of the internal procedures were unnecessarily complicated, and I initially found it bad that I had to seek approval from several different people before being able to carry out fairly straightforward tasks. Although none of these problems seriously affected my internship, they did highlight some areas where the company could become more efficient.</span>
-        </li>
-        <li data-paragraph-id="people">
-          <span class="mie-para-handle" aria-hidden="true">⠿</span>
-          <span data-paragraph-letter>F</span>
-          <span>Equally importantly, the people I worked with made the experience considerably more enjoyable. My supervisor was approachable and supportive, and I never felt that asking questions would be interpreted as a sign of incompetence. The wider team was also good at communicating, particularly when several people were working on the same project. In addition, the office itself was good: there were comfortable workstations, several quiet areas for meetings and a well-equipped kitchen. I was also pleasantly surprised by the company&rsquo;s flexibility. Although interns were expected to be in the office most of the time, I was occasionally allowed to work remotely when I needed to concentrate on a particularly demanding task. This relatively good balance between independence and supervision helped me become much more confident in managing my own time.</span>
-        </li>
-      </ol>
+    <div class="not-prose" data-paragraph-reorder data-correct-order="intro|work|people|pressure|facilities|conclusion">
+      <div class="mie-para-slots screen-only" data-paragraph-slots>
+        <div class="mie-para-slot">
+          <span class="mie-para-slot-num">1</span>
+          <div class="mie-para-slot-drop" data-paragraph-drop="1"></div>
+        </div>
+        <div class="mie-para-slot">
+          <span class="mie-para-slot-num">2</span>
+          <div class="mie-para-slot-drop" data-paragraph-drop="2"></div>
+        </div>
+        <div class="mie-para-slot">
+          <span class="mie-para-slot-num">3</span>
+          <div class="mie-para-slot-drop" data-paragraph-drop="3"></div>
+        </div>
+        <div class="mie-para-slot">
+          <span class="mie-para-slot-num">4</span>
+          <div class="mie-para-slot-drop" data-paragraph-drop="4"></div>
+        </div>
+        <div class="mie-para-slot">
+          <span class="mie-para-slot-num">5</span>
+          <div class="mie-para-slot-drop" data-paragraph-drop="5"></div>
+        </div>
+        <div class="mie-para-slot">
+          <span class="mie-para-slot-num">6</span>
+          <div class="mie-para-slot-drop" data-paragraph-drop="6"></div>
+        </div>
+      </div>
+
+      <p class="mie-para-bank-title screen-only">Paragraphs</p>
+      <div data-paragraph-list data-paragraph-bank>
+        <div class="mie-para-card" data-paragraph-id="pressure" tabindex="0">
+          <div class="mie-para-card-bar">
+            <span class="mie-para-handle" aria-hidden="true">⠿</span>
+            <span data-paragraph-letter>A</span>
+            <span class="mie-para-preview">Nevertheless, the experience was not entirely good.</span>
+            <button type="button" class="mie-para-expand" data-paragraph-expand aria-expanded="false">Read</button>
+          </div>
+          <div class="mie-para-full">Nevertheless, the experience was not entirely good. As the end of my placement approached, the workload increased considerably because the team was working towards an important deadline. At times, the amount of work became bad enough that I struggled to complete everything within normal working hours. Although I understood that this was partly due to the temporary pressure of the project, I occasionally felt that expectations were unrealistic for an intern who was still learning the company&rsquo;s systems. On a few occasions, I was also given urgent tasks without much explanation, meaning that I had to spend time working out what was expected before I could actually begin. In hindsight, better planning would have made this period considerably less stressful.</div>
+        </div>
+        <div class="mie-para-card" data-paragraph-id="work" tabindex="0">
+          <div class="mie-para-card-bar">
+            <span class="mie-para-handle" aria-hidden="true">⠿</span>
+            <span data-paragraph-letter>B</span>
+            <span class="mie-para-preview">One of the strongest aspects of the internship was the work itself.</span>
+            <button type="button" class="mie-para-expand" data-paragraph-expand aria-expanded="false">Read</button>
+          </div>
+          <div class="mie-para-full">One of the strongest aspects of the internship was the work itself. Rather than being given a series of routine administrative tasks, I was involved in several good projects that required me to think independently and apply what I had learned at university. My responsibilities gradually became more demanding, which I found both motivating and rewarding. The workload was generally good: there was enough work to keep me occupied without leaving me feeling overwhelmed. Furthermore, my manager made a point of explaining why particular tasks mattered, which gave me a much clearer understanding of how individual pieces of work contributed to the company&rsquo;s wider objectives. As a result, even when I made mistakes, I felt that I was learning from them rather than simply being criticised.</div>
+        </div>
+        <div class="mie-para-card" data-paragraph-id="conclusion" tabindex="0">
+          <div class="mie-para-card-bar">
+            <span class="mie-para-handle" aria-hidden="true">⠿</span>
+            <span data-paragraph-letter>C</span>
+            <span class="mie-para-preview">On balance, however, I would describe the internship as a good experience.</span>
+            <button type="button" class="mie-para-expand" data-paragraph-expand aria-expanded="false">Read</button>
+          </div>
+          <div class="mie-para-full">On balance, however, I would describe the internship as a good experience and would certainly recommend the company to other students looking for their first taste of professional life. The opportunity to work on meaningful projects, receive support from experienced colleagues and gradually take on more responsibility was particularly valuable. Despite the bad periods of pressure and the occasional organisational problems, I came away with a much better understanding of both the realities and expectations of the workplace. More importantly, the placement helped me identify the skills I still need to develop before entering full-time employment. If I were offered the opportunity to do the internship again, I would accept without hesitation.</div>
+        </div>
+        <div class="mie-para-card" data-paragraph-id="intro" tabindex="0">
+          <div class="mie-para-card-bar">
+            <span class="mie-para-handle" aria-hidden="true">⠿</span>
+            <span data-paragraph-letter>D</span>
+            <span class="mie-para-preview">Last summer, I completed a three-month internship at a medium-sized technology consultancy in Bristol.</span>
+            <button type="button" class="mie-para-expand" data-paragraph-expand aria-expanded="false">Read</button>
+          </div>
+          <div class="mie-para-full">Last summer, I completed a three-month internship at a medium-sized technology consultancy in Bristol. I had hoped that the placement would give me a clearer idea of what it was like to work in a professional environment, rather than simply allowing me to observe other people doing their jobs. Overall, the experience was very good, although it was not without its challenges. I was particularly impressed by the variety of tasks I was given and by how quickly I was treated as a member of the team. That said, there were also a few aspects of the placement that I found bad, particularly towards the busiest stages of the project.</div>
+        </div>
+        <div class="mie-para-card" data-paragraph-id="facilities" tabindex="0">
+          <div class="mie-para-card-bar">
+            <span class="mie-para-handle" aria-hidden="true">⠿</span>
+            <span data-paragraph-letter>E</span>
+            <span class="mie-para-preview">Another aspect that could have been improved was communication between different members of the organisation.</span>
+            <button type="button" class="mie-para-expand" data-paragraph-expand aria-expanded="false">Read</button>
+          </div>
+          <div class="mie-para-full">Another aspect that could have been improved was communication between different members of the organisation. While my immediate team was good at keeping me informed, information from other departments was sometimes less clear. There were also a few bad experiences with the office facilities. The meeting rooms were frequently fully booked, and the internet connection was occasionally unreliable when several people were working remotely. These issues were relatively minor, but they became more frustrating when deadlines were approaching. Similarly, some of the internal procedures were unnecessarily complicated, and I initially found it bad that I had to seek approval from several different people before being able to carry out fairly straightforward tasks. Although none of these problems seriously affected my internship, they did highlight some areas where the company could become more efficient.</div>
+        </div>
+        <div class="mie-para-card" data-paragraph-id="people" tabindex="0">
+          <div class="mie-para-card-bar">
+            <span class="mie-para-handle" aria-hidden="true">⠿</span>
+            <span data-paragraph-letter>F</span>
+            <span class="mie-para-preview">Equally importantly, the people I worked with made the experience considerably more enjoyable.</span>
+            <button type="button" class="mie-para-expand" data-paragraph-expand aria-expanded="false">Read</button>
+          </div>
+          <div class="mie-para-full">Equally importantly, the people I worked with made the experience considerably more enjoyable. My supervisor was approachable and supportive, and I never felt that asking questions would be interpreted as a sign of incompetence. The wider team was also good at communicating, particularly when several people were working on the same project. In addition, the office itself was good: there were comfortable workstations, several quiet areas for meetings and a well-equipped kitchen. I was also pleasantly surprised by the company&rsquo;s flexibility. Although interns were expected to be in the office most of the time, I was occasionally allowed to work remotely when I needed to concentrate on a particularly demanding task. This relatively good balance between independence and supervision helped me become much more confident in managing my own time.</div>
+        </div>
+      </div>
+      <div class="mie-reorder-toolbar screen-only">
+        <button type="button" class="mie-btn mie-btn-primary" data-reorder-check>Check answers</button>
+        <button type="button" class="mie-btn mie-btn-secondary" data-reorder-reset>Reset order</button>
+        <p data-reorder-feedback role="status" style="margin: 0; font-size: 14px; font-weight: 600; min-height: 22px; color: #4338ca;"></p>
+      </div>
     </div>
   </div>
 
@@ -530,11 +696,12 @@
   <!-- Vocabulary -->
   <div style="margin-bottom: 24px; padding: 20px 22px; background: #ffffff; border-radius: 10px; border: 1px solid #c7d2fe; box-shadow: 0 2px 8px rgba(0,0,0,0.05);" class="keep-together" data-bookmarkable="vocabulary" data-bookmark-label="Vocabulary">
     <h2 style="font-size: 22px; font-weight: bold; margin: 0 0 8px 0; color: #1e3a8a; border-bottom: 3px solid #6366f1; padding-bottom: 8px;">Vocabulary: beyond &ldquo;good&rdquo; and &ldquo;bad&rdquo;</h2>
-    <p style="font-size: 16px; margin: 12px 0 12px 0; color: #334155;">Antonio&rsquo;s article is clear, but it overuses two very general adjectives. At C1, you are expected to choose words that fit the exact meaning: a workload can be <em>manageable</em>, a project can be <em>stimulating</em>, a period of pressure can be <em>unreasonable</em>.</p>
+    <p style="font-size: 16px; margin: 12px 0 12px 0; color: #334155;">Antonio&rsquo;s article is clear, but it overuses two very general adjectives, &ldquo;good&rdquo; and &ldquo;bad&rdquo;. What adjectives can we use to make the writing more varied and elevate its level? At C1, you are expected to choose words that fit the exact meaning: a workload can be <em>manageable</em>, a project can be <em>stimulating</em>, a period of pressure can be <em>unreasonable</em>.</p>
     <p class="screen-only" style="font-size: 15px; margin: 0 0 14px 0; color: #64748b;">Open <strong>Correct paragraph order</strong> above, then click the button to highlight every numbered instance of <strong>good</strong> and <strong>bad</strong>. Write a richer alternative for each one. When you have finished, reveal three possible suggestions &mdash; your own ideas may be just as strong.</p>
     <p class="print-only" style="font-size: 15px; margin: 0 0 14px 0; color: #64748b;">The numbered words in the article are <strong>good</strong> and <strong>bad</strong>. Write a more precise alternative for each instance.</p>
     <p class="screen-only" style="margin: 0 0 16px 0;">
-      <label for="mie-highlight-vocab" class="mie-highlight-btn">
+      <label class="mie-highlight-btn">
+        <input type="checkbox" id="mie-highlight-vocab" class="mie-highlight-toggle" aria-hidden="true" tabindex="-1" />
         <span class="mie-highlight-on">Highlight &ldquo;good&rdquo; and &ldquo;bad&rdquo; in the article</span>
         <span class="mie-highlight-off">Hide highlights</span>
       </label>
@@ -639,7 +806,10 @@
     </table>
     </div>
     <p class="screen-only" style="margin: 8px 0 0 0;">
-      <label for="mie-reveal-suggestions" class="mie-reveal-btn">Reveal suggestions</label>
+      <label class="mie-reveal-btn">
+        <input type="checkbox" id="mie-reveal-suggestions" class="mie-reveal-toggle" aria-hidden="true" tabindex="-1" />
+        Reveal suggestions
+      </label>
     </p>
   </div>
 
