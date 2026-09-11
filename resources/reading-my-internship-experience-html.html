@@ -87,6 +87,21 @@
     box-shadow: none;
   }
 
+  .mie-writing-actions .grammar-save-controls,
+  .mie-writing-actions .grammar-action-button-group {
+    display: flex !important;
+    flex-direction: row !important;
+    flex-wrap: nowrap !important;
+    align-items: center !important;
+    gap: 8px !important;
+  }
+  .mie-writing-actions .grammar-save-controls button {
+    display: inline-flex !important;
+    width: auto !important;
+    flex: 0 0 auto !important;
+    white-space: nowrap !important;
+  }
+
   .mie-reorder-toolbar,
   .mie-dm-toolbar {
     display: flex;
@@ -610,15 +625,15 @@
         <div class="mie-dm-table">
           <div class="mie-dm-col">
             <h4 class="mie-dm-heading">Adding information</h4>
-            <div class="mie-dm-drop" data-dm-drop="Adding information" data-dm-accept="Furthermore|In addition|Moreover|What is more|Besides|Similarly|More importantly|Likewise"></div>
+            <div class="mie-dm-drop" data-dm-drop="Adding information" data-dm-accept="Furthermore|In addition|Moreover|What is more|Similarly|More importantly|Likewise"></div>
           </div>
           <div class="mie-dm-col">
             <h4 class="mie-dm-heading">Adding contradictory information</h4>
-            <div class="mie-dm-drop" data-dm-drop="Adding contradictory information" data-dm-accept="However|Nevertheless|Nonetheless|That said|On the other hand|In contrast|Even so|Conversely"></div>
+            <div class="mie-dm-drop" data-dm-drop="Adding contradictory information" data-dm-accept="However|Nevertheless|Nonetheless|That said|On the other hand|In contrast|Even so"></div>
           </div>
           <div class="mie-dm-col">
             <h4 class="mie-dm-heading">Showing result</h4>
-            <div class="mie-dm-drop" data-dm-drop="Showing result" data-dm-accept="As a result|Consequently|Therefore|Thus|Hence|Accordingly|For this reason"></div>
+            <div class="mie-dm-drop" data-dm-drop="Showing result" data-dm-accept="As a result|Consequently|Therefore|Accordingly|For this reason"></div>
           </div>
           <div class="mie-dm-col">
             <h4 class="mie-dm-heading">Summing up</h4>
@@ -630,7 +645,7 @@
           </div>
           <div class="mie-dm-col">
             <h4 class="mie-dm-heading">Giving examples</h4>
-            <div class="mie-dm-drop" data-dm-drop="Giving examples" data-dm-accept="For example|For instance|In particular|Namely|To illustrate|Specifically"></div>
+            <div class="mie-dm-drop" data-dm-drop="Giving examples" data-dm-accept="For example|For instance|To illustrate"></div>
           </div>
         </div>
         <div class="mie-dm-bank">
@@ -653,16 +668,11 @@
             <button type="button" class="mie-dm-chip" data-marker="Therefore">Therefore</button>
             <button type="button" class="mie-dm-chip" data-marker="In conclusion">In conclusion</button>
             <button type="button" class="mie-dm-chip" data-marker="Initially">Initially</button>
-            <button type="button" class="mie-dm-chip" data-marker="In particular">In particular</button>
             <button type="button" class="mie-dm-chip" data-marker="What is more">What is more</button>
             <button type="button" class="mie-dm-chip" data-marker="That said">That said</button>
-            <button type="button" class="mie-dm-chip" data-marker="Thus">Thus</button>
             <button type="button" class="mie-dm-chip" data-marker="To sum up">To sum up</button>
             <button type="button" class="mie-dm-chip" data-marker="Subsequently">Subsequently</button>
-            <button type="button" class="mie-dm-chip" data-marker="Namely">Namely</button>
-            <button type="button" class="mie-dm-chip" data-marker="Besides">Besides</button>
             <button type="button" class="mie-dm-chip" data-marker="On the other hand">On the other hand</button>
-            <button type="button" class="mie-dm-chip" data-marker="Hence">Hence</button>
             <button type="button" class="mie-dm-chip" data-marker="All in all">All in all</button>
             <button type="button" class="mie-dm-chip" data-marker="Meanwhile">Meanwhile</button>
             <button type="button" class="mie-dm-chip" data-marker="To illustrate">To illustrate</button>
@@ -671,12 +681,10 @@
             <button type="button" class="mie-dm-chip" data-marker="Accordingly">Accordingly</button>
             <button type="button" class="mie-dm-chip" data-marker="In short">In short</button>
             <button type="button" class="mie-dm-chip" data-marker="Eventually">Eventually</button>
-            <button type="button" class="mie-dm-chip" data-marker="Specifically">Specifically</button>
             <button type="button" class="mie-dm-chip" data-marker="More importantly">More importantly</button>
             <button type="button" class="mie-dm-chip" data-marker="Even so">Even so</button>
             <button type="button" class="mie-dm-chip" data-marker="For this reason">For this reason</button>
             <button type="button" class="mie-dm-chip" data-marker="Likewise">Likewise</button>
-            <button type="button" class="mie-dm-chip" data-marker="Conversely">Conversely</button>
             <button type="button" class="mie-dm-chip" data-marker="Previously">Previously</button>
           </div>
         </div>
@@ -696,8 +704,7 @@
   <!-- Vocabulary -->
   <div style="margin-bottom: 24px; padding: 20px 22px; background: #ffffff; border-radius: 10px; border: 1px solid #c7d2fe; box-shadow: 0 2px 8px rgba(0,0,0,0.05);" class="keep-together" data-bookmarkable="vocabulary" data-bookmark-label="Vocabulary">
     <h2 style="font-size: 22px; font-weight: bold; margin: 0 0 8px 0; color: #1e3a8a; border-bottom: 3px solid #6366f1; padding-bottom: 8px;">Vocabulary: beyond &ldquo;good&rdquo; and &ldquo;bad&rdquo;</h2>
-    <p style="font-size: 16px; margin: 12px 0 12px 0; color: #334155;">Antonio&rsquo;s article is clear, but it overuses two very general adjectives, &ldquo;good&rdquo; and &ldquo;bad&rdquo;. What adjectives can we use to make the writing more varied and elevate its level? At C1, you are expected to choose words that fit the exact meaning: a workload can be <em>manageable</em>, a project can be <em>stimulating</em>, a period of pressure can be <em>unreasonable</em>.</p>
-    <p class="screen-only" style="font-size: 15px; margin: 0 0 14px 0; color: #64748b;">Open <strong>Correct paragraph order</strong> above, then click the button to highlight every numbered instance of <strong>good</strong> and <strong>bad</strong>. Write a richer alternative for each one. When you have finished, reveal three possible suggestions &mdash; your own ideas may be just as strong.</p>
+    <p style="font-size: 16px; margin: 12px 0 12px 0; color: #334155;">Antonio&rsquo;s article is clear, but it overuses two very general adjectives, &ldquo;good&rdquo; and &ldquo;bad&rdquo;. What adjectives can we use to make the writing more varied and elevate its level?</p>
     <p class="print-only" style="font-size: 15px; margin: 0 0 14px 0; color: #64748b;">The numbered words in the article are <strong>good</strong> and <strong>bad</strong>. Write a more precise alternative for each instance.</p>
     <p class="screen-only" style="margin: 0 0 16px 0;">
       <label class="mie-highlight-btn">
@@ -822,15 +829,10 @@
       <li>Do <strong>not</strong> use the words <strong>good</strong> or <strong>bad</strong>.</li>
       <li>Include at least <strong>three discourse markers</strong> (for example: <em>Furthermore</em>, <em>That said</em>, <em>On balance</em>, <em>Nevertheless</em>, <em>In addition</em>).</li>
     </ul>
-    <div data-grammar-save-section="true">
+    <div class="mie-writing-actions not-prose" data-grammar-save-section="true" data-writing-task-submit data-writing-submit-title="Reading: My Internship Experience" data-writing-submit-input="internship-reference" data-writing-submit-forbid="good|bad" data-writing-submit-min-markers="3" data-writing-submit-markers="Furthermore|In addition|Moreover|What is more|Similarly|More importantly|Likewise|However|Nevertheless|Nonetheless|That said|On the other hand|In contrast|Even so|As a result|Consequently|Therefore|Accordingly|For this reason|Overall|On balance|In conclusion|To sum up|All in all|In short|In hindsight|At times|Initially|Subsequently|Meanwhile|Eventually|Previously|For example|For instance|To illustrate|Although|Despite|While|Equally importantly|On a few occasions">
       <span data-grammar-input="internship-reference" data-grammar-input-type="textarea" data-grammar-textarea-rows="16" style="display: block; min-height: 280px;"></span>
       <div class="screen-only" data-writing-word-count-for="internship-reference" style="margin-top: 8px; font-size: 13px; color: #64748b;">0 words</div>
     </div>
-  </div>
-
-  <div style="margin-bottom: 8px; padding: 20px 22px; background: #ffffff; border-radius: 10px; border: 2px solid #818cf8; box-shadow: 0 2px 8px rgba(0,0,0,0.05);" class="keep-together screen-only" data-writing-task-submit data-writing-submit-title="Reading: My Internship Experience" data-writing-submit-input="internship-reference" data-writing-submit-forbid="good|bad" data-writing-submit-min-markers="3" data-writing-submit-markers="Furthermore|In addition|Moreover|What is more|Besides|Similarly|More importantly|Likewise|However|Nevertheless|Nonetheless|That said|On the other hand|In contrast|Even so|Conversely|As a result|Consequently|Therefore|Thus|Hence|Accordingly|For this reason|Overall|On balance|In conclusion|To sum up|All in all|In short|In hindsight|At times|Initially|Subsequently|Meanwhile|Eventually|Previously|For example|For instance|In particular|Namely|To illustrate|Specifically|Although|Despite|While|Equally importantly|On a few occasions">
-    <h2 style="font-size: 18px; font-weight: bold; margin: 0 0 8px 0; color: #1e3a8a;">Submit for marking</h2>
-    <p style="font-size: 14px; margin: 0 0 14px 0; color: #475569;">When you have finished your reference, submit it for your teacher to mark. You will be reminded if the text still contains <em>good</em> or <em>bad</em>, or if fewer than three discourse markers are used.</p>
   </div>
 
 </div>

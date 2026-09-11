@@ -69,24 +69,48 @@ export function mountWritingTaskSubmit(
 
   const button = document.createElement('button')
   button.type = 'button'
+  button.className = 'grammar-action-button'
   button.textContent = 'Submit for marking'
-  button.className = 'mie-btn mie-btn-primary'
   button.style.cssText =
-    'font: 600 14px Arial, sans-serif; padding: 12px 18px; border: none; border-radius: 8px; color: #ffffff; background: linear-gradient(135deg, #1e3a8a 0%, #4338ca 100%); cursor: pointer; box-shadow: 0 2px 6px rgba(30, 58, 138, 0.35);'
+    'display: inline-flex; align-items: center; width: auto; flex: 0 0 auto; white-space: nowrap; background-color: #38438f; color: #fff; border: none; border-radius: 6px; padding: 8px 16px; font-size: 14px; cursor: pointer;'
+  button.style.setProperty('background-color', '#38438f', 'important')
+  button.style.setProperty('background-image', 'none', 'important')
+  button.style.setProperty('color', '#ffffff', 'important')
+  button.style.setProperty('display', 'inline-flex', 'important')
+  button.style.setProperty('width', 'auto', 'important')
 
-  const status = document.createElement('p')
+  const status = document.createElement('span')
   status.setAttribute('role', 'status')
-  status.style.cssText =
-    'margin: 12px 0 0 0; font-size: 13px; font-weight: 600; color: #64748b; min-height: 20px;'
+  status.style.cssText = 'font-size: 13px; font-weight: 600; color: #64748b; min-height: 20px;'
 
-  const note = document.createElement('p')
-  note.style.cssText = 'margin: 10px 0 0 0; font-size: 12px; color: #94a3b8;'
-  note.textContent =
-    'Your teacher will receive an email notification. You can track the submission under Writing.'
+  function placeNextToSave(): boolean {
+    const buttonGroup = host.querySelector('.grammar-action-button-group') as HTMLElement | null
+    const saveControls = host.querySelector('.grammar-save-controls') as HTMLElement | null
+    if (!buttonGroup && !saveControls) return false
+    const row = buttonGroup || saveControls
+    if (!row) return false
+    row.style.display = 'flex'
+    row.style.flexDirection = 'row'
+    row.style.flexWrap = 'nowrap'
+    row.style.alignItems = 'center'
+    row.appendChild(button)
+    if (saveControls) saveControls.appendChild(status)
+    else row.appendChild(status)
+    return true
+  }
 
-  host.appendChild(button)
-  host.appendChild(status)
-  host.appendChild(note)
+  if (!placeNextToSave()) {
+    const row = document.createElement('div')
+    row.className = 'screen-only mie-writing-submit-row'
+    row.style.cssText =
+      'display: flex; flex-direction: row; flex-wrap: nowrap; align-items: center; gap: 8px; margin-top: 10px;'
+    row.appendChild(button)
+    row.appendChild(status)
+    host.appendChild(row)
+    requestAnimationFrame(() => {
+      if (placeNextToSave()) row.remove()
+    })
+  }
   host.setAttribute('data-writing-task-submit-mounted', 'true')
 
   const onClick = async () => {
@@ -168,7 +192,6 @@ export function mountWritingTaskSubmit(
     button.removeEventListener('click', onClick)
     button.remove()
     status.remove()
-    note.remove()
     host.removeAttribute('data-writing-task-submit-mounted')
   }
 }

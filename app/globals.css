@@ -223,8 +223,21 @@ input[type="checkbox"]:focus {
 }
 
 /* Worksheet action buttons (Save, Check Answers, Get AI Feedback) */
+#worksheet-content .grammar-save-controls,
+#worksheet-content .grammar-action-button-group {
+  display: flex !important;
+  flex-direction: row !important;
+  flex-wrap: nowrap !important;
+  align-items: center !important;
+  gap: 8px !important;
+}
+
 #worksheet-content .grammar-action-button-group .grammar-action-button,
 #worksheet-content button.grammar-action-button {
+  display: inline-flex !important;
+  width: auto !important;
+  flex: 0 0 auto !important;
+  white-space: nowrap !important;
   background-color: #38438f !important;
   background-image: none !important;
   color: #ffffff !important;
