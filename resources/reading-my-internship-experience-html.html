@@ -32,6 +32,20 @@
     list-style-type: decimal !important;
   }
 
+  .mie-checklist {
+    list-style-type: disc !important;
+    list-style-position: outside !important;
+    margin: 0 0 14px 0 !important;
+    padding-left: 28px !important;
+    font-size: 15px;
+    color: #334155;
+  }
+  .mie-checklist > li {
+    display: list-item !important;
+    list-style-type: disc !important;
+    margin-bottom: 6px;
+  }
+
   .mie-wrap {
     width: 90%;
     max-width: 880px;
@@ -45,26 +59,31 @@
 
   .mie-highlight-toggle,
   .mie-reveal-toggle {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 1px;
-    height: 1px;
-    margin: 0;
-    padding: 0;
-    overflow: hidden;
+    position: absolute !important;
+    left: 0 !important;
+    top: 0 !important;
+    width: 0 !important;
+    height: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    overflow: hidden !important;
     clip: rect(0, 0, 0, 0);
     clip-path: inset(50%);
-    border: 0;
-    opacity: 0;
-    pointer-events: none;
+    border: 0 !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
+    appearance: none !important;
+    -webkit-appearance: none !important;
   }
 
   .mie-btn,
   .mie-highlight-btn,
   .mie-reveal-btn {
     position: relative;
-    display: inline-block;
+    display: inline-flex !important;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
     padding: 10px 16px;
     border: none;
     border-radius: 8px;
@@ -292,8 +311,13 @@
   .mie-order-details[open] summary::after {
     transform: rotate(180deg);
   }
-  .mie-order-body {
-    margin-top: 16px;
+  .mie-order-details summary h2 {
+    margin: 0;
+    padding: 0;
+    border: none;
+    font: inherit;
+    color: inherit;
+    line-height: inherit;
   }
 
   .mie-article p {
@@ -330,9 +354,21 @@
   }
   .mie-wrap:has(#mie-highlight-vocab:checked) .mie-vocab.mie-bad sup { color: #b91c1c; }
 
-  .mie-highlight-off { display: none; }
-  .mie-wrap:has(#mie-highlight-vocab:checked) .mie-highlight-on { display: none; }
-  .mie-wrap:has(#mie-highlight-vocab:checked) .mie-highlight-off { display: inline; }
+  .mie-highlight-btn {
+    display: inline-grid !important;
+    justify-items: center;
+    align-items: center;
+    text-align: center;
+    width: auto !important;
+  }
+  .mie-highlight-on,
+  .mie-highlight-off {
+    grid-area: 1 / 1;
+    text-align: center;
+  }
+  .mie-highlight-off { visibility: hidden; }
+  .mie-wrap:has(#mie-highlight-vocab:checked) .mie-highlight-on { visibility: hidden; }
+  .mie-wrap:has(#mie-highlight-vocab:checked) .mie-highlight-off { visibility: visible; }
   .mie-wrap:has(#mie-highlight-vocab:checked) .mie-highlight-btn {
     background: #312e81;
   }
@@ -463,12 +499,6 @@
     background: #312e81;
   }
 
-  .mie-checklist {
-    margin: 0 0 14px 0;
-    padding-left: 22px;
-    font-size: 15px;
-    color: #334155;
-  }
   .mie-checklist li { margin-bottom: 6px; }
 </style>
 
@@ -614,7 +644,9 @@
 
   <!-- Discourse markers -->
   <div style="margin-bottom: 24px; padding: 20px 22px; background: #ffffff; border-radius: 10px; border: 1px solid #c7d2fe; box-shadow: 0 2px 8px rgba(0,0,0,0.05);" class="keep-together" data-bookmarkable="discourse" data-bookmark-label="Discourse markers">
-    <h2 style="font-size: 22px; font-weight: bold; margin: 0 0 8px 0; color: #1e3a8a; border-bottom: 3px solid #6366f1; padding-bottom: 8px;">Discourse markers</h2>
+    <details class="mie-order-details" open>
+      <summary><h2>Discourse markers</h2></summary>
+      <div class="mie-order-body">
     <p style="font-size: 16px; margin: 12px 0 12px 0; color: #334155;"><strong>Discourse markers</strong> are words and phrases that show how ideas are connected. They do not usually carry the main meaning of a sentence; instead, they tell the reader what the writer is <em>doing</em> with the next idea &mdash; adding a point, contrasting it, showing a result, looking back, and so on.</p>
     <p style="font-size: 16px; margin: 0 0 12px 0; color: #334155;">They help you in two ways. When you <strong>read</strong>, they let you predict the direction of a paragraph before you process every word, which is essential for efficient reading. When you <strong>write</strong>, they make your argument easier to follow and stop a text from sounding like a list of disconnected opinions.</p>
     <p style="font-size: 16px; margin: 0 0 16px 0; color: #334155;">Antonio&rsquo;s article is full of them. For example, <em>That said</em> warns you that a reservation is coming; <em>Nevertheless</em> introduces the first real criticism; <em>On balance</em> signals that he is about to weigh everything up.</p>
@@ -699,6 +731,8 @@
     <div class="print-only">
       <p style="font-size: 15px; margin: 0 0 10px 0;">Write each marker under the correct heading.</p>
     </div>
+      </div>
+    </details>
   </div>
 
   <!-- Vocabulary -->
@@ -815,7 +849,7 @@
     <p class="screen-only" style="margin: 8px 0 0 0;">
       <label class="mie-reveal-btn">
         <input type="checkbox" id="mie-reveal-suggestions" class="mie-reveal-toggle" aria-hidden="true" tabindex="-1" />
-        Reveal suggestions
+        <span>Reveal suggestions</span>
       </label>
     </p>
   </div>
@@ -824,7 +858,7 @@
   <div style="margin-bottom: 24px; padding: 20px 22px; background: #ffffff; border-radius: 10px; border: 1px solid #c7d2fe; box-shadow: 0 2px 8px rgba(0,0,0,0.05);" class="keep-together" data-bookmarkable="writing" data-bookmark-label="Writing">
     <h2 style="font-size: 22px; font-weight: bold; margin: 0 0 8px 0; color: #1e3a8a; border-bottom: 3px solid #6366f1; padding-bottom: 8px;">Writing</h2>
     <p style="font-size: 16px; margin: 12px 0 12px 0; color: #334155;">You were Antonio&rsquo;s supervisor during his internship. Write him a professional reference that another employer could use.</p>
-    <ul class="mie-checklist">
+    <ul class="mie-checklist" style="margin: 0 0 14px 0; padding-left: 28px; font-size: 15px; color: #334155; list-style-type: disc; list-style-position: outside;">
       <li>Draw on what you know from his account: the work, the team, the pressure at the end, and his overall performance.</li>
       <li>Do <strong>not</strong> use the words <strong>good</strong> or <strong>bad</strong>.</li>
       <li>Include at least <strong>three discourse markers</strong> (for example: <em>Furthermore</em>, <em>That said</em>, <em>On balance</em>, <em>Nevertheless</em>, <em>In addition</em>).</li>
