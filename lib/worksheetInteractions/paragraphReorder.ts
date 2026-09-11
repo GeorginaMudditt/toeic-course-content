@@ -66,11 +66,12 @@ export function mountParagraphReorder(root: HTMLElement): Cleanup {
     return () => {}
   }
 
-  const bank =
+  const bankEl =
     (root.querySelector('[data-paragraph-bank]') as HTMLElement | null) ||
     (root.querySelector('[data-paragraph-list]') as HTMLElement | null)
   const drops = getDrops(root)
-  if (!bank || drops.length === 0) return () => {}
+  if (!bankEl || drops.length === 0) return () => {}
+  const bank: HTMLElement = bankEl
 
   const correct = parseCorrectOrder(root)
   if (correct.length === 0) return () => {}
