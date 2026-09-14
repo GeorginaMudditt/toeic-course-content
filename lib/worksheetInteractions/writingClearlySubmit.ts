@@ -1,15 +1,42 @@
 /**
- * Gather Writing Challenges #1–#3 and submit as one WritingSubmission for teacher marking.
+ * Gather worksheet writing tasks and submit as one WritingSubmission for teacher marking.
  * Mounted from WorksheetViewer on [data-writing-clearly-submit].
+ *
+ * Optional host attributes:
+ *   data-writing-submit-title   — WritingSubmission title
+ *   data-writing-submit-input   — comma-separated grammar input ids
+ *   data-writing-submit-labels  — pipe-separated labels matching those ids
+ *   data-writing-submit-button  — button label
  */
 
-const CHALLENGE_INPUT_IDS = [
+const DEFAULT_TASKS = [
   { id: 'writing-clearly-challenge1', label: 'Writing Challenge #1' },
   { id: 'writing-clearly-challenge2', label: 'Writing Challenge #2' },
   { id: 'writing-clearly-challenge3', label: 'Writing Challenge #3' },
 ] as const
 
 export const WRITING_CLEARLY_SUBMISSION_TITLE = 'Writing Clearly'
+const DEFAULT_BUTTON_LABEL = 'Submit Challenges #1–#3 for marking'
+
+type WritingTaskRef = { id: string; label: string }
+
+function parseList(value: string | null, separator: RegExp): string[] {
+  return (value || '')
+    .split(separator)
+    .map((item) => item.trim())
+    .filter(Boolean)
+}
+
+function tasksFromHost(host: HTMLElement): WritingTaskRef[] {
+  const ids = parseList(host.getAttribute('data-writing-submit-input'), /,/)
+  if (ids.length === 0) return [...DEFAULT_TASKS]
+
+  const labels = parseList(host.getAttribute('data-writing-submit-labels'), /\|/)
+  return ids.map((id, index) => ({
+    id,
+    label: labels[index] || id,
+  }))
+}
 
 function readInputText(root: HTMLElement, inputId: string): string {
   const container = root.querySelector(
@@ -24,7 +51,10 @@ function readInputText(root: HTMLElement, inputId: string): string {
   return (textarea?.value || '').trim()
 }
 
-function buildCombinedText(root: HTMLElement): {
+function buildCombinedText(
+  root: HTMLElement,
+  tasks: WritingTaskRef[]
+): {
   text: string
   missing: string[]
   filledCount: number
@@ -33,14 +63,14 @@ function buildCombinedText(root: HTMLElement): {
   const missing: string[] = []
   let filledCount = 0
 
-  for (const challenge of CHALLENGE_INPUT_IDS) {
-    const body = readInputText(root, challenge.id)
+  for (const task of tasks) {
+    const body = readInputText(root, task.id)
     if (!body) {
-      missing.push(challenge.label)
+      missing.push(task.label)
     } else {
       filledCount++
     }
-    parts.push(`${challenge.label}\n\n${body || '(No response)'}`)
+    parts.push(`${task.label}\n\n${body || '(No response)'}`)
   }
 
   return {
@@ -68,9 +98,15 @@ export function mountWritingClearlySubmit(
     (host.parentElement as HTMLElement | null) ||
     host
 
+  const tasks = tasksFromHost(host)
+  const title =
+    host.getAttribute('data-writing-submit-title')?.trim() || WRITING_CLEARLY_SUBMISSION_TITLE
+  const buttonLabel =
+    host.getAttribute('data-writing-submit-button')?.trim() || DEFAULT_BUTTON_LABEL
+
   const button = document.createElement('button')
   button.type = 'button'
-  button.textContent = 'Submit Challenges #1–#3 for marking'
+  button.textContent = buttonLabel
   button.style.cssText =
     'font: 600 14px Arial, sans-serif; padding: 12px 18px; border: none; border-radius: 8px; color: #ffffff; background: linear-gradient(135deg, #1e3a8a 0%, #4338ca 100%); cursor: pointer; box-shadow: 0 2px 6px rgba(30, 58, 138, 0.35);'
 
@@ -96,9 +132,9 @@ export function mountWritingClearlySubmit(
       return
     }
 
-    const { text, missing, filledCount } = buildCombinedText(worksheetRoot)
+    const { text, missing, filledCount } = buildCombinedText(worksheetRoot, tasks)
     if (filledCount === 0) {
-      status.textContent = 'Please complete at least one writing challenge before submitting.'
+      status.textContent = 'Please complete at least one writing task before submitting.'
       status.style.color = '#dc2626'
       return
     }
@@ -124,7 +160,7 @@ export function mountWritingClearlySubmit(
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          title: WRITING_CLEARLY_SUBMISSION_TITLE,
+          title,
           originalText: text,
         }),
       })
@@ -143,7 +179,7 @@ export function mountWritingClearlySubmit(
       status.textContent = msg
       status.style.color = '#dc2626'
       button.disabled = false
-      button.textContent = 'Submit Challenges #1–#3 for marking'
+      button.textContent = buttonLabel
     }
   }
 
