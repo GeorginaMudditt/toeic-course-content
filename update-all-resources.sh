@@ -89,12 +89,18 @@ npm run update:resource:supabase "Argumentation" "speaking-argumentation-html.ht
 npm run update:resource:supabase "Speaking: Making Comparisons" "speaking-making-comparisons-html.html"
 npm run update:resource:supabase "Speaking: Your Future Career" "speaking-your-future-career-html.html"
 
+# Business English
+npm run update:resource:supabase "Business English: A Conference" "a-conference-html.html"
+
 # Tests / TOEIC Reading & Writing
 npm run update:resource:supabase "Introduction to TOEICⓇ Reading" "introduction-toeic-reading-html.html"
 npm run update:resource:supabase "Introduction to TOEICⓇ Writing" "introduction-toeic-writing-html.html"
 npm run update:resource:supabase "Introduction to TOEICⓇ Listening" "introduction-toeic-listening-html.html"
 npm run update:resource:supabase "Listening: Disagreement and Criticism" "disagreement-and-criticism-html.html"
 npm run update:resource:supabase "Reading: My Internship Experience" "reading-my-internship-experience-html.html"
+
+# Reference
+npm run update:resource:supabase "US vs UK Spelling" "us-vs-uk-spelling-html.html"
 
 # Tests
 npm run update:resource:supabase "Placement Test" "placement-test-html.html"

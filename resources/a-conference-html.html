@@ -1,0 +1,501 @@
+<!-- Business English: A Conference (C1) -->
+<style>
+  :root {
+    --conf-ink: #1f2937;
+    --conf-muted: #4b5563;
+    --conf-accent: #0f766e;
+    --conf-accent-dark: #115e59;
+    --conf-gold: #c4a35a;
+    --conf-cream: #f7f3ea;
+    --conf-paper: #fffdf8;
+  }
+
+  @media print {
+    @page { margin: 1.5cm; }
+    body { margin: 0; padding: 0; }
+    .page-break { page-break-before: always; }
+    .keep-together { page-break-inside: avoid; break-inside: avoid; }
+    h2, h3 { page-break-after: avoid; break-after: avoid; }
+    .screen-only { display: none !important; }
+    .conf-reveal summary { display: none; }
+    .conf-reveal > *:not(summary) { display: block !important; }
+  }
+
+  .conf-section {
+    margin-bottom: 24px;
+    padding: 20px 22px;
+    background: #ffffff;
+    border-radius: 10px;
+    border: 1px solid #cce7e2;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+  }
+
+  .conf-section h2 {
+    font-size: 21px;
+    font-weight: 700;
+    margin: 0 0 12px 0;
+    color: var(--conf-accent-dark);
+    border-bottom: 3px solid #5eead4;
+    padding-bottom: 8px;
+  }
+
+  .conf-section h3 {
+    font-size: 17px;
+    font-weight: 700;
+    margin: 0 0 10px 0;
+    color: #134e4a;
+  }
+
+  .conf-section ul {
+    list-style-type: disc !important;
+    list-style-position: outside !important;
+    padding-left: 24px !important;
+  }
+
+  .conf-section li {
+    display: list-item !important;
+  }
+
+  .conf-audio-wrap {
+    margin: 0 0 16px 0;
+    padding: 14px 16px;
+    background: #f0fdfa;
+    border: 1px solid #99f6e4;
+    border-radius: 8px;
+  }
+
+  .conf-audio-wrap audio {
+    width: 100%;
+    max-width: 560px;
+    height: 44px;
+    display: block;
+  }
+
+  .conf-note-grid {
+    display: grid;
+    gap: 12px;
+  }
+
+  .conf-note-label {
+    display: block;
+    font-size: 14px;
+    font-weight: 700;
+    color: #0f766e;
+    margin: 0 0 6px 0;
+  }
+
+  .conf-reveal {
+    margin-top: 12px;
+    border: 1px solid #99f6e4;
+    border-radius: 8px;
+    background: #f0fdfa;
+    padding: 8px 12px;
+  }
+
+  .conf-reveal summary {
+    cursor: pointer;
+    font-weight: 700;
+    color: #115e59;
+    font-size: 15px;
+  }
+
+  .conf-reveal-body {
+    margin-top: 10px;
+    font-size: 15px;
+    line-height: 1.6;
+    color: #334155;
+  }
+
+  .conf-reveal-body p {
+    margin: 0 0 10px 0;
+  }
+
+  .conf-reveal-body p:last-child {
+    margin-bottom: 0;
+  }
+
+  .conf-focus {
+    margin-top: 10px;
+    padding: 8px 10px;
+    background: #ecfdf5;
+    border-left: 3px solid #0f766e;
+    font-size: 14px;
+    color: #134e4a;
+  }
+
+  .brochure {
+    margin: 16px 0 8px 0;
+    background: var(--conf-paper);
+    border: 1px solid #d6c7a1;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 10px 28px rgba(15, 118, 110, 0.12);
+  }
+
+  .brochure-hero {
+    padding: 28px 26px 22px 26px;
+    background:
+      linear-gradient(135deg, rgba(15, 118, 110, 0.94) 0%, rgba(17, 94, 89, 0.96) 58%, rgba(15, 23, 42, 0.92) 100%);
+    color: #fff;
+    text-align: center;
+  }
+
+  .brochure-kicker {
+    margin: 0 0 8px 0;
+    font-size: 12px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: #fde68a;
+    font-weight: 700;
+  }
+
+  .brochure-hero h3 {
+    margin: 0 0 10px 0;
+    font-size: 28px;
+    line-height: 1.2;
+    color: #ffffff;
+    font-weight: 800;
+  }
+
+  .brochure-meta {
+    margin: 0;
+    font-size: 15px;
+    color: #ccfbf1;
+  }
+
+  .brochure-body {
+    padding: 18px 18px 8px 18px;
+    background: var(--conf-cream);
+  }
+
+  .brochure-day {
+    margin: 0 0 16px 0;
+  }
+
+  .brochure-day-title {
+    margin: 0 0 10px 0;
+    font-size: 13px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #115e59;
+    font-weight: 800;
+    border-bottom: 2px solid #c4a35a;
+    padding-bottom: 6px;
+  }
+
+  .session-card {
+    display: grid;
+    grid-template-columns: 86px 1fr;
+    gap: 12px;
+    margin: 0 0 10px 0;
+    padding: 12px 14px;
+    background: #fffdf8;
+    border: 1px solid #e8dcc0;
+    border-radius: 10px;
+  }
+
+  .session-time {
+    font-size: 13px;
+    font-weight: 800;
+    color: #115e59;
+    letter-spacing: 0.04em;
+  }
+
+  .session-title {
+    margin: 0 0 6px 0;
+    font-size: 16px;
+    font-weight: 800;
+    color: #134e4a;
+  }
+
+  .session-desc {
+    margin: 0;
+    font-size: 14px;
+    line-height: 1.5;
+    color: #44403c;
+  }
+
+  .useful-lang {
+    margin: 12px 0 14px 0;
+    padding: 12px 14px;
+    background: #f0fdfa;
+    border: 1px solid #99f6e4;
+    border-radius: 8px;
+  }
+
+  .useful-lang ul {
+    margin: 0;
+    padding-left: 20px;
+    font-size: 15px;
+    color: #134e4a;
+  }
+
+  .useful-lang li {
+    margin-bottom: 6px;
+    font-style: italic;
+  }
+
+  .simple-box {
+    margin: 0 0 12px 0;
+    padding: 12px 14px;
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    font-size: 15px;
+    line-height: 1.55;
+    color: #334155;
+  }
+
+  .simple-box p {
+    margin: 0 0 8px 0;
+  }
+
+  .simple-box p:last-child {
+    margin-bottom: 0;
+  }
+
+  .rewrite-card {
+    margin: 0 0 22px 0;
+    padding: 16px 16px 14px 16px;
+    border: 1px solid #d1fae5;
+    border-radius: 10px;
+    background: #ffffff;
+  }
+
+  .rewrite-card h3 {
+    margin: 0 0 10px 0;
+  }
+
+  @media (max-width: 640px) {
+    .session-card {
+      grid-template-columns: 1fr;
+      gap: 6px;
+    }
+  }
+</style>
+
+<div style="max-width: 860px; margin: 0 auto; padding: 20px; font-family: Arial, sans-serif; line-height: 1.55; color: #1f2937;">
+
+  <div style="text-align: center; margin-bottom: 22px; padding: 22px 20px; background: linear-gradient(135deg, #0f766e 0%, #115e59 100%); border-radius: 12px;" class="keep-together">
+    <div style="display: inline-block; margin-bottom: 8px;">
+      <img src="/brizzle-logo.png" alt="Brizzle Logo" style="width: 50px; height: 50px; object-fit: contain; background: white; padding: 5px; border-radius: 50%;" />
+    </div>
+    <h1 style="font-size: 30px; font-weight: bold; margin: 0; color: #ffffff;">A Conference</h1>
+    <p style="margin: 8px 0 0 0; font-size: 16px; color: #ccfbf1; font-weight: 600;">Business English &middot; C1</p>
+  </div>
+
+  <div class="conf-section keep-together" data-bookmarkable="listening" data-bookmark-label="Listening: An Upcoming Conference">
+    <h2>1. Listening: An Upcoming Conference</h2>
+    <p style="margin: 0 0 14px 0; font-size: 16px;">Listen to the description of an upcoming conference. As you listen, make a note of the most important points.</p>
+
+    <div class="conf-audio-wrap screen-only">
+      <p style="margin: 0 0 8px 0; font-size: 14px; font-weight: 600; color: #115e59;">Audio</p>
+      <audio controls preload="metadata" src="/listening-audio/listening-letters-numbers/Glasgow-conference-audio.mp3">
+        Your browser does not support audio playback.
+      </audio>
+    </div>
+
+    <div data-grammar-save-section="true" data-grammar-check-disabled="true">
+      <label class="conf-note-label" for="conference-notes">Notes</label>
+      <span data-grammar-input="conference-notes" data-grammar-input-type="textarea" data-grammar-textarea-rows="8" style="display: block; min-height: 160px;"></span>
+    </div>
+
+    <details class="conf-reveal">
+      <summary>Script</summary>
+      <div class="conf-reveal-body">
+        <p>Have you ever wondered what it would take to make our organisations and communities genuinely more sustainable, rather than simply more sustainable in theory? If so, the Sustainable Futures Conference, taking place in Glasgow this November, could be well worth attending.</p>
+        <p>Bringing together professionals, researchers and community representatives from a wide range of sectors, the conference will explore how we can turn ambitious commitments into practical, long-term action. Rather than focusing exclusively on environmental issues, the programme will examine the connections between sustainability, economic development, public wellbeing and social inclusion.</p>
+        <p>Over the course of two days, delegates will have the opportunity to attend presentations, participate in discussions and exchange ideas with people working in very different fields. Topics will include the future of sustainable cities, responsible consumption, the changing world of work, and the role of communities in creating lasting change.</p>
+        <p>One of the conference&apos;s central aims is to encourage participants to look beyond their own professional environments and consider how different sectors can learn from one another. Whether you work in education, healthcare, business, local government or the creative industries, there should be something to take away.</p>
+        <p>The conference will be held at the Glasgow Convention Centre on the 12th and 13th of November. Places are limited, and early registration is recommended. For further information, including the full programme and registration details, visit the conference website.</p>
+      </div>
+    </details>
+  </div>
+
+  <div class="conf-section" data-bookmarkable="reading" data-bookmark-label="Reading: The Conference Programme">
+    <h2>2. Reading: The Conference Programme</h2>
+    <p style="margin: 0 0 10px 0; font-size: 16px;">Look at the programme below. Which sessions would interest you most, and why?</p>
+    <p style="margin: 0 0 8px 0; font-size: 16px;">Try to explain your choices in some detail. You could consider:</p>
+    <ul style="margin: 0 0 8px 0; padding-left: 24px; font-size: 16px; list-style-type: disc; list-style-position: outside;">
+      <li style="margin-bottom: 6px; display: list-item; list-style-type: disc;">How relevant the topic is to your professional or personal interests</li>
+      <li style="margin-bottom: 6px; display: list-item; list-style-type: disc;">Whether the session might challenge your existing views</li>
+      <li style="margin-bottom: 6px; display: list-item; list-style-type: disc;">What you might learn from it</li>
+      <li style="display: list-item; list-style-type: disc;">Whether the ideas could be applied in your own context</li>
+    </ul>
+
+    <div class="brochure keep-together">
+      <div class="brochure-hero">
+        <p class="brochure-kicker">Sustainable Futures Conference</p>
+        <h3>From Ambition to Action</h3>
+        <p class="brochure-meta">Glasgow &nbsp;|&nbsp; 12–13 November</p>
+      </div>
+      <div class="brochure-body">
+        <div class="brochure-day">
+          <p class="brochure-day-title">Day 1 &mdash; 12 November</p>
+          <article class="session-card">
+            <div class="session-time">09:30</div>
+            <div>
+              <h4 class="session-title">Rethinking Progress: Can Growth Be Sustainable?</h4>
+              <p class="session-desc">An exploration of whether economic growth and environmental responsibility can coexist, and how organisations might measure success beyond financial performance.</p>
+            </div>
+          </article>
+          <article class="session-card">
+            <div class="session-time">11:00</div>
+            <div>
+              <h4 class="session-title">The Cities We Want to Live In</h4>
+              <p class="session-desc">How can urban planning, transport, housing and public spaces contribute to healthier, more inclusive and more sustainable communities?</p>
+            </div>
+          </article>
+          <article class="session-card">
+            <div class="session-time">14:00</div>
+            <div>
+              <h4 class="session-title">From Convenience to Conscious Consumption</h4>
+              <p class="session-desc">A discussion of consumer behaviour, business responsibility and the practical challenges of encouraging more sustainable choices.</p>
+            </div>
+          </article>
+          <article class="session-card">
+            <div class="session-time">15:30</div>
+            <div>
+              <h4 class="session-title">The Future of Work: Skills, Wellbeing and Adaptability</h4>
+              <p class="session-desc">How are changing expectations, lifelong learning and employee wellbeing shaping the organisations of tomorrow?</p>
+            </div>
+          </article>
+        </div>
+
+        <div class="brochure-day" style="margin-bottom: 8px;">
+          <p class="brochure-day-title">Day 2 &mdash; 13 November</p>
+          <article class="session-card">
+            <div class="session-time">10:00</div>
+            <div>
+              <h4 class="session-title">Stronger Together: Building Resilient Communities</h4>
+              <p class="session-desc">What enables communities to respond effectively to economic, social and environmental challenges, and how can organisations contribute?</p>
+            </div>
+          </article>
+          <article class="session-card" style="margin-bottom: 0;">
+            <div class="session-time">13:30</div>
+            <div>
+              <h4 class="session-title">From Pledges to Progress: Making Change Happen</h4>
+              <p class="session-desc">Why do well-intentioned sustainability initiatives sometimes fail, and what practical approaches can help turn commitments into measurable results?</p>
+            </div>
+          </article>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="conf-section" data-bookmarkable="writing" data-bookmark-label="Writing: Elevating Simple Ideas">
+    <h2>Writing #1: Elevating Simple Ideas</h2>
+    <p style="margin: 0 0 10px 0; font-size: 16px;">The sentences below communicate the basic ideas, but they are rather simple, repetitive or fragmented.</p>
+    <p style="margin: 0 0 10px 0; font-size: 16px;">Rewrite each example in a more sophisticated way. Try to combine ideas, vary your sentence structures and use more precise vocabulary where appropriate.</p>
+    <p style="margin: 0 0 18px 0; font-size: 16px;">You do not need to use every piece of information exactly as it appears, but your version should preserve the original meaning.</p>
+
+    <div class="rewrite-card keep-together">
+      <h3>Example 1: Introducing the conference</h3>
+      <p style="margin: 0 0 6px 0; font-size: 13px; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; color: #64748b;">Simple version</p>
+      <div class="simple-box">
+        <p>There will be a conference in Glasgow. I want to go to the conference. At the conference there will be six different talks. I cannot decide which talks I want to go to.</p>
+      </div>
+      <div data-grammar-save-section="true" data-grammar-check-disabled="true">
+        <span data-grammar-input="conference-rewrite-1" data-grammar-input-type="textarea" data-grammar-textarea-rows="5" style="display: block; min-height: 110px;"></span>
+      </div>
+      <details class="conf-reveal">
+        <summary>Possible C1 rewrite</summary>
+        <div class="conf-reveal-body">
+          <p>I am considering attending a forthcoming conference in Glasgow, which features six thought-provoking sessions on different aspects of sustainability. However, given the breadth of the programme, I am finding it difficult to decide which talks would be most worthwhile.</p>
+          <p class="conf-focus"><strong>Language focus:</strong> Relative clauses, participle clauses, precise vocabulary, avoiding repetition.</p>
+        </div>
+      </details>
+    </div>
+
+    <div class="rewrite-card keep-together">
+      <h3>Example 2: Explaining relevance</h3>
+      <p style="margin: 0 0 6px 0; font-size: 13px; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; color: #64748b;">Simple version</p>
+      <div class="simple-box">
+        <p>I work in education. Sustainability is not directly related to my job. However, I think the conference could still be useful. Education can help people change their behaviour.</p>
+      </div>
+      <div data-grammar-save-section="true" data-grammar-check-disabled="true">
+        <span data-grammar-input="conference-rewrite-2" data-grammar-input-type="textarea" data-grammar-textarea-rows="5" style="display: block; min-height: 110px;"></span>
+      </div>
+      <details class="conf-reveal">
+        <summary>Possible C1 rewrite</summary>
+        <div class="conf-reveal-body">
+          <p>Although sustainability is not directly connected to my professional responsibilities in education, I believe the conference could nevertheless offer valuable insights, particularly given the role education can play in encouraging lasting changes in behaviour.</p>
+          <p class="conf-focus"><strong>Language focus:</strong> Concession (although, nevertheless), nominalisation, complex sentence structure.</p>
+        </div>
+      </details>
+    </div>
+
+    <div class="rewrite-card keep-together">
+      <h3>Example 3: Expressing interest in a session</h3>
+      <p style="margin: 0 0 6px 0; font-size: 13px; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; color: #64748b;">Simple version</p>
+      <div class="simple-box">
+        <p>I am interested in the session about the future of work. Many people are working differently now. Companies need to change. I want to know how they can do this.</p>
+      </div>
+      <div data-grammar-save-section="true" data-grammar-check-disabled="true">
+        <span data-grammar-input="conference-rewrite-3" data-grammar-input-type="textarea" data-grammar-textarea-rows="5" style="display: block; min-height: 110px;"></span>
+      </div>
+      <details class="conf-reveal">
+        <summary>Possible C1 rewrite</summary>
+        <div class="conf-reveal-body">
+          <p>The session on the future of work particularly appeals to me, as the changing nature of employment is compelling organisations to rethink how they operate and support their employees. I would be interested to explore how businesses can adapt to these developments effectively.</p>
+          <p class="conf-focus"><strong>Language focus:</strong> Appeal to, the changing nature of, compel, embedded questions, avoiding basic repetition.</p>
+        </div>
+      </details>
+    </div>
+
+    <div class="rewrite-card keep-together">
+      <h3>Example 4: Expressing a contrasting viewpoint</h3>
+      <p style="margin: 0 0 6px 0; font-size: 13px; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; color: #64748b;">Simple version</p>
+      <div class="simple-box">
+        <p>I think economic growth is important. However, it can damage the environment. Some people think we must choose one or the other. I do not agree with this.</p>
+      </div>
+      <div data-grammar-save-section="true" data-grammar-check-disabled="true">
+        <span data-grammar-input="conference-rewrite-4" data-grammar-input-type="textarea" data-grammar-textarea-rows="5" style="display: block; min-height: 110px;"></span>
+      </div>
+      <details class="conf-reveal">
+        <summary>Possible C1 rewrite</summary>
+        <div class="conf-reveal-body">
+          <p>While economic growth remains essential to many societies, it can come at a considerable environmental cost. However, I am not convinced that economic prosperity and environmental responsibility are necessarily mutually exclusive.</p>
+          <p class="conf-focus"><strong>Language focus:</strong> Concession, hedging, sophisticated contrast, mutually exclusive.</p>
+        </div>
+      </details>
+    </div>
+
+    <div class="rewrite-card keep-together">
+      <h3>Example 5: Discussing practical challenges</h3>
+      <p style="margin: 0 0 6px 0; font-size: 13px; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; color: #64748b;">Simple version</p>
+      <div class="simple-box">
+        <p>Many organisations say they want to be more sustainable. They make promises. However, they do not always do what they promise. This is a problem.</p>
+      </div>
+      <div data-grammar-save-section="true" data-grammar-check-disabled="true">
+        <span data-grammar-input="conference-rewrite-5" data-grammar-input-type="textarea" data-grammar-textarea-rows="5" style="display: block; min-height: 110px;"></span>
+      </div>
+      <details class="conf-reveal">
+        <summary>Possible C1 rewrite</summary>
+        <div class="conf-reveal-body">
+          <p>Although many organisations publicly commit to becoming more sustainable, there is often a considerable gap between their stated ambitions and their actual implementation. Bridging this gap remains one of the key challenges facing businesses today.</p>
+          <p class="conf-focus"><strong>Language focus:</strong> Commit to, stated ambitions, implementation, bridging the gap, nominalisation.</p>
+        </div>
+      </details>
+    </div>
+
+    <div class="rewrite-card keep-together" style="margin-bottom: 0;">
+      <h3>Example 6: Anticipating the outcome</h3>
+      <p style="margin: 0 0 6px 0; font-size: 13px; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; color: #64748b;">Simple version</p>
+      <div class="simple-box">
+        <p>I hope the conference will give me some useful ideas. I want to learn about things I can use at work. I also want to meet people from other sectors. They may have different ideas.</p>
+      </div>
+      <div data-grammar-save-section="true" data-grammar-check-disabled="true">
+        <span data-grammar-input="conference-rewrite-6" data-grammar-input-type="textarea" data-grammar-textarea-rows="5" style="display: block; min-height: 110px;"></span>
+      </div>
+      <details class="conf-reveal">
+        <summary>Possible C1 rewrite</summary>
+        <div class="conf-reveal-body">
+          <p>I hope the conference will provide not only practical ideas that could be applied in my own professional context, but also an opportunity to exchange perspectives with people from other sectors, whose experiences may offer valuable and unexpected insights.</p>
+          <p class="conf-focus"><strong>Language focus:</strong> Not only&hellip; but also, relative clauses, exchange perspectives, professional context, unexpected insights.</p>
+        </div>
+      </details>
+    </div>
+  </div>
+
+</div>
