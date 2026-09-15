@@ -17,9 +17,12 @@
     .keep-together { page-break-inside: avoid; break-inside: avoid; }
     h2, h3 { page-break-after: avoid; break-after: avoid; }
     .screen-only { display: none !important; }
+    .print-only { display: block !important; }
     .conf-reveal summary { display: none; }
     .conf-reveal > *:not(summary) { display: block !important; }
   }
+
+  .print-only { display: none; }
 
   .conf-section {
     margin-bottom: 24px;
@@ -102,6 +105,232 @@
 
   .conf-report p:last-child {
     margin-bottom: 0;
+  }
+
+  .conf-sent-layout {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .conf-sent-sidebar {
+    order: -1;
+    position: sticky;
+    top: 8px;
+    z-index: 6;
+    max-height: min(42vh, 360px);
+    overflow: auto;
+    padding: 12px;
+    background: #f0fdfa;
+    border: 1px solid #99f6e4;
+    border-radius: 10px;
+    box-shadow: 0 8px 22px rgba(15, 118, 110, 0.1);
+  }
+
+  .conf-blog {
+    margin: 0;
+    padding: 18px 20px;
+    background: #fffdf8;
+    border: 1px solid #d6c7a1;
+    border-radius: 10px;
+    font-size: 16px;
+    line-height: 1.7;
+    color: #1f2937;
+  }
+
+  @media (min-width: 860px) {
+    .conf-sent-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1.2fr) minmax(280px, 0.95fr);
+      gap: 16px;
+      align-items: start;
+    }
+
+    .conf-sent-sidebar {
+      order: 0;
+      grid-column: 2;
+      grid-row: 1;
+      top: 12px;
+      max-height: calc(100dvh - 32px);
+    }
+
+    .conf-blog {
+      grid-column: 1;
+      grid-row: 1;
+    }
+  }
+
+  .conf-blog p {
+    margin: 0 0 12px 0;
+  }
+
+  .conf-blog p:last-child {
+    margin-bottom: 0;
+  }
+
+  .conf-sent-slot {
+    margin: 0 0 12px 0;
+  }
+
+  .conf-sent-drop {
+    min-height: 72px;
+    border: 2px dashed #94a3b8;
+    border-radius: 8px;
+    background: #f8fafc;
+    padding: 8px;
+    display: flex;
+    align-items: stretch;
+  }
+
+  .conf-sent-drop:empty::after {
+    content: attr(data-drop-label);
+    margin: auto;
+    color: #94a3b8;
+    font-size: 13px;
+    font-weight: 600;
+  }
+
+  .conf-sent-drop.is-over {
+    border-color: #0f766e;
+    background: rgba(15, 118, 110, 0.08);
+  }
+
+  .conf-sent-drop:not(:empty) {
+    border-style: solid;
+    border-color: #99f6e4;
+    background: #ffffff;
+  }
+
+  .conf-sent-drop.is-correct { border-color: #22c55e; }
+  .conf-sent-drop.is-wrong { border-color: #f87171; }
+
+  .conf-sent-bank-title {
+    margin: 0 0 8px 0;
+    font-size: 15px;
+    font-weight: 700;
+    color: #115e59;
+  }
+
+  [data-paragraph-bank] {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    min-height: 48px;
+    margin: 0 0 12px 0;
+    border-radius: 8px;
+  }
+
+  [data-paragraph-bank].is-over {
+    outline: 2px dashed #0f766e;
+    outline-offset: 4px;
+  }
+
+  .conf-sent-card {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    margin: 0;
+    padding: 10px 12px;
+    background: #ffffff;
+    border: 2px solid #99f6e4;
+    border-radius: 8px;
+    cursor: grab;
+    user-select: none;
+    touch-action: none;
+    width: 100%;
+  }
+
+  .conf-sent-card:active { cursor: grabbing; }
+  .conf-sent-card.is-dragging { opacity: 0.55; box-shadow: 0 4px 14px rgba(15, 118, 110, 0.18); }
+  .conf-sent-card.is-selected { border-color: #0f766e; box-shadow: 0 0 0 3px rgba(15, 118, 110, 0.25); }
+  .conf-sent-card.is-correct { border-color: #22c55e; background: #f0fdf4; }
+  .conf-sent-card.is-wrong { border-color: #f87171; background: #fef2f2; }
+  .conf-sent-card:focus { outline: 2px solid #14b8a6; outline-offset: 2px; }
+
+  .conf-sent-letter {
+    flex: 0 0 auto;
+    min-width: 1.75rem;
+    height: 1.75rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 999px;
+    background: #0f766e;
+    color: #ffffff;
+    font-weight: 700;
+    font-size: 14px;
+  }
+
+  .conf-sent-text {
+    flex: 1;
+    min-width: 0;
+    font-size: 14px;
+    line-height: 1.45;
+    color: #1f2937;
+  }
+
+  .conf-reorder-toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    align-items: center;
+  }
+
+  .conf-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 16px;
+    border: none;
+    border-radius: 8px;
+    background: linear-gradient(135deg, #0f766e 0%, #14b8a6 100%);
+    color: #ffffff;
+    font-size: 14px;
+    font-weight: 600;
+    font-family: Arial, sans-serif;
+    cursor: pointer;
+    box-shadow: 0 2px 6px rgba(15, 118, 110, 0.28);
+  }
+
+  .conf-btn:hover { filter: brightness(1.05); }
+
+  .conf-btn-secondary {
+    background: #ffffff;
+    color: #0f766e;
+    border: 2px solid #0f766e;
+    box-shadow: none;
+  }
+
+  .conf-print-sentences {
+    margin: 0;
+    padding-left: 28px;
+    font-size: 15px;
+    line-height: 1.55;
+    color: #1f2937;
+    list-style-type: upper-alpha !important;
+    list-style-position: outside !important;
+  }
+
+  .conf-print-sentences li {
+    margin-bottom: 8px;
+    display: list-item !important;
+    list-style-type: upper-alpha !important;
+  }
+
+  .conf-writing-actions .grammar-save-controls,
+  .conf-writing-actions .grammar-action-button-group {
+    display: flex !important;
+    flex-direction: row !important;
+    flex-wrap: nowrap !important;
+    align-items: center !important;
+    gap: 8px !important;
+  }
+
+  .conf-writing-actions .grammar-save-controls button {
+    display: inline-flex !important;
+    width: auto !important;
+    flex: 0 0 auto !important;
+    white-space: nowrap !important;
   }
 
   .conf-note-grid {
@@ -318,7 +547,7 @@
   </div>
 
   <div class="conf-section keep-together" data-bookmarkable="listening" data-bookmark-label="Listening: An Upcoming Conference" data-grammar-check-disabled="true">
-    <h2>1. Listening: An Upcoming Conference</h2>
+    <h2>Listening: An Upcoming Conference</h2>
     <p style="margin: 0 0 14px 0; font-size: 16px;">Listen to the description of an upcoming conference. As you listen, make a note of the most important points.</p>
 
     <div class="conf-audio-wrap screen-only">
@@ -346,7 +575,7 @@
   </div>
 
   <div class="conf-section" data-bookmarkable="reading" data-bookmark-label="Reading: The Conference Programme">
-    <h2>2. Reading: The Conference Programme</h2>
+    <h2>Reading: The Conference Programme</h2>
     <p style="margin: 0 0 10px 0; font-size: 16px;">Look at the programme below. Which sessions would interest you most, and why?</p>
     <p style="margin: 0 0 8px 0; font-size: 16px;">Try to explain your choices in some detail. You could consider:</p>
     <ul style="margin: 0 0 8px 0; padding-left: 24px; font-size: 16px; list-style-type: disc; list-style-position: outside;">
@@ -531,8 +760,8 @@
     </div>
   </div>
 
-  <div class="conf-section" data-bookmarkable="vocab-grammar" data-bookmark-label="Vocabulary / Grammar" data-grammar-per-section-check="true" data-grammar-save-section="true" data-grammar-check-snapshot="conf-vocab">
-    <h2>Vocabulary / Grammar</h2>
+  <div class="conf-section" data-bookmarkable="vocab-grammar" data-bookmark-label="Vocabulary / Grammar: Conference Notes" data-grammar-per-section-check="true" data-grammar-save-section="true" data-grammar-check-snapshot="conf-vocab">
+    <h2>Vocabulary / Grammar: Conference Notes</h2>
     <p style="margin: 0 0 14px 0; font-size: 16px;">Read the report of a conference presentation. For each gap, select the word or phrase that best completes the sentence. Pay close attention to grammar, collocation and meaning.</p>
 
     <div class="conf-report">
@@ -542,6 +771,102 @@
       <p>Another issue raised was the danger of treating sustainability as a series of isolated initiatives. Installing energy-efficient lighting, reducing paper consumption or introducing recycling schemes may all be worthwhile, but such measures will have limited impact if they are not part of a <span class="conf-gap"><span class="conf-gap-num">(7)</span><span data-grammar-input="conf-vocab-7" data-grammar-input-type="select" data-grammar-input-options="comprehensively|comprehension|comprehensive|comprehend" data-correct="comprehensive" style="display: inline-block; min-width: 168px; max-width: 100%; vertical-align: middle;"></span></span> strategy. The speaker encouraged organisations to consider how their purchasing decisions, supply chains, workplace policies and long-term investments interact.</p>
       <p>Finally, the presentation addressed the question of accountability. Organisations should be prepared to acknowledge when an initiative has not produced the expected results, rather than attempting to conceal its shortcomings. In the speaker&apos;s view, a willingness to <span class="conf-gap"><span class="conf-gap-num">(8)</span><span data-grammar-input="conf-vocab-8" data-grammar-input-type="select" data-grammar-input-options="acknowledgement|acknowledging|acknowledge|acknowledged" data-correct="acknowledge" style="display: inline-block; min-width: 168px; max-width: 100%; vertical-align: middle;"></span></span> unsuccessful approaches is not a sign of weakness, but an essential part of meaningful progress.</p>
       <p>The overall message was both challenging and constructive: genuine sustainability requires more than good intentions. It demands <span class="conf-gap"><span class="conf-gap-num">(9)</span><span data-grammar-input="conf-vocab-9" data-grammar-input-type="select" data-grammar-input-options="sustain|sustaining|sustainability|sustained" data-correct="sustained" style="display: inline-block; min-width: 168px; max-width: 100%; vertical-align: middle;"></span></span> commitment, effective coordination and a willingness to reconsider established practices. As the speaker concluded, progress is unlikely to be achieved through isolated gestures; it depends on whether organisations are prepared to translate their stated ambitions <span class="conf-gap"><span class="conf-gap-num">(10)</span><span data-grammar-input="conf-vocab-10" data-grammar-input-type="select" data-grammar-input-options="onto|within|into|beneath" data-correct="into" style="display: inline-block; min-width: 168px; max-width: 100%; vertical-align: middle;"></span></span> action.</p>
+    </div>
+  </div>
+
+  <div class="conf-section" data-bookmarkable="reading-glasgow" data-bookmark-label="Reading: Visiting Glasgow">
+    <h2>Reading: Visiting Glasgow</h2>
+    <p style="margin: 0 0 10px 0; font-size: 16px;">Read the blog post about a conference delegate&apos;s experience of visiting Glasgow. Drag and drop the missing sentences to complete the text.</p>
+    <p class="screen-only" style="margin: 0 0 14px 0; font-size: 15px; color: #64748b;">Drag a sentence into each numbered gap, or tap a sentence and then tap a gap. Click <strong>Check answers</strong> when you are ready.</p>
+    <p class="print-only" style="margin: 0 0 14px 0; font-size: 15px; color: #64748b;">The missing sentences are labelled A to F. Write the correct letter in each numbered gap.</p>
+
+    <div class="not-prose conf-sent-layout" data-paragraph-reorder data-reorder-unit="sentence" data-correct-order="E|B|A|D|C|F">
+      <div class="conf-blog">
+        <p>I recently travelled to Glasgow to attend a professional conference, which occupied most of my time but also gave me an excellent excuse to explore a city I had never visited before. Having spent several days moving between presentations, workshops and networking events, I was keen to make the most of the limited free time I had available.</p>
+        <div class="conf-sent-slot">
+          <div class="conf-sent-drop" data-paragraph-drop="1" data-drop-label="1 &mdash; Drop sentence here"></div>
+        </div>
+        <p>My first impressions were shaped by the city&apos;s striking architecture. Glasgow has an extraordinary collection of Victorian and Edwardian buildings, many of which reflect the wealth and ambition of the city during the height of the Industrial Revolution. Yet alongside these imposing landmarks, there is a distinctly contemporary atmosphere, with independent caf&eacute;s, galleries and creative spaces giving the city a more modern character.</p>
+        <div class="conf-sent-slot">
+          <div class="conf-sent-drop" data-paragraph-drop="2" data-drop-label="2 &mdash; Drop sentence here"></div>
+        </div>
+        <p>One afternoon, I walked through the city centre towards the River Clyde, which has played such an important role in Glasgow&apos;s industrial history. The riverfront has changed considerably over the years, and it was interesting to see how former industrial areas have been transformed and incorporated into the modern city.</p>
+        <div class="conf-sent-slot">
+          <div class="conf-sent-drop" data-paragraph-drop="3" data-drop-label="3 &mdash; Drop sentence here"></div>
+        </div>
+        <p>I also managed to visit Kelvingrove Art Gallery and Museum, one of Glasgow&apos;s best-known cultural attractions. The building itself is impressive, but what particularly appealed to me was the breadth of the collection, which ranges from fine art to natural history and historical objects. It was the kind of place where I could easily have spent an entire day had my conference schedule allowed it.</p>
+        <div class="conf-sent-slot">
+          <div class="conf-sent-drop" data-paragraph-drop="4" data-drop-label="4 &mdash; Drop sentence here"></div>
+        </div>
+        <p>Another highlight was Glasgow Cathedral and the surrounding area, which offered a very different perspective on the city. Walking through the older streets nearby, it was possible to get a sense of Glasgow&apos;s much longer history and to appreciate how dramatically the city has evolved over the centuries.</p>
+        <div class="conf-sent-slot">
+          <div class="conf-sent-drop" data-paragraph-drop="5" data-drop-label="5 &mdash; Drop sentence here"></div>
+        </div>
+        <p>Naturally, I was also determined to explore the local food scene. I finally tried haggis, having always been curious about this quintessentially Scottish dish, and was pleasantly surprised by it. Glasgow also has a remarkably diverse range of restaurants, reflecting the city&apos;s multicultural population, so there was considerably more to discover than traditional Scottish cuisine.</p>
+        <div class="conf-sent-slot">
+          <div class="conf-sent-drop" data-paragraph-drop="6" data-drop-label="6 &mdash; Drop sentence here"></div>
+        </div>
+        <p>What struck me throughout my stay was the contrast between Glasgow&apos;s industrial past and its contemporary cultural identity. The city feels substantial and historic without seeming stuck in the past, and there is an unmistakable sense of creativity and energy in its streets. Despite arriving primarily for work, I found myself wishing I had arranged a few extra days to explore further.</p>
+        <p>All in all, the conference was both professionally worthwhile and an unexpectedly enjoyable opportunity to discover Glasgow. I left with new ideas, useful professional contacts and a much better understanding of a city that had previously been little more than a name on a map. Sometimes, the most rewarding business trips are the ones that leave you wanting to come back.</p>
+      </div>
+
+      <aside class="conf-sent-sidebar screen-only">
+      <p class="conf-sent-bank-title">Sentences to insert</p>
+      <div data-paragraph-bank>
+        <div class="conf-sent-card" data-paragraph-id="C" tabindex="0">
+          <span class="conf-sent-letter">C</span>
+          <span class="conf-sent-text">For me, this combination of historical depth and modern vitality became one of the defining characteristics of Glasgow.</span>
+        </div>
+        <div class="conf-sent-card" data-paragraph-id="A" tabindex="0">
+          <span class="conf-sent-letter">A</span>
+          <span class="conf-sent-text">The experience reminded me that even a short break from a busy professional schedule can reveal aspects of a destination that would otherwise be easy to overlook.</span>
+        </div>
+        <div class="conf-sent-card" data-paragraph-id="F" tabindex="0">
+          <span class="conf-sent-letter">F</span>
+          <span class="conf-sent-text">By the end of the trip, I had become increasingly aware that I had experienced only a small fraction of what Glasgow has to offer.</span>
+        </div>
+        <div class="conf-sent-card" data-paragraph-id="D" tabindex="0">
+          <span class="conf-sent-letter">D</span>
+          <span class="conf-sent-text">The visit was also a useful reminder that the city&apos;s history cannot be understood solely through its industrial heritage.</span>
+        </div>
+        <div class="conf-sent-card" data-paragraph-id="B" tabindex="0">
+          <span class="conf-sent-letter">B</span>
+          <span class="conf-sent-text">This was particularly noticeable in the area around the Clyde, where reminders of the city&apos;s shipbuilding heritage sit alongside much more recent developments.</span>
+        </div>
+        <div class="conf-sent-card" data-paragraph-id="E" tabindex="0">
+          <span class="conf-sent-letter">E</span>
+          <span class="conf-sent-text">Given that I had come to Glasgow partly to broaden my professional horizons, I was interested to find that the city offered plenty of opportunities for cultural discovery as well.</span>
+        </div>
+      </div>
+
+      <div class="conf-reorder-toolbar">
+        <button type="button" class="conf-btn" data-reorder-check>Check answers</button>
+        <button type="button" class="conf-btn conf-btn-secondary" data-reorder-reset>Reset</button>
+        <p data-reorder-feedback role="status" style="margin: 0; font-size: 14px; font-weight: 600; min-height: 22px; color: #0f766e;"></p>
+      </div>
+      </aside>
+
+      <div class="print-only">
+        <p class="conf-sent-bank-title">Sentences to insert</p>
+        <ol class="conf-print-sentences" type="A">
+          <li>The experience reminded me that even a short break from a busy professional schedule can reveal aspects of a destination that would otherwise be easy to overlook.</li>
+          <li>This was particularly noticeable in the area around the Clyde, where reminders of the city&apos;s shipbuilding heritage sit alongside much more recent developments.</li>
+          <li>For me, this combination of historical depth and modern vitality became one of the defining characteristics of Glasgow.</li>
+          <li>The visit was also a useful reminder that the city&apos;s history cannot be understood solely through its industrial heritage.</li>
+          <li>Given that I had come to Glasgow partly to broaden my professional horizons, I was interested to find that the city offered plenty of opportunities for cultural discovery as well.</li>
+          <li>By the end of the trip, I had become increasingly aware that I had experienced only a small fraction of what Glasgow has to offer.</li>
+        </ol>
+      </div>
+    </div>
+  </div>
+
+  <div class="conf-section keep-together" data-bookmarkable="writing-favourite-city" data-bookmark-label="Writing #2: My Favourite City" data-grammar-check-disabled="true">
+    <h2>Writing #2: My Favourite City</h2>
+    <p style="margin: 0 0 10px 0; font-size: 16px;">Write about a city you particularly enjoy visiting or living in. You may wish to describe its atmosphere, architecture, culture or food, and explain what makes it distinctive for you.</p>
+    <p style="margin: 0 0 16px 0; font-size: 16px;">Try to write a well-developed text, using a range of precise vocabulary and varied sentence structures.</p>
+    <div class="conf-writing-actions not-prose" data-grammar-save-section="true" data-grammar-check-disabled="true" data-writing-task-submit data-writing-submit-title="Writing #2: My Favourite City" data-writing-submit-input="conference-favourite-city" data-writing-submit-empty="Please write your text before submitting.">
+      <span data-grammar-input="conference-favourite-city" data-grammar-input-type="textarea" data-grammar-textarea-rows="16" style="display: block; min-height: 280px;"></span>
+      <div class="screen-only" data-writing-word-count-for="conference-favourite-city" style="margin-top: 8px; font-size: 13px; color: #64748b;">0 words</div>
     </div>
   </div>
 

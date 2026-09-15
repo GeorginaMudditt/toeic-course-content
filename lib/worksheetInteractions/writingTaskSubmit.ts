@@ -123,7 +123,9 @@ export function mountWritingTaskSubmit(
     const parts = inputIds.map((id) => readInputText(worksheetRoot, id))
     const text = parts.filter(Boolean).join('\n\n').trim()
     if (!text) {
-      status.textContent = 'Please write your reference before submitting.'
+      status.textContent =
+        host.getAttribute('data-writing-submit-empty')?.trim() ||
+        'Please write your text before submitting.'
       status.style.color = '#dc2626'
       return
     }
@@ -147,7 +149,7 @@ export function mountWritingTaskSubmit(
     if (warnings.length > 0) {
       const ok = window.confirm(`${warnings.join('\n\n')}\n\nSubmit anyway?`)
       if (!ok) {
-        status.textContent = 'Submission cancelled — you can edit your reference and try again.'
+        status.textContent = 'Submission cancelled — you can edit your text and try again.'
         status.style.color = '#64748b'
         return
       }

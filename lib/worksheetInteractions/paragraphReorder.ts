@@ -32,6 +32,22 @@ function parseCorrectOrder(root: HTMLElement): string[] {
     .filter(Boolean)
 }
 
+function reorderCopy(root: HTMLElement): { one: string; many: string; allCorrect: (total: number) => string } {
+  const unit = (root.getAttribute('data-reorder-unit') || 'paragraph').trim()
+  if (unit === 'sentence') {
+    return {
+      one: 'sentence',
+      many: 'sentences',
+      allCorrect: (total) => `Excellent — all ${total} sentences are in the correct place.`,
+    }
+  }
+  return {
+    one: 'paragraph',
+    many: 'paragraphs',
+    allCorrect: (total) => `Excellent — all ${total} paragraphs are in the correct order.`,
+  }
+}
+
 function cardInDrop(drop: HTMLElement): HTMLElement | null {
   return (drop.querySelector('[data-paragraph-id]') as HTMLElement | null)
 }
@@ -145,14 +161,15 @@ export function mountParagraphReorder(root: HTMLElement): Cleanup {
       }
     })
 
+    const copy = reorderCopy(root)
     if (placed < total) {
-      feedback.textContent = `Place every paragraph first — ${placed} / ${total} placed, ${correctCount} in the right position so far.`
+      feedback.textContent = `Place every ${copy.one} first — ${placed} / ${total} placed, ${correctCount} in the right position so far.`
       feedback.style.color = '#92400e'
     } else if (correctCount === total) {
-      feedback.textContent = `Excellent — all ${total} paragraphs are in the correct order.`
+      feedback.textContent = copy.allCorrect(total)
       feedback.style.color = '#15803d'
     } else {
-      feedback.textContent = `${correctCount} / ${total} paragraphs are in the right position. Green is correct; try moving the red ones.`
+      feedback.textContent = `${correctCount} / ${total} ${copy.many} are in the right position. Green is correct; try moving the red ones.`
       feedback.style.color = '#92400e'
     }
   }
