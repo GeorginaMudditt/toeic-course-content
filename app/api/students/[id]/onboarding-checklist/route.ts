@@ -5,6 +5,7 @@ import { supabaseServer } from '@/lib/supabase'
 import { randomUUID } from 'crypto'
 import {
   getChecklistItemDefinition,
+  isDocumentLinkedChecklistType,
   isDualDocumentOrNaType,
   isValidOnboardingChecklistSlug,
   isValidOnboardingChecklistStatus,
@@ -279,7 +280,7 @@ export async function PATCH(
       status === 'NOT_APPLICABLE' &&
       itemDefinition &&
       (isDualDocumentOrNaType(itemDefinition.type) ||
-        itemDefinition.type === 'language-assessment')
+        isDocumentLinkedChecklistType(itemDefinition.type))
     ) {
       await deleteChecklistLinkedDocuments(params.id, itemSlug)
     }

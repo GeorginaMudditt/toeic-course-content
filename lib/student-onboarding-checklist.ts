@@ -279,6 +279,7 @@ export const STUDENT_ONBOARDING_CHECKLIST_ITEMS: OnboardingChecklistItemDefiniti
     type: 'convention-contract',
     documentTitle: 'End-of-course assessment against objectives',
     allowedMimeTypes: ['application/pdf'],
+    allowNotApplicable: true,
   },
   {
     slug: 'book-toeic-exam',
@@ -292,6 +293,7 @@ export const STUDENT_ONBOARDING_CHECKLIST_ITEMS: OnboardingChecklistItemDefiniti
     type: 'convention-contract',
     documentTitle: 'End-of-course certificate',
     allowedMimeTypes: ['application/pdf'],
+    allowNotApplicable: true,
   },
   {
     slug: 'log-nda-bpf-activity',

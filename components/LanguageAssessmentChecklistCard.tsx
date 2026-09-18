@@ -100,7 +100,7 @@ export default function LanguageAssessmentChecklistCard({
   const templateVariants = listOnboardingTemplateVariants(item.slug)
   const workflowSection = getWorkflowSectionCopy(item)
   const showCertificateOption = item.type === 'language-assessment'
-  const showNotApplicable = item.type === 'language-assessment' && item.allowNotApplicable !== false
+  const showNotApplicable = item.allowNotApplicable === true
   const signedUploadLabel =
     item.type === 'convention-contract' ? 'Upload signed document' : 'Upload signed form'
 
