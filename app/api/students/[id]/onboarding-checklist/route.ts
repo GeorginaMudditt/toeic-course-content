@@ -278,7 +278,8 @@ export async function PATCH(
     if (
       status === 'NOT_APPLICABLE' &&
       itemDefinition &&
-      isDualDocumentOrNaType(itemDefinition.type)
+      (isDualDocumentOrNaType(itemDefinition.type) ||
+        itemDefinition.type === 'language-assessment')
     ) {
       await deleteChecklistLinkedDocuments(params.id, itemSlug)
     }

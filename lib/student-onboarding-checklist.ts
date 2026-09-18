@@ -200,6 +200,7 @@ export const STUDENT_ONBOARDING_CHECKLIST_ITEMS: OnboardingChecklistItemDefiniti
     type: 'language-assessment',
     documentTitle: 'Language Assessment',
     allowedMimeTypes: ['application/pdf', 'image/png', 'image/jpeg', 'image/jpg'],
+    allowNotApplicable: true,
   },
   {
     slug: 'student-support-adaptations',
@@ -437,6 +438,7 @@ export function mergeChecklistWithRecords(
     const linkedDocument = linkedDocuments.get(item.slug) ?? null
 
     if (isDocumentLinkedChecklistType(item.type)) {
+      const isNotApplicable = record?.status === 'NOT_APPLICABLE'
       const uploaded = linkedDocument !== null
       const workflowState = usesChecklistWorkflowState(item.type)
         ? parseTemplateWorkflowState(record?.workflowState)
@@ -444,11 +446,13 @@ export function mergeChecklistWithRecords(
 
       return {
         ...item,
-        status: uploaded ? 'COMPLETED' : 'PENDING',
+        status: uploaded ? 'COMPLETED' : isNotApplicable ? 'NOT_APPLICABLE' : 'PENDING',
         note: linkedDocument?.studentNote ?? null,
         fileName: linkedDocument?.fileName ?? null,
         fileUrl: linkedDocument?.fileUrl ?? null,
-        completedAt: linkedDocument?.createdAt ?? null,
+        completedAt: isNotApplicable
+          ? record?.completedAt ?? null
+          : linkedDocument?.createdAt ?? null,
         linkedDocument,
         linkedDocumentsBySlot: {},
         workflowState,
