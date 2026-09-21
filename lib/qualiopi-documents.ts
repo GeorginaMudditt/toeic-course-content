@@ -16,6 +16,11 @@ export interface QualiopiFolder {
   externalUrl?: string
 }
 
+export interface QualiopiResourceLink {
+  label: string
+  href: string
+}
+
 export interface QualiopiDocument {
   slug: string
   title: string
@@ -25,6 +30,8 @@ export interface QualiopiDocument {
   indicatorOrder?: number
   layout?: QualiopiDocumentLayout
   folders?: QualiopiFolder[]
+  resourceLinksIntro?: string
+  resourceLinks?: QualiopiResourceLink[]
 }
 
 export const qualiopiDocuments: QualiopiDocument[] = [
@@ -102,6 +109,22 @@ export const qualiopiDocuments: QualiopiDocument[] = [
         title: 'Resources from CPD webinars',
         description: 'Upload and browse resources from CPD webinars.',
         type: 'pdf-folder',
+      },
+    ],
+    resourceLinksIntro:
+      'Each time you complete the tracker, check these websites for relevant professional updates:',
+    resourceLinks: [
+      {
+        label: 'Mon Compte Formation',
+        href: 'https://financeurs.moncompteformation.gouv.fr/espace-public/accueil?field_thematique_target_id=All',
+      },
+      {
+        label: 'Ministère du Travail',
+        href: 'https://travail-emploi.gouv.fr/le-compte-personnel-de-formation-cpf',
+      },
+      {
+        label: 'Légifrance',
+        href: 'https://www.legifrance.gouv.fr/',
       },
     ],
   },
