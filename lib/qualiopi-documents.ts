@@ -88,6 +88,22 @@ export const qualiopiDocuments: QualiopiDocument[] = [
     spreadsheetId: '1Dr9b-rJdlhtX5DoeGleq6mTtPWGup6G9_2o_BfPq3j4',
     category: 'indicator',
     indicatorOrder: 22,
+    layout: 'hub',
+    folders: [
+      {
+        slug: 'cpd-tracker',
+        title: 'CPD tracker',
+        description: 'View and update the continual professional development spreadsheet.',
+        type: 'spreadsheet',
+        spreadsheetId: '1Dr9b-rJdlhtX5DoeGleq6mTtPWGup6G9_2o_BfPq3j4',
+      },
+      {
+        slug: 'webinar-resources',
+        title: 'Resources from CPD webinars',
+        description: 'Upload and browse resources from CPD webinars.',
+        type: 'pdf-folder',
+      },
+    ],
   },
   {
     slug: 'indicators-23-24-25',
