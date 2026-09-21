@@ -35,6 +35,8 @@ type Phrase = {
   tts_text?: string
   /** Calmer, less punchy delivery. */
   calm?: boolean
+  speed?: number
+  seed?: number
 }
 
 const PHRASES: ReadonlyArray<Phrase> = [
@@ -44,8 +46,10 @@ const PHRASES: ReadonlyArray<Phrase> = [
   {
     file: 'can-you-say-that-again-please.mp3',
     text: 'Can you say that again, please?',
-    tts_text: 'Can you say that again, please.',
+    tts_text: 'Can you say that again please.',
     calm: true,
+    speed: 0.85,
+    seed: 117,
   },
   {
     file: 'can-you-repeat-that-please.mp3',
@@ -75,6 +79,16 @@ const PHRASES: ReadonlyArray<Phrase> = [
   { file: 'im-learning-english-can-you-help-me.mp3', text: "I'm learning English. Can you help me?" },
   { file: 'english-is-not-my-first-language.mp3', text: 'English is not my first language.' },
   { file: 'can-you-give-me-an-example-please.mp3', text: 'Can you give me an example, please?' },
+  { file: 'thirteen.mp3', text: 'thirteen', tts_text: 'thirteen.', calm: true },
+  { file: 'fourteen.mp3', text: 'fourteen', tts_text: 'fourteen.', calm: true },
+  { file: 'fifteen.mp3', text: 'fifteen', tts_text: 'fifteen.', calm: true },
+  { file: 'sixteen.mp3', text: 'sixteen', tts_text: 'sixteen.', calm: true },
+  { file: 'nineteen.mp3', text: 'nineteen', tts_text: 'nineteen.', calm: true },
+  { file: 'thirty.mp3', text: 'thirty', tts_text: 'thirty.', calm: true },
+  { file: 'forty.mp3', text: 'forty', tts_text: 'forty.', calm: true },
+  { file: 'fifty.mp3', text: 'fifty', tts_text: 'fifty.', calm: true },
+  { file: 'sixty.mp3', text: 'sixty', tts_text: 'sixty.', calm: true },
+  { file: 'ninety.mp3', text: 'ninety', tts_text: 'ninety.', calm: true },
 ]
 
 function sleep(ms: number) {
@@ -117,7 +131,7 @@ async function generateSpeech(apiKey: string, item: Phrase, seed: number): Promi
           similarity_boost: 0.85,
           style: 0,
           use_speaker_boost: !item.calm,
-          speed: item.calm ? 0.72 : TTS_SPEED,
+          speed: item.speed ?? (item.calm ? 0.72 : TTS_SPEED),
         },
       }),
     }
@@ -177,7 +191,11 @@ async function main() {
     try {
       if (existsSync(cachePath)) unlinkSync(cachePath)
       console.log(`  generating: ${item.text}`)
-      const audioBuffer = await generateSpeech(apiKey!, item, TTS_SEED + (item.tts_text ?? item.text).length)
+      const audioBuffer = await generateSpeech(
+        apiKey!,
+        item,
+        item.seed ?? TTS_SEED + (item.tts_text ?? item.text).length
+      )
       writeFileSync(cachePath, audioBuffer)
       writeFileSync(outPath, audioBuffer)
       generated++
