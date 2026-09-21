@@ -154,6 +154,16 @@
     margin-bottom: 0;
   }
 
+  .sc-bullets {
+    list-style-type: disc !important;
+    list-style-position: outside !important;
+  }
+
+  .sc-bullets > li {
+    display: list-item !important;
+    list-style-type: disc !important;
+  }
+
   .sc-repeat {
     margin: 0;
     padding: 0;
@@ -336,6 +346,82 @@
     color: var(--sc-accent-dark);
   }
 
+  .sc-match-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 16px;
+    align-items: start;
+  }
+
+  @media (min-width: 700px) {
+    .sc-match-grid {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  .sc-match-col {
+    background: var(--sc-soft);
+    border: 1px solid var(--sc-border);
+    border-radius: 8px;
+    padding: 14px 16px;
+  }
+
+  .sc-match-col h3 {
+    margin: 0 0 10px 0;
+  }
+
+  .sc-verb-list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    counter-reset: sc-verb;
+    font-size: 16px;
+  }
+
+  .sc-verb-list > li {
+    counter-increment: sc-verb;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: baseline;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .sc-verb-list > li::before {
+    content: counter(sc-verb) ".";
+    flex: 0 0 auto;
+    min-width: 1.6em;
+    font-weight: 600;
+    color: var(--sc-accent);
+  }
+
+  .sc-verb-list > li:last-child {
+    margin-bottom: 0;
+  }
+
+  .sc-fr-list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    font-size: 16px;
+  }
+
+  .sc-fr-list > li {
+    display: grid;
+    grid-template-columns: 2.1em 1fr;
+    column-gap: 0.35em;
+    margin-bottom: 8px;
+  }
+
+  .sc-fr-list > li:last-child {
+    margin-bottom: 0;
+  }
+
+  .sc-fr-letter {
+    font-weight: 700;
+    color: var(--sc-accent);
+  }
+
   .sc-video,
   .sc-audio {
     width: 100%;
@@ -366,16 +452,59 @@
       It is more professional to stop and ask.
     </p>
     <h3 style="margin-top: 22px;">Warm-up: talk to your teacher</h3>
-    <ol class="sc-list">
+    <ul class="sc-list sc-bullets">
       <li>Do you sometimes say &ldquo;yes&rdquo; when you do not understand?</li>
       <li>Why do people do this?</li>
       <li>What can go wrong at work if you do not understand?</li>
       <li>Is it polite to say &ldquo;Sorry, I don&apos;t understand&rdquo; in English?</li>
-    </ol>
+    </ul>
+  </div>
+
+  <div class="sc-section" data-bookmarkable="vocabulary" data-bookmark-label="Vocabulary" data-grammar-per-section-check="true" data-grammar-save-section="true">
+    <h2>1. Vocabulary</h2>
+    <p class="sc-intro">Match each verb to the French translation. Write the letter in the box. Each letter is used once.</p>
+
+    <div class="sc-match-grid">
+      <div class="sc-match-col">
+        <h3>Verbs</h3>
+        <ol class="sc-verb-list">
+          <li>to understand — <span data-grammar-input="sc-vocab-1" data-grammar-input-type="input" data-correct="C" data-grammar-acceptable="C|c" style="display: inline-block; min-width: 52px; vertical-align: middle;"></span></li>
+          <li>to miss — <span data-grammar-input="sc-vocab-2" data-grammar-input-type="input" data-correct="F" data-grammar-acceptable="F|f" style="display: inline-block; min-width: 52px; vertical-align: middle;"></span></li>
+          <li>to mean — <span data-grammar-input="sc-vocab-3" data-grammar-input-type="input" data-correct="L" data-grammar-acceptable="L|l" style="display: inline-block; min-width: 52px; vertical-align: middle;"></span></li>
+          <li>to say — <span data-grammar-input="sc-vocab-4" data-grammar-input-type="input" data-correct="J" data-grammar-acceptable="J|j" style="display: inline-block; min-width: 52px; vertical-align: middle;"></span></li>
+          <li>to repeat — <span data-grammar-input="sc-vocab-5" data-grammar-input-type="input" data-correct="E" data-grammar-acceptable="E|e" style="display: inline-block; min-width: 52px; vertical-align: middle;"></span></li>
+          <li>to speak — <span data-grammar-input="sc-vocab-6" data-grammar-input-type="input" data-correct="B" data-grammar-acceptable="B|b" style="display: inline-block; min-width: 52px; vertical-align: middle;"></span></li>
+          <li>to learn — <span data-grammar-input="sc-vocab-7" data-grammar-input-type="input" data-correct="H" data-grammar-acceptable="H|h" style="display: inline-block; min-width: 52px; vertical-align: middle;"></span></li>
+          <li>to use — <span data-grammar-input="sc-vocab-8" data-grammar-input-type="input" data-correct="K" data-grammar-acceptable="K|k" style="display: inline-block; min-width: 52px; vertical-align: middle;"></span></li>
+          <li>to rephrase — <span data-grammar-input="sc-vocab-9" data-grammar-input-type="input" data-correct="G" data-grammar-acceptable="G|g" style="display: inline-block; min-width: 52px; vertical-align: middle;"></span></li>
+          <li>to write — <span data-grammar-input="sc-vocab-10" data-grammar-input-type="input" data-correct="I" data-grammar-acceptable="I|i" style="display: inline-block; min-width: 52px; vertical-align: middle;"></span></li>
+          <li>to spell — <span data-grammar-input="sc-vocab-11" data-grammar-input-type="input" data-correct="A" data-grammar-acceptable="A|a" style="display: inline-block; min-width: 52px; vertical-align: middle;"></span></li>
+          <li>to give — <span data-grammar-input="sc-vocab-12" data-grammar-input-type="input" data-correct="D" data-grammar-acceptable="D|d" style="display: inline-block; min-width: 52px; vertical-align: middle;"></span></li>
+        </ol>
+      </div>
+
+      <div class="sc-match-col">
+        <h3>French</h3>
+        <ul class="sc-fr-list">
+          <li><span class="sc-fr-letter">A.</span><span>épeler</span></li>
+          <li><span class="sc-fr-letter">B.</span><span>parler</span></li>
+          <li><span class="sc-fr-letter">C.</span><span>comprendre</span></li>
+          <li><span class="sc-fr-letter">D.</span><span>donner</span></li>
+          <li><span class="sc-fr-letter">E.</span><span>répéter</span></li>
+          <li><span class="sc-fr-letter">F.</span><span>rater / ne pas entendre</span></li>
+          <li><span class="sc-fr-letter">G.</span><span>reformuler</span></li>
+          <li><span class="sc-fr-letter">H.</span><span>apprendre</span></li>
+          <li><span class="sc-fr-letter">I.</span><span>écrire</span></li>
+          <li><span class="sc-fr-letter">J.</span><span>dire</span></li>
+          <li><span class="sc-fr-letter">K.</span><span>utiliser</span></li>
+          <li><span class="sc-fr-letter">L.</span><span>vouloir dire</span></li>
+        </ul>
+      </div>
+    </div>
   </div>
 
   <div class="sc-section" data-bookmarkable="phrases" data-bookmark-label="Useful phrases">
-    <h2>1. Useful phrases</h2>
+    <h2>2. Useful phrases</h2>
     <p class="sc-intro">Read the phrases. Then listen and say them.</p>
 
     <div class="sc-phrase-grid">
@@ -440,12 +569,6 @@
             <div class="sc-phrase-row">
               <span>Could you speak more slowly, please?</span>
               <audio class="sc-phrase-audio" controls preload="none" src="/audio/speaking-communication/could-you-speak-more-slowly-please.mp3">Your browser does not support audio playback.</audio>
-            </div>
-          </li>
-          <li>
-            <div class="sc-phrase-row">
-              <span>One moment, please. A little slower?</span>
-              <audio class="sc-phrase-audio" controls preload="none" src="/audio/speaking-communication/one-moment-please-a-little-slower.mp3">Your browser does not support audio playback.</audio>
             </div>
           </li>
         </ul>
@@ -526,7 +649,7 @@
   </div>
 
   <div class="sc-section keep-together">
-    <h2>2. Repeat after your teacher</h2>
+    <h2>3. Repeat after your teacher</h2>
     <p class="sc-intro">Listen. Then say each sentence. Speak clearly. Do not rush.</p>
     <ol class="sc-repeat">
       <li>Sorry, I don&apos;t understand.</li>
@@ -541,7 +664,7 @@
   </div>
 
   <div class="sc-section" data-bookmarkable="choose" data-bookmark-label="What do you say?" data-grammar-per-section-check="true" data-grammar-save-section="true">
-    <h2>3. What do you say?</h2>
+    <h2>4. What do you say?</h2>
     <p class="sc-intro">Choose the best phrase for each situation.</p>
 
     <div class="sc-item">
@@ -579,7 +702,7 @@
   </div>
 
   <div class="sc-section" data-bookmarkable="dialogues" data-bookmark-label="Complete the conversation" data-grammar-per-section-check="true" data-grammar-save-section="true">
-    <h2>4. Complete the conversation</h2>
+    <h2>5. Complete the conversation</h2>
     <p class="sc-intro">Choose the missing line. Then practise the conversations with a partner.</p>
 
     <div class="sc-dialogue">
@@ -614,7 +737,7 @@
 
 <div class="sc-wrap page-break">
   <div class="sc-section">
-    <h2>5. Speak: role plays</h2>
+    <h2>6. Speak: role plays</h2>
     <p class="sc-intro">Work with a partner. Student A starts. Student B uses the phrases from section 1. Then change roles.</p>
 
     <h3>Role play 1 &mdash; Too fast</h3>
@@ -671,7 +794,7 @@
   </div>
 
   <div class="sc-section" data-bookmarkable="letters" data-bookmark-label="Letters, names and emails">
-    <h2>6. Letters, names and emails</h2>
+    <h2>7. Letters, names and emails</h2>
     <p class="sc-intro">At work you often need to spell your name, a surname, or an email. Say the letters clearly.</p>
 
     <h3>The alphabet</h3>
@@ -718,7 +841,7 @@
   </div>
 
   <div class="sc-section" data-bookmarkable="numbers" data-bookmark-label="Numbers and times" data-grammar-per-section-check="true" data-grammar-save-section="true">
-    <h2>7. Numbers and times</h2>
+    <h2>8. Numbers and times</h2>
     <p class="sc-intro">These pairs are easy to mix up. Say both numbers. Make the ending clear: <em>thir<strong>teen</strong></em> / <em>thir<strong>ty</strong></em>.</p>
 
     <table class="sc-table no-break">
@@ -797,7 +920,7 @@
         style="width: 100%; height: auto; display: block;"
       />
     </div>
-    <p class="sc-intro">Say these times. Then ask your partner: &ldquo;What time is the meeting?&rdquo; If you do not understand, use a phrase from section 1.</p>
+    <p class="sc-intro">Say these times. Then ask your partner: &ldquo;What time is the meeting?&rdquo; If you do not understand, use a phrase from Useful phrases.</p>
     <div class="sc-practice-grid">
       <div class="sc-chip">9.00</div>
       <div class="sc-chip">9.15</div>
@@ -810,7 +933,7 @@
   </div>
 
   <div class="sc-section keep-together">
-    <h2>8. At work: your turn</h2>
+    <h2>9. At work: your turn</h2>
     <p class="sc-intro">Your teacher (or partner) gives you information too fast. Stop them. Get the information. You can ask as many times as you need.</p>
     <ol class="sc-list">
       <li>A name and an email</li>
@@ -825,7 +948,10 @@
 
   <div class="sc-section sc-key">
     <h2>Answer key</h2>
-    <h3>3. What do you say?</h3>
+    <h3>1. Vocabulary</h3>
+    <p>1C &nbsp; 2F &nbsp; 3L &nbsp; 4J &nbsp; 5E &nbsp; 6B &nbsp; 7H &nbsp; 8K &nbsp; 9G &nbsp; 10I &nbsp; 11A &nbsp; 12D</p>
+
+    <h3>4. What do you say?</h3>
     <p>1. Can you speak more slowly, please?</p>
     <p>2. Can you say that again, please?</p>
     <p>3. Sorry, I don&apos;t understand. What does that mean?</p>
@@ -835,13 +961,13 @@
     <p>7. Can you repeat the last part, please?</p>
     <p>8. Can you give me an example, please?</p>
 
-    <h3>4. Complete the conversation</h3>
+    <h3>5. Complete the conversation</h3>
     <p>1. Sorry, can you speak more slowly, please?</p>
     <p>2. Could you spell that, please?</p>
     <p>3. Sorry, I don&apos;t understand. Can you say that more simply, please?</p>
     <p>4. Can you use easy words, please?</p>
 
-    <h3>7. Choose the number</h3>
+    <h3>8. Choose the number</h3>
     <p>1. 13 &nbsp; 2. 50 &nbsp; 3. 214</p>
     <p>Times: 9.00 nine o&apos;clock &middot; 9.15 quarter past nine &middot; 9.30 half past nine &middot; 9.45 quarter to ten &middot; 14.00 two o&apos;clock / fourteen hundred &middot; 16.50 ten to five / sixteen fifty</p>
   </div>
