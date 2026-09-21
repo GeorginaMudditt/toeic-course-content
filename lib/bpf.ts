@@ -53,13 +53,13 @@ export interface BpfPeriod {
 export const BPF_PERIODS: BpfPeriod[] = [
   {
     slug: '2026-04-01-to-2026-09-30',
-    label: '01 April 2026 – 30 September 2026',
+    label: '1 April 2026 until 30 September 2026',
     startDate: '2026-04-01',
     endDate: '2026-09-30',
   },
   {
     slug: '2026-10-01-to-2027-09-30',
-    label: '01 October 2026 – 30 September 2027',
+    label: '1 October 2026 until 30 September 2027',
     startDate: '2026-10-01',
     endDate: '2027-09-30',
   },
@@ -174,12 +174,8 @@ export function getActiveBpfPeriod(referenceDate = new Date()): BpfPeriod | unde
   return BPF_PERIODS.find((period) => isoDate >= period.startDate && isoDate <= period.endDate)
 }
 
-/** Teacher admin page for logging NDA-covered BPF activity (current period when possible). */
-export function bpfNdaActivityLogHref(referenceDate = new Date()): string {
-  const active = getActiveBpfPeriod(referenceDate)
-  if (active) {
-    return `/teacher/admin/nda-covered-activity/${active.slug}`
-  }
+/** Teacher admin page for choosing a BPF period, then logging NDA-covered activity. */
+export function bpfNdaActivityLogHref(): string {
   return '/teacher/admin/nda-covered-activity'
 }
 
