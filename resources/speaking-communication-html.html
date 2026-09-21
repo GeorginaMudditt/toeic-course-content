@@ -1,0 +1,848 @@
+<!-- Speaking: Communication (A2) -->
+<style>
+  :root {
+    --sc-ink: #1f2937;
+    --sc-muted: #4b5563;
+    --sc-accent: #38438f;
+    --sc-accent-dark: #2d3569;
+    --sc-border: #c7d2fe;
+    --sc-soft: #eef2ff;
+  }
+
+  @media print {
+    @page { margin: 1.5cm; }
+    body { margin: 0; padding: 0; }
+    .page-break { page-break-before: always; }
+    .keep-together { page-break-inside: avoid; break-inside: avoid; }
+    h2, h3 { page-break-after: avoid; break-after: avoid; }
+    table { page-break-inside: avoid; break-inside: avoid; }
+    .sc-video, .sc-audio, video, audio { display: none !important; }
+  }
+
+  .sc-wrap {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 22px;
+    font-family: Arial, sans-serif;
+    line-height: 1.55;
+    color: var(--sc-ink);
+  }
+
+  .sc-section {
+    margin-bottom: 22px;
+    padding: 18px 20px;
+    background: #fff;
+    border-radius: 10px;
+    border: 1px solid var(--sc-border);
+    box-shadow: 0 2px 8px rgba(56, 67, 143, 0.06);
+  }
+
+  .sc-section h2 {
+    font-size: 21px;
+    font-weight: 700;
+    margin: 0 0 10px 0;
+    color: var(--sc-accent-dark);
+    border-bottom: 3px solid #c7d2fe;
+    padding-bottom: 8px;
+  }
+
+  .sc-section h3 {
+    font-size: 17px;
+    font-weight: 700;
+    margin: 16px 0 8px 0;
+    color: var(--sc-accent);
+  }
+
+  .sc-section h3:first-of-type {
+    margin-top: 4px;
+  }
+
+  .sc-intro {
+    margin: 0 0 12px 0;
+    font-size: 16px;
+    color: var(--sc-muted);
+  }
+
+  .sc-note {
+    margin: 12px 0 0 0;
+    padding: 12px 14px;
+    background: #f8fafc;
+    border: 1px dashed #cbd5e1;
+    border-radius: 8px;
+    font-size: 15px;
+    color: var(--sc-muted);
+  }
+
+  .sc-gold {
+    margin: 0;
+    padding: 14px 16px;
+    background: linear-gradient(135deg, #eef2ff 0%, #f8fafc 100%);
+    border-left: 5px solid var(--sc-accent);
+    border-radius: 8px;
+    font-size: 16px;
+  }
+
+  .sc-phrase-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  @media (min-width: 700px) {
+    .sc-phrase-grid {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  .sc-card {
+    background: var(--sc-soft);
+    border: 1px solid var(--sc-border);
+    border-radius: 10px;
+    padding: 14px 16px;
+  }
+
+  .sc-card h3 {
+    margin: 0 0 8px 0;
+    font-size: 15px;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+    color: var(--sc-accent);
+  }
+
+  .sc-card ul {
+    margin: 0;
+    padding-left: 22px;
+    font-size: 16px;
+    list-style-type: disc !important;
+    list-style-position: outside !important;
+  }
+
+  .sc-card li {
+    display: list-item !important;
+    list-style-type: disc !important;
+    margin-bottom: 10px;
+  }
+
+  .sc-card li:last-child {
+    margin-bottom: 0;
+  }
+
+  .sc-phrase-row {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+  }
+
+  .sc-phrase-audio {
+    width: 190px;
+    max-width: 100%;
+    height: 32px;
+  }
+
+  .sc-list {
+    margin: 0;
+    padding-left: 26px;
+    font-size: 16px;
+  }
+
+  .sc-list > li {
+    margin-bottom: 10px;
+  }
+
+  .sc-list > li:last-child {
+    margin-bottom: 0;
+  }
+
+  .sc-repeat {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    counter-reset: sc-n;
+  }
+
+  .sc-repeat > li {
+    counter-increment: sc-n;
+    display: flex;
+    gap: 10px;
+    align-items: baseline;
+    margin-bottom: 8px;
+    font-size: 17px;
+    font-weight: 600;
+    color: #0f172a;
+  }
+
+  .sc-repeat > li::before {
+    content: counter(sc-n) ".";
+    flex: 0 0 1.6em;
+    color: var(--sc-accent);
+  }
+
+  .sc-item {
+    margin-bottom: 14px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid #e5e7eb;
+  }
+
+  .sc-item:last-child {
+    margin-bottom: 0;
+    padding-bottom: 0;
+    border-bottom: none;
+  }
+
+  .sc-prompt {
+    margin: 0 0 8px 0;
+    font-size: 16px;
+  }
+
+  .sc-dialogue {
+    margin: 0 0 16px 0;
+    padding: 12px 14px;
+    background: #f8fafc;
+    border-radius: 8px;
+    border: 1px solid #e2e8f0;
+  }
+
+  .sc-dialogue:last-child {
+    margin-bottom: 0;
+  }
+
+  .sc-dialogue p {
+    margin: 0 0 8px 0;
+    font-size: 16px;
+  }
+
+  .sc-dialogue p:last-child {
+    margin-bottom: 0;
+  }
+
+  .sc-role {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  @media (min-width: 700px) {
+    .sc-role {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  .sc-role-box {
+    background: #fff;
+    border: 2px solid #c7d2fe;
+    border-radius: 8px;
+    padding: 12px 14px;
+  }
+
+  .sc-role-box h4 {
+    margin: 0 0 8px 0;
+    font-size: 15px;
+    color: var(--sc-accent);
+  }
+
+  .sc-role-box p {
+    margin: 0 0 6px 0;
+    font-size: 15px;
+  }
+
+  .sc-role-box p:last-child {
+    margin-bottom: 0;
+  }
+
+  .sc-alpha {
+    margin: 0 0 10px 0;
+    font-size: 18px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    line-height: 1.7;
+    text-align: center;
+  }
+
+  .sc-symbol-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 8px;
+    margin: 10px 0;
+  }
+
+  @media (max-width: 640px) {
+    .sc-symbol-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  .sc-symbol {
+    background: var(--sc-soft);
+    border: 1px solid var(--sc-border);
+    border-radius: 8px;
+    padding: 10px 8px;
+    text-align: center;
+  }
+
+  .sc-symbol-char {
+    display: block;
+    font-size: 28px;
+    font-weight: 700;
+    line-height: 1.2;
+    color: var(--sc-accent-dark);
+  }
+
+  .sc-symbol-name {
+    display: block;
+    margin-top: 4px;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--sc-muted);
+  }
+
+  .sc-practice-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+
+  @media (min-width: 640px) {
+    .sc-practice-grid {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  .sc-chip {
+    background: #fff;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    padding: 10px 12px;
+    font-size: 16px;
+    font-weight: 600;
+  }
+
+  .sc-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 15px;
+    background: #fff;
+  }
+
+  .sc-table th,
+  .sc-table td {
+    border: 1px solid #c7d2fe;
+    padding: 8px 10px;
+    text-align: left;
+  }
+
+  .sc-table th {
+    background: var(--sc-soft);
+    color: var(--sc-accent-dark);
+  }
+
+  .sc-video,
+  .sc-audio {
+    width: 100%;
+    max-width: 520px;
+    display: block;
+    margin: 10px auto 0 auto;
+  }
+
+  .sc-key p {
+    margin: 0 0 8px 0;
+    font-size: 16px;
+  }
+</style>
+
+<div class="sc-wrap">
+  <div style="text-align: center; margin-bottom: 20px; padding: 16px; background: linear-gradient(135deg, #38438f 0%, #2d3569 100%); border-radius: 10px;" class="no-break">
+    <div style="display: inline-block; margin-bottom: 8px;">
+      <img src="/brizzle-logo.png" alt="Brizzle Logo" style="width: 50px; height: 50px; object-fit: contain; background: white; padding: 5px; border-radius: 50%;" />
+    </div>
+    <h1 style="font-size: 28px; font-weight: bold; margin: 0; color: #ffffff;">Communication</h1>
+    <p style="margin: 8px 0 0 0; font-size: 16px; color: #c7d2fe; font-weight: 600;">Speaking · A2</p>
+  </div>
+
+  <div class="sc-section keep-together">
+    <h2>Today&apos;s idea</h2>
+    <p class="sc-gold">
+      At work, people sometimes speak fast. You do not need to smile and say &ldquo;yes&rdquo; if you do not understand.
+      It is more professional to stop and ask.
+    </p>
+    <h3 style="margin-top: 22px;">Warm-up: talk to your teacher</h3>
+    <ol class="sc-list">
+      <li>Do you sometimes say &ldquo;yes&rdquo; when you do not understand?</li>
+      <li>Why do people do this?</li>
+      <li>What can go wrong at work if you do not understand?</li>
+      <li>Is it polite to say &ldquo;Sorry, I don&apos;t understand&rdquo; in English?</li>
+    </ol>
+  </div>
+
+  <div class="sc-section" data-bookmarkable="phrases" data-bookmark-label="Useful phrases">
+    <h2>1. Useful phrases</h2>
+    <p class="sc-intro">Read the phrases. Then listen and say them.</p>
+
+    <div class="sc-phrase-grid">
+      <div class="sc-card">
+        <h3>I don&apos;t understand</h3>
+        <ul>
+          <li>
+            <div class="sc-phrase-row">
+              <span>Sorry, I don&apos;t understand.</span>
+              <audio class="sc-phrase-audio" controls preload="none" src="/audio/speaking-communication/sorry-i-dont-understand.mp3">Your browser does not support audio playback.</audio>
+            </div>
+          </li>
+          <li>
+            <div class="sc-phrase-row">
+              <span>Sorry, I missed that.</span>
+              <audio class="sc-phrase-audio" controls preload="none" src="/audio/speaking-communication/sorry-i-missed-that.mp3">Your browser does not support audio playback.</audio>
+            </div>
+          </li>
+          <li>
+            <div class="sc-phrase-row">
+              <span>What does that mean?</span>
+              <audio class="sc-phrase-audio" controls preload="none" src="/audio/speaking-communication/what-does-that-mean.mp3">Your browser does not support audio playback.</audio>
+            </div>
+          </li>
+        </ul>
+      </div>
+
+      <div class="sc-card">
+        <h3>Say it again</h3>
+        <ul>
+          <li>
+            <div class="sc-phrase-row">
+              <span>Can you say that again, please?</span>
+              <audio class="sc-phrase-audio" controls preload="none" src="/audio/speaking-communication/can-you-say-that-again-please.mp3">Your browser does not support audio playback.</audio>
+            </div>
+          </li>
+          <li>
+            <div class="sc-phrase-row">
+              <span>Can you repeat that, please?</span>
+              <audio class="sc-phrase-audio" controls preload="none" src="/audio/speaking-communication/can-you-repeat-that-please.mp3">Your browser does not support audio playback.</audio>
+            </div>
+          </li>
+          <li>
+            <div class="sc-phrase-row">
+              <span>Can you repeat the last part, please?</span>
+              <audio class="sc-phrase-audio" controls preload="none" src="/audio/speaking-communication/can-you-repeat-the-last-part-please.mp3">Your browser does not support audio playback.</audio>
+            </div>
+          </li>
+        </ul>
+      </div>
+
+      <div class="sc-card">
+        <h3>Speak more slowly</h3>
+        <ul>
+          <li>
+            <div class="sc-phrase-row">
+              <span>Can you speak more slowly, please?</span>
+              <audio class="sc-phrase-audio" controls preload="none" src="/audio/speaking-communication/can-you-speak-more-slowly-please.mp3">Your browser does not support audio playback.</audio>
+            </div>
+          </li>
+          <li>
+            <div class="sc-phrase-row">
+              <span>Could you speak more slowly, please?</span>
+              <audio class="sc-phrase-audio" controls preload="none" src="/audio/speaking-communication/could-you-speak-more-slowly-please.mp3">Your browser does not support audio playback.</audio>
+            </div>
+          </li>
+          <li>
+            <div class="sc-phrase-row">
+              <span>One moment, please. A little slower?</span>
+              <audio class="sc-phrase-audio" controls preload="none" src="/audio/speaking-communication/one-moment-please-a-little-slower.mp3">Your browser does not support audio playback.</audio>
+            </div>
+          </li>
+        </ul>
+      </div>
+
+      <div class="sc-card">
+        <h3>Say it more simply</h3>
+        <ul>
+          <li>
+            <div class="sc-phrase-row">
+              <span>Can you say that more simply, please?</span>
+              <audio class="sc-phrase-audio" controls preload="none" src="/audio/speaking-communication/can-you-say-that-more-simply-please.mp3">Your browser does not support audio playback.</audio>
+            </div>
+          </li>
+          <li>
+            <div class="sc-phrase-row">
+              <span>I&apos;m learning English. Can you use easy words, please?</span>
+              <audio class="sc-phrase-audio" controls preload="none" src="/audio/speaking-communication/im-learning-english-can-you-use-easy-words-please.mp3">Your browser does not support audio playback.</audio>
+            </div>
+          </li>
+          <li>
+            <div class="sc-phrase-row">
+              <span>Could you rephrase that more simply?</span>
+              <audio class="sc-phrase-audio" controls preload="none" src="/audio/speaking-communication/could-you-rephrase-that-more-simply.mp3">Your browser does not support audio playback.</audio>
+            </div>
+          </li>
+        </ul>
+      </div>
+
+      <div class="sc-card">
+        <h3>Write it / spell it</h3>
+        <ul>
+          <li>
+            <div class="sc-phrase-row">
+              <span>Could you write that down, please?</span>
+              <audio class="sc-phrase-audio" controls preload="none" src="/audio/speaking-communication/could-you-write-that-down-please.mp3">Your browser does not support audio playback.</audio>
+            </div>
+          </li>
+          <li>
+            <div class="sc-phrase-row">
+              <span>Could you spell that, please?</span>
+              <audio class="sc-phrase-audio" controls preload="none" src="/audio/speaking-communication/could-you-spell-that-please.mp3">Your browser does not support audio playback.</audio>
+            </div>
+          </li>
+          <li>
+            <div class="sc-phrase-row">
+              <span>How do you spell that?</span>
+              <audio class="sc-phrase-audio" controls preload="none" src="/audio/speaking-communication/how-do-you-spell-that.mp3">Your browser does not support audio playback.</audio>
+            </div>
+          </li>
+        </ul>
+      </div>
+
+      <div class="sc-card">
+        <h3>I&apos;m learning English</h3>
+        <ul>
+          <li>
+            <div class="sc-phrase-row">
+              <span>I&apos;m learning English. Can you help me?</span>
+              <audio class="sc-phrase-audio" controls preload="none" src="/audio/speaking-communication/im-learning-english-can-you-help-me.mp3">Your browser does not support audio playback.</audio>
+            </div>
+          </li>
+          <li>
+            <div class="sc-phrase-row">
+              <span>English is not my first language.</span>
+              <audio class="sc-phrase-audio" controls preload="none" src="/audio/speaking-communication/english-is-not-my-first-language.mp3">Your browser does not support audio playback.</audio>
+            </div>
+          </li>
+          <li>
+            <div class="sc-phrase-row">
+              <span>Can you give me an example, please?</span>
+              <audio class="sc-phrase-audio" controls preload="none" src="/audio/speaking-communication/can-you-give-me-an-example-please.mp3">Your browser does not support audio playback.</audio>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="sc-section keep-together">
+    <h2>2. Repeat after your teacher</h2>
+    <p class="sc-intro">Listen. Then say each sentence. Speak clearly. Do not rush.</p>
+    <ol class="sc-repeat">
+      <li>Sorry, I don&apos;t understand.</li>
+      <li>Can you say that again, please?</li>
+      <li>Can you speak more slowly, please?</li>
+      <li>I&apos;m learning English. Can you say that more simply, please?</li>
+      <li>Could you write that down, please?</li>
+      <li>Could you spell that, please?</li>
+      <li>How do you spell your name?</li>
+      <li>Can you give me an example, please?</li>
+    </ol>
+  </div>
+
+  <div class="sc-section" data-bookmarkable="choose" data-bookmark-label="What do you say?" data-grammar-per-section-check="true" data-grammar-save-section="true">
+    <h2>3. What do you say?</h2>
+    <p class="sc-intro">Choose the best phrase for each situation.</p>
+
+    <div class="sc-item">
+      <p class="sc-prompt">1. Your colleague speaks very fast.</p>
+      <span data-grammar-input="sc-choose-1" data-grammar-input-type="select" data-grammar-input-options="Can you speak more slowly, please?|See you later.|What time is it?" data-correct="Can you speak more slowly, please?" style="display: inline-block; min-width: min(100%, 360px); max-width: 100%;"></span>
+    </div>
+    <div class="sc-item">
+      <p class="sc-prompt">2. You hear the words, but you are not sure.</p>
+      <span data-grammar-input="sc-choose-2" data-grammar-input-type="select" data-grammar-input-options="My name is Alex.|Can you say that again, please?|Have a nice weekend." data-correct="Can you say that again, please?" style="display: inline-block; min-width: min(100%, 360px); max-width: 100%;"></span>
+    </div>
+    <div class="sc-item">
+      <p class="sc-prompt">3. You do not know this word.</p>
+      <span data-grammar-input="sc-choose-3" data-grammar-input-type="select" data-grammar-input-options="I&apos;m fine, thank you.|Sorry, I don&apos;t understand. What does that mean?|Where is the kitchen?" data-correct="Sorry, I don&apos;t understand. What does that mean?" style="display: inline-block; min-width: min(100%, 420px); max-width: 100%;"></span>
+    </div>
+    <div class="sc-item">
+      <p class="sc-prompt">4. Someone gives you an email address.</p>
+      <span data-grammar-input="sc-choose-4" data-grammar-input-type="select" data-grammar-input-options="Could you spell that, please?|Good morning.|I like coffee." data-correct="Could you spell that, please?" style="display: inline-block; min-width: min(100%, 360px); max-width: 100%;"></span>
+    </div>
+    <div class="sc-item">
+      <p class="sc-prompt">5. The information is important. You want to see it on paper.</p>
+      <span data-grammar-input="sc-choose-5" data-grammar-input-type="select" data-grammar-input-options="How are you?|Could you write that down, please?|This is my desk." data-correct="Could you write that down, please?" style="display: inline-block; min-width: min(100%, 360px); max-width: 100%;"></span>
+    </div>
+    <div class="sc-item">
+      <p class="sc-prompt">6. The sentence is too difficult.</p>
+      <span data-grammar-input="sc-choose-6" data-grammar-input-type="select" data-grammar-input-options="I&apos;m learning English. Can you say that more simply, please?|The meeting is finished.|Please sit down." data-correct="I&apos;m learning English. Can you say that more simply, please?" style="display: inline-block; min-width: min(100%, 460px); max-width: 100%;"></span>
+    </div>
+    <div class="sc-item">
+      <p class="sc-prompt">7. You only missed the last words.</p>
+      <span data-grammar-input="sc-choose-7" data-grammar-input-type="select" data-grammar-input-options="What&apos;s the weather like?|Can you repeat the last part, please?|I work on Mondays." data-correct="Can you repeat the last part, please?" style="display: inline-block; min-width: min(100%, 360px); max-width: 100%;"></span>
+    </div>
+    <div class="sc-item">
+      <p class="sc-prompt">8. You need a clear picture of the idea.</p>
+      <span data-grammar-input="sc-choose-8" data-grammar-input-type="select" data-grammar-input-options="Can you give me an example, please?|See you tomorrow.|I have a sandwich." data-correct="Can you give me an example, please?" style="display: inline-block; min-width: min(100%, 360px); max-width: 100%;"></span>
+    </div>
+  </div>
+
+  <div class="sc-section" data-bookmarkable="dialogues" data-bookmark-label="Complete the conversation" data-grammar-per-section-check="true" data-grammar-save-section="true">
+    <h2>4. Complete the conversation</h2>
+    <p class="sc-intro">Choose the missing line. Then practise the conversations with a partner.</p>
+
+    <div class="sc-dialogue">
+      <p><strong>A:</strong> We need the report by Friday, and then we can send it to the client.</p>
+      <p><strong>B:</strong> <span data-grammar-input="sc-dlg-1" data-grammar-input-type="select" data-grammar-input-options="Sorry, can you speak more slowly, please?|I&apos;m hungry.|The printer is broken." data-correct="Sorry, can you speak more slowly, please?" style="display: inline-block; min-width: min(100%, 380px); max-width: 100%;"></span></p>
+      <p><strong>A:</strong> Yes. We need the report on Friday.</p>
+      <p><strong>B:</strong> Thank you. Friday. OK.</p>
+    </div>
+
+    <div class="sc-dialogue">
+      <p><strong>A:</strong> Please send the file to j.martin@office.com.</p>
+      <p><strong>B:</strong> <span data-grammar-input="sc-dlg-2" data-grammar-input-type="select" data-grammar-input-options="Could you spell that, please?|I live in Lyon.|The coffee is good." data-correct="Could you spell that, please?" style="display: inline-block; min-width: min(100%, 320px); max-width: 100%;"></span></p>
+      <p><strong>A:</strong> J dot Martin at office dot com.</p>
+      <p><strong>B:</strong> J-dot-M-A-R-T-I-N. Thank you.</p>
+    </div>
+
+    <div class="sc-dialogue">
+      <p><strong>A:</strong> The kick-off is at half past two in room two fourteen.</p>
+      <p><strong>B:</strong> <span data-grammar-input="sc-dlg-3" data-grammar-input-type="select" data-grammar-input-options="Sorry, I don&apos;t understand. Can you say that more simply, please?|Happy birthday.|This is my phone." data-correct="Sorry, I don&apos;t understand. Can you say that more simply, please?" style="display: inline-block; min-width: min(100%, 460px); max-width: 100%;"></span></p>
+      <p><strong>A:</strong> The meeting starts at 2.30. The room number is 214.</p>
+      <p><strong>B:</strong> 2.30, room 214. Could you write that down, please?</p>
+    </div>
+
+    <div class="sc-dialogue">
+      <p><strong>A:</strong> We need to cascade this to the stakeholders.</p>
+      <p><strong>B:</strong> I&apos;m learning English. <span data-grammar-input="sc-dlg-4" data-grammar-input-type="select" data-grammar-input-options="Can you use easy words, please?|I have two brothers.|The train is late." data-correct="Can you use easy words, please?" style="display: inline-block; min-width: min(100%, 320px); max-width: 100%;"></span></p>
+      <p><strong>A:</strong> Sorry. We need to tell the other teams.</p>
+      <p><strong>B:</strong> Ah, OK. Tell the other teams. Thank you.</p>
+    </div>
+  </div>
+</div>
+
+<div class="sc-wrap page-break">
+  <div class="sc-section">
+    <h2>5. Speak: role plays</h2>
+    <p class="sc-intro">Work with a partner. Student A starts. Student B uses the phrases from section 1. Then change roles.</p>
+
+    <h3>Role play 1 &mdash; Too fast</h3>
+    <div class="sc-role">
+      <div class="sc-role-box">
+        <h4>Student A</h4>
+        <p>You speak fast. Say:</p>
+        <p>&ldquo;So we need the numbers by Thursday and then the client call is on Friday morning at nine.&rdquo;</p>
+        <p>Then slow down and help.</p>
+      </div>
+      <div class="sc-role-box">
+        <h4>Student B</h4>
+        <p>Stop. Ask A to speak more slowly. Ask A to say it again. Check: Thursday, Friday, 9.00.</p>
+      </div>
+    </div>
+
+    <h3>Role play 2 &mdash; An email</h3>
+    <div class="sc-role">
+      <div class="sc-role-box">
+        <h4>Student A</h4>
+        <p>Give this email, once, quite quickly:</p>
+        <p><strong>sam.lee@brizzle.co.uk</strong></p>
+        <p>Spell it if B asks.</p>
+      </div>
+      <div class="sc-role-box">
+        <h4>Student B</h4>
+        <p>You need the email. Ask A to spell it. Ask A to write it down if you still need help. Then say the email back.</p>
+      </div>
+    </div>
+
+    <h3>Role play 3 &mdash; A meeting</h3>
+    <div class="sc-role">
+      <div class="sc-role-box">
+        <h4>Student A</h4>
+        <p>Say: &ldquo;The briefing is in room two fourteen at a quarter to three.&rdquo;</p>
+      </div>
+      <div class="sc-role-box">
+        <h4>Student B</h4>
+        <p>You do not understand &ldquo;briefing&rdquo; or the time. Ask for simple words. Ask A to write the room number and the time.</p>
+      </div>
+    </div>
+
+    <h3>Role play 4 &mdash; A new word</h3>
+    <div class="sc-role">
+      <div class="sc-role-box">
+        <h4>Student A</h4>
+        <p>Use a difficult word from your job. Do not explain it the first time.</p>
+      </div>
+      <div class="sc-role-box">
+        <h4>Student B</h4>
+        <p>Say you are learning English. Ask what the word means. Ask for an example. Ask A to spell it.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="sc-section" data-bookmarkable="letters" data-bookmark-label="Letters, names and emails">
+    <h2>6. Letters, names and emails</h2>
+    <p class="sc-intro">At work you often need to spell your name, a surname, or an email. Say the letters clearly.</p>
+
+    <h3>The alphabet</h3>
+    <p class="sc-alpha">A B C D E F G H I J K L M N O P Q R S T U V W X Y Z</p>
+    <div class="sc-video">
+      <video class="sc-video" controls preload="metadata" playsinline>
+        <source src="/images/everyday-english/alphabet.mp4" type="video/mp4" />
+        Your browser does not support the video element.
+      </video>
+    </div>
+    <p class="sc-note"><strong>Practise:</strong> Which letters are difficult for you? Spell your first name. Then spell your surname. In English, the first name comes first: <strong>Marie Dupont</strong>.</p>
+
+    <h3>Email and web addresses</h3>
+    <p class="sc-intro" style="margin-bottom: 0;">Say these symbols:</p>
+    <div class="sc-symbol-grid">
+      <div class="sc-symbol">
+        <span class="sc-symbol-char">@</span>
+        <span class="sc-symbol-name">at</span>
+      </div>
+      <div class="sc-symbol">
+        <span class="sc-symbol-char">.</span>
+        <span class="sc-symbol-name">dot</span>
+      </div>
+      <div class="sc-symbol">
+        <span class="sc-symbol-char">-</span>
+        <span class="sc-symbol-name">hyphen</span>
+      </div>
+      <div class="sc-symbol">
+        <span class="sc-symbol-char">_</span>
+        <span class="sc-symbol-name">underscore</span>
+      </div>
+    </div>
+    <p class="sc-note">In an email, <strong>.</strong> is &ldquo;dot&rdquo; (not &ldquo;full stop&rdquo;). Example: <strong>www.bbc.co.uk</strong> = W W W dot B B C dot co dot U K.</p>
+
+    <h3>Say these emails</h3>
+    <p class="sc-intro">Work with a partner. Spell the email. Your partner writes it. Then check.</p>
+    <div class="sc-practice-grid">
+      <div class="sc-chip">sam.lee@brizzle.co.uk</div>
+      <div class="sc-chip">marie_dupont@office.com</div>
+      <div class="sc-chip">j-martin@team.org</div>
+      <div class="sc-chip">help@brizzle.fr</div>
+    </div>
+    <p class="sc-note"><strong>Then:</strong> Spell your real email. If your partner does not understand, they must ask: &ldquo;Could you spell that, please?&rdquo; or &ldquo;Could you write that down, please?&rdquo;</p>
+  </div>
+
+  <div class="sc-section" data-bookmarkable="numbers" data-bookmark-label="Numbers and times" data-grammar-per-section-check="true" data-grammar-save-section="true">
+    <h2>7. Numbers and times</h2>
+    <p class="sc-intro">These pairs are easy to mix up. Say both numbers. Make the ending clear: <em>thir<strong>teen</strong></em> / <em>thir<strong>ty</strong></em>.</p>
+
+    <table class="sc-table no-break">
+      <thead>
+        <tr>
+          <th>Number</th>
+          <th>Say</th>
+          <th>Number</th>
+          <th>Say</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>13</td>
+          <td>thirteen</td>
+          <td>30</td>
+          <td>thirty</td>
+        </tr>
+        <tr>
+          <td>14</td>
+          <td>fourteen</td>
+          <td>40</td>
+          <td>forty</td>
+        </tr>
+        <tr>
+          <td>15</td>
+          <td>fifteen</td>
+          <td>50</td>
+          <td>fifty</td>
+        </tr>
+        <tr>
+          <td>16</td>
+          <td>sixteen</td>
+          <td>60</td>
+          <td>sixty</td>
+        </tr>
+        <tr>
+          <td>19</td>
+          <td>nineteen</td>
+          <td>90</td>
+          <td>ninety</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h3>Choose the number</h3>
+    <div class="sc-item">
+      <p class="sc-prompt">1. Your teacher says &ldquo;thirteen&rdquo;. What do you write?</p>
+      <span data-grammar-input="sc-num-1" data-grammar-input-type="select" data-grammar-input-options="13|30|31" data-correct="13" style="display: inline-block; min-width: 120px;"></span>
+    </div>
+    <div class="sc-item">
+      <p class="sc-prompt">2. Your teacher says &ldquo;fifty&rdquo;. What do you write?</p>
+      <span data-grammar-input="sc-num-2" data-grammar-input-type="select" data-grammar-input-options="15|50|55" data-correct="50" style="display: inline-block; min-width: 120px;"></span>
+    </div>
+    <div class="sc-item">
+      <p class="sc-prompt">3. The meeting is in room &ldquo;two fourteen&rdquo;. What do you write?</p>
+      <span data-grammar-input="sc-num-3" data-grammar-input-type="select" data-grammar-input-options="240|214|2014" data-correct="214" style="display: inline-block; min-width: 120px;"></span>
+    </div>
+
+    <h3>Phone numbers</h3>
+    <p class="sc-intro">In English, say phone numbers <strong>one digit at a time</strong> (not in pairs, like in French). 0 is often &ldquo;oh&rdquo;. 55 can be &ldquo;double five&rdquo;.</p>
+    <p class="sc-note">Example: 0787 145527 &rarr; oh seven eight seven, one four five five two seven.</p>
+    <p class="sc-intro">Practise with a partner. Say the number. Your partner writes it. If they miss a digit, they ask: &ldquo;Can you say that again, please?&rdquo; or &ldquo;Could you write that down, please?&rdquo;</p>
+    <div class="sc-practice-grid">
+      <div class="sc-chip">07 45 12 88 03</div>
+      <div class="sc-chip">06 19 30 14 50</div>
+      <div class="sc-chip">01 43 16 60 15</div>
+      <div class="sc-chip">Your real number</div>
+    </div>
+
+    <h3>Times</h3>
+    <div style="border: 1px solid #e2e8f0; border-radius: 10px; background: #fff; padding: 10px; margin-bottom: 12px;">
+      <img
+        src="https://ulrwcortyhassmytkcij.supabase.co/storage/v1/object/public/travel-english/telling-time.png"
+        alt="Telling the time in English"
+        style="width: 100%; height: auto; display: block;"
+      />
+    </div>
+    <p class="sc-intro">Say these times. Then ask your partner: &ldquo;What time is the meeting?&rdquo; If you do not understand, use a phrase from section 1.</p>
+    <div class="sc-practice-grid">
+      <div class="sc-chip">9.00</div>
+      <div class="sc-chip">9.15</div>
+      <div class="sc-chip">9.30</div>
+      <div class="sc-chip">9.45</div>
+      <div class="sc-chip">14.00</div>
+      <div class="sc-chip">16.50</div>
+    </div>
+    <p class="sc-note"><strong>Useful:</strong> 9.00 = nine o&apos;clock &middot; 9.15 = quarter past nine &middot; 9.30 = half past nine &middot; 9.45 = quarter to ten. You can also say the numbers: 9.30 = nine thirty.</p>
+  </div>
+
+  <div class="sc-section keep-together">
+    <h2>8. At work: your turn</h2>
+    <p class="sc-intro">Your teacher (or partner) gives you information too fast. Stop them. Get the information. You can ask as many times as you need.</p>
+    <ol class="sc-list">
+      <li>A name and an email</li>
+      <li>A phone number</li>
+      <li>A meeting time and a room number</li>
+      <li>A new word from your job</li>
+    </ol>
+    <p class="sc-gold" style="margin-top: 14px;">
+      Remember: nodding is not a solution. Asking is. Take the information, say it back, and check.
+    </p>
+  </div>
+
+  <div class="sc-section sc-key">
+    <h2>Answer key</h2>
+    <h3>3. What do you say?</h3>
+    <p>1. Can you speak more slowly, please?</p>
+    <p>2. Can you say that again, please?</p>
+    <p>3. Sorry, I don&apos;t understand. What does that mean?</p>
+    <p>4. Could you spell that, please?</p>
+    <p>5. Could you write that down, please?</p>
+    <p>6. I&apos;m learning English. Can you say that more simply, please?</p>
+    <p>7. Can you repeat the last part, please?</p>
+    <p>8. Can you give me an example, please?</p>
+
+    <h3>4. Complete the conversation</h3>
+    <p>1. Sorry, can you speak more slowly, please?</p>
+    <p>2. Could you spell that, please?</p>
+    <p>3. Sorry, I don&apos;t understand. Can you say that more simply, please?</p>
+    <p>4. Can you use easy words, please?</p>
+
+    <h3>7. Choose the number</h3>
+    <p>1. 13 &nbsp; 2. 50 &nbsp; 3. 214</p>
+    <p>Times: 9.00 nine o&apos;clock &middot; 9.15 quarter past nine &middot; 9.30 half past nine &middot; 9.45 quarter to ten &middot; 14.00 two o&apos;clock / fourteen hundred &middot; 16.50 ten to five / sixteen fifty</p>
+  </div>
+</div>

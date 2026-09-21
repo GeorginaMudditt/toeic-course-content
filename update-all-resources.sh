@@ -89,6 +89,7 @@ npm run update:resource:supabase "PRO Speaking: Presentations" "speaking-present
 npm run update:resource:supabase "Argumentation" "speaking-argumentation-html.html"
 npm run update:resource:supabase "Speaking: Making Comparisons" "speaking-making-comparisons-html.html"
 npm run update:resource:supabase "Speaking: Your Future Career" "speaking-your-future-career-html.html"
+npm run update:resource:supabase "Speaking: Communication" "speaking-communication-html.html"
 
 # Business English
 npm run update:resource:supabase "Business English: A Conference" "a-conference-html.html"
