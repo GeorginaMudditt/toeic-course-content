@@ -1,0 +1,432 @@
+<!-- Speaking: Topics (A1) -->
+<style>
+  .st-wrap {
+    --st-ink: #1f2937;
+    --st-muted: #6b7280;
+    --st-accent: #38438f;
+    --st-accent-dark: #2d3569;
+    --st-gold: #d4a017;
+    --st-card-w: 150px;
+    --st-card-h: 210px;
+    max-width: 920px;
+    margin: 0 auto;
+    padding: 8px 4px 20px;
+    font-family: Arial, sans-serif;
+    color: var(--st-ink);
+  }
+
+  .st-wrap p,
+  .st-wrap button {
+    margin: 0;
+    font-family: Arial, sans-serif;
+  }
+
+  .st-intro {
+    text-align: center;
+    font-size: 18px;
+    line-height: 1.45;
+    color: var(--st-ink);
+    margin-bottom: 6px !important;
+  }
+
+  .st-sub {
+    text-align: center;
+    font-size: 15px;
+    color: var(--st-muted);
+    margin-bottom: 18px !important;
+  }
+
+  .st-table {
+    position: relative;
+    background: radial-gradient(ellipse at 50% 18%, #eef2ff 0%, #ffffff 58%);
+    border: 1px solid #e0e7ff;
+    border-radius: 18px;
+    padding: 16px 12px 40px;
+    overflow: visible;
+  }
+
+  .st-fan-area {
+    position: relative;
+    height: 290px;
+  }
+
+  .st-stage {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 28px;
+    min-height: 240px;
+    padding: 8px 8px 18px;
+    flex-wrap: wrap;
+  }
+
+  .st-discard {
+    position: absolute;
+    left: 18px;
+    bottom: 44px;
+    width: 72px;
+    height: 100px;
+    pointer-events: none;
+  }
+
+  .st-slot {
+    width: var(--st-card-w);
+    height: var(--st-card-h);
+    position: relative;
+    flex: 0 0 auto;
+  }
+
+  .st-slot-hint {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 16px;
+    border: 2px dashed #c7d2fe;
+    border-radius: 14px;
+    color: #9aa5c4;
+    font-size: 15px;
+    line-height: 1.35;
+    background: rgba(255, 255, 255, 0.55);
+  }
+
+  .st-slot.is-filled .st-slot-hint {
+    display: none;
+  }
+
+  .st-timer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    min-width: 140px;
+  }
+
+  .st-timer-face {
+    position: relative;
+    width: 128px;
+    height: 128px;
+  }
+
+  .st-timer-face svg {
+    width: 128px;
+    height: 128px;
+    transform: rotate(-90deg);
+  }
+
+  .st-timer-track {
+    fill: none;
+    stroke: #e5e7eb;
+    stroke-width: 8;
+  }
+
+  .st-timer-progress {
+    fill: none;
+    stroke: var(--st-accent);
+    stroke-width: 8;
+    stroke-linecap: round;
+    stroke-dasharray: 327;
+    stroke-dashoffset: 0;
+    transition: stroke 0.25s ease;
+  }
+
+  .st-timer.is-low .st-timer-progress {
+    stroke: #c2410c;
+  }
+
+  .st-timer.is-up .st-timer-progress {
+    stroke: #b91c1c;
+  }
+
+  .st-timer-time {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 32px;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    color: var(--st-accent-dark);
+    pointer-events: none;
+  }
+
+  .st-timer.is-up .st-timer-time {
+    font-size: 18px;
+    text-align: center;
+    padding: 0 10px;
+    line-height: 1.2;
+    color: #b91c1c;
+  }
+
+  .st-timer-start,
+  .st-new-pack {
+    appearance: none;
+    -webkit-appearance: none;
+    border: none;
+    background: var(--st-accent);
+    color: #fff;
+    font-size: 16px;
+    font-weight: 700;
+    padding: 8px 22px;
+    border-radius: 999px;
+    cursor: pointer;
+    box-shadow: 0 2px 0 var(--st-accent-dark);
+  }
+
+  .st-timer-start:hover:not(:disabled),
+  .st-new-pack:hover {
+    background: var(--st-accent-dark);
+  }
+
+  .st-timer-start:disabled {
+    opacity: 0.4;
+    cursor: default;
+    box-shadow: none;
+  }
+
+  .st-card {
+    appearance: none;
+    -webkit-appearance: none;
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: var(--st-card-w);
+    height: var(--st-card-h);
+    padding: 0;
+    border: none;
+    background: transparent;
+    color: inherit;
+    cursor: pointer;
+    transform-origin: center center;
+    perspective: 900px;
+    transform-style: preserve-3d;
+    -webkit-transform-style: preserve-3d;
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+  }
+
+  .st-card:focus-visible {
+    outline: 3px solid #818cf8;
+    outline-offset: 4px;
+    border-radius: 14px;
+  }
+
+  .st-card.is-fan {
+    cursor: pointer;
+  }
+
+  .st-card:not(.is-fan) {
+    cursor: default;
+  }
+
+  .st-card-inner {
+    display: block;
+    position: relative;
+    width: 100%;
+    height: 100%;
+    transform-style: preserve-3d;
+    -webkit-transform-style: preserve-3d;
+  }
+
+  .st-card-back,
+  .st-card-face {
+    display: flex;
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    border-radius: 14px;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+    box-shadow: 0 10px 22px rgba(31, 41, 79, 0.22);
+  }
+
+  .st-card-back {
+    background-color: var(--st-accent);
+    background-image:
+      radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.16) 1.1px, transparent 1.3px);
+    background-size: 11px 11px;
+  }
+
+  .st-card-back::before {
+    content: '';
+    position: absolute;
+    inset: 9px;
+    border: 2px solid rgba(212, 160, 23, 0.7);
+    border-radius: 8px;
+    pointer-events: none;
+  }
+
+  .st-card-back::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 36px;
+    height: 36px;
+    transform: translate(-50%, -50%) rotate(45deg);
+    border: 2px solid rgba(255, 255, 255, 0.85);
+    border-radius: 4px;
+    box-shadow: inset 0 0 0 6px var(--st-accent), 0 0 0 6px rgba(212, 160, 23, 0.35);
+    pointer-events: none;
+  }
+
+  .st-card-face {
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 18px 14px;
+    background-color: #fffdf8;
+    background-image: linear-gradient(180deg, #fffdf8 0%, #f7f1e4 100%);
+    border: 1px solid #e8dcc4;
+    transform: rotateY(180deg);
+    color: var(--st-accent-dark);
+  }
+
+  .st-card-topic {
+    font-family: Georgia, 'Times New Roman', serif;
+    font-size: 28px;
+    line-height: 1.2;
+    text-align: center;
+    font-weight: 700;
+  }
+
+  .st-card-prompt {
+    font-size: 12px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: #9a8b6a;
+  }
+
+  .st-status {
+    text-align: center;
+    margin-top: 12px !important;
+    font-size: 14px;
+    color: var(--st-muted);
+  }
+
+  .st-new-pack {
+    display: none;
+    margin: 14px auto 0;
+  }
+
+  .st-new-pack.is-visible {
+    display: block;
+  }
+
+  .st-print-topics {
+    display: none;
+  }
+
+  @media (max-width: 700px) {
+    .st-wrap {
+      --st-card-w: 118px;
+      --st-card-h: 166px;
+    }
+
+    .st-fan-area {
+      height: 230px;
+    }
+
+    .st-intro {
+      font-size: 16px;
+    }
+
+    .st-card-topic {
+      font-size: 22px;
+    }
+
+    .st-stage {
+      gap: 16px;
+    }
+
+    .st-timer-face,
+    .st-timer-face svg {
+      width: 108px;
+      height: 108px;
+    }
+
+    .st-timer-time {
+      font-size: 26px;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .st-card,
+    .st-card-inner,
+    .st-timer-progress {
+      transition: none !important;
+    }
+  }
+
+  @media print {
+    .st-table,
+    .st-status,
+    .st-new-pack {
+      display: none !important;
+    }
+
+    .st-print-topics {
+      display: block;
+      columns: 2;
+      font-size: 16px;
+    }
+  }
+</style>
+
+<div
+  class="st-wrap"
+  data-speaking-topics
+  data-seconds="60"
+  data-topics="My family|My house|Sport|Food|Animals|Hobbies|Clothes|Holidays|My job|My day|My town|The weather|My friends|Music|Shopping|The weekend|Films"
+>
+  <p class="st-intro">Click a card. Talk about the topic for one minute.</p>
+  <p class="st-sub">Then click another card.</p>
+
+  <div class="st-table">
+    <div class="st-fan-area" data-st-fan></div>
+    <div class="st-stage">
+      <div class="st-discard" data-st-discard aria-hidden="true"></div>
+      <div class="st-slot" data-st-slot>
+        <p class="st-slot-hint">Your topic will land here.</p>
+      </div>
+      <div class="st-timer" data-st-timer>
+        <div class="st-timer-face">
+          <svg viewBox="0 0 120 120" aria-hidden="true">
+            <circle class="st-timer-track" cx="60" cy="60" r="52"></circle>
+            <circle class="st-timer-progress" cx="60" cy="60" r="52" data-st-ring></circle>
+          </svg>
+          <div class="st-timer-time" data-st-time role="timer" aria-live="polite">1:00</div>
+        </div>
+        <button type="button" class="st-timer-start" data-st-start disabled>Start</button>
+      </div>
+    </div>
+  </div>
+
+  <p class="st-status" data-st-status></p>
+  <button type="button" class="st-new-pack" data-st-new-pack>New pack</button>
+
+  <ul class="st-print-topics" aria-hidden="true">
+    <li>My family</li>
+    <li>My house</li>
+    <li>Sport</li>
+    <li>Food</li>
+    <li>Animals</li>
+    <li>Hobbies</li>
+    <li>Clothes</li>
+    <li>Holidays</li>
+    <li>My job</li>
+    <li>My day</li>
+    <li>My town</li>
+    <li>The weather</li>
+    <li>My friends</li>
+    <li>Music</li>
+    <li>Shopping</li>
+    <li>The weekend</li>
+    <li>Films</li>
+  </ul>
+</div>

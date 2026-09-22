@@ -35,6 +35,7 @@ import { mountOpinionRankings } from '@/lib/worksheetInteractions/opinionRanking
 import { mountParagraphReorders } from '@/lib/worksheetInteractions/paragraphReorder'
 import { mountDiscourseMarkerSorts } from '@/lib/worksheetInteractions/discourseMarkerSort'
 import { mountWritingPracticeTimers } from '@/lib/worksheetInteractions/writingPracticeTimers'
+import { mountSpeakingTopicsPacks } from '@/lib/worksheetInteractions/speakingTopicsPack'
 import { mountWritingClearlyPhraseMatch } from '@/lib/worksheetInteractions/writingClearlyPhraseMatch'
 import { mountWritingClearlySubmit } from '@/lib/worksheetInteractions/writingClearlySubmit'
 import { mountWritingTaskSubmits } from '@/lib/worksheetInteractions/writingTaskSubmit'
@@ -908,6 +909,8 @@ export default function WorksheetViewer({
     typeof resource.content === 'string' && resource.content.includes('data-discourse-marker-sort')
   const hasWritingTaskSubmit =
     typeof resource.content === 'string' && resource.content.includes('data-writing-task-submit')
+  const hasSpeakingTopics =
+    typeof resource.content === 'string' && resource.content.includes('data-speaking-topics')
   const bookmarkedSlugsRef = useRef(new Set(initialBookmarkedSlugs))
 
   /** Per-section Check Answers + live tick/cross (see resources using data-grammar-per-section-check). */
@@ -3086,6 +3089,21 @@ export default function WorksheetViewer({
     }
   }, [resource.content, hasWritingTimers])
 
+  // A1 speaking topic cards (fan, flutter, one-minute timer).
+  useLayoutEffect(() => {
+    if (!hasSpeakingTopics || !isClientMounted) return
+    let detach: (() => void) | undefined
+    const rafId = requestAnimationFrame(() => {
+      const host = contentRef.current
+      if (!host) return
+      detach = mountSpeakingTopicsPacks(host)
+    })
+    return () => {
+      cancelAnimationFrame(rafId)
+      detach?.()
+    }
+  }, [hasSpeakingTopics, resource.content, isClientMounted])
+
   // Writing Clearly — wordy phrase matching.
   useEffect(() => {
     if (!hasWritingClearlyPhraseMatch) return
@@ -3587,9 +3605,12 @@ export default function WorksheetViewer({
             } else {
               // Render normally for non-placement tests
               // Memoize HTML when it has injected inputs/activities (re-renders would reset the DOM).
-              if (hasGrammarInputs || hasMountedWorksheetActivities) {
+              if (hasGrammarInputs || hasMountedWorksheetActivities || hasSpeakingTopics) {
                 return (
-                  <MemoizedContent html={resource.content} fullWidth={hasMountedWorksheetActivities} />
+                  <MemoizedContent
+                    html={resource.content}
+                    fullWidth={hasMountedWorksheetActivities || hasSpeakingTopics}
+                  />
                 )
               }
               return (
