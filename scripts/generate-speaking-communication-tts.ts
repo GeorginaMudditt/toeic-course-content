@@ -83,11 +83,15 @@ const PHRASES: ReadonlyArray<Phrase> = [
   { file: 'fourteen.mp3', text: 'fourteen', tts_text: 'fourteen.', calm: true },
   { file: 'fifteen.mp3', text: 'fifteen', tts_text: 'fifteen.', calm: true },
   { file: 'sixteen.mp3', text: 'sixteen', tts_text: 'sixteen.', calm: true },
+  { file: 'seventeen.mp3', text: 'seventeen', tts_text: 'seventeen.', calm: true },
+  { file: 'eighteen.mp3', text: 'eighteen', tts_text: 'eighteen.', calm: true },
   { file: 'nineteen.mp3', text: 'nineteen', tts_text: 'nineteen.', calm: true },
   { file: 'thirty.mp3', text: 'thirty', tts_text: 'thirty.', calm: true },
   { file: 'forty.mp3', text: 'forty', tts_text: 'forty.', calm: true },
   { file: 'fifty.mp3', text: 'fifty', tts_text: 'fifty.', calm: true },
   { file: 'sixty.mp3', text: 'sixty', tts_text: 'sixty.', calm: true },
+  { file: 'seventy.mp3', text: 'seventy', tts_text: 'seventy.', calm: true },
+  { file: 'eighty.mp3', text: 'eighty', tts_text: 'eighty.', calm: true },
   { file: 'ninety.mp3', text: 'ninety', tts_text: 'ninety.', calm: true },
 ]
 
