@@ -139,12 +139,20 @@ function mountSpeakingTopicsPack(root: HTMLElement): () => void {
   let busy = false
   let remainingSeconds = totalSeconds
   let intervalId: ReturnType<typeof setInterval> | null = null
+  let timeUpTimeoutId: ReturnType<typeof setTimeout> | null = null
   let hoverCard: HTMLButtonElement | null = null
 
   const stopTimer = () => {
     if (intervalId !== null) {
       clearInterval(intervalId)
       intervalId = null
+    }
+  }
+
+  const clearTimeUpRestore = () => {
+    if (timeUpTimeoutId !== null) {
+      clearTimeout(timeUpTimeoutId)
+      timeUpTimeoutId = null
     }
   }
 
@@ -165,6 +173,7 @@ function mountSpeakingTopicsPack(root: HTMLElement): () => void {
 
   const resetTimer = (enableStart: boolean) => {
     stopTimer()
+    clearTimeUpRestore()
     showTime(totalSeconds, false)
     startBtn.disabled = !enableStart
     startBtn.textContent = 'Start'
@@ -173,6 +182,7 @@ function mountSpeakingTopicsPack(root: HTMLElement): () => void {
   const startTimer = () => {
     if (startBtn.disabled) return
     stopTimer()
+    clearTimeUpRestore()
     showTime(totalSeconds, false)
     startBtn.textContent = 'Reset'
     intervalId = setInterval(() => {
@@ -182,6 +192,10 @@ function mountSpeakingTopicsPack(root: HTMLElement): () => void {
         showTime(0, true)
         startBtn.textContent = 'Start'
         playTimeUpSound()
+        timeUpTimeoutId = setTimeout(() => {
+          timeUpTimeoutId = null
+          resetTimer(true)
+        }, 3000)
         return
       }
       showTime(next, false)
@@ -479,6 +493,7 @@ function mountSpeakingTopicsPack(root: HTMLElement): () => void {
 
   return () => {
     stopTimer()
+    clearTimeUpRestore()
     cards.forEach((card) => {
       card.el.getAnimations().forEach((animation) => animation.cancel())
       card.inner.getAnimations().forEach((animation) => animation.cancel())
