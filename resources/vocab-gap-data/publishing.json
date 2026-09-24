@@ -1,0 +1,24 @@
+{
+  "sentences": [
+    { "number": 1, "parts": ["The novel still existed only as a ", { "slot": "gapfill-q1", "answers": ["manuscript"] }, " on the author's laptop: 90,000 words, and not yet a printed book."] },
+    { "number": 2, "parts": ["The award is only for ", { "slot": "gapfill-q2", "answers": ["literary"] }, " fiction, so cookbooks, textbooks and sports biographies cannot be entered."] },
+    { "number": 3, "parts": ["The guidelines explain how to prepare a ", { "slot": "gapfill-q3", "answers": ["submission"] }, ": a short letter, a one-page summary, and the first three chapters."] },
+    { "number": 4, "parts": ["For most of the story, readers follow Maya, the ", { "slot": "gapfill-q4", "answers": ["protagonist"] }, ", as she tries to save her family's bookshop."] },
+    { "number": 5, "parts": ["The ", { "slot": "gapfill-q5", "answers": ["narrative"] }, " jumps between three decades, so the reader has to piece the family history together."] },
+    { "number": 6, "parts": ["At the weekly ", { "slot": "gapfill-q6", "answers": ["editorial"] }, " meeting, the team argued about whether the ending was too sad for their readers."] },
+    { "number": 7, "parts": ["Without the author's permission, posting whole chapters online would break ", { "slot": "gapfill-q7", "answers": ["copyright"] }, "."] },
+    { "number": 8, "parts": ["The ", { "slot": "gapfill-q8", "answers": ["blurb"] }, " printed on the back cover made the novel sound exciting, but it carefully hid the final twist."] },
+    { "number": 9, "parts": ["Booksellers can already order the novel, even though it is still listed as a ", { "slot": "gapfill-q9", "answers": ["forthcoming title"] }, " and will not reach the shops until October."] },
+    { "number": 10, "parts": ["The contract offered an ", { "slot": "gapfill-q10", "answers": ["advance"] }, " of €12,000, paid in three parts before the book went on sale."] },
+    { "number": 11, "parts": ["After the book had earned back that first payment, the writer began to receive ", { "slot": "gapfill-q11", "answers": ["royalties"] }, " of 8% on every copy sold."] },
+    { "number": 12, "parts": ["On publication day, the author read two pages aloud at the ", { "slot": "gapfill-q12", "answers": ["book launch"] }, " and then signed copies for people in the queue."] },
+    { "number": 13, "parts": ["The agent sold the ", { "slot": "gapfill-q13", "answers": ["foreign rights"] }, " to publishers in Italy and Korea, so each country can bring out its own edition."] },
+    { "number": 14, "parts": ["The Spanish ", { "slot": "gapfill-q14", "answers": ["translation"] }, " took eight months, because the translator wanted the jokes to work for readers in Madrid."] },
+    { "number": 15, "parts": ["The publisher printed 4,000 copies in the first ", { "slot": "gapfill-q15", "answers": ["print run"] }, " and waited to see if bookshops asked for more."] },
+    { "number": 16, "parts": ["Standing by the editor's stand, the agent gave a two-minute spoken ", { "slot": "gapfill-q16", "answers": ["pitch"] }, " about why commuters would buy this novel."] },
+    { "number": 17, "parts": ["Unlike the back-cover text, the ", { "slot": "gapfill-q17", "answers": ["synopsis"] }, " gave away the ending so the editor could judge the whole plot."] },
+    { "number": 18, "parts": ["During ", { "slot": "gapfill-q18", "answers": ["editing"] }, ", the editor asked the writer to cut a side character and make chapter four easier to follow."] },
+    { "number": 19, "parts": ["The final check is ", { "slot": "gapfill-q19", "answers": ["proofreading"] }, ": someone looks for typos and missing commas, but does not change the story."] },
+    { "number": 20, "parts": ["At the London ", { "slot": "gapfill-q20", "answers": ["book fair"] }, ", hundreds of publishers set up stands so they can meet booksellers and show their new books."] }
+  ]
+}

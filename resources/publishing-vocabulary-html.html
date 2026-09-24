@@ -1,0 +1,352 @@
+<!-- PAGE 1: Vocabulary List -->
+<style>
+  @media print {
+    @page { margin: 1.5cm; }
+    body { margin: 0; padding: 0; }
+    .page-break { page-break-before: always; }
+    .no-break { page-break-inside: avoid; break-inside: avoid; }
+    .keep-together { page-break-inside: avoid; break-inside: avoid; }
+    h2, h3 { page-break-after: avoid; break-after: avoid; }
+    table { page-break-inside: avoid; break-inside: avoid; }
+    ul, ol { page-break-inside: avoid; break-inside: avoid; }
+  }
+
+  @keyframes vsg-shake {
+    0%, 100% { transform: translateX(0); }
+    20%, 60% { transform: translateX(-6px); }
+    40%, 80% { transform: translateX(6px); }
+  }
+  .vsg-shake { animation: vsg-shake 0.45s ease; }
+  .vsg-slot-correct {
+    border: 3px solid #15803d !important;
+    background: #ecfdf5 !important;
+    box-shadow: inset 0 0 0 1px rgba(21, 128, 61, 0.15);
+  }
+  .vsg-slot-wrong { border-color: #b91c1c !important; background: #fee2e2 !important; }
+  .vsg-layout {
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+    align-items: flex-start;
+  }
+  .vsg-sentences-col { flex: 1; min-width: 0; }
+  .vsg-bank-col {
+    width: min(260px, 100%);
+    flex-shrink: 0;
+    position: sticky;
+    top: 12px;
+    padding: 14px;
+    border-radius: 10px;
+    background: linear-gradient(135deg, #e8eaf6 0%, #f5f6fc 100%);
+    border: 1px solid #c5cae9;
+    box-shadow: 0 2px 6px rgba(56, 67, 143, 0.1);
+  }
+  .vsg-bank-scroll-notice {
+    margin: 0 0 10px;
+    padding: 8px 10px;
+    border-radius: 8px;
+    background: linear-gradient(135deg, #fff7ed 0%, #ffedd5 100%);
+    border: 1px solid #fdba74;
+    font-size: 12px;
+    line-height: 1.45;
+    color: #9a3412;
+  }
+  .vsg-bank-scroll-wrap {
+    position: relative;
+  }
+  .vsg-bank-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    max-height: min(70vh, 640px);
+    overflow-y: auto;
+    padding-right: 4px;
+    scrollbar-width: thin;
+    scrollbar-color: #38438f #e8eaf6;
+  }
+  .vsg-bank-grid::-webkit-scrollbar { width: 8px; }
+  .vsg-bank-grid::-webkit-scrollbar-track {
+    background: #e8eaf6;
+    border-radius: 8px;
+  }
+  .vsg-bank-grid::-webkit-scrollbar-thumb {
+    background: #38438f;
+    border-radius: 8px;
+  }
+  .vsg-bank-fade {
+    position: absolute;
+    left: 0;
+    right: 8px;
+    height: 28px;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+    z-index: 1;
+  }
+  .vsg-bank-fade-top {
+    top: 0;
+    background: linear-gradient(180deg, rgba(245, 246, 252, 0.98) 0%, rgba(245, 246, 252, 0) 100%);
+  }
+  .vsg-bank-fade-bottom {
+    bottom: 0;
+    background: linear-gradient(0deg, rgba(245, 246, 252, 0.98) 0%, rgba(245, 246, 252, 0) 100%);
+  }
+  .vsg-toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    align-items: center;
+    margin-top: 18px;
+  }
+  @media (max-width: 720px) {
+    .vsg-layout { flex-direction: column; }
+    .vsg-bank-col { width: 100%; position: static; }
+    .vsg-bank-grid {
+      flex-direction: row;
+      flex-wrap: wrap;
+      max-height: none;
+    }
+    .vsg-chip { flex: 0 1 auto; width: auto !important; }
+  }
+  @media print {
+    .vsg-no-print { display: none !important; }
+    .vsg-slot { border: 1px dashed #333 !important; background: #fff !important; }
+  }
+
+</style>
+<div style="max-width: 800px; margin: 0 auto; padding: 20px; font-family: Arial, sans-serif; line-height: 1.5; color: #333; background: linear-gradient(to bottom, #e8eaf6, #ffffff);">
+
+  <div style="text-align: center; margin-bottom: 25px; padding: 20px; background: linear-gradient(135deg, #38438f 0%, #2d3569 100%); border-radius: 12px; box-shadow: 0 4px 6px rgba(56,67,143,0.3);" class="no-break">
+    <div style="display: inline-block; margin-bottom: 8px;">
+      <img src="/brizzle-logo.png" alt="Brizzle Logo" style="width: 50px; height: 50px; object-fit: contain; background: white; padding: 5px; border-radius: 50%;" />
+    </div>
+    <h1 style="font-size: 28px; font-weight: bold; margin: 0; color: #ffffff; text-shadow: 0 2px 4px rgba(0,0,0,0.2);">Vocabulary: Publishing</h1>
+  </div>
+
+  <div style="margin-bottom: 30px; padding: 20px; background: white; border-radius: 10px; box-shadow: 0 2px 4px rgba(0,0,0,0.05);" class="keep-together">
+    <h2 style="font-size: 20px; font-weight: bold; margin-bottom: 15px; color: #38438f; border-bottom: 3px solid #38438f; padding-bottom: 8px;">Part 1: Vocabulary List with Pronunciation and Translation</h2>
+
+    <table style="width: 100%; border-collapse: collapse; margin-top: 12px; font-size: 16px; border: 1px solid #e5e7eb; box-shadow: 0 1px 3px rgba(0,0,0,0.05);" class="no-break">
+      <thead>
+        <tr style="background: linear-gradient(135deg, #38438f 0%, #2d3569 100%);">
+          <th style="border: 1px solid #e5e7eb; padding: 10px; text-align: left; font-weight: bold; font-size: 16px; width: 25%; color: white;">Word/Phrase</th>
+          <th style="border: 1px solid #e5e7eb; padding: 10px; text-align: left; font-weight: bold; font-size: 16px; width: 15%; color: white;">Pronunciation</th>
+          <th style="border: 1px solid #e5e7eb; padding: 10px; text-align: left; font-weight: bold; font-size: 16px; width: 20%; color: white;">French Translation</th>
+          <th style="border: 1px solid #e5e7eb; padding: 10px; text-align: left; font-weight: bold; font-size: 16px; width: 40%; color: white;">Example Sentence</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px; font-weight: bold; color: #1e293b;">manuscript</td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px;"><div onclick="document.getElementById('audio-manuscript').play()" style="display: inline-block; background: linear-gradient(135deg, #ba3627 0%, #9a2d21 100%); color: white; padding: 4px 12px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; box-shadow: 0 2px 4px rgba(186,54,39,0.3); transition: transform 0.1s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">🔊 Listen</div><audio id="audio-manuscript" preload="auto"><source src="/vocab-audio/publishing-vocab-audio/manuscript.mp3" type="audio/mpeg"></audio></td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px; font-style: italic; color: #64748b;">manuscrit</td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px;">She spent three years writing the manuscript before she let anyone else read it.</td>
+        </tr>
+        <tr style="background: #e8eaf6;">
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px; font-weight: bold; color: #1e293b;">literary</td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px;"><div onclick="document.getElementById('audio-literary').play()" style="display: inline-block; background: linear-gradient(135deg, #ba3627 0%, #9a2d21 100%); color: white; padding: 4px 12px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; box-shadow: 0 2px 4px rgba(186,54,39,0.3); transition: transform 0.1s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">🔊 Listen</div><audio id="audio-literary" preload="auto"><source src="/vocab-audio/publishing-vocab-audio/literary.mp3" type="audio/mpeg"></audio></td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px; font-style: italic; color: #64748b;">littéraire</td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px;">The novel won a literary prize for its beautiful writing and original story.</td>
+        </tr>
+        <tr>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px; font-weight: bold; color: #1e293b;">submission</td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px;"><div onclick="document.getElementById('audio-submission').play()" style="display: inline-block; background: linear-gradient(135deg, #ba3627 0%, #9a2d21 100%); color: white; padding: 4px 12px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; box-shadow: 0 2px 4px rgba(186,54,39,0.3); transition: transform 0.1s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">🔊 Listen</div><audio id="audio-submission" preload="auto"><source src="/vocab-audio/publishing-vocab-audio/submission.mp3" type="audio/mpeg"></audio></td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px; font-style: italic; color: #64748b;">soumission (d'un manuscrit)</td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px;">His first submission was rejected, but a different publisher accepted the second one.</td>
+        </tr>
+        <tr style="background: #e8eaf6;">
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px; font-weight: bold; color: #1e293b;">protagonist</td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px;"><div onclick="document.getElementById('audio-protagonist').play()" style="display: inline-block; background: linear-gradient(135deg, #ba3627 0%, #9a2d21 100%); color: white; padding: 4px 12px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; box-shadow: 0 2px 4px rgba(186,54,39,0.3); transition: transform 0.1s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">🔊 Listen</div><audio id="audio-protagonist" preload="auto"><source src="/vocab-audio/publishing-vocab-audio/protagonist.mp3" type="audio/mpeg"></audio></td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px; font-style: italic; color: #64748b;">protagoniste</td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px;">Readers often sympathise with the protagonist, even when that character makes mistakes.</td>
+        </tr>
+        <tr>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px; font-weight: bold; color: #1e293b;">narrative</td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px;"><div onclick="document.getElementById('audio-narrative').play()" style="display: inline-block; background: linear-gradient(135deg, #ba3627 0%, #9a2d21 100%); color: white; padding: 4px 12px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; box-shadow: 0 2px 4px rgba(186,54,39,0.3); transition: transform 0.1s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">🔊 Listen</div><audio id="audio-narrative" preload="auto"><source src="/vocab-audio/publishing-vocab-audio/narrative.mp3" type="audio/mpeg"></audio></td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px; font-style: italic; color: #64748b;">récit</td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px;">A clear narrative helps the reader follow what happens from the first page to the last.</td>
+        </tr>
+        <tr style="background: #e8eaf6;">
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px; font-weight: bold; color: #1e293b;">editorial</td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px;"><div onclick="document.getElementById('audio-editorial').play()" style="display: inline-block; background: linear-gradient(135deg, #ba3627 0%, #9a2d21 100%); color: white; padding: 4px 12px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; box-shadow: 0 2px 4px rgba(186,54,39,0.3); transition: transform 0.1s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">🔊 Listen</div><audio id="audio-editorial" preload="auto"><source src="/vocab-audio/publishing-vocab-audio/editorial.mp3" type="audio/mpeg"></audio></td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px; font-style: italic; color: #64748b;">éditorial</td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px;">The editorial team decides which books fit the publisher's list and how each one should be shaped.</td>
+        </tr>
+        <tr>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px; font-weight: bold; color: #1e293b;">copyright</td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px;"><div onclick="document.getElementById('audio-copyright').play()" style="display: inline-block; background: linear-gradient(135deg, #ba3627 0%, #9a2d21 100%); color: white; padding: 4px 12px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; box-shadow: 0 2px 4px rgba(186,54,39,0.3); transition: transform 0.1s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">🔊 Listen</div><audio id="audio-copyright" preload="auto"><source src="/vocab-audio/publishing-vocab-audio/copyright.mp3" type="audio/mpeg"></audio></td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px; font-style: italic; color: #64748b;">droit d'auteur</td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px;">Copyright means other people cannot copy an author's work without permission.</td>
+        </tr>
+        <tr style="background: #e8eaf6;">
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px; font-weight: bold; color: #1e293b;">blurb</td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px;"><div onclick="document.getElementById('audio-blurb').play()" style="display: inline-block; background: linear-gradient(135deg, #ba3627 0%, #9a2d21 100%); color: white; padding: 4px 12px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; box-shadow: 0 2px 4px rgba(186,54,39,0.3); transition: transform 0.1s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">🔊 Listen</div><audio id="audio-blurb" preload="auto"><source src="/vocab-audio/publishing-vocab-audio/blurb.mp3" type="audio/mpeg"></audio></td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px; font-style: italic; color: #64748b;">texte de quatrième de couverture</td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px;">A good blurb makes you want to open the book, without revealing how the story ends.</td>
+        </tr>
+        <tr>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px; font-weight: bold; color: #1e293b;">forthcoming title</td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px;"><div onclick="document.getElementById('audio-forthcoming-title').play()" style="display: inline-block; background: linear-gradient(135deg, #ba3627 0%, #9a2d21 100%); color: white; padding: 4px 12px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; box-shadow: 0 2px 4px rgba(186,54,39,0.3); transition: transform 0.1s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">🔊 Listen</div><audio id="audio-forthcoming-title" preload="auto"><source src="/vocab-audio/publishing-vocab-audio/forthcoming title.mp3" type="audio/mpeg"></audio></td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px; font-style: italic; color: #64748b;">titre à paraître</td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px;">The publisher announced a forthcoming title by a well-known crime writer.</td>
+        </tr>
+        <tr style="background: #e8eaf6;">
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px; font-weight: bold; color: #1e293b;">advance</td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px;"><div onclick="document.getElementById('audio-advance').play()" style="display: inline-block; background: linear-gradient(135deg, #ba3627 0%, #9a2d21 100%); color: white; padding: 4px 12px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; box-shadow: 0 2px 4px rgba(186,54,39,0.3); transition: transform 0.1s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">🔊 Listen</div><audio id="audio-advance" preload="auto"><source src="/vocab-audio/publishing-vocab-audio/advance.mp3" type="audio/mpeg"></audio></td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px; font-style: italic; color: #64748b;">à-valoir</td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px;">An advance is money the publisher pays the author before the book goes on sale.</td>
+        </tr>
+        <tr>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px; font-weight: bold; color: #1e293b;">royalties</td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px;"><div onclick="document.getElementById('audio-royalties').play()" style="display: inline-block; background: linear-gradient(135deg, #ba3627 0%, #9a2d21 100%); color: white; padding: 4px 12px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; box-shadow: 0 2px 4px rgba(186,54,39,0.3); transition: transform 0.1s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">🔊 Listen</div><audio id="audio-royalties" preload="auto"><source src="/vocab-audio/publishing-vocab-audio/royalties.mp3" type="audio/mpeg"></audio></td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px; font-style: italic; color: #64748b;">redevances</td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px;">Authors earn royalties each time a bookshop sells a copy of their book.</td>
+        </tr>
+        <tr style="background: #e8eaf6;">
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px; font-weight: bold; color: #1e293b;">book launch</td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px;"><div onclick="document.getElementById('audio-book-launch').play()" style="display: inline-block; background: linear-gradient(135deg, #ba3627 0%, #9a2d21 100%); color: white; padding: 4px 12px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; box-shadow: 0 2px 4px rgba(186,54,39,0.3); transition: transform 0.1s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">🔊 Listen</div><audio id="audio-book-launch" preload="auto"><source src="/vocab-audio/publishing-vocab-audio/book launch.mp3" type="audio/mpeg"></audio></td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px; font-style: italic; color: #64748b;">lancement d'un livre</td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px;">The book launch included a short reading and time for readers to ask questions.</td>
+        </tr>
+        <tr>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px; font-weight: bold; color: #1e293b;">foreign rights</td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px;"><div onclick="document.getElementById('audio-foreign-rights').play()" style="display: inline-block; background: linear-gradient(135deg, #ba3627 0%, #9a2d21 100%); color: white; padding: 4px 12px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; box-shadow: 0 2px 4px rgba(186,54,39,0.3); transition: transform 0.1s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">🔊 Listen</div><audio id="audio-foreign-rights" preload="auto"><source src="/vocab-audio/publishing-vocab-audio/foreign rights.mp3" type="audio/mpeg"></audio></td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px; font-style: italic; color: #64748b;">droits étrangers</td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px;">Selling the foreign rights lets another publisher bring the book out in a different country.</td>
+        </tr>
+        <tr style="background: #e8eaf6;">
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px; font-weight: bold; color: #1e293b;">translation</td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px;"><div onclick="document.getElementById('audio-translation').play()" style="display: inline-block; background: linear-gradient(135deg, #ba3627 0%, #9a2d21 100%); color: white; padding: 4px 12px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; box-shadow: 0 2px 4px rgba(186,54,39,0.3); transition: transform 0.1s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">🔊 Listen</div><audio id="audio-translation" preload="auto"><source src="/vocab-audio/publishing-vocab-audio/translation.mp3" type="audio/mpeg"></audio></td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px; font-style: italic; color: #64748b;">traduction</td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px;">A good translation keeps the voice of the original book in a new language.</td>
+        </tr>
+        <tr>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px; font-weight: bold; color: #1e293b;">print run</td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px;"><div onclick="document.getElementById('audio-print-run').play()" style="display: inline-block; background: linear-gradient(135deg, #ba3627 0%, #9a2d21 100%); color: white; padding: 4px 12px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; box-shadow: 0 2px 4px rgba(186,54,39,0.3); transition: transform 0.1s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">🔊 Listen</div><audio id="audio-print-run" preload="auto"><source src="/vocab-audio/publishing-vocab-audio/print run.mp3" type="audio/mpeg"></audio></td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px; font-style: italic; color: #64748b;">tirage</td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px;">A small print run is safer for a first novel, because unsold copies are expensive to store.</td>
+        </tr>
+        <tr style="background: #e8eaf6;">
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px; font-weight: bold; color: #1e293b;">pitch</td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px;"><div onclick="document.getElementById('audio-pitch').play()" style="display: inline-block; background: linear-gradient(135deg, #ba3627 0%, #9a2d21 100%); color: white; padding: 4px 12px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; box-shadow: 0 2px 4px rgba(186,54,39,0.3); transition: transform 0.1s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">🔊 Listen</div><audio id="audio-pitch" preload="auto"><source src="/vocab-audio/publishing-vocab-audio/pitch.mp3" type="audio/mpeg"></audio></td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px; font-style: italic; color: #64748b;">pitch / argumentaire</td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px;">A strong pitch can persuade an editor to read the full story, not just the first page.</td>
+        </tr>
+        <tr>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px; font-weight: bold; color: #1e293b;">synopsis</td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px;"><div onclick="document.getElementById('audio-synopsis').play()" style="display: inline-block; background: linear-gradient(135deg, #ba3627 0%, #9a2d21 100%); color: white; padding: 4px 12px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; box-shadow: 0 2px 4px rgba(186,54,39,0.3); transition: transform 0.1s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">🔊 Listen</div><audio id="audio-synopsis" preload="auto"><source src="/vocab-audio/publishing-vocab-audio/synopsis.mp3" type="audio/mpeg"></audio></td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px; font-style: italic; color: #64748b;">synopsis</td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px;">Editors often ask for a synopsis so they can see the whole plot before they read every chapter.</td>
+        </tr>
+        <tr style="background: #e8eaf6;">
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px; font-weight: bold; color: #1e293b;">editing</td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px;"><div onclick="document.getElementById('audio-editing').play()" style="display: inline-block; background: linear-gradient(135deg, #ba3627 0%, #9a2d21 100%); color: white; padding: 4px 12px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; box-shadow: 0 2px 4px rgba(186,54,39,0.3); transition: transform 0.1s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">🔊 Listen</div><audio id="audio-editing" preload="auto"><source src="/vocab-audio/publishing-vocab-audio/editing.mp3" type="audio/mpeg"></audio></td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px; font-style: italic; color: #64748b;">révision éditoriale</td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px;">Editing improves the structure and clarity of a book; it is more than correcting spelling.</td>
+        </tr>
+        <tr>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px; font-weight: bold; color: #1e293b;">proofreading</td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px;"><div onclick="document.getElementById('audio-proofreading').play()" style="display: inline-block; background: linear-gradient(135deg, #ba3627 0%, #9a2d21 100%); color: white; padding: 4px 12px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; box-shadow: 0 2px 4px rgba(186,54,39,0.3); transition: transform 0.1s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">🔊 Listen</div><audio id="audio-proofreading" preload="auto"><source src="/vocab-audio/publishing-vocab-audio/proofreading.mp3" type="audio/mpeg"></audio></td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px; font-style: italic; color: #64748b;">correction d'épreuves</td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px;">Proofreading comes after editing and looks for small errors such as typos and missing commas.</td>
+        </tr>
+        <tr style="background: #e8eaf6;">
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px; font-weight: bold; color: #1e293b;">book fair</td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px;"><div onclick="document.getElementById('audio-book-fair').play()" style="display: inline-block; background: linear-gradient(135deg, #ba3627 0%, #9a2d21 100%); color: white; padding: 4px 12px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; box-shadow: 0 2px 4px rgba(186,54,39,0.3); transition: transform 0.1s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">🔊 Listen</div><audio id="audio-book-fair" preload="auto"><source src="/vocab-audio/publishing-vocab-audio/book fair.mp3" type="audio/mpeg"></audio></td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px; font-style: italic; color: #64748b;">salon du livre</td>
+          <td style="border: 1px solid #e5e7eb; padding: 8px; font-size: 16px;">A book fair is a large event where publishers show new books to booksellers and readers.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- PAGE 2: Gap Fill Exercise -->
+<div style="max-width: 800px; margin: 0 auto; padding: 20px; font-family: Arial, sans-serif; line-height: 1.5; color: #333; background: linear-gradient(to bottom, #f5e6e4, #ffffff);" class="page-break">
+
+  <div style="margin-bottom: 30px; padding: 20px; background: white; border-radius: 10px; box-shadow: 0 2px 4px rgba(0,0,0,0.05);" class="keep-together">
+    <h2 style="font-size: 20px; font-weight: bold; margin-bottom: 15px; color: #ba3627; border-bottom: 3px solid #ba3627; padding-bottom: 8px;">Part 2: Gap Fill Exercise</h2>
+    <p style="font-size: 16px; margin-bottom: 15px; color: #475569;">Drag the word cards from the <strong>scrollable word bank on the right</strong> into the gaps in each sentence, or click a card and then click a gap. Use the <strong>Check answers</strong> button when you are ready.</p>
+
+    <div data-vocab-gap-fill-mount="true" data-vocab-audio-dir="/vocab-audio/publishing-vocab-audio/" style="margin-top: 8px;">
+      <div class="vocab-series-gap-data" hidden aria-hidden="true">{
+  "sentences": [
+    { "number": 1, "parts": ["The novel still existed only as a ", { "slot": "gapfill-q1", "answers": ["manuscript"] }, " on the author's laptop: 90,000 words, and not yet a printed book."] },
+    { "number": 2, "parts": ["The award is only for ", { "slot": "gapfill-q2", "answers": ["literary"] }, " fiction, so cookbooks, textbooks and sports biographies cannot be entered."] },
+    { "number": 3, "parts": ["The guidelines explain how to prepare a ", { "slot": "gapfill-q3", "answers": ["submission"] }, ": a short letter, a one-page summary, and the first three chapters."] },
+    { "number": 4, "parts": ["For most of the story, readers follow Maya, the ", { "slot": "gapfill-q4", "answers": ["protagonist"] }, ", as she tries to save her family's bookshop."] },
+    { "number": 5, "parts": ["The ", { "slot": "gapfill-q5", "answers": ["narrative"] }, " jumps between three decades, so the reader has to piece the family history together."] },
+    { "number": 6, "parts": ["At the weekly ", { "slot": "gapfill-q6", "answers": ["editorial"] }, " meeting, the team argued about whether the ending was too sad for their readers."] },
+    { "number": 7, "parts": ["Without the author's permission, posting whole chapters online would break ", { "slot": "gapfill-q7", "answers": ["copyright"] }, "."] },
+    { "number": 8, "parts": ["The ", { "slot": "gapfill-q8", "answers": ["blurb"] }, " printed on the back cover made the novel sound exciting, but it carefully hid the final twist."] },
+    { "number": 9, "parts": ["Booksellers can already order the novel, even though it is still listed as a ", { "slot": "gapfill-q9", "answers": ["forthcoming title"] }, " and will not reach the shops until October."] },
+    { "number": 10, "parts": ["The contract offered an ", { "slot": "gapfill-q10", "answers": ["advance"] }, " of €12,000, paid in three parts before the book went on sale."] },
+    { "number": 11, "parts": ["After the book had earned back that first payment, the writer began to receive ", { "slot": "gapfill-q11", "answers": ["royalties"] }, " of 8% on every copy sold."] },
+    { "number": 12, "parts": ["On publication day, the author read two pages aloud at the ", { "slot": "gapfill-q12", "answers": ["book launch"] }, " and then signed copies for people in the queue."] },
+    { "number": 13, "parts": ["The agent sold the ", { "slot": "gapfill-q13", "answers": ["foreign rights"] }, " to publishers in Italy and Korea, so each country can bring out its own edition."] },
+    { "number": 14, "parts": ["The Spanish ", { "slot": "gapfill-q14", "answers": ["translation"] }, " took eight months, because the translator wanted the jokes to work for readers in Madrid."] },
+    { "number": 15, "parts": ["The publisher printed 4,000 copies in the first ", { "slot": "gapfill-q15", "answers": ["print run"] }, " and waited to see if bookshops asked for more."] },
+    { "number": 16, "parts": ["Standing by the editor's stand, the agent gave a two-minute spoken ", { "slot": "gapfill-q16", "answers": ["pitch"] }, " about why commuters would buy this novel."] },
+    { "number": 17, "parts": ["Unlike the back-cover text, the ", { "slot": "gapfill-q17", "answers": ["synopsis"] }, " gave away the ending so the editor could judge the whole plot."] },
+    { "number": 18, "parts": ["During ", { "slot": "gapfill-q18", "answers": ["editing"] }, ", the editor asked the writer to cut a side character and make chapter four easier to follow."] },
+    { "number": 19, "parts": ["The final check is ", { "slot": "gapfill-q19", "answers": ["proofreading"] }, ": someone looks for typos and missing commas, but does not change the story."] },
+    { "number": 20, "parts": ["At the London ", { "slot": "gapfill-q20", "answers": ["book fair"] }, ", hundreds of publishers set up stands so they can meet booksellers and show their new books."] }
+  ]
+}</div>
+    </div>
+  </div>
+</div>
+
+<!-- PAGE 3: Discussion Questions -->
+<div style="max-width: 800px; margin: 0 auto; padding: 20px; font-family: Arial, sans-serif; line-height: 1.5; color: #333; background: linear-gradient(to bottom, #e8eaf6, #ffffff);" class="page-break">
+
+  <div style="margin-bottom: 30px; padding: 20px; background: white; border-radius: 10px; box-shadow: 0 2px 4px rgba(0,0,0,0.05);" class="keep-together">
+    <h2 style="font-size: 20px; font-weight: bold; margin-bottom: 15px; color: #38438f; border-bottom: 3px solid #38438f; padding-bottom: 8px;">Part 3: Discussion Questions</h2>
+    <p style="font-size: 16px; margin-bottom: 15px; color: #475569;">Use the vocabulary from this worksheet to answer the following questions.</p>
+
+    <div style="background: linear-gradient(135deg, #e8eaf6 0%, #c5cae9 100%); padding: 20px; border-radius: 10px; border-left: 5px solid #38438f; box-shadow: 0 2px 4px rgba(56,67,143,0.1);">
+      <ol style="padding-left: 25px; font-size: 16px; list-style-type: decimal; margin: 0;">
+        <li style="margin-bottom: 15px; padding: 10px; background: white; border-radius: 6px; box-shadow: 0 1px 2px rgba(0,0,0,0.05);">What makes a good blurb, and how is it different from a synopsis? Which one would you read before buying a novel, and why?</li>
+        <li style="margin-bottom: 15px; padding: 10px; background: white; border-radius: 6px; box-shadow: 0 1px 2px rgba(0,0,0,0.05);">If you were a first-time author, would you rather receive a large advance or higher royalties? What are the risks of each?</li>
+        <li style="margin-bottom: 15px; padding: 10px; background: white; border-radius: 6px; box-shadow: 0 1px 2px rgba(0,0,0,0.05);">Why might a publisher print only a small number of copies of a first novel? What could go wrong with a very large print run?</li>
+        <li style="margin-bottom: 15px; padding: 10px; background: white; border-radius: 6px; box-shadow: 0 1px 2px rgba(0,0,0,0.05);">You are organising a book launch for a novel you love. Who would you invite, and what would you want people to do there?</li>
+        <li style="margin-bottom: 15px; padding: 10px; background: white; border-radius: 6px; box-shadow: 0 1px 2px rgba(0,0,0,0.05);">A novel is first published in English. Why might the publisher also sell the foreign rights, and what does a translation need to do well?</li>
+        <li style="margin-bottom: 0; padding: 10px; background: white; border-radius: 6px; box-shadow: 0 1px 2px rgba(0,0,0,0.05);">What is the difference between editing and proofreading? Why do both matter before a book is printed and sold?</li>
+      </ol>
+    </div>
+  </div>
+</div>
+
+<!-- PAGE 4: Answer Key -->
+<div style="max-width: 800px; margin: 0 auto; padding: 20px; font-family: Arial, sans-serif; line-height: 1.5; color: #333; background: linear-gradient(to bottom, #e8eaf6, #ffffff);" class="page-break">
+
+  <div style="margin-top: 30px; padding-top: 20px; border-top: 3px solid #38438f;" class="no-break">
+    <h2 style="font-size: 22px; font-weight: bold; margin-bottom: 20px; color: white; text-align: center; padding: 15px; background: linear-gradient(135deg, #38438f 0%, #2d3569 100%); border-radius: 10px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">📝 Answer Key</h2>
+
+    <div style="margin-bottom: 20px; padding: 20px; background: white; border-radius: 10px; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
+      <h3 style="font-size: 22px; font-weight: bold; margin-bottom: 15px; color: #ba3627; border-bottom: 2px solid #ba3627; padding-bottom: 6px;">Part 2: Gap Fill Exercise</h3>
+      <ol style="padding-left: 25px; font-size: 16px; list-style-type: decimal;">
+        <li style="margin-bottom: 10px; padding: 8px; background: #f5e6e4; border-radius: 4px;">The novel still existed only as a <strong style="color: #38438f;">manuscript</strong> on the author's laptop: 90,000 words, and not yet a printed book.</li>
+        <li style="margin-bottom: 10px; padding: 8px; background: #f5e6e4; border-radius: 4px;">The award is only for <strong style="color: #38438f;">literary</strong> fiction, so cookbooks, textbooks and sports biographies cannot be entered.</li>
+        <li style="margin-bottom: 10px; padding: 8px; background: #f5e6e4; border-radius: 4px;">The guidelines explain how to prepare a <strong style="color: #38438f;">submission</strong>: a short letter, a one-page summary, and the first three chapters.</li>
+        <li style="margin-bottom: 10px; padding: 8px; background: #f5e6e4; border-radius: 4px;">For most of the story, readers follow Maya, the <strong style="color: #38438f;">protagonist</strong>, as she tries to save her family's bookshop.</li>
+        <li style="margin-bottom: 10px; padding: 8px; background: #f5e6e4; border-radius: 4px;">The <strong style="color: #38438f;">narrative</strong> jumps between three decades, so the reader has to piece the family history together.</li>
+        <li style="margin-bottom: 10px; padding: 8px; background: #f5e6e4; border-radius: 4px;">At the weekly <strong style="color: #38438f;">editorial</strong> meeting, the team argued about whether the ending was too sad for their readers.</li>
+        <li style="margin-bottom: 10px; padding: 8px; background: #f5e6e4; border-radius: 4px;">Without the author's permission, posting whole chapters online would break <strong style="color: #38438f;">copyright</strong>.</li>
+        <li style="margin-bottom: 10px; padding: 8px; background: #f5e6e4; border-radius: 4px;">The <strong style="color: #38438f;">blurb</strong> printed on the back cover made the novel sound exciting, but it carefully hid the final twist.</li>
+        <li style="margin-bottom: 10px; padding: 8px; background: #f5e6e4; border-radius: 4px;">Booksellers can already order the novel, even though it is still listed as a <strong style="color: #38438f;">forthcoming title</strong> and will not reach the shops until October.</li>
+        <li style="margin-bottom: 10px; padding: 8px; background: #f5e6e4; border-radius: 4px;">The contract offered an <strong style="color: #38438f;">advance</strong> of €12,000, paid in three parts before the book went on sale.</li>
+        <li style="margin-bottom: 10px; padding: 8px; background: #f5e6e4; border-radius: 4px;">After the book had earned back that first payment, the writer began to receive <strong style="color: #38438f;">royalties</strong> of 8% on every copy sold.</li>
+        <li style="margin-bottom: 10px; padding: 8px; background: #f5e6e4; border-radius: 4px;">On publication day, the author read two pages aloud at the <strong style="color: #38438f;">book launch</strong> and then signed copies for people in the queue.</li>
+        <li style="margin-bottom: 10px; padding: 8px; background: #f5e6e4; border-radius: 4px;">The agent sold the <strong style="color: #38438f;">foreign rights</strong> to publishers in Italy and Korea, so each country can bring out its own edition.</li>
+        <li style="margin-bottom: 10px; padding: 8px; background: #f5e6e4; border-radius: 4px;">The Spanish <strong style="color: #38438f;">translation</strong> took eight months, because the translator wanted the jokes to work for readers in Madrid.</li>
+        <li style="margin-bottom: 10px; padding: 8px; background: #f5e6e4; border-radius: 4px;">The publisher printed 4,000 copies in the first <strong style="color: #38438f;">print run</strong> and waited to see if bookshops asked for more.</li>
+        <li style="margin-bottom: 10px; padding: 8px; background: #f5e6e4; border-radius: 4px;">Standing by the editor's stand, the agent gave a two-minute spoken <strong style="color: #38438f;">pitch</strong> about why commuters would buy this novel.</li>
+        <li style="margin-bottom: 10px; padding: 8px; background: #f5e6e4; border-radius: 4px;">Unlike the back-cover text, the <strong style="color: #38438f;">synopsis</strong> gave away the ending so the editor could judge the whole plot.</li>
+        <li style="margin-bottom: 10px; padding: 8px; background: #f5e6e4; border-radius: 4px;">During <strong style="color: #38438f;">editing</strong>, the editor asked the writer to cut a side character and make chapter four easier to follow.</li>
+        <li style="margin-bottom: 10px; padding: 8px; background: #f5e6e4; border-radius: 4px;">The final check is <strong style="color: #38438f;">proofreading</strong>: someone looks for typos and missing commas, but does not change the story.</li>
+        <li style="margin-bottom: 10px; padding: 8px; background: #f5e6e4; border-radius: 4px;">At the London <strong style="color: #38438f;">book fair</strong>, hundreds of publishers set up stands so they can meet booksellers and show their new books.</li>
+      </ol>
+    </div>
+  </div>
+</div>

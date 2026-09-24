@@ -149,6 +149,11 @@ const PATCHES: Array<{
     jsonFile: 'company-finance.json',
     audioDir: '/vocab-audio/company-finance-vocab-audio/',
   },
+  {
+    htmlFile: 'publishing-vocabulary-html.html',
+    jsonFile: 'publishing.json',
+    audioDir: '/vocab-audio/publishing-vocab-audio/',
+  },
 ]
 
 function patchFile(htmlFile: string, jsonFile: string, audioDir: string) {

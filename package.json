@@ -34,6 +34,8 @@
     "generate:money-vocab-tts": "tsx scripts/generate-money-vocab-tts.ts",
     "generate:company-finance-html": "tsx scripts/generate-company-finance-html.ts",
     "generate:company-finance-vocab-tts": "tsx scripts/generate-company-finance-vocab-tts.ts",
+    "generate:publishing-html": "tsx scripts/generate-publishing-html.ts",
+    "generate:publishing-vocab-tts": "tsx scripts/generate-publishing-vocab-tts.ts",
     "migrate:add-skill": "tsx scripts/migrate-add-skill.ts"
   },
   "dependencies": {
