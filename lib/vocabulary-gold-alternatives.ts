@@ -1,5 +1,6 @@
 /** Extra accepted English answers for gold challenge typing (beyond word_english). */
 const GOLD_ALTERNATIVES: Record<string, string[]> = {
+  'a1|Seasons & Holidays|Merry Christmas!': ['happy christmas', 'Happy Christmas!'],
   'a1|Food & Drink (B)|ice-cream': ['ice cream', 'icecream'],
   'a1|Food & Drink (B)|ice cream': ['ice-cream', 'icecream'],
   'a1|Travel & Transport|aeroplane': ['airplane', 'plane'],

@@ -310,7 +310,9 @@ export const STUDENT_ONBOARDING_CHECKLIST_ITEMS: OnboardingChecklistItemDefiniti
   {
     slug: 'student-satisfaction-survey',
     label: 'Student Satisfaction Survey',
-    type: 'complete-or-na',
+    type: 'student-document',
+    documentTitle: 'Student Satisfaction Survey',
+    allowedMimeTypes: ['application/pdf'],
     externalLinks: [
       {
         label: 'Student satisfaction indicators',

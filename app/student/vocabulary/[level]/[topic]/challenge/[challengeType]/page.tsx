@@ -5,6 +5,7 @@ import { useParams, useRouter, useSearchParams } from 'next/navigation'
 import { LEVEL_COLORS } from '@/lib/level-colors'
 import VocabularyNav from '@/components/VocabularyNav'
 import ChallengeModal from '@/components/ChallengeModal'
+import ChallengeConfetti from '@/components/ChallengeConfetti'
 import Link from 'next/link'
 import { supabase } from '@/lib/supabase'
 import { isVocabularyLevel } from '@/lib/vocabulary-levels'
@@ -666,6 +667,9 @@ export default function ChallengePage() {
         message={modalState.message}
         levelColor={levelColor}
       />
+      {challengeType === 'gold' && modalState.isOpen && modalState.type === 'success' && (
+        <ChallengeConfetti />
+      )}
       {/* Help Prompt Modal */}
       {showHelpPrompt && (
         <div className="fixed inset-0 z-50 overflow-y-auto">
