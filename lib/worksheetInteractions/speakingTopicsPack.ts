@@ -1,8 +1,55 @@
 /**
  * A1 speaking topic cards: a face-down fan, a flutter-and-flip draw,
- * and a one-minute countdown. Worksheet <script> tags do not run, so
+ * and a one-minute countdown. Topics already spoken stay face-up in the
+ * discard pile across visits. Worksheet <script> tags do not run, so
  * this is mounted from WorksheetViewer.
  */
+
+export type SpeakingTopicsPersistence = {
+  getUsedTopics: () => string[]
+  setUsedTopics: (topics: string[]) => void
+}
+
+const USED_KEY = 'speakingTopicsUsed'
+const DECK_KEY = 'speakingTopicsDeck'
+
+export function parseSpeakingTopicsUsedFromNotes(notes: string | null | undefined): string[] {
+  try {
+    const parsed = JSON.parse(notes || '{}') as { speakingTopicsUsed?: unknown }
+    if (!Array.isArray(parsed.speakingTopicsUsed)) return []
+    return parsed.speakingTopicsUsed.filter(
+      (item): item is string => typeof item === 'string' && item.trim().length > 0,
+    )
+  } catch {
+    return []
+  }
+}
+
+export function mergeSpeakingTopicsUsedIntoNotes(
+  notes: string | null | undefined,
+  topics: string[],
+): string {
+  let parsed: Record<string, unknown> = {}
+  try {
+    if (notes && notes.trim()) {
+      const value = JSON.parse(notes) as unknown
+      if (value && typeof value === 'object' && !Array.isArray(value)) {
+        parsed = { ...(value as Record<string, unknown>) }
+      }
+    }
+  } catch {
+    return notes || ''
+  }
+
+  const unique: string[] = []
+  topics.forEach((topic) => {
+    if (!unique.includes(topic)) unique.push(topic)
+  })
+  parsed[USED_KEY] = unique
+  // Keeps a cleared deck meaningful so an empty used-list is not dropped on save.
+  parsed[DECK_KEY] = 'saved'
+  return JSON.stringify(parsed)
+}
 
 type Pose = { x: number; y: number; angle: number; scale: number }
 type CardStatus = 'fan' | 'flying' | 'active' | 'discard'
@@ -109,7 +156,10 @@ function parseTopics(raw: string | null): string[] {
   return fromAttr.length > 0 ? fromAttr : DEFAULT_TOPICS.slice()
 }
 
-function mountSpeakingTopicsPack(root: HTMLElement): () => void {
+function mountSpeakingTopicsPack(
+  root: HTMLElement,
+  persistence?: SpeakingTopicsPersistence,
+): () => void {
   if (root.getAttribute('data-speaking-topics-mounted') === 'true') {
     return () => {}
   }
@@ -208,12 +258,30 @@ function mountSpeakingTopicsPack(root: HTMLElement): () => void {
 
   const updateStatus = () => {
     const left = fanCards().length
+    const spoken = discardCards().length
     if (statusEl) {
-      statusEl.textContent =
+      const leftText =
         left === 0 ? 'No cards left.' : left === 1 ? '1 card left.' : `${left} cards left.`
+      const spokenText =
+        left > 0 && spoken > 0
+          ? spoken === 1
+            ? ' 1 already spoken.'
+            : ` ${spoken} already spoken.`
+          : ''
+      statusEl.textContent = `${leftText}${spokenText}`
     }
     newPackBtn.classList.toggle('is-visible', left === 0)
-    slot.classList.toggle('is-filled', Boolean(activeCard()) || discardCards().length > 0)
+    slot.classList.toggle('is-filled', Boolean(activeCard()))
+  }
+
+  const rememberUsed = () => {
+    if (!persistence) return
+    const used: string[] = []
+    cards.forEach((card) => {
+      if (card.status === 'fan' || used.includes(card.topic)) return
+      used.push(card.topic)
+    })
+    persistence.setUsedTopics(used)
   }
 
   const cardSize = () => {
@@ -373,6 +441,7 @@ function mountSpeakingTopicsPack(root: HTMLElement): () => void {
     card.el.classList.remove('is-fan')
     card.el.disabled = true
     card.el.style.zIndex = '80'
+    rememberUsed()
     const landing = slotPose()
     setFlipped(card, true, true)
     await animateTo(card, landing, prefersReducedMotion() ? 0 : 820, true)
@@ -401,17 +470,32 @@ function mountSpeakingTopicsPack(root: HTMLElement): () => void {
       card.el.disabled = false
       setFlipped(card, false, false)
     })
+    persistence?.setUsedTopics([])
     layoutFan(false)
     resetTimer(false)
     updateStatus()
   }
 
-  const topics = shuffle(parseTopics(root.getAttribute('data-topics')))
+  const savedUsed = persistence?.getUsedTopics() ?? []
+  const savedUsedSet = new Set(savedUsed)
+  const allTopics = parseTopics(root.getAttribute('data-topics'))
+  const unusedTopics = shuffle(allTopics.filter((topic) => !savedUsedSet.has(topic)))
+  const usedTopics = savedUsed.filter(
+    (topic, index) => allTopics.includes(topic) && savedUsed.indexOf(topic) === index,
+  )
+  const topics = [...unusedTopics, ...usedTopics]
+  const subEl = root.querySelector('.st-sub')
+  if (subEl) {
+    subEl.textContent =
+      'Then click another card. Spoken topics stay turned over when you come back.'
+  }
   topics.forEach((topic) => {
+    const alreadySpoken = savedUsedSet.has(topic)
     const el = document.createElement('button')
     el.type = 'button'
-    el.className = 'st-card is-fan'
-    el.setAttribute('aria-label', 'Face-down topic card')
+    el.className = alreadySpoken ? 'st-card' : 'st-card is-fan'
+    el.disabled = alreadySpoken
+    el.setAttribute('aria-label', alreadySpoken ? topic : 'Face-down topic card')
     el.innerHTML = `
       <div class="st-card-inner">
         <div class="st-card-back"></div>
@@ -431,9 +515,10 @@ function mountSpeakingTopicsPack(root: HTMLElement): () => void {
       inner,
       topicEl,
       topic,
-      status: 'fan',
+      status: alreadySpoken ? 'discard' : 'fan',
       pose: { x: 0, y: 0, angle: 0, scale: 1 },
     }
+    if (alreadySpoken) setFlipped(record, true, false)
     cards.push(record)
 
     const onClick = () => {
@@ -487,6 +572,7 @@ function mountSpeakingTopicsPack(root: HTMLElement): () => void {
   cleanups.push(() => window.removeEventListener('resize', onResize))
 
   layoutFan(false)
+  layoutDiscards()
   resetTimer(false)
   updateStatus()
   root.setAttribute('data-speaking-topics-mounted', 'true')
@@ -503,10 +589,13 @@ function mountSpeakingTopicsPack(root: HTMLElement): () => void {
   }
 }
 
-export function mountSpeakingTopicsPacks(host: HTMLElement): () => void {
+export function mountSpeakingTopicsPacks(
+  host: HTMLElement,
+  persistence?: SpeakingTopicsPersistence,
+): () => void {
   const roots = Array.from(host.querySelectorAll('[data-speaking-topics]')) as HTMLElement[]
   const cleanups = roots
     .filter((el) => el.getAttribute('data-speaking-topics-mounted') !== 'true')
-    .map((el) => mountSpeakingTopicsPack(el))
+    .map((el) => mountSpeakingTopicsPack(el, persistence))
   return () => cleanups.forEach((fn) => fn())
 }

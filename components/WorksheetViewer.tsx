@@ -35,7 +35,12 @@ import { mountOpinionRankings } from '@/lib/worksheetInteractions/opinionRanking
 import { mountParagraphReorders } from '@/lib/worksheetInteractions/paragraphReorder'
 import { mountDiscourseMarkerSorts } from '@/lib/worksheetInteractions/discourseMarkerSort'
 import { mountWritingPracticeTimers } from '@/lib/worksheetInteractions/writingPracticeTimers'
-import { mountSpeakingTopicsPacks } from '@/lib/worksheetInteractions/speakingTopicsPack'
+import {
+  mergeSpeakingTopicsUsedIntoNotes,
+  mountSpeakingTopicsPacks,
+  parseSpeakingTopicsUsedFromNotes,
+  type SpeakingTopicsPersistence,
+} from '@/lib/worksheetInteractions/speakingTopicsPack'
 import { mountWritingClearlyPhraseMatch } from '@/lib/worksheetInteractions/writingClearlyPhraseMatch'
 import { mountWritingClearlySubmit } from '@/lib/worksheetInteractions/writingClearlySubmit'
 import { mountWritingTaskSubmits } from '@/lib/worksheetInteractions/writingTaskSubmit'
@@ -857,6 +862,7 @@ export default function WorksheetViewer({
   notesRef.current = notes
   const latestSaveIdRef = useRef(0)
   const giaqPersistenceRef = useRef<GiaqActivityPersistence | null>(null)
+  const speakingTopicsPersistenceRef = useRef<SpeakingTopicsPersistence | null>(null)
   giaqPersistenceRef.current = {
     getMatchPlacements: (matchKey) => parseGiaqMatchPlacementsFromNotes(notesRef.current, matchKey),
     setMatchPlacements: (matchKey, placements) => {
@@ -1532,6 +1538,15 @@ export default function WorksheetViewer({
   )
   const saveProgressRef = useRef(saveProgress)
   saveProgressRef.current = saveProgress
+  speakingTopicsPersistenceRef.current = {
+    getUsedTopics: () => parseSpeakingTopicsUsedFromNotes(notesRef.current),
+    setUsedTopics: (topics) => {
+      const newNotes = mergeSpeakingTopicsUsedIntoNotes(notesRef.current, topics)
+      notesRef.current = newNotes
+      setNotes(newNotes)
+      void saveProgressRef.current(newNotes)
+    },
+  }
 
   // Auto-save placement test answers when notes change
   useEffect(() => {
@@ -3096,7 +3111,7 @@ export default function WorksheetViewer({
     const rafId = requestAnimationFrame(() => {
       const host = contentRef.current
       if (!host) return
-      detach = mountSpeakingTopicsPacks(host)
+      detach = mountSpeakingTopicsPacks(host, speakingTopicsPersistenceRef.current ?? undefined)
     })
     return () => {
       cancelAnimationFrame(rafId)
@@ -3285,7 +3300,7 @@ export default function WorksheetViewer({
   // Flush and persist when the student leaves the tab or closes the page.
   useEffect(() => {
     if (preventSave) return
-    if (!hasGrammarInputs && !hasGiaqActivities && !isPlacementTest) return
+    if (!hasGrammarInputs && !hasGiaqActivities && !isPlacementTest && !hasSpeakingTopics) return
 
     const persistOnLeave = () => {
       const notesValue = hasGrammarInputs
@@ -3320,6 +3335,7 @@ export default function WorksheetViewer({
     flushGrammarInputsToNotes,
     hasGiaqActivities,
     hasGrammarInputs,
+    hasSpeakingTopics,
     isPlacementTest,
     notes,
     preventSave,
