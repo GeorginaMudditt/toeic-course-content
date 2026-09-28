@@ -109,11 +109,17 @@ export async function PUT(
     }
 
     const data = await request.json()
+    const hasName = typeof data.name === 'string'
+    const hasEmail = typeof data.email === 'string'
+
+    if (!hasName && !hasEmail) {
+      return NextResponse.json({ error: 'Name or email is required' }, { status: 400 })
+    }
 
     // Verify the user exists and is a student
     const { data: userData, error: userError } = await supabaseServer
       .from('User')
-      .select('id, role, email')
+      .select('id, role, email, name')
       .eq('id', params.id)
       .eq('role', 'STUDENT')
       .single()
@@ -122,53 +128,68 @@ export async function PUT(
       return NextResponse.json({ error: 'Student not found' }, { status: 404 })
     }
 
-    // Validate email if provided
-    if (data.email) {
-      const normalizedEmail = data.email.toLowerCase().trim()
-      
-      // Check if email is already in use by another user
-      const { data: existingUser, error: checkError } = await supabaseServer
-        .from('User')
-        .select('id')
-        .eq('email', normalizedEmail)
-        .neq('id', params.id)
-        .single()
-
-      if (checkError && checkError.code !== 'PGRST116') { // PGRST116 = no rows returned
-        console.error('Error checking email:', checkError)
-        return NextResponse.json(
-          { error: 'Failed to verify email availability' },
-          { status: 500 }
-        )
-      }
-
-      if (existingUser) {
-        return NextResponse.json(
-          { error: 'Email is already in use' },
-          { status: 400 }
-        )
-      }
-
-      // Update email
-      const { data: updatedUser, error: updateError } = await supabaseServer
-        .from('User')
-        .update({ email: normalizedEmail })
-        .eq('id', params.id)
-        .select()
-        .single()
-
-      if (updateError) {
-        console.error('Error updating email:', updateError)
-        return NextResponse.json(
-          { error: 'Failed to update email' },
-          { status: 500 }
-        )
-      }
-
-      return NextResponse.json({ success: true, user: updatedUser })
+    const updatePayload: Record<string, unknown> = {
+      updatedAt: new Date().toISOString(),
     }
 
-    return NextResponse.json({ error: 'No email provided' }, { status: 400 })
+    if (hasName) {
+      const name = data.name.trim()
+      if (!name) {
+        return NextResponse.json({ error: 'Please enter a name' }, { status: 400 })
+      }
+      updatePayload.name = name
+    }
+
+    if (hasEmail) {
+      const normalizedEmail = data.email.toLowerCase().trim()
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+      if (!emailRegex.test(normalizedEmail)) {
+        return NextResponse.json({ error: 'Please enter a valid email address' }, { status: 400 })
+      }
+
+      if (normalizedEmail !== userData.email.toLowerCase().trim()) {
+        const { data: existingUser, error: checkError } = await supabaseServer
+          .from('User')
+          .select('id')
+          .eq('email', normalizedEmail)
+          .neq('id', params.id)
+          .maybeSingle()
+
+        if (checkError) {
+          console.error('Error checking email:', checkError)
+          return NextResponse.json(
+            { error: 'Failed to verify email availability' },
+            { status: 500 }
+          )
+        }
+
+        if (existingUser) {
+          return NextResponse.json(
+            { error: 'Email is already in use' },
+            { status: 400 }
+          )
+        }
+      }
+
+      updatePayload.email = normalizedEmail
+    }
+
+    const { data: updatedUser, error: updateError } = await supabaseServer
+      .from('User')
+      .update(updatePayload)
+      .eq('id', params.id)
+      .select()
+      .single()
+
+    if (updateError) {
+      console.error('Error updating student details:', updateError)
+      return NextResponse.json(
+        { error: 'Failed to update student details' },
+        { status: 500 }
+      )
+    }
+
+    return NextResponse.json({ success: true, user: updatedUser })
   } catch (error) {
     console.error('Error updating student email:', error)
     return NextResponse.json(

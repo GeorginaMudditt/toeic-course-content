@@ -5,25 +5,30 @@ import { useRouter } from 'next/navigation'
 
 interface EditStudentEmailProps {
   studentId: string
+  currentName: string
   currentEmail: string
 }
 
-export default function EditStudentEmail({ studentId, currentEmail }: EditStudentEmailProps) {
+export default function EditStudentEmail({
+  studentId,
+  currentName,
+  currentEmail,
+}: EditStudentEmailProps) {
   const router = useRouter()
   const [showEdit, setShowEdit] = useState(false)
+  const [name, setName] = useState(currentName)
   const [email, setEmail] = useState(currentEmail)
   const [updating, setUpdating] = useState(false)
   const [error, setError] = useState('')
 
-  // Reset email when modal opens/closes
   useEffect(() => {
     if (showEdit) {
+      setName(currentName)
       setEmail(currentEmail)
       setError('')
     }
-  }, [showEdit, currentEmail])
+  }, [showEdit, currentName, currentEmail])
 
-  // Prevent body scroll when modal is open
   useEffect(() => {
     if (showEdit) {
       document.body.style.overflow = 'hidden'
@@ -38,16 +43,25 @@ export default function EditStudentEmail({ studentId, currentEmail }: EditStuden
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setError('')
-    
-    // Validate email format
+
+    const trimmedName = name.trim()
+    const trimmedEmail = email.trim()
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-    if (!emailRegex.test(email)) {
+
+    if (!trimmedName) {
+      setError('Please enter a name')
+      return
+    }
+
+    if (!emailRegex.test(trimmedEmail)) {
       setError('Please enter a valid email address')
       return
     }
 
-    if (email.toLowerCase().trim() === currentEmail.toLowerCase().trim()) {
-      setError('Email is the same as current email')
+    const nameUnchanged = trimmedName === currentName.trim()
+    const emailUnchanged = trimmedEmail.toLowerCase() === currentEmail.toLowerCase().trim()
+    if (nameUnchanged && emailUnchanged) {
+      setError('Change the name or the email before saving')
       return
     }
 
@@ -57,22 +71,21 @@ export default function EditStudentEmail({ studentId, currentEmail }: EditStuden
       const response = await fetch(`/api/users/${studentId}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email })
+        body: JSON.stringify({ name: trimmedName, email: trimmedEmail }),
       })
 
       const data = await response.json()
 
       if (response.ok) {
-        // Close modal and refresh page
         setShowEdit(false)
         router.refresh()
       } else {
-        setError(data.error || 'Failed to update email')
+        setError(data.error || 'Failed to update student details')
         setUpdating(false)
       }
     } catch (error: any) {
-      console.error('Error updating email:', error)
-      setError(error.message || 'Failed to update email. Please try again.')
+      console.error('Error updating student details:', error)
+      setError(error.message || 'Failed to update student details. Please try again.')
       setUpdating(false)
     }
   }
@@ -84,21 +97,18 @@ export default function EditStudentEmail({ studentId, currentEmail }: EditStuden
         className="px-4 py-2 text-white rounded-md transition-opacity hover:opacity-90"
         style={{ backgroundColor: '#38438f' }}
       >
-        Edit Email
+        Edit student details
       </button>
 
       {showEdit && (
         <div className="fixed inset-0 z-50 overflow-y-auto">
-          {/* Backdrop */}
           <div
             className="fixed inset-0 bg-black bg-opacity-50 transition-opacity"
             onClick={() => !updating && setShowEdit(false)}
           />
-          
-          {/* Modal */}
+
           <div className="flex min-h-full items-center justify-center p-4">
             <div className="relative bg-white rounded-lg shadow-xl max-w-md w-full transform transition-all">
-              {/* Close button */}
               {!updating && (
                 <button
                   onClick={() => setShowEdit(false)}
@@ -111,32 +121,41 @@ export default function EditStudentEmail({ studentId, currentEmail }: EditStuden
                 </button>
               )}
 
-              {/* Content */}
               <div className="p-6">
-                {/* Title */}
                 <h3 className="text-2xl font-bold text-center mb-4 text-gray-900">
-                  Change Email Address
+                  Edit student details
                 </h3>
 
-                {/* Form */}
                 <form onSubmit={handleSubmit}>
                   <div className="mb-4">
-                    <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
-                      New Email Address
+                    <label htmlFor="student-name" className="block text-sm font-medium text-gray-700 mb-2">
+                      Name
                     </label>
                     <input
-                      type="email"
-                      id="email"
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
+                      type="text"
+                      id="student-name"
+                      value={name}
+                      onChange={(e) => setName(e.target.value)}
                       disabled={updating}
                       className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#38438f] focus:border-transparent disabled:bg-gray-100 disabled:cursor-not-allowed"
                       required
                       autoFocus
                     />
-                    <p className="mt-1 text-xs text-gray-500">
-                      Current email: <span className="font-medium">{currentEmail}</span>
-                    </p>
+                  </div>
+
+                  <div className="mb-4">
+                    <label htmlFor="student-email" className="block text-sm font-medium text-gray-700 mb-2">
+                      Email address
+                    </label>
+                    <input
+                      type="email"
+                      id="student-email"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      disabled={updating}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#38438f] focus:border-transparent disabled:bg-gray-100 disabled:cursor-not-allowed"
+                      required
+                    />
                   </div>
 
                   {error && (
@@ -145,7 +164,6 @@ export default function EditStudentEmail({ studentId, currentEmail }: EditStuden
                     </div>
                   )}
 
-                  {/* Buttons */}
                   <div className="flex space-x-3">
                     <button
                       type="button"
@@ -161,7 +179,7 @@ export default function EditStudentEmail({ studentId, currentEmail }: EditStuden
                       className="flex-1 px-4 py-2 text-white rounded-md transition-opacity hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed"
                       style={{ backgroundColor: '#38438f' }}
                     >
-                      {updating ? 'Updating...' : 'Update Email'}
+                      {updating ? 'Saving...' : 'Save'}
                     </button>
                   </div>
                 </form>

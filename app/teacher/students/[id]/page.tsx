@@ -258,7 +258,11 @@ export default async function StudentDetailPage({
                 >
                   Student View
                 </Link>
-                <EditStudentEmail studentId={student.id} currentEmail={student.email} />
+                <EditStudentEmail
+                  studentId={student.id}
+                  currentName={student.name}
+                  currentEmail={student.email}
+                />
                 <DeleteStudentButton studentId={student.id} studentName={student.name} />
               </div>
             </div>
