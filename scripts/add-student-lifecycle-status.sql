@@ -7,7 +7,7 @@ ALTER TABLE "User" DROP CONSTRAINT IF EXISTS "User_studentLifecycleStatus_check"
 
 ALTER TABLE "User" ADD CONSTRAINT "User_studentLifecycleStatus_check" CHECK (
   "studentLifecycleStatus" IS NULL
-  OR "studentLifecycleStatus" IN ('ACTIVE_STUDENT', 'PAST_STUDENT', 'TESTING', 'EDITING')
+  OR "studentLifecycleStatus" IN ('ACTIVE_STUDENT', 'INACTIVE_STUDENT', 'PAST_STUDENT', 'TESTING', 'EDITING')
 );
 
 UPDATE "User"

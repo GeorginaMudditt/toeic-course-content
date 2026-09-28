@@ -1,5 +1,6 @@
 export const STUDENT_LIFECYCLE_STATUS_VALUES = [
   'ACTIVE_STUDENT',
+  'INACTIVE_STUDENT',
   'PAST_STUDENT',
   'TESTING',
   'EDITING',
@@ -9,6 +10,7 @@ export type StudentLifecycleStatus = (typeof STUDENT_LIFECYCLE_STATUS_VALUES)[nu
 
 export const STUDENT_LIFECYCLE_LABELS: Record<StudentLifecycleStatus, string> = {
   ACTIVE_STUDENT: 'Active student',
+  INACTIVE_STUDENT: 'Inactive student',
   PAST_STUDENT: 'Past student',
   TESTING: 'Testing',
   EDITING: 'Editing',
@@ -17,6 +19,7 @@ export const STUDENT_LIFECYCLE_LABELS: Record<StudentLifecycleStatus, string> = 
 /** Wording for the teacher "Show students" filter dropdown */
 export const STUDENT_LIFECYCLE_FILTER_LABELS: Record<StudentLifecycleStatus, string> = {
   ACTIVE_STUDENT: 'Active students only',
+  INACTIVE_STUDENT: 'Inactive students only',
   PAST_STUDENT: 'Past students only',
   TESTING: 'Testing only',
   EDITING: 'Editing only',
@@ -32,6 +35,12 @@ export const STUDENT_LIFECYCLE_VISUAL: Record<
     leftStripeClass: 'border-l-4 border-l-emerald-600',
     selectClass:
       'border-emerald-400 bg-emerald-100 text-emerald-950 focus:ring-emerald-500/40 focus:border-emerald-500',
+  },
+  INACTIVE_STUDENT: {
+    rowClass: 'bg-sky-50/90 hover:bg-sky-50',
+    leftStripeClass: 'border-l-4 border-l-sky-600',
+    selectClass:
+      'border-sky-400 bg-sky-100 text-sky-950 focus:ring-sky-500/40 focus:border-sky-500',
   },
   PAST_STUDENT: {
     rowClass: 'bg-slate-100/90 hover:bg-slate-100',

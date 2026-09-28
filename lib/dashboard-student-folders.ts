@@ -71,10 +71,11 @@ export function isDashboardFolderArchived(value: boolean | null | undefined): bo
   return value === true
 }
 
-/** Students shown as active folders on the teacher dashboard. */
+/** Students shown as folders on the teacher dashboard. Inactive students stay visible. */
 export function isVisibleOnDashboard(student: DashboardStudentRow): boolean {
   const status = normalizeStudentLifecycleStatus(student.studentLifecycleStatus)
-  return status === 'ACTIVE_STUDENT' && !isDashboardFolderArchived(student.dashboardFolderArchived)
+  const shownOnDashboard = status === 'ACTIVE_STUDENT' || status === 'INACTIVE_STUDENT'
+  return shownOnDashboard && !isDashboardFolderArchived(student.dashboardFolderArchived)
 }
 
 /** Students shown inside the dashboard Archive folder. */

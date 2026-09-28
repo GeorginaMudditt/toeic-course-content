@@ -52,7 +52,7 @@ model User {
   resetToken        String?   // Token for password reset
   resetTokenExpiry  DateTime? // Expiry time for reset token
   lastSeenAt        DateTime? // Last time the user logged in
-  /// For students: ACTIVE_STUDENT | PAST_STUDENT | TESTING | EDITING. Null for teachers or legacy rows.
+  /// For students: ACTIVE_STUDENT | INACTIVE_STUDENT | PAST_STUDENT | TESTING | EDITING. Null for teachers or legacy rows.
   studentLifecycleStatus String?
   /// When true, the student folder is hidden from the dashboard active list (Archive folder only).
   dashboardFolderArchived Boolean @default(false)
