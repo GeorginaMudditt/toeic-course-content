@@ -100,7 +100,7 @@ model Resource {
 model Course {
   id            String    @id @default(cuid())
   name          String
-  duration      Int       // 15, 30, 45, or 60 hours
+  duration      Int       // Package length in hours: 10, 15, 20, or 40
   description   String?
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
@@ -160,6 +160,21 @@ model Progress {
   student       User           @relation(fields: [studentId], references: [id])
   
   @@unique([assignmentId, studentId])
+}
+
+model BookedLesson {
+  id                String   @id
+  websiteLessonId   String   @unique
+  studentEmail      String
+  studentName       String?
+  lessonDate        DateTime @db.Date
+  startTime         String
+  endTime           String
+  lessonType        String?
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  @@index([studentEmail, lessonDate])
 }
 
 model CourseNote {

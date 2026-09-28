@@ -7,6 +7,10 @@ import Link from 'next/link'
 import { getSavedSectionsForDashboard } from '@/lib/resource-bookmarks'
 import SavedSectionsPanel from '@/components/SavedSectionsPanel'
 import { formatUKDate, formatCourseName } from '@/lib/date-utils'
+import { loadCourseHourPanels } from '@/lib/student-course-hours'
+import { loadUpcomingLessonsForStudent } from '@/lib/booked-lessons'
+import CourseHoursProgress from '@/components/CourseHoursProgress'
+import UpcomingLessons from '@/components/UpcomingLessons'
 
 export default async function StudentDashboard() {
   const session = await getServerSession(authOptions)
@@ -70,6 +74,8 @@ export default async function StudentDashboard() {
   }
 
   const savedSections = await getSavedSectionsForDashboard(session.user.id)
+  const courseHourPanels = await loadCourseHourPanels(session.user.id)
+  const upcomingLessons = await loadUpcomingLessonsForStudent(session.user.id)
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -77,6 +83,15 @@ export default async function StudentDashboard() {
       <div className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
         <div className="px-4 py-6 sm:px-0">
           <h1 className="text-3xl font-bold text-gray-900 mb-8">Dashboard</h1>
+
+          <div
+            className={`mb-8 grid grid-cols-1 gap-6 ${
+              courseHourPanels.length > 0 ? 'xl:grid-cols-2' : ''
+            }`}
+          >
+            <CourseHoursProgress panels={courseHourPanels} />
+            <UpcomingLessons lessons={upcomingLessons} />
+          </div>
 
           <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
             {/* My Resources Card (was My Course) */}

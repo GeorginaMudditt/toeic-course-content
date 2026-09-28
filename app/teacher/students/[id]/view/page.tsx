@@ -5,6 +5,10 @@ import { supabaseServer } from '@/lib/supabase'
 import Navbar from '@/components/Navbar'
 import Link from 'next/link'
 import { formatUKDate, formatCourseName } from '@/lib/date-utils'
+import { loadCourseHourPanels } from '@/lib/student-course-hours'
+import { loadUpcomingLessonsForStudent } from '@/lib/booked-lessons'
+import CourseHoursProgress from '@/components/CourseHoursProgress'
+import UpcomingLessons from '@/components/UpcomingLessons'
 
 export default async function StudentViewPage({ params }: { params: { id: string } }) {
   const session = await getServerSession(authOptions)
@@ -63,6 +67,8 @@ export default async function StudentViewPage({ params }: { params: { id: string
 
   // Get the first enrollment for the "My Course" card
   const firstEnrollment = enrollments[0]
+  const courseHourPanels = await loadCourseHourPanels(params.id)
+  const upcomingLessons = await loadUpcomingLessonsForStudent(params.id)
 
   // Fetch document count for the "My Docs" card
   let documentCount = 0
@@ -102,6 +108,15 @@ export default async function StudentViewPage({ params }: { params: { id: string
           </div>
 
           <h1 className="text-3xl font-bold text-gray-900 mb-8">Dashboard</h1>
+
+          <div
+            className={`mb-8 grid grid-cols-1 gap-6 ${
+              courseHourPanels.length > 0 ? 'xl:grid-cols-2' : ''
+            }`}
+          >
+            <CourseHoursProgress panels={courseHourPanels} />
+            <UpcomingLessons lessons={upcomingLessons} />
+          </div>
 
           <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
             {/* My Resources Card (was My Course) */}
