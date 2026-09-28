@@ -17,8 +17,9 @@ function CourseHourBlocks({ panel }: { panel: CourseHourPanel }) {
 
   return (
     <div>
-      <p className="text-sm text-gray-600">{panel.courseLabel}</p>
-      <p className="mt-1 text-2xl font-semibold text-gray-900">{summary}</p>
+      <h2 className="text-xl font-semibold text-gray-900" style={{ color: '#38438f' }}>
+        {summary}
+      </h2>
       <div
         className="mt-4 grid w-full max-w-md grid-cols-10 gap-1.5"
         aria-hidden="true"
@@ -35,10 +36,6 @@ function CourseHourBlocks({ panel }: { panel: CourseHourPanel }) {
           )
         })}
       </div>
-      <p className="mt-3 text-sm text-gray-500">
-        Each block is one hour logged in My Notes.
-        {overPackage ? ' Every block in this package is filled.' : ''}
-      </p>
     </div>
   )
 }
@@ -52,10 +49,7 @@ export default function CourseHoursProgress({ panels }: Props) {
       className="rounded-lg border-t-4 bg-white p-6 shadow"
       style={{ borderTopColor: '#38438f' }}
     >
-      <h2 className="text-xl font-semibold text-gray-900" style={{ color: '#38438f' }}>
-        Course hours
-      </h2>
-      <div className="mt-5 space-y-8">
+      <div className="space-y-8">
         {panels.map((panel) => (
           <CourseHourBlocks key={panel.enrollmentId} panel={panel} />
         ))}
