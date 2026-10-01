@@ -39,10 +39,11 @@ export function mountArticleExpressionMatch(root: HTMLElement): Cleanup {
     return () => {}
   }
 
-  const bank = root.querySelector('[data-ace-bank]') as HTMLElement | null
+  const bankEl = root.querySelector('[data-ace-bank]') as HTMLElement | null
   const feedback = root.querySelector('[data-ace-feedback]') as HTMLElement | null
   const drops = dropsIn(root)
-  if (!bank || drops.length === 0) return () => {}
+  if (!bankEl || drops.length === 0) return () => {}
+  const bank: HTMLElement = bankEl
 
   const cleanups: Cleanup[] = []
   let selected: HTMLElement | null = null
@@ -86,7 +87,7 @@ export function mountArticleExpressionMatch(root: HTMLElement): Cleanup {
     const fromDrop = chip.closest('[data-ace-drop]') as HTMLElement | null
     const existing = drop.querySelector('.ace-chip') as HTMLElement | null
     if (existing && existing !== chip) {
-      bank!.appendChild(existing)
+      bank.appendChild(existing)
       existing.classList.remove('is-correct', 'is-wrong', 'is-selected')
     }
     drop.querySelector('.ace-placeholder')?.remove()
@@ -102,7 +103,7 @@ export function mountArticleExpressionMatch(root: HTMLElement): Cleanup {
   function returnToBank(chip: HTMLElement) {
     clearMarks()
     const fromDrop = chip.closest('[data-ace-drop]') as HTMLElement | null
-    bank!.appendChild(chip)
+    bank.appendChild(chip)
     chip.classList.remove('is-correct', 'is-wrong', 'is-selected')
     if (fromDrop) {
       fromDrop.classList.remove('is-correct', 'is-wrong', 'is-over')
