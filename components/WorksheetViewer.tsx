@@ -34,6 +34,7 @@ import { mountPresentingServicesProductsActivities } from '@/lib/worksheetIntera
 import { mountOpinionRankings } from '@/lib/worksheetInteractions/opinionRanking'
 import { mountParagraphReorders } from '@/lib/worksheetInteractions/paragraphReorder'
 import { mountDiscourseMarkerSorts } from '@/lib/worksheetInteractions/discourseMarkerSort'
+import { mountArticleExpressionMatches } from '@/lib/worksheetInteractions/articleExpressionMatch'
 import { mountWritingPracticeTimers } from '@/lib/worksheetInteractions/writingPracticeTimers'
 import {
   mergeSpeakingTopicsUsedIntoNotes,
@@ -913,6 +914,8 @@ export default function WorksheetViewer({
     typeof resource.content === 'string' && resource.content.includes('data-paragraph-reorder')
   const hasDiscourseMarkerSort =
     typeof resource.content === 'string' && resource.content.includes('data-discourse-marker-sort')
+  const hasArticleExpressionMatch =
+    typeof resource.content === 'string' && resource.content.includes('data-article-expression-match')
   const hasWritingTaskSubmit =
     typeof resource.content === 'string' && resource.content.includes('data-writing-task-submit')
   const hasSpeakingTopics =
@@ -3071,6 +3074,21 @@ export default function WorksheetViewer({
     }
   }, [hasDiscourseMarkerSort, resource.content, isClientMounted, grammarInputsReady])
 
+  // Articles in Common Expressions: drag an expression into each gap.
+  useLayoutEffect(() => {
+    if (!hasArticleExpressionMatch || !isClientMounted) return
+    let detach: (() => void) | undefined
+    const rafId = requestAnimationFrame(() => {
+      const host = contentRef.current
+      if (!host) return
+      detach = mountArticleExpressionMatches(host)
+    })
+    return () => {
+      cancelAnimationFrame(rafId)
+      detach?.()
+    }
+  }, [hasArticleExpressionMatch, resource.content, isClientMounted])
+
   // Static phrase lists with 🔊 buttons (e.g. Natur'Evasion Vocabulary).
   useLayoutEffect(() => {
     if (!hasPhraseAudioRoot) return
@@ -3621,7 +3639,7 @@ export default function WorksheetViewer({
             } else {
               // Render normally for non-placement tests
               // Memoize HTML when it has injected inputs/activities (re-renders would reset the DOM).
-              if (hasGrammarInputs || hasMountedWorksheetActivities || hasSpeakingTopics) {
+              if (hasGrammarInputs || hasMountedWorksheetActivities || hasSpeakingTopics || hasArticleExpressionMatch) {
                 return (
                   <MemoizedContent
                     html={resource.content}

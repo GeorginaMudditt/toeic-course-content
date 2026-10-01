@@ -14,6 +14,7 @@ echo ""
 
 # Grammar worksheets
 npm run update:resource:supabase "Adjectives" "adjectives-html.html"
+npm run update:resource:supabase "Articles in Common Expressions" "articles-in-common-expressions-html.html"
 npm run update:resource:supabase "Comparative and Superlative Adjectives" "comparative-and-superlative-adjectives-html.html"
 npm run update:resource:supabase "Conditionals: Zero, First, Second" "conditionals-zero-first-second-html.html"
 npm run update:resource:supabase "Conditionals: Third, Mixed" "conditionals-third-mixed-html.html"

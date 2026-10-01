@@ -126,7 +126,8 @@ export function mountResourceSectionBookmarks(
       section.querySelector('h2')?.textContent?.trim() ||
       sectionSlug
 
-    const heading = section.querySelector('h2')
+    const headingSelector = section.getAttribute('data-bookmark-heading') || 'h2'
+    const heading = section.querySelector(headingSelector)
     if (!heading || heading.closest('.resource-bookmark-heading-row')) return
 
     const row = document.createElement('div')

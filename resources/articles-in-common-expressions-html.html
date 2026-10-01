@@ -1,0 +1,811 @@
+<!-- Articles in Common Expressions (B1) -->
+<style>
+  .ace-wrap {
+    max-width: 920px;
+    margin: 0 auto;
+    padding: 8px 4px 28px;
+    font-family: Arial, Helvetica, sans-serif;
+    line-height: 1.55;
+    color: #1f2937;
+  }
+
+  .ace-wrap h1 {
+    margin: 8px 0 0;
+    font-size: 28px;
+    line-height: 1.2;
+    color: #0f172a;
+  }
+
+  .ace-wrap h2 {
+    margin: 0 0 10px;
+    font-size: 22px;
+    color: #1e3a8a;
+  }
+
+  .ace-wrap h3 {
+    margin: 0 0 8px;
+    font-size: 18px;
+    color: #1e293b;
+  }
+
+  .ace-header {
+    text-align: center;
+    margin-bottom: 16px;
+  }
+
+  .ace-header .resource-bookmark-heading-row {
+    justify-content: center;
+  }
+
+  .ace-card {
+    border: 1px solid #dbe3f0;
+    border-radius: 10px;
+    background: #fff;
+    padding: 16px 18px;
+    margin-bottom: 16px;
+  }
+
+  .ace-intro {
+    font-size: 16px;
+    margin: 0;
+  }
+
+  .ace-art {
+    color: #ba3627;
+    font-weight: 800;
+  }
+
+  .ace-zero {
+    display: inline-block;
+    margin-left: 6px;
+    padding: 1px 6px;
+    border-radius: 999px;
+    background: #f1f5f9;
+    color: #475569;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    vertical-align: middle;
+  }
+
+  .ace-table-scroll {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .ace-table {
+    width: 100%;
+    min-width: 720px;
+    border-collapse: collapse;
+    font-size: 15px;
+    margin: 0;
+  }
+
+  .ace-table th,
+  .ace-table td {
+    border: 1px solid #e2e8f0;
+    padding: 8px 10px;
+    text-align: left;
+    vertical-align: top;
+    word-break: normal !important;
+    overflow-wrap: break-word;
+  }
+
+  .ace-table th {
+    background: #e8eaf6;
+    color: #1e293b;
+    font-weight: 700;
+  }
+
+  .ace-table td:first-child {
+    min-width: 11em;
+  }
+
+  .ace-example {
+    color: #334155;
+  }
+
+  .ace-note {
+    margin: 8px 0 0;
+    padding: 8px 10px;
+    background: #fff7ed;
+    border-left: 4px solid #f97316;
+    border-radius: 6px;
+    font-size: 14px;
+  }
+
+  .ace-group {
+    margin-bottom: 18px;
+  }
+
+  .ace-group:last-child {
+    margin-bottom: 0;
+  }
+
+  .ace-help {
+    margin: 0 0 12px;
+    font-size: 15px;
+    color: #334155;
+  }
+
+  .ace-bank {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 0 0 14px;
+    padding: 12px;
+    border: 1px dashed #c7d2fe;
+    border-radius: 8px;
+    background: #eef2ff;
+    min-height: 52px;
+  }
+
+  .ace-bank.is-over {
+    border-color: #38438f;
+    background: #e0e7ff;
+  }
+
+  .ace-chip {
+    display: inline-flex;
+    align-items: center;
+    margin: 0;
+    padding: 7px 12px;
+    border: 1px solid #2d3569;
+    border-radius: 8px;
+    background: #38438f;
+    color: #fff;
+    font: 600 14px/1.2 Arial, Helvetica, sans-serif;
+    cursor: grab;
+    box-shadow: 0 1px 2px rgba(15, 23, 42, 0.15);
+    user-select: none;
+    touch-action: manipulation;
+  }
+
+  .ace-chip.is-dragging {
+    opacity: 0.65;
+  }
+
+  .ace-chip.is-selected {
+    outline: 3px solid #fbbf24;
+    outline-offset: 1px;
+  }
+
+  .ace-chip.is-correct {
+    background: #15803d;
+    border-color: #166534;
+  }
+
+  .ace-chip.is-wrong {
+    background: #b91c1c;
+    border-color: #991b1b;
+  }
+
+  .ace-items {
+    list-style-type: decimal !important;
+    list-style-position: outside !important;
+    margin: 0 0 14px;
+    padding-left: 1.4em;
+  }
+
+  .ace-items li {
+    display: list-item !important;
+    margin: 0 0 10px;
+    font-size: 16px;
+    line-height: 2.1;
+  }
+
+  .ace-drop {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    vertical-align: middle;
+    min-width: 7.5em;
+    min-height: 36px;
+    margin: 0 4px;
+    padding: 2px 6px;
+    border: 2px dashed #94a3b8;
+    border-radius: 8px;
+    background: #fff;
+    cursor: pointer;
+    font: inherit;
+    color: inherit;
+  }
+
+  .ace-drop.is-over {
+    border-color: #38438f;
+    background: #eef2ff;
+  }
+
+  .ace-drop.is-correct {
+    border-style: solid;
+    border-color: #16a34a;
+    background: #f0fdf4;
+  }
+
+  .ace-drop.is-wrong {
+    border-style: solid;
+    border-color: #dc2626;
+    background: #fef2f2;
+  }
+
+  .ace-placeholder {
+    color: #94a3b8;
+    font-size: 13px;
+    font-weight: 600;
+  }
+
+  .ace-toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .ace-btn {
+    margin: 0;
+    padding: 8px 14px;
+    border: none;
+    border-radius: 6px;
+    font: 600 14px Arial, Helvetica, sans-serif;
+    cursor: pointer;
+  }
+
+  .ace-btn-primary {
+    background: #38438f;
+    color: #fff;
+  }
+
+  .ace-btn-secondary {
+    background: #e2e8f0;
+    color: #1e293b;
+  }
+
+  .ace-feedback {
+    margin: 0;
+    min-height: 22px;
+    font-size: 14px;
+    font-weight: 700;
+    color: #38438f;
+  }
+
+  @media (max-width: 700px) {
+    .ace-table {
+      min-width: 0;
+    }
+
+    .ace-table thead {
+      display: none;
+    }
+
+    .ace-table,
+    .ace-table tbody,
+    .ace-table tr,
+    .ace-table td {
+      display: block;
+      width: 100%;
+    }
+
+    .ace-table tr {
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+      margin-bottom: 10px;
+      padding: 8px 10px;
+      background: #fff;
+    }
+
+    .ace-table td {
+      border: none;
+      padding: 2px 0;
+    }
+
+    .ace-table td:nth-child(2) {
+      margin-top: 4px;
+    }
+
+    .ace-table td:nth-child(3) {
+      margin-top: 4px;
+      color: #334155;
+    }
+  }
+
+  .ace-practice + .ace-practice {
+    margin-top: 22px;
+    padding-top: 18px;
+    border-top: 1px solid #e2e8f0;
+  }
+
+  @media print {
+    .ace-toolbar,
+    .ace-help,
+    .ace-placeholder {
+      display: none !important;
+    }
+
+    .ace-chip {
+      background: #fff !important;
+      color: #111 !important;
+      border: 1px solid #111 !important;
+      box-shadow: none !important;
+    }
+
+    .ace-drop {
+      border: none !important;
+      border-bottom: 1px solid #111 !important;
+      border-radius: 0 !important;
+      background: transparent !important;
+      min-width: 8em;
+    }
+
+    .ace-card,
+    .ace-group {
+      break-inside: avoid;
+      page-break-inside: avoid;
+    }
+  }
+</style>
+
+<div class="ace-wrap">
+  <div class="ace-header" data-bookmarkable="articles-expressions" data-bookmark-label="Articles in Common Expressions" data-bookmark-heading="h1">
+    <img src="/brizzle-logo.png" alt="Brizzle" style="width: 45px; height: 45px; object-fit: contain;" />
+    <h1>Articles in Common Expressions</h1>
+  </div>
+
+  <div class="ace-card">
+    <h2>Common expressions</h2>
+    <p class="ace-intro">In English, articles (<em>a/an</em>, <em>the</em> and no article) are often part of a fixed expression. Sometimes there is a clear difference in meaning, but sometimes the best way to learn the expression is simply to learn the whole phrase.</p>
+  </div>
+
+  <div class="ace-card">
+    <div class="ace-group">
+      <h3>Bed</h3>
+      <div class="ace-table-scroll">
+        <table class="ace-table">
+          <thead>
+            <tr>
+              <th>Expression</th>
+              <th>Meaning</th>
+              <th>Example</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>go to bed</strong> <span class="ace-zero">no article</span></td>
+              <td>Go to your bed in order to sleep.</td>
+              <td class="ace-example">I usually go to bed at around 11 p.m.</td>
+            </tr>
+            <tr>
+              <td><strong>go to <span class="ace-art">the</span> bed</strong></td>
+              <td>Go to a particular bed, usually for another reason.</td>
+              <td class="ace-example">She went to the bed to pick up her phone.</td>
+            </tr>
+            <tr>
+              <td><strong>be in bed</strong> <span class="ace-zero">no article</span></td>
+              <td>Be in bed, usually sleeping or resting.</td>
+              <td class="ace-example">The children are in bed already.</td>
+            </tr>
+            <tr>
+              <td><strong>be in <span class="ace-art">the</span> bed</strong></td>
+              <td>Be physically inside a particular bed.</td>
+              <td class="ace-example">The cat is in the bed again!</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="ace-group">
+      <h3>Home</h3>
+      <div class="ace-table-scroll">
+        <table class="ace-table">
+          <thead>
+            <tr>
+              <th>Expression</th>
+              <th>Meaning</th>
+              <th>Example</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>go home</strong> <span class="ace-zero">no article</span></td>
+              <td>Return to your home.</td>
+              <td class="ace-example">I&rsquo;m tired. I think I&rsquo;ll go home.</td>
+            </tr>
+            <tr>
+              <td><strong>go to <span class="ace-art">the</span> house</strong></td>
+              <td>Go to a particular house or building.</td>
+              <td class="ace-example">We&rsquo;re going to the house to collect some boxes.</td>
+            </tr>
+            <tr>
+              <td><strong>be at home</strong> <span class="ace-zero">no article</span></td>
+              <td>Be in your home.</td>
+              <td class="ace-example">I&rsquo;m at home today.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="ace-group">
+      <h3>School</h3>
+      <div class="ace-table-scroll">
+        <table class="ace-table">
+          <thead>
+            <tr>
+              <th>Expression</th>
+              <th>Meaning</th>
+              <th>Example</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>go to school</strong> <span class="ace-zero">no article</span></td>
+              <td>Attend school / go there as a student.</td>
+              <td class="ace-example">My children go to school from Monday to Friday.</td>
+            </tr>
+            <tr>
+              <td><strong>go to <span class="ace-art">the</span> school</strong></td>
+              <td>Go to a particular school or school building, usually for another reason.</td>
+              <td class="ace-example">I went to the school to speak to my daughter&rsquo;s teacher.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="ace-group">
+      <h3>Work</h3>
+      <div class="ace-table-scroll">
+        <table class="ace-table">
+          <thead>
+            <tr>
+              <th>Expression</th>
+              <th>Meaning</th>
+              <th>Example</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>go to work</strong> <span class="ace-zero">no article</span></td>
+              <td>Go to your place of work in order to work.</td>
+              <td class="ace-example">I go to work at 8:30 every morning.</td>
+            </tr>
+            <tr>
+              <td><strong>go to <span class="ace-art">the</span> office</strong></td>
+              <td>Go to a particular office or workplace.</td>
+              <td class="ace-example">I usually work from home, but tomorrow I&rsquo;m going to the office.</td>
+            </tr>
+            <tr>
+              <td><strong>be at work</strong> <span class="ace-zero">no article</span></td>
+              <td>Be working / be at your workplace.</td>
+              <td class="ace-example">Don&rsquo;t call her now. She&rsquo;s at work.</td>
+            </tr>
+            <tr>
+              <td><strong>be at <span class="ace-art">the</span> office</strong></td>
+              <td>Be at a particular office or workplace.</td>
+              <td class="ace-example">He&rsquo;s at the office today because he has a meeting.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="ace-group">
+      <h3>Hospital</h3>
+      <div class="ace-table-scroll">
+        <table class="ace-table">
+          <thead>
+            <tr>
+              <th>Expression</th>
+              <th>Meaning</th>
+              <th>Example</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>go to hospital</strong> <span class="ace-zero">no article</span></td>
+              <td>Go to hospital to receive medical treatment.</td>
+              <td class="ace-example">She fell off her bike and had to go to hospital.</td>
+            </tr>
+            <tr>
+              <td><strong>go to <span class="ace-art">the</span> hospital</strong></td>
+              <td>Go to a particular hospital or building.</td>
+              <td class="ace-example">I need to go to the hospital to visit my friend.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="ace-note">This contrast is British English. In American English, people usually say <em>go to the hospital</em> for both meanings.</p>
+    </div>
+
+    <div class="ace-group">
+      <h3>Church</h3>
+      <div class="ace-table-scroll">
+        <table class="ace-table">
+          <thead>
+            <tr>
+              <th>Expression</th>
+              <th>Meaning</th>
+              <th>Example</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>go to church</strong> <span class="ace-zero">no article</span></td>
+              <td>Attend a church service.</td>
+              <td class="ace-example">My grandparents go to church every Sunday.</td>
+            </tr>
+            <tr>
+              <td><strong>go to <span class="ace-art">the</span> church</strong></td>
+              <td>Go to a particular church or building.</td>
+              <td class="ace-example">We went to the church to see the beautiful stained-glass windows.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="ace-group">
+      <h3>Prison</h3>
+      <div class="ace-table-scroll">
+        <table class="ace-table">
+          <thead>
+            <tr>
+              <th>Expression</th>
+              <th>Meaning</th>
+              <th>Example</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>go to prison</strong> <span class="ace-zero">no article</span></td>
+              <td>Become a prisoner / be sent to prison.</td>
+              <td class="ace-example">He was found guilty and went to prison.</td>
+            </tr>
+            <tr>
+              <td><strong>go to <span class="ace-art">the</span> prison</strong></td>
+              <td>Go to a particular prison, usually as a visitor or for another purpose.</td>
+              <td class="ace-example">The lawyer went to the prison to see his client.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="ace-card">
+    <div class="ace-group">
+      <h3>The dentist, the doctor and the cinema</h3>
+      <div class="ace-table-scroll">
+        <table class="ace-table">
+          <thead>
+            <tr>
+              <th>Expression</th>
+              <th>Meaning</th>
+              <th>Example</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>go to <span class="ace-art">the</span> dentist</strong></td>
+              <td>Have an appointment with the dentist / receive dental treatment.</td>
+              <td class="ace-example">I have to go to the dentist next Tuesday.</td>
+            </tr>
+            <tr>
+              <td><strong>go to <span class="ace-art">the</span> doctor</strong></td>
+              <td>See a doctor for medical advice or treatment.</td>
+              <td class="ace-example">I don&rsquo;t feel well, so I&rsquo;m going to the doctor.</td>
+            </tr>
+            <tr>
+              <td><strong>go to <span class="ace-art">the</span> cinema</strong></td>
+              <td>Go to see a film at a cinema.</td>
+              <td class="ace-example">We&rsquo;re going to the cinema tonight.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="ace-group">
+      <h3>Listening</h3>
+      <div class="ace-table-scroll">
+        <table class="ace-table">
+          <thead>
+            <tr>
+              <th>Expression</th>
+              <th>Meaning</th>
+              <th>Example</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>listen to music</strong> <span class="ace-zero">no article</span></td>
+              <td>Listen to music in general.</td>
+              <td class="ace-example">I love listening to music when I&rsquo;m driving.</td>
+            </tr>
+            <tr>
+              <td><strong>listen to <span class="ace-art">the</span> radio</strong></td>
+              <td>Listen to radio programmes or broadcasts.</td>
+              <td class="ace-example">My dad listens to the radio every morning.</td>
+            </tr>
+            <tr>
+              <td><strong>listen to <span class="ace-art">a</span> song</strong></td>
+              <td>Listen to one particular song, not previously identified.</td>
+              <td class="ace-example">I listened to a song on the radio that I really liked.</td>
+            </tr>
+            <tr>
+              <td><strong>listen to <span class="ace-art">the</span> song</strong></td>
+              <td>Listen to a particular song that the speaker and listener know.</td>
+              <td class="ace-example">Listen to the song I sent you yesterday.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="ace-note"><em>Music</em> is an uncountable noun, so we don&rsquo;t need an article when talking about music generally.</p>
+    </div>
+
+    <div class="ace-group">
+      <h3>Sport and musical instruments</h3>
+      <div class="ace-table-scroll">
+        <table class="ace-table">
+          <thead>
+            <tr>
+              <th>Expression</th>
+              <th>Meaning</th>
+              <th>Example</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>play football / tennis / basketball</strong> <span class="ace-zero">no article</span></td>
+              <td>Play a sport.</td>
+              <td class="ace-example">I play tennis twice a week.</td>
+            </tr>
+            <tr>
+              <td><strong>play <span class="ace-art">the</span> piano / guitar / violin</strong></td>
+              <td>Play a musical instrument.</td>
+              <td class="ace-example">She plays the piano beautifully.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="ace-group">
+      <h3>Meals and washing</h3>
+      <div class="ace-table-scroll">
+        <table class="ace-table">
+          <thead>
+            <tr>
+              <th>Expression</th>
+              <th>Meaning</th>
+              <th>Example</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>have breakfast / lunch / dinner</strong> <span class="ace-zero">no article</span></td>
+              <td>Eat a meal.</td>
+              <td class="ace-example">I usually have breakfast at 7:30.<br>We had dinner at a restaurant last night.</td>
+            </tr>
+            <tr>
+              <td><strong>have <span class="ace-art">a</span> shower / have <span class="ace-art">a</span> bath</strong></td>
+              <td>Wash yourself using a shower or a bath.</td>
+              <td class="ace-example">I&rsquo;m going to have a shower before dinner.<br>She had a bath last night.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="ace-card" data-bookmarkable="articles-practice" data-bookmark-label="Practice: articles in expressions">
+    <h2>Practice</h2>
+    <p class="ace-help">Drag each expression into the correct gap. You can also tap an expression, then tap a gap. Tap a placed expression to put it back.</p>
+
+    <div class="ace-practice" data-article-expression-match>
+      <h3>1. Bed, home and school</h3>
+      <div class="ace-bank" data-ace-bank>
+        <button type="button" class="ace-chip" data-ace-id="the-school">to the school</button>
+        <button type="button" class="ace-chip" data-ace-id="in-bed">in bed</button>
+        <button type="button" class="ace-chip" data-ace-id="go-home">home</button>
+        <button type="button" class="ace-chip" data-ace-id="bed-thing">to the bed</button>
+        <button type="button" class="ace-chip" data-ace-id="to-school">to school</button>
+        <button type="button" class="ace-chip" data-ace-id="at-home">at home</button>
+        <button type="button" class="ace-chip" data-ace-id="in-the-bed">in the bed</button>
+        <button type="button" class="ace-chip" data-ace-id="the-house">to the house</button>
+        <button type="button" class="ace-chip" data-ace-id="bed-sleep">to bed</button>
+      </div>
+      <ol class="ace-items">
+        <li>On weekdays, I go <span class="ace-drop" role="button" tabindex="0" data-ace-drop data-ace-answer="bed-sleep"><span class="ace-placeholder">drop here</span></span> at about eleven.</li>
+        <li>She went <span class="ace-drop" role="button" tabindex="0" data-ace-drop data-ace-answer="bed-thing"><span class="ace-placeholder">drop here</span></span> to pick up her phone.</li>
+        <li>It&rsquo;s late. The children are <span class="ace-drop" role="button" tabindex="0" data-ace-drop data-ace-answer="in-bed"><span class="ace-placeholder">drop here</span></span> already.</li>
+        <li>The cat is <span class="ace-drop" role="button" tabindex="0" data-ace-drop data-ace-answer="in-the-bed"><span class="ace-placeholder">drop here</span></span> again!</li>
+        <li>I&rsquo;m tired. I think I&rsquo;ll go <span class="ace-drop" role="button" tabindex="0" data-ace-drop data-ace-answer="go-home"><span class="ace-placeholder">drop here</span></span>.</li>
+        <li>Don&rsquo;t come over. I&rsquo;m <span class="ace-drop" role="button" tabindex="0" data-ace-drop data-ace-answer="at-home"><span class="ace-placeholder">drop here</span></span> today.</li>
+        <li>We&rsquo;re going <span class="ace-drop" role="button" tabindex="0" data-ace-drop data-ace-answer="the-house"><span class="ace-placeholder">drop here</span></span> to collect some boxes.</li>
+        <li>My children go <span class="ace-drop" role="button" tabindex="0" data-ace-drop data-ace-answer="to-school"><span class="ace-placeholder">drop here</span></span> from Monday to Friday.</li>
+        <li>I went <span class="ace-drop" role="button" tabindex="0" data-ace-drop data-ace-answer="the-school"><span class="ace-placeholder">drop here</span></span> to speak to my daughter&rsquo;s teacher.</li>
+      </ol>
+      <div class="ace-toolbar">
+        <button type="button" class="ace-btn ace-btn-primary" data-ace-check>Check answers</button>
+        <button type="button" class="ace-btn ace-btn-secondary" data-ace-reset>Reset</button>
+        <button type="button" class="ace-btn ace-btn-secondary" data-ace-show>Show answers</button>
+        <p class="ace-feedback" data-ace-feedback role="status"></p>
+      </div>
+    </div>
+
+    <div class="ace-practice" data-article-expression-match>
+      <h3>2. Work, hospital, church and prison</h3>
+      <div class="ace-bank" data-ace-bank>
+        <button type="button" class="ace-chip" data-ace-id="the-prison">to the prison</button>
+        <button type="button" class="ace-chip" data-ace-id="at-work">at work</button>
+        <button type="button" class="ace-chip" data-ace-id="to-church">to church</button>
+        <button type="button" class="ace-chip" data-ace-id="the-office">to the office</button>
+        <button type="button" class="ace-chip" data-ace-id="to-hospital">to hospital</button>
+        <button type="button" class="ace-chip" data-ace-id="at-office">at the office</button>
+        <button type="button" class="ace-chip" data-ace-id="the-church">to the church</button>
+        <button type="button" class="ace-chip" data-ace-id="to-work">to work</button>
+        <button type="button" class="ace-chip" data-ace-id="the-hospital">to the hospital</button>
+        <button type="button" class="ace-chip" data-ace-id="to-prison">to prison</button>
+      </div>
+      <ol class="ace-items">
+        <li>I go <span class="ace-drop" role="button" tabindex="0" data-ace-drop data-ace-answer="to-work"><span class="ace-placeholder">drop here</span></span> at 8:30 every morning.</li>
+        <li>I usually work from home, but tomorrow I&rsquo;m going <span class="ace-drop" role="button" tabindex="0" data-ace-drop data-ace-answer="the-office"><span class="ace-placeholder">drop here</span></span>.</li>
+        <li>Don&rsquo;t call her now. She&rsquo;s <span class="ace-drop" role="button" tabindex="0" data-ace-drop data-ace-answer="at-work"><span class="ace-placeholder">drop here</span></span>.</li>
+        <li>He&rsquo;s <span class="ace-drop" role="button" tabindex="0" data-ace-drop data-ace-answer="at-office"><span class="ace-placeholder">drop here</span></span> today because he has a meeting.</li>
+        <li>She fell off her bike and had to go <span class="ace-drop" role="button" tabindex="0" data-ace-drop data-ace-answer="to-hospital"><span class="ace-placeholder">drop here</span></span>.</li>
+        <li>I need to go <span class="ace-drop" role="button" tabindex="0" data-ace-drop data-ace-answer="the-hospital"><span class="ace-placeholder">drop here</span></span> to visit my friend.</li>
+        <li>My grandparents go <span class="ace-drop" role="button" tabindex="0" data-ace-drop data-ace-answer="to-church"><span class="ace-placeholder">drop here</span></span> every Sunday.</li>
+        <li>We went <span class="ace-drop" role="button" tabindex="0" data-ace-drop data-ace-answer="the-church"><span class="ace-placeholder">drop here</span></span> to see the stained-glass windows.</li>
+        <li>He was found guilty and went <span class="ace-drop" role="button" tabindex="0" data-ace-drop data-ace-answer="to-prison"><span class="ace-placeholder">drop here</span></span>.</li>
+        <li>The lawyer went <span class="ace-drop" role="button" tabindex="0" data-ace-drop data-ace-answer="the-prison"><span class="ace-placeholder">drop here</span></span> to see his client.</li>
+      </ol>
+      <div class="ace-toolbar">
+        <button type="button" class="ace-btn ace-btn-primary" data-ace-check>Check answers</button>
+        <button type="button" class="ace-btn ace-btn-secondary" data-ace-reset>Reset</button>
+        <button type="button" class="ace-btn ace-btn-secondary" data-ace-show>Show answers</button>
+        <p class="ace-feedback" data-ace-feedback role="status"></p>
+      </div>
+    </div>
+
+    <div class="ace-practice" data-article-expression-match>
+      <h3>3. Everyday expressions</h3>
+      <div class="ace-bank" data-ace-bank>
+        <button type="button" class="ace-chip" data-ace-id="piano">plays the piano</button>
+        <button type="button" class="ace-chip" data-ace-id="music">to music</button>
+        <button type="button" class="ace-chip" data-ace-id="shower">have a shower</button>
+        <button type="button" class="ace-chip" data-ace-id="doctor">to the doctor</button>
+        <button type="button" class="ace-chip" data-ace-id="a-song">to a song</button>
+        <button type="button" class="ace-chip" data-ace-id="breakfast">have breakfast</button>
+        <button type="button" class="ace-chip" data-ace-id="cinema">to the cinema</button>
+        <button type="button" class="ace-chip" data-ace-id="radio">to the radio</button>
+        <button type="button" class="ace-chip" data-ace-id="bath">had a bath</button>
+        <button type="button" class="ace-chip" data-ace-id="tennis">play tennis</button>
+        <button type="button" class="ace-chip" data-ace-id="the-song">to the song</button>
+        <button type="button" class="ace-chip" data-ace-id="dentist">to the dentist</button>
+        <button type="button" class="ace-chip" data-ace-id="dinner">had dinner</button>
+      </div>
+      <ol class="ace-items">
+        <li>I have to go <span class="ace-drop" role="button" tabindex="0" data-ace-drop data-ace-answer="dentist"><span class="ace-placeholder">drop here</span></span> next Tuesday.</li>
+        <li>I don&rsquo;t feel well, so I&rsquo;m going <span class="ace-drop" role="button" tabindex="0" data-ace-drop data-ace-answer="doctor"><span class="ace-placeholder">drop here</span></span>.</li>
+        <li>We&rsquo;re going <span class="ace-drop" role="button" tabindex="0" data-ace-drop data-ace-answer="cinema"><span class="ace-placeholder">drop here</span></span> tonight.</li>
+        <li>I love listening <span class="ace-drop" role="button" tabindex="0" data-ace-drop data-ace-answer="music"><span class="ace-placeholder">drop here</span></span> when I&rsquo;m driving.</li>
+        <li>My dad listens <span class="ace-drop" role="button" tabindex="0" data-ace-drop data-ace-answer="radio"><span class="ace-placeholder">drop here</span></span> every morning.</li>
+        <li>I listened <span class="ace-drop" role="button" tabindex="0" data-ace-drop data-ace-answer="a-song"><span class="ace-placeholder">drop here</span></span> on the radio that I really liked.</li>
+        <li>Listen <span class="ace-drop" role="button" tabindex="0" data-ace-drop data-ace-answer="the-song"><span class="ace-placeholder">drop here</span></span> I sent you yesterday.</li>
+        <li>I <span class="ace-drop" role="button" tabindex="0" data-ace-drop data-ace-answer="tennis"><span class="ace-placeholder">drop here</span></span> twice a week.</li>
+        <li>She <span class="ace-drop" role="button" tabindex="0" data-ace-drop data-ace-answer="piano"><span class="ace-placeholder">drop here</span></span> beautifully.</li>
+        <li>I usually <span class="ace-drop" role="button" tabindex="0" data-ace-drop data-ace-answer="breakfast"><span class="ace-placeholder">drop here</span></span> at 7:30.</li>
+        <li>We <span class="ace-drop" role="button" tabindex="0" data-ace-drop data-ace-answer="dinner"><span class="ace-placeholder">drop here</span></span> at a restaurant last night.</li>
+        <li>I&rsquo;m going to <span class="ace-drop" role="button" tabindex="0" data-ace-drop data-ace-answer="shower"><span class="ace-placeholder">drop here</span></span> before dinner.</li>
+        <li>She <span class="ace-drop" role="button" tabindex="0" data-ace-drop data-ace-answer="bath"><span class="ace-placeholder">drop here</span></span> and washed her hair.</li>
+      </ol>
+      <div class="ace-toolbar">
+        <button type="button" class="ace-btn ace-btn-primary" data-ace-check>Check answers</button>
+        <button type="button" class="ace-btn ace-btn-secondary" data-ace-reset>Reset</button>
+        <button type="button" class="ace-btn ace-btn-secondary" data-ace-show>Show answers</button>
+        <p class="ace-feedback" data-ace-feedback role="status"></p>
+      </div>
+    </div>
+  </div>
+</div>
