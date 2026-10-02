@@ -39,6 +39,14 @@ export const CONTACT_CATEGORIES = [
     activeButtonClassName: 'border-pink-700 bg-pink-700 text-white',
     fieldClassName: 'border-pink-300 bg-pink-50',
   },
+  {
+    value: 'ally',
+    label: 'Ally',
+    badgeClassName: 'bg-teal-100 text-teal-800',
+    buttonClassName: 'border-teal-200 bg-teal-50 text-teal-800',
+    activeButtonClassName: 'border-teal-700 bg-teal-700 text-white',
+    fieldClassName: 'border-teal-300 bg-teal-50',
+  },
 ] as const
 
 export type ContactCategory = (typeof CONTACT_CATEGORIES)[number]['value']
