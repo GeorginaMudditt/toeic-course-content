@@ -58,6 +58,8 @@ model User {
   dashboardFolderArchived Boolean @default(false)
   /// When true, the student is hidden from the Vocabulary Challenge Progress view.
   vocabularyProgressArchived Boolean @default(false)
+  /// When true, the student dashboard hides upcoming lessons and keeps course hours.
+  upcomingLessonsHidden Boolean @default(false)
   createdAt         DateTime  @default(now())
   updatedAt         DateTime  @updatedAt
   

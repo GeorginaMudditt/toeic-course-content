@@ -7,6 +7,7 @@ export type AdminIcon =
   | 'meta'
   | 'linkedin'
   | 'mailchimp'
+  | 'contacts'
   | 'pronunciation'
   | 'qonto'
   | 'mollie'
@@ -89,6 +90,13 @@ export const ADMIN_SECTIONS: AdminSection[] = [
         description: 'A monthly newsletter is sent out via Mailchimp.',
         inlineLinks: [{ phrase: 'Mailchimp', href: 'https://us16.admin.mailchimp.com/' }],
         icon: 'mailchimp',
+      },
+      {
+        description: 'All contacts are listed in a Central Contact List.',
+        inlineLinks: [
+          { phrase: 'Central Contact List', href: '/teacher/admin/contacts' },
+        ],
+        icon: 'contacts',
       },
     ],
   },

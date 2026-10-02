@@ -89,6 +89,27 @@ function MailchimpIcon() {
   )
 }
 
+function ContactsIcon() {
+  return (
+    <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" aria-hidden="true">
+      <circle cx="9" cy="8" r="2.6" fill="#db2777" />
+      <path
+        d="M4 17.5c.5-2.4 2.4-3.8 5-3.8s4.5 1.4 5 3.8"
+        stroke="#db2777"
+        strokeWidth="1.6"
+        strokeLinecap="round"
+      />
+      <circle cx="16.2" cy="9" r="2" fill="#f472b6" />
+      <path
+        d="M14.2 17.5c.3-1.5 1.3-2.6 3-3.1"
+        stroke="#f472b6"
+        strokeWidth="1.6"
+        strokeLinecap="round"
+      />
+    </svg>
+  )
+}
+
 function PronunciationIcon() {
   return (
     <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" aria-hidden="true">
@@ -231,6 +252,7 @@ const ICONS = {
   meta: MetaIcon,
   linkedin: LinkedInIcon,
   mailchimp: MailchimpIcon,
+  contacts: ContactsIcon,
   pronunciation: PronunciationIcon,
   qonto: QontoIcon,
   mollie: MollieIcon,

@@ -18,6 +18,7 @@ async function main() {
   const templateTitlePattern = process.argv[4] || '%Jobs, People%'
   const levelOverride = process.argv[5]
   const skillOverride = process.argv[6]
+  const descriptionOverride = process.argv[7]
 
   if (!title || !htmlFileName) {
     console.log('Usage: npx tsx scripts/create-resource-supabase.ts "Resource Title" file.html')
@@ -33,10 +34,15 @@ async function main() {
     .ilike('title', title.trim())
     .limit(1)
 
+  const metadata: Record<string, string> = {}
+  if (levelOverride) metadata.level = levelOverride
+  if (skillOverride) metadata.skill = skillOverride
+  if (descriptionOverride) metadata.description = descriptionOverride
+
   if (existing?.[0]) {
     const { data: updated, error } = await supabaseServer
       .from('Resource')
-      .update({ content, updatedAt: new Date().toISOString() })
+      .update({ content, updatedAt: new Date().toISOString(), ...metadata })
       .eq('id', existing[0].id)
       .select()
       .single()
@@ -58,9 +64,16 @@ async function main() {
     .ilike('title', templateTitlePattern)
     .limit(1)
 
-  const ref = template?.[0]
+  let ref = template?.[0]
   if (!ref?.creatorId) {
-    console.error('❌ Could not find a vocabulary template resource to copy metadata from.')
+    const { data: fallback } = await supabaseServer
+      .from('Resource')
+      .select('creatorId, type, level, skill, estimatedHours')
+      .limit(1)
+    ref = fallback?.[0]
+  }
+  if (!ref?.creatorId) {
+    console.error('❌ Could not find a template resource to copy metadata from.')
     process.exit(1)
   }
 
@@ -72,8 +85,8 @@ async function main() {
     .insert({
       id,
       title,
-      description: null,
-      type: ref.type,
+      description: descriptionOverride || null,
+      type: ref.type || 'WORKSHEET',
       content,
       estimatedHours: ref.estimatedHours ?? 1,
       level: levelOverride || ref.level,

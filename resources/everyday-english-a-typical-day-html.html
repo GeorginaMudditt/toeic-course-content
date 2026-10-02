@@ -1,0 +1,758 @@
+<!-- Everyday English: A Typical Day -->
+<style>
+  .dd-wrap {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 8px 4px 24px;
+    font-family: Arial, sans-serif;
+    line-height: 1.55;
+    color: #1f2937;
+  }
+
+  .dd-wrap h1 {
+    margin: 0;
+    font-size: 30px;
+    line-height: 1.2;
+    color: #0f172a;
+  }
+
+  .dd-wrap h2 {
+    margin: 0 0 10px;
+    font-size: 22px;
+    color: #1e3a8a;
+  }
+
+  .dd-wrap h3 {
+    margin: 16px 0 8px;
+    font-size: 18px;
+    color: #0f172a;
+  }
+
+  .dd-card {
+    border: 1px solid #dbe3f0;
+    border-radius: 10px;
+    background: #fff;
+    padding: 18px 20px;
+    margin-bottom: 18px;
+  }
+
+  .dd-header {
+    text-align: center;
+    background: linear-gradient(to bottom, #ffffff, #f8faff);
+  }
+
+  .dd-reading {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    padding: 14px 16px;
+    margin: 0 0 16px;
+  }
+
+  .dd-reading p {
+    margin: 0 0 12px;
+    font-size: 16px;
+  }
+
+  .dd-reading p:last-child {
+    margin-bottom: 0;
+  }
+
+  .dd-q {
+    margin: 0 0 16px;
+    padding-bottom: 14px;
+    border-bottom: 1px solid #e5e7eb;
+  }
+
+  .dd-q:last-of-type {
+    border-bottom: none;
+    margin-bottom: 0;
+    padding-bottom: 0;
+  }
+
+  .dd-q p {
+    margin: 0 0 6px;
+    font-size: 16px;
+  }
+
+  .dd-choices {
+    margin: 0 0 8px 8px;
+    padding: 0;
+    list-style: none !important;
+  }
+
+  .dd-choices li {
+    display: block !important;
+    margin: 0 0 3px;
+    font-size: 16px;
+  }
+
+  .dd-audio-box {
+    border: 1px solid #c7d2fe;
+    border-radius: 8px;
+    background: #eef2ff;
+    padding: 12px 14px;
+    margin: 0 0 14px;
+  }
+
+  .dd-audio-box audio {
+    width: 100%;
+    margin-top: 8px;
+  }
+
+  .dd-script {
+    border: 1px solid #c7d2fe;
+    border-radius: 8px;
+    background: #f8fafc;
+    padding: 8px 12px;
+    margin: 14px 0 0;
+  }
+
+  .dd-script summary {
+    cursor: pointer;
+    font-weight: 700;
+    color: #1e3a8a;
+  }
+
+  .dd-script p {
+    margin: 10px 0 0;
+    font-size: 16px;
+  }
+
+  .dd-steps {
+    margin: 0 0 14px 20px;
+    padding: 0;
+    list-style-type: decimal !important;
+    list-style-position: outside !important;
+  }
+
+  .dd-steps li {
+    display: list-item !important;
+    margin-bottom: 4px;
+    font-size: 16px;
+  }
+
+  .dd-teacher-only {
+    display: none !important;
+  }
+
+  #worksheet-content[data-teacher-key="true"] .dd-teacher-only {
+    display: block !important;
+  }
+
+  .dd-teacher-box {
+    border: 2px solid #d97706;
+    background: #fffbeb;
+    border-radius: 10px;
+    padding: 14px 16px;
+    margin: 0 0 16px;
+  }
+
+  .dd-teacher-box h3 {
+    margin: 0 0 6px;
+    color: #92400e;
+  }
+
+  .dd-teacher-box p {
+    margin: 0 0 10px;
+    font-size: 14px;
+    color: #78350f;
+  }
+
+  .dd-teacher-box table {
+    width: 100%;
+    border-collapse: collapse;
+    background: #fff;
+    font-size: 14px;
+  }
+
+  .dd-teacher-box th,
+  .dd-teacher-box td {
+    border: 1px solid #fcd34d;
+    padding: 6px 8px;
+    text-align: left;
+    vertical-align: top;
+  }
+
+  .dd-teacher-box th {
+    background: #fef3c7;
+  }
+
+  .dd-jenny-wrap {
+    overflow-x: auto;
+    border: 1px solid #cbd5e1;
+    border-radius: 10px;
+  }
+
+  .dd-jenny {
+    display: table !important;
+    width: 100%;
+    min-width: 720px;
+    border-collapse: collapse;
+    background: #fff;
+    font-size: 15px;
+  }
+
+  .dd-jenny tr {
+    display: table-row !important;
+  }
+
+  .dd-jenny th,
+  .dd-jenny td {
+    display: table-cell !important;
+  }
+
+  .dd-jenny th,
+  .dd-jenny td {
+    border: 1px solid #e2e8f0;
+    padding: 8px 10px;
+    text-align: left;
+    vertical-align: top;
+  }
+
+  .dd-jenny th {
+    background: #eff6ff;
+    color: #1e3a8a;
+    font-size: 14px;
+  }
+
+  .dd-jenny-time {
+    width: 1%;
+    white-space: nowrap;
+    background: #f8fafc;
+    color: #1e3a8a;
+    font-weight: 700;
+    font-size: 14px;
+  }
+
+  .dd-jenny-line {
+    min-width: 180px;
+  }
+
+  .dd-prompt {
+    margin: 0;
+    font-size: 16px;
+    font-weight: 700;
+  }
+
+  .dd-panel {
+    margin-top: 8px;
+    border-radius: 8px;
+    padding: 8px 10px;
+    font-size: 15px;
+  }
+
+  .dd-panel[hidden],
+  [data-dd-panel][hidden] {
+    display: none !important;
+  }
+
+  .dd-panel p {
+    margin: 0;
+  }
+
+  .dd-panel--question {
+    background: #eef2ff;
+    border: 1px solid #c7d2fe;
+  }
+
+  .dd-panel--answer {
+    background: #ecfdf5;
+    border: 1px solid #a7f3d0;
+  }
+
+  .dd-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px;
+    margin-top: 14px;
+  }
+
+  .dd-btn {
+    display: inline-flex;
+    align-items: center;
+    background: #38438f;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    padding: 8px 16px;
+    font-size: 14px;
+    cursor: pointer;
+  }
+
+  .dd-btn:disabled {
+    opacity: 0.7;
+    cursor: default;
+  }
+
+  .dd-status {
+    margin: 0;
+    font-size: 14px;
+    font-weight: 600;
+    color: #b45309;
+    min-height: 20px;
+  }
+
+  .dd-prompts {
+    margin: 0;
+    padding-left: 22px;
+    list-style-type: disc !important;
+    list-style-position: outside !important;
+  }
+
+  .dd-prompts li {
+    display: list-item !important;
+    margin-bottom: 4px;
+    font-size: 16px;
+  }
+
+  @media (max-width: 640px) {
+    .dd-jenny {
+      min-width: 640px;
+    }
+  }
+
+  @media print {
+    .screen-only {
+      display: none !important;
+    }
+
+    .dd-card {
+      break-inside: avoid;
+    }
+  }
+</style>
+
+<div class="dd-wrap not-prose">
+  <div class="dd-card dd-header" data-bookmarkable="typical-day-title" data-bookmark-label="A Typical Day">
+    <img src="/brizzle-logo.png" alt="Brizzle" style="width: 46px; height: 46px; object-fit: contain;" />
+    <h1>A Typical Day</h1>
+  </div>
+
+  <div class="dd-card" data-bookmarkable="daniels-day" data-bookmark-label="Activity 1: Daniel's Day" data-grammar-per-section-check="true" data-grammar-check-snapshot="dd-reading">
+    <h2>Activity 1: Daniel’s Day (Reading)</h2>
+    <p style="margin: 0 0 12px; font-size: 16px;">Read the text and answer the questions. Then click <strong>Check Answers</strong>.</p>
+    <div class="dd-reading">
+      <p>My name is Daniel, and I am 42 years old. I live in Bristol with my wife and our two children. I work as a nurse in a hospital. I usually get up at 6:00 in the morning. First, I have a shower and get dressed. At 6:30, I make breakfast for my family. My children usually eat toast and fruit, and I drink a cup of tea. At 7:15, I take the children to school by car. I start work at 8:00.</p>
+      <p>I work in a busy hospital. In the morning, I talk to patients, give them medicine and help the doctors. At 12:30, I have lunch in the hospital café. I often eat a sandwich and an apple. After lunch, I visit patients again. At 3:00 pm I have a meeting with the other nurses and then I write my reports for the day. I finish work at 4:00 in the afternoon and drive home.</p>
+      <p>At 4:45, I collect the children from school. When we get home, they do their homework and I prepare dinner. We usually eat at 6:30. After dinner, I help the children with their homework and read stories to them. At 8:30, they go to bed. Then I sometimes watch a film or listen to music. I go to bed at 10:30 because I need to get up early the next day.</p>
+    </div>
+
+    <div class="dd-q">
+      <p><strong>1.</strong> How old is Daniel?</p>
+      <ul class="dd-choices">
+        <li>A. twenty-four</li>
+        <li>B. forty-two</li>
+        <li>C. thirty-two</li>
+        <li>D. fifty-two</li>
+      </ul>
+      <span data-grammar-input="dd-read-1" data-grammar-input-type="radio" data-grammar-input-options="A|B|C|D" data-correct="B"></span>
+    </div>
+    <div class="dd-q">
+      <p><strong>2.</strong> What time does Daniel usually get up?</p>
+      <ul class="dd-choices">
+        <li>A. 6:00</li>
+        <li>B. 6:30</li>
+        <li>C. 7:15</li>
+        <li>D. 8:00</li>
+      </ul>
+      <span data-grammar-input="dd-read-2" data-grammar-input-type="radio" data-grammar-input-options="A|B|C|D" data-correct="A"></span>
+    </div>
+    <div class="dd-q">
+      <p><strong>3.</strong> How does Daniel take the children to school?</p>
+      <ul class="dd-choices">
+        <li>A. By bus</li>
+        <li>B. By train</li>
+        <li>C. On foot</li>
+        <li>D. By car</li>
+      </ul>
+      <span data-grammar-input="dd-read-3" data-grammar-input-type="radio" data-grammar-input-options="A|B|C|D" data-correct="D"></span>
+    </div>
+    <div class="dd-q">
+      <p><strong>4.</strong> What does Daniel often eat for lunch?</p>
+      <ul class="dd-choices">
+        <li>A. Toast and fruit</li>
+        <li>B. A sandwich and an apple</li>
+        <li>C. Cereal and tea</li>
+        <li>D. A cup of coffee</li>
+      </ul>
+      <span data-grammar-input="dd-read-4" data-grammar-input-type="radio" data-grammar-input-options="A|B|C|D" data-correct="B"></span>
+    </div>
+    <div class="dd-q">
+      <p><strong>5.</strong> What do Daniel’s children do in the evening?</p>
+      <ul class="dd-choices">
+        <li>A. Cook dinner</li>
+        <li>B. Do homework</li>
+        <li>C. Watch a movie</li>
+        <li>D. Read stories</li>
+      </ul>
+      <span data-grammar-input="dd-read-5" data-grammar-input-type="radio" data-grammar-input-options="A|B|C|D" data-correct="B"></span>
+    </div>
+  </div>
+
+  <div class="dd-card" data-bookmarkable="sophies-day" data-bookmark-label="Activity 2: Sophie's Day">
+    <h2>Activity 2: Sophie’s Day (Listening)</h2>
+    <p style="margin: 0 0 12px; font-size: 16px;">Listen to Sophie talking about her day, then answer the questions. Click <strong>Check Answers</strong> when you are ready.</p>
+    <div data-grammar-per-section-check="true" data-grammar-check-snapshot="dd-listening">
+
+    <div class="dd-audio-box screen-only">
+      <p style="margin: 0; font-weight: 700; color: #1e3a8a;">Audio: Sophie’s day</p>
+      <audio controls preload="metadata" src="https://ulrwcortyhassmytkcij.supabase.co/storage/v1/object/public/everyday-english/sophies-day.mp3?v=20261002">Your browser does not support audio playback.</audio>
+    </div>
+
+    <div class="dd-q">
+      <p><strong>1.</strong> Where does Sophie live?</p>
+      <ul class="dd-choices">
+        <li>A. Bristol</li>
+        <li>B. Manchester</li>
+        <li>C. London</li>
+        <li>D. Liverpool</li>
+      </ul>
+      <span data-grammar-input="dd-listen-1" data-grammar-input-type="radio" data-grammar-input-options="A|B|C|D" data-correct="B"></span>
+    </div>
+    <div class="dd-q">
+      <p><strong>2.</strong> What area does Sophie work in?</p>
+      <ul class="dd-choices">
+        <li>A. Healthcare</li>
+        <li>B. Education</li>
+        <li>C. Marketing</li>
+        <li>D. Law</li>
+      </ul>
+      <span data-grammar-input="dd-listen-2" data-grammar-input-type="radio" data-grammar-input-options="A|B|C|D" data-correct="C"></span>
+    </div>
+    <div class="dd-q">
+      <p><strong>3.</strong> What does Sophie usually do before breakfast?</p>
+      <ul class="dd-choices">
+        <li>A. She reads the news.</li>
+        <li>B. She does 20 minutes of yoga.</li>
+        <li>C. She takes the train.</li>
+        <li>D. She checks her emails.</li>
+      </ul>
+      <span data-grammar-input="dd-listen-3" data-grammar-input-type="radio" data-grammar-input-options="A|B|C|D" data-correct="B"></span>
+    </div>
+    <div class="dd-q">
+      <p><strong>4.</strong> How long does her train journey take?</p>
+      <ul class="dd-choices">
+        <li>A. 15 minutes</li>
+        <li>B. 20 minutes</li>
+        <li>C. 30 minutes</li>
+        <li>D. 45 minutes</li>
+      </ul>
+      <span data-grammar-input="dd-listen-4" data-grammar-input-type="radio" data-grammar-input-options="A|B|C|D" data-correct="C"></span>
+    </div>
+    <div class="dd-q">
+      <p><strong>5.</strong> What time is Sophie’s meeting with her team?</p>
+      <ul class="dd-choices">
+        <li>A. 8:15</li>
+        <li>B. 9:00</li>
+        <li>C. 9:30</li>
+        <li>D. 11:00</li>
+      </ul>
+      <span data-grammar-input="dd-listen-5" data-grammar-input-type="radio" data-grammar-input-options="A|B|C|D" data-correct="C"></span>
+    </div>
+    <div class="dd-q">
+      <p><strong>6.</strong> What does Sophie do at 8:00 on Wednesdays?</p>
+      <ul class="dd-choices">
+        <li>A. She goes to the gym.</li>
+        <li>B. She calls her sister.</li>
+        <li>C. She goes to a photography class.</li>
+        <li>D. She cooks dinner.</li>
+      </ul>
+      <span data-grammar-input="dd-listen-6" data-grammar-input-type="radio" data-grammar-input-options="A|B|C|D" data-correct="C"></span>
+    </div>
+    </div>
+
+    <details class="dd-script screen-only">
+      <summary>Read tapescript</summary>
+      <p>My name is Sophie, and I am 39 years old. I live in Manchester with my partner. I am a director at a marketing company, and I manage a team of 15 people. My days are often busy, but I enjoy my job. I get up at 6:45 every morning. I usually do 20 minutes of yoga before I have breakfast. At 7:30, I make coffee and eat porridge while I read the news on my phone. I leave home at 8:15 and take the train to work. My journey takes about 30 minutes. I arrive at the office at 9:00 and check my emails. At 9:30, I have a meeting with my team. We talk about our projects and plan our work for the week. At 11:00, I usually have a video call with a client. I have lunch at 12:30. Sometimes I eat with my colleagues in a nearby café, and sometimes I bring lunch from home.</p>
+      <p>In the afternoon, I work on reports and prepare presentations. I often have another meeting at 3:00. I finish work at 5:30 and take the train home. At 6:15, I go shopping or stop at the gym. I usually cook dinner at 7:30. After dinner, I enjoy reading a book or calling my sister. On Wednesdays, I go to an evening photography class at 8:00. I usually go to bed at 10:45.</p>
+    </details>
+  </div>
+
+  <div class="dd-card keep-together" data-bookmarkable="jennys-day" data-bookmark-label="Activity 3: Jenny's Day" data-grammar-check-disabled="true">
+    <h2>Activity 3: Jenny’s Day (Speaking)</h2>
+    <p style="margin: 0 0 8px; font-size: 16px;">Jenny’s diary has some missing information. You are going to ask your teacher about her day.</p>
+    <ol class="dd-steps">
+      <li>Write a question for each gap.</li>
+      <li>Click <strong>Save</strong>.</li>
+      <li>Click <strong>Reveal questions</strong> and compare your questions.</li>
+      <li>Ask your teacher. Write what you find out in <strong>Your answer</strong>.</li>
+      <li>Click <strong>Reveal answers</strong> to check.</li>
+    </ol>
+
+    <div class="dd-teacher-only dd-teacher-box">
+      <h3>Teacher notes</h3>
+      <p>Students cannot see this. Use it when they ask you about Jenny’s day.</p>
+      <table>
+        <thead>
+          <tr>
+            <th>Diary</th>
+            <th>Model question</th>
+            <th>Answer to give</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>7:00 am — Jenny …………………………</td>
+            <td>What does Jenny do at 7 am?</td>
+            <td>Jenny gets up.</td>
+          </tr>
+          <tr>
+            <td>7:30 am — Jenny eats …… and drinks …… for breakfast.</td>
+            <td>What does Jenny eat and drink for breakfast?</td>
+            <td>Jenny eats cereal and fruit, and drinks tea.</td>
+          </tr>
+          <tr>
+            <td>…… am — Jenny takes the train.</td>
+            <td>What time does Jenny take the train?</td>
+            <td>8:20 am</td>
+          </tr>
+          <tr>
+            <td>…… am — Jenny arrives at work.</td>
+            <td>What time does Jenny arrive at work?</td>
+            <td>8:45 am</td>
+          </tr>
+          <tr>
+            <td>9:00 am — Jenny checks ……………</td>
+            <td>What does Jenny check at 9 am?</td>
+            <td>Her emails.</td>
+          </tr>
+          <tr>
+            <td>10:00 am — Meeting with ………..</td>
+            <td>Who does Jenny have a meeting with at 10 am?</td>
+            <td>Her manager.</td>
+          </tr>
+          <tr>
+            <td>11:00 am — Staff meeting, room ……….</td>
+            <td>Where is Jenny’s staff meeting?</td>
+            <td>Room 604A.</td>
+          </tr>
+          <tr>
+            <td>From …… to …… — lunch.</td>
+            <td>What time is Jenny’s lunch break? (or: What time does Jenny have lunch?)</td>
+            <td>From 12:30 pm to 1:15 pm.</td>
+          </tr>
+          <tr>
+            <td>Afternoon — Jenny ……</td>
+            <td>What does Jenny do in the afternoon?</td>
+            <td>She visits clients.</td>
+          </tr>
+          <tr>
+            <td>…… pm — Jenny finishes work.</td>
+            <td>What time does Jenny finish work?</td>
+            <td>5:30 pm</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div data-grammar-save-section="true">
+      <div class="dd-jenny-wrap">
+        <table class="dd-jenny">
+          <thead>
+            <tr>
+              <th>Time</th>
+              <th>Diary</th>
+              <th>Your question</th>
+              <th>Your answer</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="dd-jenny-time">7:00 am</td>
+              <td class="dd-jenny-line"><p class="dd-prompt">Jenny …………………………</p></td>
+              <td>
+                <span data-grammar-input="dd-jenny-q1" data-dd-question data-grammar-input-type="textarea" data-grammar-textarea-rows="2" style="display: block; min-height: 64px;"></span>
+                <div class="dd-panel dd-panel--question" data-dd-panel="questions" hidden>
+                  <p><strong>Model question:</strong> What does Jenny do at 7 am?</p>
+                </div>
+              </td>
+              <td>
+                <span data-grammar-input="dd-jenny-a1" data-grammar-input-type="textarea" data-grammar-textarea-rows="2" style="display: block; min-height: 64px;"></span>
+                <div class="dd-panel dd-panel--answer" data-dd-panel="answers" hidden>
+                  <p><strong>Answer:</strong> Jenny gets up.</p>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td class="dd-jenny-time">7:30 am</td>
+              <td class="dd-jenny-line"><p class="dd-prompt">Jenny eats …… and drinks …… for breakfast.</p></td>
+              <td>
+                <span data-grammar-input="dd-jenny-q2" data-dd-question data-grammar-input-type="textarea" data-grammar-textarea-rows="2" style="display: block; min-height: 64px;"></span>
+                <div class="dd-panel dd-panel--question" data-dd-panel="questions" hidden>
+                  <p><strong>Model question:</strong> What does Jenny eat and drink for breakfast?</p>
+                </div>
+              </td>
+              <td>
+                <span data-grammar-input="dd-jenny-a2" data-grammar-input-type="textarea" data-grammar-textarea-rows="2" style="display: block; min-height: 64px;"></span>
+                <div class="dd-panel dd-panel--answer" data-dd-panel="answers" hidden>
+                  <p><strong>Answer:</strong> Jenny eats cereal and fruit, and drinks tea.</p>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td class="dd-jenny-time">…… am</td>
+              <td class="dd-jenny-line"><p class="dd-prompt">Jenny takes the train.</p></td>
+              <td>
+                <span data-grammar-input="dd-jenny-q3" data-dd-question data-grammar-input-type="textarea" data-grammar-textarea-rows="2" style="display: block; min-height: 64px;"></span>
+                <div class="dd-panel dd-panel--question" data-dd-panel="questions" hidden>
+                  <p><strong>Model question:</strong> What time does Jenny take the train?</p>
+                </div>
+              </td>
+              <td>
+                <span data-grammar-input="dd-jenny-a3" data-grammar-input-type="textarea" data-grammar-textarea-rows="2" style="display: block; min-height: 64px;"></span>
+                <div class="dd-panel dd-panel--answer" data-dd-panel="answers" hidden>
+                  <p><strong>Answer:</strong> 8:20 am</p>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td class="dd-jenny-time">…… am</td>
+              <td class="dd-jenny-line"><p class="dd-prompt">Jenny arrives at work.</p></td>
+              <td>
+                <span data-grammar-input="dd-jenny-q4" data-dd-question data-grammar-input-type="textarea" data-grammar-textarea-rows="2" style="display: block; min-height: 64px;"></span>
+                <div class="dd-panel dd-panel--question" data-dd-panel="questions" hidden>
+                  <p><strong>Model question:</strong> What time does Jenny arrive at work?</p>
+                </div>
+              </td>
+              <td>
+                <span data-grammar-input="dd-jenny-a4" data-grammar-input-type="textarea" data-grammar-textarea-rows="2" style="display: block; min-height: 64px;"></span>
+                <div class="dd-panel dd-panel--answer" data-dd-panel="answers" hidden>
+                  <p><strong>Answer:</strong> 8:45 am</p>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td class="dd-jenny-time">9:00 am</td>
+              <td class="dd-jenny-line"><p class="dd-prompt">Jenny checks ……………</p></td>
+              <td>
+                <span data-grammar-input="dd-jenny-q5" data-dd-question data-grammar-input-type="textarea" data-grammar-textarea-rows="2" style="display: block; min-height: 64px;"></span>
+                <div class="dd-panel dd-panel--question" data-dd-panel="questions" hidden>
+                  <p><strong>Model question:</strong> What does Jenny check at 9 am?</p>
+                </div>
+              </td>
+              <td>
+                <span data-grammar-input="dd-jenny-a5" data-grammar-input-type="textarea" data-grammar-textarea-rows="2" style="display: block; min-height: 64px;"></span>
+                <div class="dd-panel dd-panel--answer" data-dd-panel="answers" hidden>
+                  <p><strong>Answer:</strong> Her emails.</p>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td class="dd-jenny-time">10:00 am</td>
+              <td class="dd-jenny-line"><p class="dd-prompt">Meeting with ………..</p></td>
+              <td>
+                <span data-grammar-input="dd-jenny-q6" data-dd-question data-grammar-input-type="textarea" data-grammar-textarea-rows="2" style="display: block; min-height: 64px;"></span>
+                <div class="dd-panel dd-panel--question" data-dd-panel="questions" hidden>
+                  <p><strong>Model question:</strong> Who does Jenny have a meeting with at 10 am?</p>
+                </div>
+              </td>
+              <td>
+                <span data-grammar-input="dd-jenny-a6" data-grammar-input-type="textarea" data-grammar-textarea-rows="2" style="display: block; min-height: 64px;"></span>
+                <div class="dd-panel dd-panel--answer" data-dd-panel="answers" hidden>
+                  <p><strong>Answer:</strong> Her manager.</p>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td class="dd-jenny-time">11:00 am</td>
+              <td class="dd-jenny-line"><p class="dd-prompt">Staff meeting, room ……….</p></td>
+              <td>
+                <span data-grammar-input="dd-jenny-q7" data-dd-question data-grammar-input-type="textarea" data-grammar-textarea-rows="2" style="display: block; min-height: 64px;"></span>
+                <div class="dd-panel dd-panel--question" data-dd-panel="questions" hidden>
+                  <p><strong>Model question:</strong> Where is Jenny’s staff meeting?</p>
+                </div>
+              </td>
+              <td>
+                <span data-grammar-input="dd-jenny-a7" data-grammar-input-type="textarea" data-grammar-textarea-rows="2" style="display: block; min-height: 64px;"></span>
+                <div class="dd-panel dd-panel--answer" data-dd-panel="answers" hidden>
+                  <p><strong>Answer:</strong> Room 604A.</p>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td class="dd-jenny-time">From …… to ……</td>
+              <td class="dd-jenny-line"><p class="dd-prompt">Lunch.</p></td>
+              <td>
+                <span data-grammar-input="dd-jenny-q8" data-dd-question data-grammar-input-type="textarea" data-grammar-textarea-rows="2" style="display: block; min-height: 64px;"></span>
+                <div class="dd-panel dd-panel--question" data-dd-panel="questions" hidden>
+                  <p><strong>Model question:</strong> What time is Jenny’s lunch break? (or: What time does Jenny have lunch?)</p>
+                </div>
+              </td>
+              <td>
+                <span data-grammar-input="dd-jenny-a8" data-grammar-input-type="textarea" data-grammar-textarea-rows="2" style="display: block; min-height: 64px;"></span>
+                <div class="dd-panel dd-panel--answer" data-dd-panel="answers" hidden>
+                  <p><strong>Answer:</strong> From 12:30 pm to 1:15 pm.</p>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td class="dd-jenny-time">Afternoon</td>
+              <td class="dd-jenny-line"><p class="dd-prompt">Jenny ……</p></td>
+              <td>
+                <span data-grammar-input="dd-jenny-q9" data-dd-question data-grammar-input-type="textarea" data-grammar-textarea-rows="2" style="display: block; min-height: 64px;"></span>
+                <div class="dd-panel dd-panel--question" data-dd-panel="questions" hidden>
+                  <p><strong>Model question:</strong> What does Jenny do in the afternoon?</p>
+                </div>
+              </td>
+              <td>
+                <span data-grammar-input="dd-jenny-a9" data-grammar-input-type="textarea" data-grammar-textarea-rows="2" style="display: block; min-height: 64px;"></span>
+                <div class="dd-panel dd-panel--answer" data-dd-panel="answers" hidden>
+                  <p><strong>Answer:</strong> She visits clients.</p>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td class="dd-jenny-time">…… pm</td>
+              <td class="dd-jenny-line"><p class="dd-prompt">Jenny finishes work.</p></td>
+              <td>
+                <span data-grammar-input="dd-jenny-q10" data-dd-question data-grammar-input-type="textarea" data-grammar-textarea-rows="2" style="display: block; min-height: 64px;"></span>
+                <div class="dd-panel dd-panel--question" data-dd-panel="questions" hidden>
+                  <p><strong>Model question:</strong> What time does Jenny finish work?</p>
+                </div>
+              </td>
+              <td>
+                <span data-grammar-input="dd-jenny-a10" data-grammar-input-type="textarea" data-grammar-textarea-rows="2" style="display: block; min-height: 64px;"></span>
+                <div class="dd-panel dd-panel--answer" data-dd-panel="answers" hidden>
+                  <p><strong>Answer:</strong> 5:30 pm</p>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="dd-actions screen-only">
+      <button type="button" class="dd-btn" data-dd-reveal="questions" aria-expanded="false">Reveal questions</button>
+      <p class="dd-status" data-dd-reveal-status="questions" role="status"></p>
+    </div>
+    <div class="dd-actions screen-only">
+      <button type="button" class="dd-btn" data-dd-reveal="answers" aria-expanded="false">Reveal answers</button>
+    </div>
+  </div>
+
+  <div class="dd-card" data-bookmarkable="your-day-speaking" data-bookmark-label="Activity 4: Your Day">
+    <h2>Activity 4: Your Day (Speaking)</h2>
+    <p style="margin: 0 0 10px; font-size: 16px;">Tell your teacher about your typical day. Use the present simple.</p>
+    <ul class="dd-prompts">
+      <li>What time do you get up?</li>
+      <li>What do you have for breakfast?</li>
+      <li>How do you get to work or school?</li>
+      <li>What do you do in the morning and in the afternoon?</li>
+      <li>What time do you finish?</li>
+      <li>What do you do in the evening?</li>
+      <li>What time do you go to bed?</li>
+    </ul>
+  </div>
+
+  <div class="dd-card keep-together" data-bookmarkable="your-day-writing" data-bookmark-label="Activity 5: Your Day" data-grammar-check-disabled="true">
+    <h2>Activity 5: Your Day (Writing)</h2>
+    <p style="margin: 0 0 12px; font-size: 16px;">Write about your typical day. Include the morning, the afternoon and the evening. Then click <strong>Submit for marking</strong>.</p>
+    <div data-grammar-save-section="true" data-grammar-check-disabled="true" data-writing-task-submit data-writing-submit-title="A Typical Day" data-writing-submit-input="dd-your-day" data-writing-submit-empty="Please write about your day before submitting.">
+      <span data-grammar-input="dd-your-day" data-grammar-input-type="textarea" data-grammar-textarea-rows="14" style="display: block; min-height: 280px;"></span>
+      <div class="screen-only" data-writing-word-count-for="dd-your-day" style="margin-top: 8px; font-size: 13px; color: #64748b;">0 words</div>
+    </div>
+  </div>
+</div>
