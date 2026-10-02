@@ -1,6 +1,6 @@
 'use client'
 
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import {
   CONTACT_CATEGORIES,
   contactCategoryMeta,
@@ -48,7 +48,7 @@ function draftToPayload(draft: Draft): ContactInput {
 }
 
 const inputClassName =
-  'w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm shadow-sm focus:border-[#38438f] focus:outline-none focus:ring-1 focus:ring-[#38438f]'
+  'w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 shadow-sm focus:border-[#38438f] focus:outline-none focus:ring-1 focus:ring-[#38438f]'
 
 export default function CentralContactList() {
   const [contacts, setContacts] = useState<Contact[]>([])
@@ -62,6 +62,7 @@ export default function CentralContactList() {
   const [formOpen, setFormOpen] = useState(false)
   const [saving, setSaving] = useState(false)
   const [deletingId, setDeletingId] = useState<number | null>(null)
+  const formRef = useRef<HTMLFormElement>(null)
 
   const loadContacts = useCallback(async () => {
     setError(null)
@@ -77,6 +78,12 @@ export default function CentralContactList() {
   useEffect(() => {
     loadContacts().finally(() => setLoading(false))
   }, [loadContacts])
+
+  useEffect(() => {
+    if (!formOpen) return
+    formRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    formRef.current?.querySelector<HTMLInputElement>('#contact-name')?.focus()
+  }, [formOpen, editingId])
 
   const filtered = useMemo(() => {
     const query = search.trim().toLowerCase()
@@ -247,7 +254,8 @@ export default function CentralContactList() {
 
       {formOpen ? (
         <form
-          className="rounded-lg border border-gray-200 bg-white p-5 shadow-sm"
+          ref={formRef}
+          className="scroll-mt-6 rounded-lg border border-gray-200 bg-white p-5 shadow-sm"
           onSubmit={(event) => {
             event.preventDefault()
             void saveContact()
@@ -263,6 +271,7 @@ export default function CentralContactList() {
               </label>
               <input
                 id="contact-name"
+                type="text"
                 value={draft.name}
                 onChange={(event) => setDraft((current) => ({ ...current, name: event.target.value }))}
                 className={inputClassName}
