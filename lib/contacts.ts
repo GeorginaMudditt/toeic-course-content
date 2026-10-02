@@ -47,6 +47,14 @@ export const CONTACT_CATEGORIES = [
     activeButtonClassName: 'border-teal-700 bg-teal-700 text-white',
     fieldClassName: 'border-teal-300 bg-teal-50',
   },
+  {
+    value: 'baby_club',
+    label: 'Baby Club',
+    badgeClassName: 'bg-orange-100 text-orange-800',
+    buttonClassName: 'border-orange-200 bg-orange-50 text-orange-800',
+    activeButtonClassName: 'border-orange-700 bg-orange-700 text-white',
+    fieldClassName: 'border-orange-300 bg-orange-50',
+  },
 ] as const
 
 export type ContactCategory = (typeof CONTACT_CATEGORIES)[number]['value']
