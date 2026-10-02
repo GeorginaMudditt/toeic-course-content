@@ -26,6 +26,7 @@ export default function ResourcePreview({ resource, showActions = true }: Resour
       resource={resource}
       initialProgress={null}
       preventSave
+      showTeacherKey
       compact={!showActions}
       backHref="/teacher/resources"
       backLabel="Back to Resources"

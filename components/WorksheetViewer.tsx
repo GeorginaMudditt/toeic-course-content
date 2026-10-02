@@ -45,6 +45,7 @@ import {
 import { mountWritingClearlyPhraseMatch } from '@/lib/worksheetInteractions/writingClearlyPhraseMatch'
 import { mountWritingClearlySubmit } from '@/lib/worksheetInteractions/writingClearlySubmit'
 import { mountWritingTaskSubmits } from '@/lib/worksheetInteractions/writingTaskSubmit'
+import { mountDailyRoutineReveal } from '@/lib/worksheetInteractions/dailyRoutineReveal'
 import { mountWritingWordCounts } from '@/lib/worksheetInteractions/writingWordCounts'
 import { mountPlacementTestCheckAnswers } from '@/lib/worksheetInteractions/placementTestCheckAnswers'
 import {
@@ -81,6 +82,8 @@ interface WorksheetViewerProps {
   initialProgress?: Progress | null
   /** When true, the full student UI is shown but progress is not saved to the server. */
   preventSave?: boolean
+  /** Teacher resource preview: show answer notes that stay hidden for students. */
+  showTeacherKey?: boolean
   backHref?: string
   backLabel?: string
   /** Hide toolbars and action buttons — for embedded previews only. */
@@ -842,6 +845,7 @@ export default function WorksheetViewer({
   resource,
   initialProgress,
   preventSave = false,
+  showTeacherKey = false,
   backHref = '/student/course',
   backLabel = 'Return to My Course',
   compact = false,
@@ -918,6 +922,8 @@ export default function WorksheetViewer({
     typeof resource.content === 'string' && resource.content.includes('data-article-expression-match')
   const hasWritingTaskSubmit =
     typeof resource.content === 'string' && resource.content.includes('data-writing-task-submit')
+  const hasDailyRoutineReveal =
+    typeof resource.content === 'string' && resource.content.includes('data-dd-reveal')
   const hasSpeakingTopics =
     typeof resource.content === 'string' && resource.content.includes('data-speaking-topics')
   const bookmarkedSlugsRef = useRef(new Set(initialBookmarkedSlugs))
@@ -3183,6 +3189,20 @@ export default function WorksheetViewer({
       detach?.()
     }
   }, [resource.content, hasWritingTaskSubmit, grammarInputsReady, preventSave])
+
+  // Everyday English: A Typical Day — teacher answer notes and reveal buttons.
+  useLayoutEffect(() => {
+    if (!isClientMounted) return
+    const host = contentRef.current
+    if (!host) return
+    if (showTeacherKey) host.setAttribute('data-teacher-key', 'true')
+    else host.removeAttribute('data-teacher-key')
+    const detach = hasDailyRoutineReveal ? mountDailyRoutineReveal(host) : undefined
+    return () => {
+      detach?.()
+      host.removeAttribute('data-teacher-key')
+    }
+  }, [isClientMounted, resource.content, showTeacherKey, hasDailyRoutineReveal])
 
   // Live word counts under writing practice textareas.
   useEffect(() => {
