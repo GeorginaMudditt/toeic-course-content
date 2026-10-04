@@ -1038,7 +1038,7 @@ export default function ChallengePage() {
                         Write the words in English
                       </h3>
                       <p className="text-gray-600">
-                        For each French word, type the corresponding English word in the box. Spelling and punctuation must be exact.
+                        For each French word, type the corresponding English word in the box. Spelling and punctuation must be exact. Verbs are accepted with or without <span className="italic">to</span>.
                       </p>
                     </div>
 

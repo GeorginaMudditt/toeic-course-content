@@ -13,6 +13,8 @@ const GOLD_ALTERNATIVES: Record<string, string[]> = {
   'a1|Nouns|desk': ['office'],
   'a1|Nouns|toy': ['game'],
   'a1|Nouns|mobile phone': ['cellphone', 'cell phone', 'cell-phone'],
+  'a1|Verbs (A)|to love': ['to adore'],
+  'a1|Verbs (A)|to sit': ['to sit down'],
   'a2|Activities (B)|spare time': ['free time'],
   'a2|Adjectives (B)|amazing': ['incredible'],
   'a2|Adjectives (B)|good-looking': ['good looking'],
@@ -81,6 +83,15 @@ function normalizeGoldAnswer(value: string): string {
     .replace(/\s+/g, ' ')
     .trim()
     .toLocaleLowerCase()
+}
+
+/** Infinitives are stored as "to work". Challenge 3 also accepts the bare verb. */
+function goldAnswerForms(value: string): string[] {
+  const normalized = normalizeGoldAnswer(value)
+  if (!normalized) return []
+  if (!normalized.startsWith('to ')) return [normalized]
+  const bare = normalized.slice(3).trim()
+  return bare ? [normalized, bare] : [normalized]
 }
 
 function groupIndicesByFrench(words: VocabularyWord[]): Map<string, number[]> {
@@ -175,6 +186,7 @@ export function isGoldEnglishAnswerCorrect(
 ): boolean {
   const user = normalizeGoldAnswer(userInput)
   if (!user) return false
-  if (user === normalizeGoldAnswer(expectedEnglish)) return true
-  return alternatives.some((alt) => user === normalizeGoldAnswer(alt))
+  return [expectedEnglish, ...alternatives].some((candidate) =>
+    goldAnswerForms(candidate).includes(user)
+  )
 }
