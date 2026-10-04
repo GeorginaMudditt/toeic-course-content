@@ -1,6 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { generateVocabularyListPdf } from '@/lib/generate-vocabulary-list-pdf'
 import {
+  generateVocabularyListByCategoryPdf,
+  generateVocabularyListPdf,
+} from '@/lib/generate-vocabulary-list-pdf'
+import {
+  getVocabularyListCategoriesForLevel,
   getVocabularyListEntriesForLevel,
   supportsGeneratedVocabularyList,
 } from '@/lib/vocabulary-list-data'
@@ -22,17 +26,31 @@ export async function GET(
       )
     }
 
-    const entries = await getVocabularyListEntriesForLevel(level)
+    const byCategory = _request.nextUrl.searchParams.get('group') === 'category'
+    let pdfBytes: ArrayBuffer
+    let fileName: string
 
-    if (!entries.length) {
-      return NextResponse.json(
-        { error: 'No vocabulary entries found for this level.' },
-        { status: 404 }
-      )
+    if (byCategory) {
+      const categories = await getVocabularyListCategoriesForLevel(level)
+      if (!categories.length) {
+        return NextResponse.json(
+          { error: 'No vocabulary entries found for this level.' },
+          { status: 404 }
+        )
+      }
+      pdfBytes = await generateVocabularyListByCategoryPdf(level, categories)
+      fileName = `${level.toUpperCase()} vocabulary list by category.pdf`
+    } else {
+      const entries = await getVocabularyListEntriesForLevel(level)
+      if (!entries.length) {
+        return NextResponse.json(
+          { error: 'No vocabulary entries found for this level.' },
+          { status: 404 }
+        )
+      }
+      pdfBytes = await generateVocabularyListPdf(level, entries)
+      fileName = `${level.toUpperCase()} vocabulary list.pdf`
     }
-
-    const pdfBytes = await generateVocabularyListPdf(level, entries)
-    const fileName = `${level.toUpperCase()} vocabulary list.pdf`
 
     return new NextResponse(Buffer.from(pdfBytes), {
       status: 200,

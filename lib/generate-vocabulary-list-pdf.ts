@@ -3,7 +3,7 @@ import { join } from 'path'
 import { jsPDF } from 'jspdf'
 import { brizzleRed } from '@/lib/brand-colors'
 import { LEVEL_COLORS } from '@/lib/level-colors'
-import type { VocabularyListEntry } from '@/lib/vocabulary-list-data'
+import type { VocabularyListCategory, VocabularyListEntry } from '@/lib/vocabulary-list-data'
 
 const FONT_URLS = {
   regular:
@@ -218,6 +218,121 @@ export async function generateVocabularyListPdf(
     pageNumber += 1
 
     if (pageEntries.length === 0) break
+  }
+
+  return doc.output('arraybuffer')
+}
+
+const CONTENT_BOTTOM = 278
+
+function entryBlockHeight(doc: jsPDF, entry: VocabularyListEntry): number {
+  doc.setFontSize(FONT_SIZE)
+  doc.setLineHeightFactor(LINE_HEIGHT_FACTOR)
+  doc.setFont('NotoSans', 'bold')
+  const englishLines = doc.splitTextToSize(entry.word_english, ENGLISH_WIDTH)
+  doc.setFont('NotoSans', 'italic')
+  const frenchLines = doc.splitTextToSize(
+    entry.translation_french,
+    COLUMN_WIDTH - FRENCH_X_OFFSET
+  )
+  const rowLines = Math.max(englishLines.length, frenchLines.length, 1)
+  return LINE_HEIGHT + (rowLines - 1) * WRAP_LINE_HEIGHT
+}
+
+function drawCategoryHeading(doc: jsPDF, title: string, y: number, levelColor: string): number {
+  doc.setFont('NotoSans', 'bold')
+  doc.setFontSize(13)
+  doc.setTextColor(levelColor)
+  const lines = doc.splitTextToSize(title, PAGE_WIDTH - MARGIN_X * 2)
+  doc.text(lines, MARGIN_X, y)
+  doc.setTextColor(0, 0, 0)
+  doc.setFontSize(FONT_SIZE)
+  return y + lines.length * 6 + 1.5
+}
+
+export async function generateVocabularyListByCategoryPdf(
+  level: string,
+  categories: VocabularyListCategory[]
+): Promise<ArrayBuffer> {
+  const fonts = await loadFonts()
+  const logoDataUri = loadLogoDataUri()
+  const levelDisplay = level.toUpperCase()
+  const levelColor =
+    LEVEL_COLORS[levelDisplay as keyof typeof LEVEL_COLORS] ?? brizzleRed
+
+  const doc = new jsPDF({ unit: 'mm', format: 'a4' })
+  registerFonts(doc, fonts)
+
+  let pageNumber = 1
+  let y = 66
+  let hasContentOnPage = false
+
+  const startPage = (isFirst: boolean) => {
+    if (!isFirst) doc.addPage()
+    drawPageNumber(doc, pageNumber)
+    drawFooter(doc)
+    hasContentOnPage = false
+    if (isFirst) {
+      drawFirstPageHeader(doc, levelDisplay, levelColor, logoDataUri)
+      doc.setFont('NotoSans', 'italic')
+      doc.setFontSize(12)
+      doc.setTextColor(90, 90, 90)
+      doc.text('By category', PAGE_WIDTH / 2, 56, { align: 'center' })
+      doc.setTextColor(0, 0, 0)
+      y = 66
+    } else {
+      y = 20
+    }
+  }
+
+  const nextPage = () => {
+    pageNumber += 1
+    startPage(false)
+  }
+
+  startPage(true)
+
+  for (const category of categories) {
+    if (category.entries.length === 0) continue
+    let entryIndex = 0
+    let headingOnPage = false
+
+    while (entryIndex < category.entries.length) {
+      const left = category.entries[entryIndex]!
+      const right = category.entries[entryIndex + 1]
+      const rowHeight = Math.max(
+        entryBlockHeight(doc, left),
+        right ? entryBlockHeight(doc, right) : 0
+      )
+
+      if (!headingOnPage) {
+        const headingHeight = 8
+        const gap = hasContentOnPage ? 5 : 0
+        if (hasContentOnPage && y + gap + headingHeight + rowHeight > CONTENT_BOTTOM) {
+          nextPage()
+        } else {
+          y += gap
+        }
+        y = drawCategoryHeading(doc, category.topic, y, levelColor)
+        headingOnPage = true
+        hasContentOnPage = true
+      }
+
+      if (y + rowHeight > CONTENT_BOTTOM && hasContentOnPage && y > 40) {
+        nextPage()
+        y = drawCategoryHeading(doc, category.topic, y, levelColor)
+        headingOnPage = true
+        hasContentOnPage = true
+        continue
+      }
+
+      const leftX = MARGIN_X
+      const rightX = MARGIN_X + COLUMN_WIDTH + COLUMN_GAP
+      const leftNext = drawEntry(doc, left, leftX, y)
+      const rightNext = right ? drawEntry(doc, right, rightX, y) : y
+      y = Math.max(leftNext, rightNext)
+      entryIndex += right ? 2 : 1
+    }
   }
 
   return doc.output('arraybuffer')

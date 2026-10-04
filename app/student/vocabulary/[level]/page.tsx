@@ -7,6 +7,10 @@ import VocabularyNav from '@/components/VocabularyNav'
 import Link from 'next/link'
 import { isVocabularyLevel } from '@/lib/vocabulary-levels'
 import { supportsGeneratedVocabularyList } from '@/lib/vocabulary-list-data'
+import {
+  isVocabularyLevelComplete,
+  lookupTopicProgress,
+} from '@/lib/vocabulary-level-completion'
 
 interface Topic {
   name: string
@@ -97,24 +101,7 @@ export default function VocabularyLevelPage() {
   }, [level, fetchProgress])
 
   // Get progress for a topic from state
-  const getTopicProgress = (topicName: string) => {
-    // Normalize topic name for matching (trim and remove extra spaces)
-    const normalizedTopic = topicName.trim().replace(/\s+/g, ' ')
-    // Try exact match first, then try case-insensitive match
-    let progress = topicProgress[normalizedTopic] || topicProgress[topicName]
-    
-    // If still not found, try case-insensitive search
-    if (!progress) {
-      const matchingKey = Object.keys(topicProgress).find(
-        key => key.toLowerCase() === normalizedTopic.toLowerCase()
-      )
-      if (matchingKey) {
-        progress = topicProgress[matchingKey]
-      }
-    }
-    
-    return progress || { bronze: false, silver: false, gold: false }
-  }
+  const getTopicProgress = (topicName: string) => lookupTopicProgress(topicName, topicProgress)
 
   // Handle topic click - navigate to challenge selection
   const handleTopicClick = (topicName: string) => {
@@ -155,6 +142,13 @@ export default function VocabularyLevelPage() {
   const vocabularyListPdfUrl = supportsGeneratedVocabularyList(level)
     ? `/api/vocabulary/${level}/vocabulary-list`
     : null
+  const levelCompleted =
+    !loading &&
+    topics.length > 0 &&
+    isVocabularyLevelComplete(
+      topics.map((topic) => topic.name),
+      topicProgress
+    )
 
   useEffect(() => {
     const fetchTopics = async () => {
@@ -225,9 +219,19 @@ export default function VocabularyLevelPage() {
           
           <div className="bg-white shadow rounded-lg p-6">
             <div className="mb-6">
-              <h1 className="text-3xl font-bold mb-4" style={{ color: levelColor }}>
-                Vocabulary - Level {levelDisplay}
-              </h1>
+              <div className="mb-4 flex flex-wrap items-center gap-3">
+                <h1 className="text-3xl font-bold" style={{ color: levelColor }}>
+                  Vocabulary - Level {levelDisplay}
+                </h1>
+                {levelCompleted && (
+                  <span
+                    className="inline-flex items-center rounded-full px-3 py-1 text-sm font-semibold text-white"
+                    style={{ backgroundColor: levelColor }}
+                  >
+                    Completed
+                  </span>
+                )}
+              </div>
               <div className="space-y-2 text-gray-700">
                 <p>🎯 Complete three challenges (1, 2, 3) for each theme.</p>
                 <p>🧭 You can complete the themes in any order.</p>
@@ -359,18 +363,30 @@ export default function VocabularyLevelPage() {
 
             {/* Download Vocabulary List Button */}
             {vocabularyListPdfUrl && (
-              <div className="mt-6 pt-6 border-t border-gray-200">
+              <div className="mt-6 flex flex-wrap gap-3 border-t border-gray-200 pt-6">
                 <a
                   href={vocabularyListPdfUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white transition-colors hover:opacity-90"
+                  className="inline-flex items-center rounded-md border border-transparent px-6 py-3 text-base font-medium text-white transition-colors hover:opacity-90"
                   style={{ backgroundColor: levelColor }}
                 >
-                  <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className="mr-2 h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                   </svg>
-                  Full {levelDisplay} Vocabulary List
+                  Full {levelDisplay} Vocabulary List (A–Z)
+                </a>
+                <a
+                  href={`${vocabularyListPdfUrl}?group=category`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center rounded-md border-2 bg-white px-6 py-3 text-base font-medium transition-colors hover:bg-gray-50"
+                  style={{ borderColor: levelColor, color: levelColor }}
+                >
+                  <svg className="mr-2 h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                  </svg>
+                  Full {levelDisplay} Vocabulary List (by category)
                 </a>
               </div>
             )}

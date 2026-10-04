@@ -2,10 +2,12 @@
 
 import { useEffect, useState, useMemo, useCallback } from 'react'
 import { useParams, useRouter, useSearchParams } from 'next/navigation'
+import { useSession } from 'next-auth/react'
 import { LEVEL_COLORS } from '@/lib/level-colors'
 import VocabularyNav from '@/components/VocabularyNav'
 import ChallengeModal from '@/components/ChallengeModal'
 import ChallengeConfetti from '@/components/ChallengeConfetti'
+import LevelCompleteCelebration from '@/components/LevelCompleteCelebration'
 import Link from 'next/link'
 import { supabase } from '@/lib/supabase'
 import { isVocabularyLevel } from '@/lib/vocabulary-levels'
@@ -19,6 +21,11 @@ import {
 } from '@/lib/vocabulary-silver-matching'
 import { orderWordsForBronze } from '@/lib/vocabulary-bronze-order'
 import { shuffleForVocabularyChallenge } from '@/lib/vocabulary-shuffle'
+import {
+  isVocabularyLevelComplete,
+  normalizeVocabularyTopicName,
+  vocabularyProgressRecord,
+} from '@/lib/vocabulary-level-completion'
 
 interface Word {
   word_english: string
@@ -37,6 +44,7 @@ export default function ChallengePage() {
   const topic = decodeURIComponent(params.topic as string).trim().replace(/\s+/g, ' ')
   const challengeType = params.challengeType as 'bronze' | 'silver' | 'gold'
   const isViewMode = searchParams.get('view') === 'true'
+  const { data: session } = useSession()
 
   const [progress, setProgress] = useState({ bronze: false, silver: false, gold: false })
   const [words, setWords] = useState<Word[]>([])
@@ -55,6 +63,7 @@ export default function ChallengePage() {
   const [silverHelpModeEnabled, setSilverHelpModeEnabled] = useState(false)
   const [helpModeEnabled, setHelpModeEnabled] = useState(false)
   const [isSubmittingChallenge, setIsSubmittingChallenge] = useState(false)
+  const [showLevelCelebration, setShowLevelCelebration] = useState(false)
   const [modalState, setModalState] = useState<{
     isOpen: boolean
     type: 'success' | 'error'
@@ -569,6 +578,34 @@ export default function ChallengePage() {
         })
       }
 
+      const newlyCompleted = !latestProgress[challengeType]
+      let finishedLevel = false
+      if (newlyCompleted && isVocabularyLevel(level)) {
+        try {
+          const [topicsResponse, progressResponse] = await Promise.all([
+            fetch(`/api/vocabulary/${level}`),
+            fetch(`/api/vocabulary-progress?level=${level}`),
+          ])
+          const topicsResult = await topicsResponse.json()
+          const progressResult = await progressResponse.json()
+          if (topicsResponse.ok && progressResponse.ok) {
+            const topicNames = ((topicsResult.data || []) as Array<{ name?: string }>)
+              .map((item) => item.name)
+              .filter((name): name is string => Boolean(name))
+            const progressRecord = vocabularyProgressRecord(progressResult.data || [])
+            progressRecord[normalizeVocabularyTopicName(topic)] = newProgress
+            finishedLevel = isVocabularyLevelComplete(topicNames, progressRecord)
+          }
+        } catch (completionError) {
+          console.error('Error checking level completion:', completionError)
+        }
+      }
+
+      if (finishedLevel) {
+        setShowLevelCelebration(true)
+        return
+      }
+
       // Show success modal
       setModalState({
         isOpen: true,
@@ -656,9 +693,28 @@ export default function ChallengePage() {
     )
   }
 
+  const learnerFullName =
+    session?.user?.role === 'GUARDIAN'
+      ? session.user.activeChildName
+      : session?.user?.name
+  const learnerFirstName = learnerFullName?.trim().split(/\s+/)[0] || ''
+
   return (
     <div className="min-h-screen bg-gray-50">
       <VocabularyNav />
+      {showLevelCelebration && (
+        <LevelCompleteCelebration
+          learnerName={learnerFirstName}
+          levelLabel={level.toUpperCase()}
+          alphabeticalListHref={`/api/vocabulary/${level}/vocabulary-list`}
+          categoryListHref={`/api/vocabulary/${level}/vocabulary-list?group=category`}
+          levelColor={levelColor}
+          onContinue={() => {
+            setShowLevelCelebration(false)
+            router.push(`/student/vocabulary/${level}`)
+          }}
+        />
+      )}
       <ChallengeModal
         isOpen={modalState.isOpen}
         onClose={handleModalClose}

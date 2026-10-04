@@ -4,6 +4,7 @@ import { redirect } from 'next/navigation'
 import Link from 'next/link'
 import { LEVEL_INFO } from '@/lib/level-colors'
 import { resolveVocabularyStudentContext } from '@/lib/vocabulary-student-context'
+import { getCompletedVocabularyLevelIds } from '@/lib/vocabulary-level-completion-server'
 import VocabularyNav from '@/components/VocabularyNav'
 
 export default async function VocabularyPage({ searchParams }: { searchParams: { viewAs?: string } }) {
@@ -16,6 +17,14 @@ export default async function VocabularyPage({ searchParams }: { searchParams: {
   }
 
   const isGuardian = ctx.isGuardian
+  let completedLevels = new Set<string>()
+  if (ctx.studentId) {
+    try {
+      completedLevels = await getCompletedVocabularyLevelIds(ctx.studentId)
+    } catch (error) {
+      console.error('Error loading vocabulary level completion:', error)
+    }
+  }
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -62,9 +71,18 @@ export default async function VocabularyPage({ searchParams }: { searchParams: {
                         </h3>
                       </div>
                       {isAvailable && (
-                        <div className="text-2xl" style={{ color: level.color }}>
-                          →
-                        </div>
+                        completedLevels.has(level.id.toLowerCase()) ? (
+                          <span
+                            className="text-sm font-bold uppercase tracking-wide"
+                            style={{ color: level.color }}
+                          >
+                            Completed
+                          </span>
+                        ) : (
+                          <div className="text-2xl" style={{ color: level.color }}>
+                            →
+                          </div>
+                        )
                       )}
                     </div>
                   </>
