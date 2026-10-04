@@ -239,6 +239,26 @@ function entryBlockHeight(doc: jsPDF, entry: VocabularyListEntry): number {
   return LINE_HEIGHT + (rowLines - 1) * WRAP_LINE_HEIGHT
 }
 
+function categoryHeadingHeight(doc: jsPDF, title: string): number {
+  doc.setFont('NotoSans', 'bold')
+  doc.setFontSize(13)
+  const lines = doc.splitTextToSize(title, PAGE_WIDTH - MARGIN_X * 2)
+  return lines.length * 6 + 1.5
+}
+
+function categoryBlockHeight(doc: jsPDF, category: VocabularyListCategory): number {
+  let height = categoryHeadingHeight(doc, category.topic)
+  for (let index = 0; index < category.entries.length; index += 2) {
+    const left = category.entries[index]!
+    const right = category.entries[index + 1]
+    height += Math.max(
+      entryBlockHeight(doc, left),
+      right ? entryBlockHeight(doc, right) : 0
+    )
+  }
+  return height
+}
+
 function drawCategoryHeading(doc: jsPDF, title: string, y: number, levelColor: string): number {
   doc.setFont('NotoSans', 'bold')
   doc.setFontSize(13)
@@ -247,7 +267,7 @@ function drawCategoryHeading(doc: jsPDF, title: string, y: number, levelColor: s
   doc.text(lines, MARGIN_X, y)
   doc.setTextColor(0, 0, 0)
   doc.setFontSize(FONT_SIZE)
-  return y + lines.length * 6 + 1.5
+  return y + categoryHeadingHeight(doc, title)
 }
 
 export async function generateVocabularyListByCategoryPdf(
@@ -292,8 +312,21 @@ export async function generateVocabularyListByCategoryPdf(
 
   startPage(true)
 
+  const categoryGap = 5
+
   for (const category of categories) {
     if (category.entries.length === 0) continue
+    const blockHeight = categoryBlockHeight(doc, category)
+    const gap = hasContentOnPage ? categoryGap : 0
+    // Keep a category on one page. If the remainder of this page is too short,
+    // start the whole category on the next page. A category taller than a full
+    // page still continues, because it cannot fit on a single page.
+    if (hasContentOnPage && y + gap + blockHeight > CONTENT_BOTTOM) {
+      nextPage()
+    } else if (gap) {
+      y += gap
+    }
+
     let entryIndex = 0
     let headingOnPage = false
 
@@ -306,19 +339,12 @@ export async function generateVocabularyListByCategoryPdf(
       )
 
       if (!headingOnPage) {
-        const headingHeight = 8
-        const gap = hasContentOnPage ? 5 : 0
-        if (hasContentOnPage && y + gap + headingHeight + rowHeight > CONTENT_BOTTOM) {
-          nextPage()
-        } else {
-          y += gap
-        }
         y = drawCategoryHeading(doc, category.topic, y, levelColor)
         headingOnPage = true
         hasContentOnPage = true
       }
 
-      if (y + rowHeight > CONTENT_BOTTOM && hasContentOnPage && y > 40) {
+      if (y + rowHeight > CONTENT_BOTTOM && y > 40) {
         nextPage()
         y = drawCategoryHeading(doc, category.topic, y, levelColor)
         headingOnPage = true
