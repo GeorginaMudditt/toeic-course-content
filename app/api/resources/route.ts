@@ -3,6 +3,7 @@ import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
 import { supabaseServer } from '@/lib/supabase'
 import { randomUUID } from 'crypto'
+import { isStudentUploadedResource } from '@/lib/student-uploaded-resource'
 
 export async function POST(request: NextRequest) {
   try {
@@ -79,7 +80,9 @@ export async function GET(request: NextRequest) {
       )
     }
 
-    return NextResponse.json(resources || [])
+    return NextResponse.json(
+      (resources || []).filter((resource) => !isStudentUploadedResource(resource.content)),
+    )
   } catch (error) {
     console.error('Error fetching resources:', error)
     const errorMessage = error instanceof Error ? error.message : 'Unknown error'

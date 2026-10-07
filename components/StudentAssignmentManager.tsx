@@ -9,6 +9,8 @@ import { brizzleBlue, brizzleBlueHover, brizzleRed, brizzleRedHover } from '@/li
 import { parseCourseDurationHours } from '@/lib/course-notes-lessons'
 import { buildResourceStudiedLessonsMap } from '@/lib/course-notes-resource-lessons'
 import { ClientLocalLastOpenedLine } from '@/components/ClientLocalDateTime'
+import UploadStudentDocument, { UploadedPdfBadge } from '@/components/UploadStudentDocument'
+import { isStudentUploadedResource } from '@/lib/student-uploaded-resource'
 
 type ProgressStatusKey = 'NOT_STARTED' | 'IN_PROGRESS' | 'COMPLETED'
 
@@ -122,6 +124,7 @@ interface Resource {
   estimatedHours: number
   level?: string
   skill?: string
+  content?: string | null
 }
 
 interface Course {
@@ -516,8 +519,11 @@ export default function StudentAssignmentManager({ student, resources, courses }
     }
   }
 
-  const handleRemoveAssignment = async (assignmentId: string) => {
-    if (!confirm('Are you sure you want to remove this assignment?')) {
+  const handleRemoveAssignment = async (assignmentId: string, uploadedDocument = false) => {
+    const message = uploadedDocument
+      ? 'Remove this uploaded document from the student\'s resources?'
+      : 'Are you sure you want to remove this assignment?'
+    if (!confirm(message)) {
       return
     }
 
@@ -822,6 +828,8 @@ export default function StudentAssignmentManager({ student, resources, courses }
               )}
             </div>
 
+            <UploadStudentDocument enrollmentId={enrollment.id} />
+
             {/* Current Assignments */}
             <div>
               <div className="flex flex-col gap-4 mb-3 sm:flex-row sm:justify-between sm:items-start">
@@ -969,6 +977,7 @@ export default function StudentAssignmentManager({ student, resources, courses }
                             <div className="flex-1 min-w-0">
                               <div className="font-medium text-gray-900 flex flex-wrap items-center gap-2">
                                 <span>{assignment.resource.title}</span>
+                                <UploadedPdfBadge content={assignment.resource.content} />
                                 <StudiedLessonBadges lessonNumbers={studiedLessons} />
                               </div>
                               <AssignmentProgressMeta progress={progress} />
@@ -984,7 +993,12 @@ export default function StudentAssignmentManager({ student, resources, courses }
                                 View
                               </Link>
                               <button
-                                onClick={() => handleRemoveAssignment(assignment.id)}
+                                onClick={() =>
+                                  handleRemoveAssignment(
+                                    assignment.id,
+                                    isStudentUploadedResource(assignment.resource.content),
+                                  )
+                                }
                                 className="text-sm transition-colors"
                                 style={{ color: brizzleRed }}
                                 onMouseEnter={(e) => (e.currentTarget.style.color = brizzleRedHover)}
@@ -1011,6 +1025,7 @@ export default function StudentAssignmentManager({ student, resources, courses }
                               <div className="font-medium text-gray-900 flex flex-wrap items-center gap-2">
                                 <span className="text-gray-500 text-sm font-normal">Reference</span>
                                 <span>{assignment.resource.title}</span>
+                                <UploadedPdfBadge content={assignment.resource.content} />
                                 <StudiedLessonBadges lessonNumbers={studiedLessons} />
                               </div>
                               <AssignmentProgressMeta progress={progress} />
@@ -1026,7 +1041,12 @@ export default function StudentAssignmentManager({ student, resources, courses }
                                 View
                               </Link>
                               <button
-                                onClick={() => handleRemoveAssignment(assignment.id)}
+                                onClick={() =>
+                                  handleRemoveAssignment(
+                                    assignment.id,
+                                    isStudentUploadedResource(assignment.resource.content),
+                                  )
+                                }
                                 className="text-sm transition-colors"
                                 style={{ color: brizzleRed }}
                                 onMouseEnter={(e) => (e.currentTarget.style.color = brizzleRedHover)}

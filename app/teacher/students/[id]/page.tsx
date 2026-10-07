@@ -12,6 +12,7 @@ import StudentNotesManager from '@/components/StudentNotesManager'
 import StudentDocumentManager from '@/components/StudentDocumentManager'
 import WritingSubmissionsManager from '@/components/WritingSubmissionsManager'
 import Tabs from '@/components/Tabs'
+import { isStudentUploadedResource } from '@/lib/student-uploaded-resource'
 
 export default async function StudentDetailPage({
   params,
@@ -177,7 +178,9 @@ export default async function StudentDetailPage({
     if (resourcesListError) {
       console.error('Error fetching all resources:', resourcesListError)
     } else {
-      allResources = resourcesList || []
+      allResources = (resourcesList || []).filter(
+        (resource) => !isStudentUploadedResource(resource.content),
+      )
     }
 
     // Fetch all courses for the teacher

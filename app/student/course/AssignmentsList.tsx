@@ -2,6 +2,7 @@
 
 import { useMemo } from 'react'
 import Link from 'next/link'
+import { isStudentUploadedResource } from '@/lib/student-uploaded-resource'
 import { useSessionState } from '@/lib/use-session-state'
 
 interface Assignment {
@@ -15,6 +16,7 @@ interface Assignment {
     level: string
     skill?: string
     createdAt: string
+    content?: string | null
   } | null
   progress: any[]
 }
@@ -376,7 +378,7 @@ export default function AssignmentsList({ assignments, viewAs, storageKey }: Pro
                       </div>
                       {assignment.resource && (
                         <div className="text-sm text-gray-500">
-                          {assignment.resource.estimatedHours}h • {formatSkill(assignment.resource.skill)} • Level {assignment.resource.level}
+                          {isStudentUploadedResource(assignment.resource.content) ? 'PDF' : `${assignment.resource.estimatedHours}h`} • {formatSkill(assignment.resource.skill)} • Level {assignment.resource.level}
                         </div>
                       )}
                     </div>

@@ -4,6 +4,7 @@ import { redirect } from 'next/navigation'
 import { supabaseServer } from '@/lib/supabase'
 import Navbar from '@/components/Navbar'
 import ResourcesList from './ResourcesList'
+import { isStudentUploadedResource } from '@/lib/student-uploaded-resource'
 
 export default async function ResourcesPage() {
   const session = await getServerSession(authOptions)
@@ -24,7 +25,7 @@ export default async function ResourcesPage() {
     if (error) {
       console.error('Error loading resources:', error)
     } else {
-      resources = data || []
+      resources = (data || []).filter((resource) => !isStudentUploadedResource(resource.content))
     }
   } catch (error) {
     console.error('Error loading resources:', error)

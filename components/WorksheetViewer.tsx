@@ -4,6 +4,7 @@ import React, { useState, useEffect, useLayoutEffect, useRef, useCallback, useMe
 import { createRoot } from 'react-dom/client'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
+import { studentUploadedPdfUrl } from '@/lib/student-uploaded-resource'
 import { mountAircraftAviationAdjectiveMatch } from '@/lib/worksheetInteractions/aircraftAviationAdjectivesMatch'
 import { mountAircraftAviationVerbsGapFill } from '@/lib/worksheetInteractions/aircraftAviationVerbsGapFill'
 import { mountInstructionsDescriptionsArmyAdjectiveMatch } from '@/lib/worksheetInteractions/instructionsDescriptionsArmyAdjectivesMatch'
@@ -3412,6 +3413,12 @@ export default function WorksheetViewer({
   }
 
   const handlePrint = () => {
+    const uploadedPdf = studentUploadedPdfUrl(resource.content)
+    if (uploadedPdf) {
+      window.open(uploadedPdf, '_blank')
+      return
+    }
+
     // If content is a PDF file, open it for printing
     if (resource.content.startsWith('/uploads/') || resource.content.startsWith('uploads/')) {
       const filePath = resource.content.startsWith('/') ? resource.content : `/${resource.content}`
@@ -3546,6 +3553,16 @@ export default function WorksheetViewer({
             }
           } catch (e) {
             // Not JSON, continue with normal handling
+          }
+
+          if (contentData && contentData.type === 'student-pdf' && typeof contentData.pdf === 'string') {
+            return (
+              <iframe
+                src={contentData.pdf}
+                className="w-full h-[800px] border-0"
+                title={resource.title}
+              />
+            )
           }
 
           if (contentData && contentData.type === 'pdf-with-audio') {
