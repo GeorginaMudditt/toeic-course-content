@@ -26,6 +26,7 @@ export default function UploadStudentDocument({ enrollmentId }: { enrollmentId: 
   const [fileInputKey, setFileInputKey] = useState(0)
   const [uploading, setUploading] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [open, setOpen] = useState(false)
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault()
@@ -71,9 +72,27 @@ export default function UploadStudentDocument({ enrollmentId }: { enrollmentId: 
   }
 
   return (
-    <form onSubmit={handleSubmit} className="mb-6 p-5 border border-gray-200 rounded-lg bg-gray-50">
-      <h3 className="font-semibold mb-1 text-gray-900">Upload a document</h3>
-      <p className="text-sm text-gray-600 mb-4">
+    <div className="mb-6 border border-gray-200 rounded-lg bg-white">
+      <button
+        type="button"
+        onClick={() => setOpen((value) => !value)}
+        aria-expanded={open}
+        className="w-full flex items-center justify-between gap-3 px-4 py-3 text-left hover:bg-gray-50 transition-colors rounded-lg"
+      >
+        <span className="font-semibold text-gray-900">Upload a document</span>
+        <svg
+          className={`w-4 h-4 text-gray-500 shrink-0 transition-transform ${open ? 'rotate-180' : ''}`}
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+          aria-hidden="true"
+        >
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+        </svg>
+      </button>
+      {open && (
+    <form onSubmit={handleSubmit} className="px-4 pb-4 border-t border-gray-200">
+      <p className="text-sm text-gray-600 mt-4 mb-4">
         Add a PDF for this student. It appears in their resource list with the title, level, and category you choose.
       </p>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -160,5 +179,7 @@ export default function UploadStudentDocument({ enrollmentId }: { enrollmentId: 
         {uploading ? 'Uploading...' : 'Upload document'}
       </button>
     </form>
+      )}
+    </div>
   )
 }
