@@ -2,7 +2,7 @@ export const STUDENT_PDF_CONTENT_TYPE = 'student-pdf'
 
 export const STUDENT_UPLOAD_LEVELS = ['All', 'A1', 'A2', 'B1', 'B2', 'C1', 'C2'] as const
 
-export const MAX_STUDENT_PDF_BYTES = 25 * 1024 * 1024
+export const MAX_STUDENT_PDF_BYTES = 300 * 1024 * 1024
 
 export function studentPdfTooLargeMessage() {
   const megabytes = MAX_STUDENT_PDF_BYTES / (1024 * 1024)

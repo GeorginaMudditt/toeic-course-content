@@ -12,6 +12,36 @@ import { verifyTeacherEnrollment } from '@/lib/verify-teacher-enrollment'
 
 export const dynamic = 'force-dynamic'
 
+async function ensureResourcesBucketSize(): Promise<{ ok: true } | { ok: false; error: string }> {
+  const { data: bucket, error } = await supabaseServer.storage.getBucket('resources')
+  if (error || !bucket) {
+    console.error('Could not read resources bucket:', error)
+    return { ok: true }
+  }
+
+  const currentLimit = bucket.file_size_limit ?? 0
+  if (currentLimit >= MAX_STUDENT_PDF_BYTES) {
+    return { ok: true }
+  }
+
+  const { error: updateError } = await supabaseServer.storage.updateBucket('resources', {
+    public: bucket.public,
+    fileSizeLimit: MAX_STUDENT_PDF_BYTES,
+    allowedMimeTypes: bucket.allowed_mime_types ?? undefined,
+  })
+
+  if (updateError) {
+    console.error('Could not raise storage file size limit:', updateError)
+    return {
+      ok: false,
+      error:
+        'This PDF is larger than the storage limit. Raise the file size limit for the resources bucket in Supabase, then try again.',
+    }
+  }
+
+  return { ok: true }
+}
+
 export async function POST(request: NextRequest) {
   try {
     const session = await getServerSession(authOptions)
@@ -41,6 +71,11 @@ export async function POST(request: NextRequest) {
     const enrollment = await verifyTeacherEnrollment(enrollmentId, session.user.id)
     if (!enrollment.ok) {
       return NextResponse.json({ error: enrollment.error }, { status: enrollment.status })
+    }
+
+    const sizeLimit = await ensureResourcesBucketSize()
+    if (!sizeLimit.ok) {
+      return NextResponse.json({ error: sizeLimit.error }, { status: 500 })
     }
 
     const sanitizedName = fileName.replace(/[^a-zA-Z0-9.-]/g, '_')
