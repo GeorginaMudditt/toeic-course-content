@@ -6,6 +6,7 @@ import {
   MAX_STUDENT_PDF_BYTES,
   isPdfUpload,
   studentPdfStoragePrefix,
+  studentPdfTooLargeMessage,
 } from '@/lib/student-uploaded-resource'
 import { verifyTeacherEnrollment } from '@/lib/verify-teacher-enrollment'
 
@@ -34,7 +35,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Choose a PDF to upload.' }, { status: 400 })
     }
     if (fileSize > MAX_STUDENT_PDF_BYTES) {
-      return NextResponse.json({ error: 'PDF must be 10MB or smaller.' }, { status: 400 })
+      return NextResponse.json({ error: studentPdfTooLargeMessage() }, { status: 400 })
     }
 
     const enrollment = await verifyTeacherEnrollment(enrollmentId, session.user.id)

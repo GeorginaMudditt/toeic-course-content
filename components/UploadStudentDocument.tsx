@@ -9,6 +9,7 @@ import {
   STUDENT_UPLOAD_SKILLS,
   isPdfUpload,
   isStudentUploadedResource,
+  studentPdfTooLargeMessage,
 } from '@/lib/student-uploaded-resource'
 
 export function UploadedPdfBadge({ content }: { content?: string | null }) {
@@ -60,7 +61,7 @@ export default function UploadStudentDocument({ enrollmentId }: { enrollmentId: 
       return
     }
     if (file.size > MAX_STUDENT_PDF_BYTES) {
-      setError('PDF must be 10MB or smaller.')
+      setError(studentPdfTooLargeMessage())
       return
     }
 
