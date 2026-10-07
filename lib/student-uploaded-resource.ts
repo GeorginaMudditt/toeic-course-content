@@ -2,6 +2,24 @@ export const STUDENT_PDF_CONTENT_TYPE = 'student-pdf'
 
 export const STUDENT_UPLOAD_LEVELS = ['All', 'A1', 'A2', 'B1', 'B2', 'C1', 'C2'] as const
 
+export const MAX_STUDENT_PDF_BYTES = 10 * 1024 * 1024
+
+export function studentPdfStoragePrefix(enrollmentId: string) {
+  return `student-pdfs/${enrollmentId}/`
+}
+
+export function isPdfUpload(fileName: string, mimeType: string) {
+  const name = fileName.trim().toLowerCase()
+  if (!name.endsWith('.pdf')) return false
+  const type = mimeType.trim().toLowerCase()
+  return (
+    type === '' ||
+    type === 'application/pdf' ||
+    type === 'application/x-pdf' ||
+    type === 'application/octet-stream'
+  )
+}
+
 export const STUDENT_UPLOAD_SKILLS: { value: string; label: string }[] = [
   { value: 'GRAMMAR', label: 'Grammar' },
   { value: 'VOCABULARY', label: 'Vocabulary' },

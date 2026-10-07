@@ -2,9 +2,12 @@
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
+import { supabase } from '@/lib/supabase'
 import {
+  MAX_STUDENT_PDF_BYTES,
   STUDENT_UPLOAD_LEVELS,
   STUDENT_UPLOAD_SKILLS,
+  isPdfUpload,
   isStudentUploadedResource,
 } from '@/lib/student-uploaded-resource'
 
@@ -15,6 +18,22 @@ export function UploadedPdfBadge({ content }: { content?: string | null }) {
       Uploaded PDF
     </span>
   )
+}
+
+async function readError(response: Response, fallback: string) {
+  const text = await response.text()
+  if (!text) return fallback
+  try {
+    const data = JSON.parse(text) as { error?: unknown }
+    if (typeof data.error === 'string' && data.error) return data.error
+    if (data.error && typeof data.error === 'object' && 'message' in data.error) {
+      const message = (data.error as { message?: unknown }).message
+      if (typeof message === 'string' && message) return message
+    }
+  } catch {
+    return text.slice(0, 300)
+  }
+  return fallback
 }
 
 export default function UploadStudentDocument({ enrollmentId }: { enrollmentId: string }) {
@@ -36,24 +55,59 @@ export default function UploadStudentDocument({ enrollmentId }: { enrollmentId: 
       setError('Enter a title, choose a level and category, and choose a PDF.')
       return
     }
+    if (!isPdfUpload(file.name, file.type)) {
+      setError('Only PDF files can be uploaded here.')
+      return
+    }
+    if (file.size > MAX_STUDENT_PDF_BYTES) {
+      setError('PDF must be 10MB or smaller.')
+      return
+    }
 
     setUploading(true)
+    let storagePath = ''
     try {
-      const body = new FormData()
-      body.set('enrollmentId', enrollmentId)
-      body.set('title', title.trim())
-      body.set('level', level)
-      body.set('skill', skill)
-      body.set('file', file)
+      const uploadUrlResponse = await fetch('/api/student-resource-uploads/upload-url', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          enrollmentId,
+          fileName: file.name,
+          mimeType: file.type || 'application/pdf',
+          fileSize: file.size,
+        }),
+      })
+      if (!uploadUrlResponse.ok) {
+        setError(await readError(uploadUrlResponse, 'Failed to prepare the upload.'))
+        return
+      }
+      const uploadUrlData = await uploadUrlResponse.json()
+      storagePath = uploadUrlData.filePath as string
+      const token = uploadUrlData.token as string
+
+      const { error: storageError } = await supabase.storage
+        .from('resources')
+        .uploadToSignedUrl(storagePath, token, file)
+      if (storageError) {
+        setError(storageError.message || 'Failed to upload the PDF.')
+        return
+      }
 
       const response = await fetch('/api/student-resource-uploads', {
         method: 'POST',
-        body,
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          enrollmentId,
+          title: title.trim(),
+          level,
+          skill,
+          storagePath,
+          fileName: file.name,
+        }),
       })
 
       if (!response.ok) {
-        const data = await response.json().catch(() => ({ error: 'Failed to upload the document.' }))
-        setError(data.error || 'Failed to upload the document.')
+        setError(await readError(response, 'Failed to save the document.'))
         return
       }
 
@@ -65,7 +119,7 @@ export default function UploadStudentDocument({ enrollmentId }: { enrollmentId: 
       router.refresh()
     } catch (uploadError) {
       console.error('Error uploading student document:', uploadError)
-      setError('Failed to upload the document. Check your connection and try again.')
+      setError(uploadError instanceof Error ? uploadError.message : 'Failed to upload the document.')
     } finally {
       setUploading(false)
     }
