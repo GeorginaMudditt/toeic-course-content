@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
+import { useSessionState } from '@/lib/use-session-state'
 import { formatUKDate, formatCourseName as formatCourseNameUtil } from '@/lib/date-utils'
 import { brizzleBlue, brizzleBlueHover, brizzleRed, brizzleRedHover } from '@/lib/brand-colors'
 import { parseCourseDurationHours } from '@/lib/course-notes-lessons'
@@ -10,6 +11,22 @@ import { buildResourceStudiedLessonsMap } from '@/lib/course-notes-resource-less
 import { ClientLocalLastOpenedLine } from '@/components/ClientLocalDateTime'
 
 type ProgressStatusKey = 'NOT_STARTED' | 'IN_PROGRESS' | 'COMPLETED'
+
+const LEVEL_FILTERS = ['All', 'A1', 'A2', 'B1', 'B2', 'C1', 'C2']
+const SKILL_FILTERS = [
+  'All',
+  'GRAMMAR',
+  'VOCABULARY',
+  'READING',
+  'WRITING',
+  'SPEAKING',
+  'LISTENING',
+  'TESTS',
+  'REFERENCE',
+  'TRAVEL_ENGLISH',
+  'BUSINESS_ENGLISH',
+  'EVERYDAY_ENGLISH',
+]
 
 const ASSIGNED_SKILL_FILTER_OPTIONS: { value: string; label: string }[] = [
   { value: 'All', label: 'All skills' },
@@ -25,6 +42,78 @@ const ASSIGNED_SKILL_FILTER_OPTIONS: { value: string; label: string }[] = [
   { value: 'BUSINESS_ENGLISH', label: 'Business English' },
   { value: 'EVERYDAY_ENGLISH', label: 'Everyday English' },
 ]
+
+type ManagerFilters = {
+  selectedLevels: string[]
+  selectedSkills: string[]
+  titleSearch: string
+  showOnlyUnassigned: Record<string, boolean>
+  assignedListSelectedSkill: Record<string, string>
+  assignedListShowStatuses: Record<string, Record<ProgressStatusKey, boolean>>
+}
+
+const DEFAULT_MANAGER_FILTERS: ManagerFilters = {
+  selectedLevels: ['All'],
+  selectedSkills: ['All'],
+  titleSearch: '',
+  showOnlyUnassigned: {},
+  assignedListSelectedSkill: {},
+  assignedListShowStatuses: {},
+}
+
+function parseChoiceList(value: unknown, allowed: string[]): string[] {
+  if (!Array.isArray(value)) return ['All']
+  const choices = value.filter(
+    (item): item is string => typeof item === 'string' && allowed.includes(item) && item !== 'All',
+  )
+  return choices.length === 0 ? ['All'] : choices
+}
+
+function parseBooleanMap(value: unknown): Record<string, boolean> {
+  if (!value || typeof value !== 'object' || Array.isArray(value)) return {}
+  const out: Record<string, boolean> = {}
+  for (const [key, entry] of Object.entries(value)) {
+    if (typeof entry === 'boolean') out[key] = entry
+  }
+  return out
+}
+
+function parseSkillMap(value: unknown): Record<string, string> {
+  if (!value || typeof value !== 'object' || Array.isArray(value)) return {}
+  const allowed = new Set(SKILL_FILTERS)
+  const out: Record<string, string> = {}
+  for (const [key, entry] of Object.entries(value)) {
+    if (typeof entry === 'string' && allowed.has(entry)) out[key] = entry
+  }
+  return out
+}
+
+function parseStatusMap(value: unknown): Record<string, Record<ProgressStatusKey, boolean>> {
+  if (!value || typeof value !== 'object' || Array.isArray(value)) return {}
+  const out: Record<string, Record<ProgressStatusKey, boolean>> = {}
+  for (const [key, entry] of Object.entries(value)) {
+    if (!entry || typeof entry !== 'object' || Array.isArray(entry)) continue
+    const status = entry as Record<string, unknown>
+    out[key] = {
+      NOT_STARTED: status.NOT_STARTED !== false,
+      IN_PROGRESS: status.IN_PROGRESS !== false,
+      COMPLETED: status.COMPLETED !== false,
+    }
+  }
+  return out
+}
+
+function parseManagerFilters(value: unknown): ManagerFilters {
+  const raw = value && typeof value === 'object' ? (value as Record<string, unknown>) : {}
+  return {
+    selectedLevels: parseChoiceList(raw.selectedLevels, LEVEL_FILTERS),
+    selectedSkills: parseChoiceList(raw.selectedSkills, SKILL_FILTERS),
+    titleSearch: typeof raw.titleSearch === 'string' ? raw.titleSearch : '',
+    showOnlyUnassigned: parseBooleanMap(raw.showOnlyUnassigned),
+    assignedListSelectedSkill: parseSkillMap(raw.assignedListSelectedSkill),
+    assignedListShowStatuses: parseStatusMap(raw.assignedListShowStatuses),
+  }
+}
 
 interface Resource {
   id: string
@@ -155,19 +244,26 @@ export default function StudentAssignmentManager({ student, resources, courses }
   const [customCourseDurationHours, setCustomCourseDurationHours] = useState('10')
   const [selectedResources, setSelectedResources] = useState<string[]>([])
   const [loading, setLoading] = useState(false)
-  const [selectedLevels, setSelectedLevels] = useState<string[]>(['All'])
-  const [selectedSkills, setSelectedSkills] = useState<string[]>(['All'])
-  const [titleSearch, setTitleSearch] = useState('')
-  const [showOnlyUnassigned, setShowOnlyUnassigned] = useState<Record<string, boolean>>({})
-  const [assignedListSelectedSkill, setAssignedListSelectedSkill] = useState<
-    Record<string, string>
-  >({})
-  const [assignedListShowStatuses, setAssignedListShowStatuses] = useState<
-    Record<string, Record<ProgressStatusKey, boolean>>
-  >({})
+  const [filters, setFilters] = useSessionState(
+    `brizzle-filters:student-manager:${student.id}`,
+    DEFAULT_MANAGER_FILTERS,
+    parseManagerFilters,
+  )
+  const {
+    selectedLevels,
+    selectedSkills,
+    titleSearch,
+    showOnlyUnassigned,
+    assignedListSelectedSkill,
+    assignedListShowStatuses,
+  } = filters
 
-  const getAssignedListSkill = (enrollmentId: string) =>
-    assignedListSelectedSkill[enrollmentId] ?? 'All'
+  const getAssignedListSkill = (enrollmentId: string, assignments: Assignment[] = []) => {
+    const skill = assignedListSelectedSkill[enrollmentId] ?? 'All'
+    if (assignments.length === 0) return skill
+    const options = getAssignedSkillOptions(assignments)
+    return options.some((option) => option.value === skill) ? skill : 'All'
+  }
 
   const getAssignedListStatuses = (enrollmentId: string): Record<ProgressStatusKey, boolean> =>
     assignedListShowStatuses[enrollmentId] ?? {
@@ -177,19 +273,25 @@ export default function StudentAssignmentManager({ student, resources, courses }
     }
 
   const setAssignedListSkill = (enrollmentId: string, skill: string) => {
-    setAssignedListSelectedSkill((prev) => ({ ...prev, [enrollmentId]: skill }))
+    setFilters((prev) => ({
+      ...prev,
+      assignedListSelectedSkill: { ...prev.assignedListSelectedSkill, [enrollmentId]: skill },
+    }))
   }
 
-  const toggleAssignedListStatus = (enrollmentId: string, key: ProgressStatusKey) => {
-    setAssignedListShowStatuses((prev) => {
-      const current = prev[enrollmentId] ?? {
+  const toggleAssignedListStatus = (enrollmentId: string, status: ProgressStatusKey) => {
+    setFilters((prev) => {
+      const current = prev.assignedListShowStatuses[enrollmentId] ?? {
         NOT_STARTED: true,
         IN_PROGRESS: true,
         COMPLETED: true,
       }
       return {
         ...prev,
-        [enrollmentId]: { ...current, [key]: !current[key] },
+        assignedListShowStatuses: {
+          ...prev.assignedListShowStatuses,
+          [enrollmentId]: { ...current, [status]: !current[status] },
+        },
       }
     })
   }
@@ -202,21 +304,8 @@ export default function StudentAssignmentManager({ student, resources, courses }
   )
 
   // Get unique levels and skills from resources
-  const availableLevels = ['All', 'A1', 'A2', 'B1', 'B2', 'C1', 'C2']
-  const availableSkills = [
-    'All',
-    'GRAMMAR',
-    'VOCABULARY',
-    'READING',
-    'WRITING',
-    'SPEAKING',
-    'LISTENING',
-    'TESTS',
-    'REFERENCE',
-    'TRAVEL_ENGLISH',
-    'BUSINESS_ENGLISH',
-    'EVERYDAY_ENGLISH'
-  ]
+  const availableLevels = LEVEL_FILTERS
+  const availableSkills = SKILL_FILTERS
 
   const formatSkillLabel = (skill: string) => {
     if (skill === 'All') return 'All'
@@ -261,29 +350,29 @@ export default function StudentAssignmentManager({ student, resources, courses }
   }
 
   const handleLevelToggle = (level: string) => {
-    if (level === 'All') {
-      setSelectedLevels(['All'])
-    } else {
-      setSelectedLevels((prev) => {
-        const newLevels = prev.includes(level)
-          ? prev.filter(l => l !== level)
-          : [...prev.filter(l => l !== 'All'), level]
-        return newLevels.length === 0 ? ['All'] : newLevels
-      })
-    }
+    setFilters((prev) => {
+      if (level === 'All') {
+        return { ...prev, selectedLevels: ['All'] }
+      }
+      const withoutAll = prev.selectedLevels.filter((item) => item !== 'All')
+      const newLevels = withoutAll.includes(level)
+        ? withoutAll.filter((item) => item !== level)
+        : [...withoutAll, level]
+      return { ...prev, selectedLevels: newLevels.length === 0 ? ['All'] : newLevels }
+    })
   }
 
   const handleSkillToggle = (skill: string) => {
-    if (skill === 'All') {
-      setSelectedSkills(['All'])
-    } else {
-      setSelectedSkills((prev) => {
-        const newSkills = prev.includes(skill)
-          ? prev.filter(s => s !== skill)
-          : [...prev.filter(s => s !== 'All'), skill]
-        return newSkills.length === 0 ? ['All'] : newSkills
-      })
-    }
+    setFilters((prev) => {
+      if (skill === 'All') {
+        return { ...prev, selectedSkills: ['All'] }
+      }
+      const withoutAll = prev.selectedSkills.filter((item) => item !== 'All')
+      const newSkills = withoutAll.includes(skill)
+        ? withoutAll.filter((item) => item !== skill)
+        : [...withoutAll, skill]
+      return { ...prev, selectedSkills: newSkills.length === 0 ? ['All'] : newSkills }
+    })
   }
 
   const getFilteredAssignedAssignments = (
@@ -291,7 +380,7 @@ export default function StudentAssignmentManager({ student, resources, courses }
     assignments: Assignment[],
   ) => {
     const showStatuses = getAssignedListStatuses(enrollmentId)
-    const selectedSkill = getAssignedListSkill(enrollmentId)
+    const selectedSkill = getAssignedListSkill(enrollmentId, assignments)
     const anyStatusSelected =
       showStatuses.NOT_STARTED || showStatuses.IN_PROGRESS || showStatuses.COMPLETED
 
@@ -563,7 +652,10 @@ export default function StudentAssignmentManager({ student, resources, courses }
                           id={`resource-title-search-${enrollment.id}`}
                           type="search"
                           value={titleSearch}
-                          onChange={(e) => setTitleSearch(e.target.value)}
+                          onChange={(e) => {
+                            const titleSearch = e.target.value
+                            setFilters((prev) => ({ ...prev, titleSearch }))
+                          }}
                           placeholder="e.g. past simple, army, prepositions…"
                           className="w-full border border-gray-300 rounded-md pl-3 pr-9 py-2 text-sm focus:outline-none bg-white"
                           onFocus={(e) => (e.currentTarget.style.borderColor = '#38438f')}
@@ -573,7 +665,7 @@ export default function StudentAssignmentManager({ student, resources, courses }
                         {titleSearch.trim() !== '' && (
                           <button
                             type="button"
-                            onClick={() => setTitleSearch('')}
+                            onClick={() => setFilters((prev) => ({ ...prev, titleSearch: '' }))}
                             className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 p-1"
                             aria-label="Clear search"
                             title="Clear search"
@@ -593,10 +685,14 @@ export default function StudentAssignmentManager({ student, resources, courses }
                           type="checkbox"
                           checked={showOnlyUnassigned[enrollment.id] || false}
                           onChange={(e) => {
-                            setShowOnlyUnassigned({
-                              ...showOnlyUnassigned,
-                              [enrollment.id]: e.target.checked
-                            })
+                            const checked = e.target.checked
+                            setFilters((prev) => ({
+                              ...prev,
+                              showOnlyUnassigned: {
+                                ...prev.showOnlyUnassigned,
+                                [enrollment.id]: checked,
+                              },
+                            }))
                           }}
                           className="cursor-pointer"
                         />
@@ -743,7 +839,7 @@ export default function StudentAssignmentManager({ student, resources, courses }
                       </label>
                       <select
                         id={`assigned-skill-filter-${enrollment.id}`}
-                        value={getAssignedListSkill(enrollment.id)}
+                        value={getAssignedListSkill(enrollment.id, enrollment.assignments)}
                         onChange={(e) => setAssignedListSkill(enrollment.id, e.target.value)}
                         className="border border-gray-300 rounded-md px-3 py-2 focus:outline-none w-full text-sm bg-white"
                         onFocus={(e) => (e.currentTarget.style.borderColor = '#38438f')}
@@ -800,7 +896,7 @@ export default function StudentAssignmentManager({ student, resources, courses }
               <div className="space-y-2">
                 {(() => {
                   const showStatuses = getAssignedListStatuses(enrollment.id)
-                  const selectedSkill = getAssignedListSkill(enrollment.id)
+                  const selectedSkill = getAssignedListSkill(enrollment.id, enrollment.assignments)
                   const anyStatusSelected =
                     showStatuses.NOT_STARTED ||
                     showStatuses.IN_PROGRESS ||

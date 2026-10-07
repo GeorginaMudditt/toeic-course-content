@@ -3,6 +3,7 @@
 import { useMemo, useState } from 'react'
 import Link from 'next/link'
 import { LEVEL_COLORS } from '@/lib/level-colors'
+import { useSessionState } from '@/lib/use-session-state'
 
 type TopicProgress = {
   id: string
@@ -51,7 +52,11 @@ function getLevelColor(level: string) {
 
 export default function VocabularyProgressList({ students: initialStudents }: Props) {
   const [students, setStudents] = useState<VocabularyProgressStudent[]>(initialStudents)
-  const [filter, setFilter] = useState<FilterValue>('ACTIVE')
+  const [filter, setFilter] = useSessionState<FilterValue>(
+    'brizzle-filters:vocabulary-progress',
+    'ACTIVE',
+    (value) => (value === 'HIDDEN' || value === 'ALL' || value === 'ACTIVE' ? value : 'ACTIVE'),
+  )
   const [savingId, setSavingId] = useState<string | null>(null)
   const [saveError, setSaveError] = useState<string | null>(null)
 

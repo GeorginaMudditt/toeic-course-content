@@ -1,7 +1,8 @@
 'use client'
 
-import { useState, useMemo } from 'react'
+import { useMemo } from 'react'
 import Link from 'next/link'
+import { useSessionState } from '@/lib/use-session-state'
 
 interface Assignment {
   id: string
@@ -30,6 +31,7 @@ function formatSkill(skill: string | undefined): string {
 interface Props {
   assignments: Assignment[]
   viewAs?: string
+  storageKey: string
 }
 
 type SortOption = 'date' | 'level' | 'alphabetical'
@@ -51,6 +53,50 @@ const SKILL_FILTER_OPTIONS: { value: string; label: string }[] = [
   { value: 'EVERYDAY_ENGLISH', label: 'Everyday English' },
 ]
 
+type AssignmentListView = {
+  sortBy: SortOption
+  searchQuery: string
+  selectedSkill: string
+  showStatuses: Record<ProgressStatusKey, boolean>
+}
+
+const DEFAULT_ASSIGNMENT_LIST_VIEW: AssignmentListView = {
+  sortBy: 'date',
+  searchQuery: '',
+  selectedSkill: 'All',
+  showStatuses: {
+    NOT_STARTED: true,
+    IN_PROGRESS: true,
+    COMPLETED: true,
+  },
+}
+
+function parseAssignmentListView(value: unknown): AssignmentListView {
+  const raw = value && typeof value === 'object' ? (value as Record<string, unknown>) : {}
+  const statuses =
+    raw.showStatuses && typeof raw.showStatuses === 'object'
+      ? (raw.showStatuses as Record<string, unknown>)
+      : {}
+  const skillValues = new Set(SKILL_FILTER_OPTIONS.map((option) => option.value))
+  const sortBy = raw.sortBy === 'level' || raw.sortBy === 'alphabetical' || raw.sortBy === 'date'
+    ? raw.sortBy
+    : 'date'
+
+  return {
+    sortBy,
+    searchQuery: typeof raw.searchQuery === 'string' ? raw.searchQuery : '',
+    selectedSkill:
+      typeof raw.selectedSkill === 'string' && skillValues.has(raw.selectedSkill)
+        ? raw.selectedSkill
+        : 'All',
+    showStatuses: {
+      NOT_STARTED: statuses.NOT_STARTED !== false,
+      IN_PROGRESS: statuses.IN_PROGRESS !== false,
+      COMPLETED: statuses.COMPLETED !== false,
+    },
+  }
+}
+
 function getAssignmentStatus(assignment: Assignment): ProgressStatusKey {
   const progress = Array.isArray(assignment.progress) ? assignment.progress[0] : null
   const raw = progress?.status as string | undefined
@@ -60,15 +106,13 @@ function getAssignmentStatus(assignment: Assignment): ProgressStatusKey {
   return 'NOT_STARTED'
 }
 
-export default function AssignmentsList({ assignments, viewAs }: Props) {
-  const [sortBy, setSortBy] = useState<SortOption>('date')
-  const [searchQuery, setSearchQuery] = useState('')
-  const [selectedSkill, setSelectedSkill] = useState('All')
-  const [showStatuses, setShowStatuses] = useState<Record<ProgressStatusKey, boolean>>({
-    NOT_STARTED: true,
-    IN_PROGRESS: true,
-    COMPLETED: true,
-  })
+export default function AssignmentsList({ assignments, viewAs, storageKey }: Props) {
+  const [view, setView] = useSessionState(
+    storageKey,
+    DEFAULT_ASSIGNMENT_LIST_VIEW,
+    parseAssignmentListView,
+  )
+  const { sortBy, searchQuery, showStatuses } = view
 
   const skillsInAssignments = useMemo(() => {
     const skills = new Set<string>()
@@ -85,6 +129,10 @@ export default function AssignmentsList({ assignments, viewAs }: Props) {
       ),
     [skillsInAssignments],
   )
+
+  const selectedSkill = categoryOptions.some((option) => option.value === view.selectedSkill)
+    ? view.selectedSkill
+    : 'All'
 
   // Check if assignment has been viewed (has progress record)
   const hasBeenViewed = (assignment: Assignment) => {
@@ -148,7 +196,10 @@ export default function AssignmentsList({ assignments, viewAs }: Props) {
   }, [assignments, sortBy, showStatuses, searchQuery, selectedSkill])
 
   const toggleStatus = (key: ProgressStatusKey) => {
-    setShowStatuses((prev) => ({ ...prev, [key]: !prev[key] }))
+    setView((prev) => ({
+      ...prev,
+      showStatuses: { ...prev.showStatuses, [key]: !prev.showStatuses[key] },
+    }))
   }
 
   const anyStatusSelected =
@@ -186,7 +237,10 @@ export default function AssignmentsList({ assignments, viewAs }: Props) {
                 id="assignment-search"
                 type="search"
                 value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
+                onChange={(e) => {
+                  const searchQuery = e.target.value
+                  setView((prev) => ({ ...prev, searchQuery }))
+                }}
                 placeholder="Search by title, category, or level…"
                 className="w-full border border-gray-300 rounded-md pl-3 pr-9 py-2 text-sm focus:outline-none bg-white"
                 onFocus={(e) => (e.currentTarget.style.borderColor = '#38438f')}
@@ -196,7 +250,7 @@ export default function AssignmentsList({ assignments, viewAs }: Props) {
               {searchQuery.trim() !== '' && (
                 <button
                   type="button"
-                  onClick={() => setSearchQuery('')}
+                  onClick={() => setView((prev) => ({ ...prev, searchQuery: '' }))}
                   className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 p-1"
                   aria-label="Clear search"
                   title="Clear search"
@@ -217,7 +271,10 @@ export default function AssignmentsList({ assignments, viewAs }: Props) {
               <select
                 id="category-filter"
                 value={selectedSkill}
-                onChange={(e) => setSelectedSkill(e.target.value)}
+                onChange={(e) => {
+                  const selectedSkill = e.target.value
+                  setView((prev) => ({ ...prev, selectedSkill }))
+                }}
                 className="border border-gray-300 rounded-md px-3 py-2 focus:outline-none w-full text-sm"
                 onFocus={(e) => (e.currentTarget.style.borderColor = '#38438f')}
                 onBlur={(e) => (e.currentTarget.style.borderColor = '#d1d5db')}
@@ -236,7 +293,10 @@ export default function AssignmentsList({ assignments, viewAs }: Props) {
               <select
                 id="sort-by"
                 value={sortBy}
-                onChange={(e) => setSortBy(e.target.value as SortOption)}
+                onChange={(e) => {
+                  const sortBy = e.target.value as SortOption
+                  setView((prev) => ({ ...prev, sortBy }))
+                }}
                 className="border border-gray-300 rounded-md px-3 py-2 focus:outline-none w-full text-sm"
                 onFocus={(e) => (e.currentTarget.style.borderColor = '#38438f')}
                 onBlur={(e) => (e.currentTarget.style.borderColor = '#d1d5db')}

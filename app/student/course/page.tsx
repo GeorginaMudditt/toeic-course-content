@@ -163,7 +163,11 @@ export default async function MyCoursePage({ searchParams }: { searchParams: { v
                   </div>
 
                   <div className="mt-4">
-                    <AssignmentsList assignments={enrollment.assignments} viewAs={viewAs} />
+                    <AssignmentsList
+                      assignments={enrollment.assignments}
+                      viewAs={viewAs}
+                      storageKey={`brizzle-filters:student-course:${studentId}:${enrollment.id}`}
+                    />
                   </div>
                 </div>
               ))}

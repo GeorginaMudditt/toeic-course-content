@@ -4,6 +4,7 @@ import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import ResourcePreview from '@/components/ResourcePreview'
+import { useSessionState } from '@/lib/use-session-state'
 
 interface Resource {
   id: string
@@ -26,6 +27,53 @@ interface Props {
 }
 
 type SortOption = 'level' | 'alphabetical' | 'date'
+
+const RESOURCE_LEVELS = ['All', 'A1', 'A2', 'B1', 'B2', 'C1', 'C2']
+const RESOURCE_SKILLS = [
+  'All',
+  'GRAMMAR',
+  'VOCABULARY',
+  'READING',
+  'WRITING',
+  'SPEAKING',
+  'LISTENING',
+  'TESTS',
+  'REFERENCE',
+  'TRAVEL_ENGLISH',
+  'BUSINESS_ENGLISH',
+  'EVERYDAY_ENGLISH',
+]
+const RESOURCE_SORTS: SortOption[] = ['date', 'level', 'alphabetical']
+
+type ResourceListView = {
+  selectedLevel: string
+  selectedSkill: string
+  searchQuery: string
+  sortBy: SortOption
+}
+
+const DEFAULT_RESOURCE_LIST_VIEW: ResourceListView = {
+  selectedLevel: 'All',
+  selectedSkill: 'All',
+  searchQuery: '',
+  sortBy: 'date',
+}
+
+function parseResourceListView(value: unknown): ResourceListView {
+  const raw = value && typeof value === 'object' ? (value as Record<string, unknown>) : {}
+  return {
+    selectedLevel:
+      typeof raw.selectedLevel === 'string' && RESOURCE_LEVELS.includes(raw.selectedLevel)
+        ? raw.selectedLevel
+        : 'All',
+    selectedSkill:
+      typeof raw.selectedSkill === 'string' && RESOURCE_SKILLS.includes(raw.selectedSkill)
+        ? raw.selectedSkill
+        : 'All',
+    searchQuery: typeof raw.searchQuery === 'string' ? raw.searchQuery : '',
+    sortBy: RESOURCE_SORTS.includes(raw.sortBy as SortOption) ? (raw.sortBy as SortOption) : 'date',
+  }
+}
 
 function formatSkill(skill?: string) {
   if (!skill) return ''
@@ -54,10 +102,12 @@ function matchesSearch(resource: Resource, query: string) {
 
 export default function ResourcesList({ resources }: Props) {
   const router = useRouter()
-  const [selectedLevel, setSelectedLevel] = useState<string>('All')
-  const [selectedSkill, setSelectedSkill] = useState<string>('All')
-  const [searchQuery, setSearchQuery] = useState('')
-  const [sortBy, setSortBy] = useState<SortOption>('date')
+  const [view, setView] = useSessionState(
+    'brizzle-filters:teacher-resources',
+    DEFAULT_RESOURCE_LIST_VIEW,
+    parseResourceListView,
+  )
+  const { selectedLevel, selectedSkill, searchQuery, sortBy } = view
   const [deleteModalOpen, setDeleteModalOpen] = useState(false)
   const [resourceToDelete, setResourceToDelete] = useState<Resource | null>(null)
   const [fullResourceData, setFullResourceData] = useState<FullResource | null>(null)
@@ -178,7 +228,10 @@ export default function ResourcesList({ resources }: Props) {
             id="resource-search"
             type="search"
             value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
+            onChange={(e) => {
+              const searchQuery = e.target.value
+              setView((prev) => ({ ...prev, searchQuery }))
+            }}
             placeholder="Search by title, description, skill, or level…"
             className="w-full border border-gray-300 rounded-md pl-3 pr-9 py-2 text-sm focus:outline-none bg-white"
             onFocus={(e) => (e.currentTarget.style.borderColor = '#38438f')}
@@ -188,7 +241,7 @@ export default function ResourcesList({ resources }: Props) {
           {searchQuery.trim() !== '' && (
             <button
               type="button"
-              onClick={() => setSearchQuery('')}
+              onClick={() => setView((prev) => ({ ...prev, searchQuery: '' }))}
               className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 p-1"
               aria-label="Clear search"
               title="Clear search"
@@ -209,7 +262,10 @@ export default function ResourcesList({ resources }: Props) {
           <select
             id="level-filter"
             value={selectedLevel}
-            onChange={(e) => setSelectedLevel(e.target.value)}
+            onChange={(e) => {
+              const selectedLevel = e.target.value
+              setView((prev) => ({ ...prev, selectedLevel }))
+            }}
             className="border border-gray-300 rounded-md px-3 py-2 focus:outline-none w-full"
             onFocus={(e) => e.currentTarget.style.borderColor = '#38438f'}
             onBlur={(e) => e.currentTarget.style.borderColor = '#d1d5db'}
@@ -231,7 +287,10 @@ export default function ResourcesList({ resources }: Props) {
           <select
             id="skill-filter"
             value={selectedSkill}
-            onChange={(e) => setSelectedSkill(e.target.value)}
+            onChange={(e) => {
+              const selectedSkill = e.target.value
+              setView((prev) => ({ ...prev, selectedSkill }))
+            }}
             className="border border-gray-300 rounded-md px-3 py-2 focus:outline-none w-full"
             onFocus={(e) => e.currentTarget.style.borderColor = '#38438f'}
             onBlur={(e) => e.currentTarget.style.borderColor = '#d1d5db'}
@@ -258,7 +317,10 @@ export default function ResourcesList({ resources }: Props) {
           <select
             id="sort-by"
             value={sortBy}
-            onChange={(e) => setSortBy(e.target.value as SortOption)}
+            onChange={(e) => {
+              const sortBy = e.target.value as SortOption
+              setView((prev) => ({ ...prev, sortBy }))
+            }}
             className="border border-gray-300 rounded-md px-3 py-2 focus:outline-none w-full"
             onFocus={(e) => e.currentTarget.style.borderColor = '#38438f'}
             onBlur={(e) => e.currentTarget.style.borderColor = '#d1d5db'}
