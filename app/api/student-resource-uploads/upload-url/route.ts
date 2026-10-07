@@ -12,15 +12,23 @@ import { verifyTeacherEnrollment } from '@/lib/verify-teacher-enrollment'
 
 export const dynamic = 'force-dynamic'
 
-async function ensureResourcesBucketSize(): Promise<{ ok: true } | { ok: false; error: string }> {
+async function ensureResourcesBucketSize(
+  fileSize: number,
+): Promise<{ ok: true } | { ok: false; error: string }> {
+  // Files within the usual storage cap can upload without changing the bucket.
+  if (fileSize <= 50 * 1024 * 1024) {
+    return { ok: true }
+  }
+
   const { data: bucket, error } = await supabaseServer.storage.getBucket('resources')
   if (error || !bucket) {
     console.error('Could not read resources bucket:', error)
     return { ok: true }
   }
 
-  const currentLimit = bucket.file_size_limit ?? 0
-  if (currentLimit >= MAX_STUDENT_PDF_BYTES) {
+  const currentLimit =
+    bucket.file_size_limit == null ? null : Number(bucket.file_size_limit)
+  if (currentLimit != null && (fileSize <= currentLimit || currentLimit >= MAX_STUDENT_PDF_BYTES)) {
     return { ok: true }
   }
 
@@ -73,7 +81,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: enrollment.error }, { status: enrollment.status })
     }
 
-    const sizeLimit = await ensureResourcesBucketSize()
+    const sizeLimit = await ensureResourcesBucketSize(fileSize)
     if (!sizeLimit.ok) {
       return NextResponse.json({ error: sizeLimit.error }, { status: 500 })
     }
