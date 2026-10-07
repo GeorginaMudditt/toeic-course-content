@@ -1,6 +1,6 @@
 export const STUDENT_PDF_CONTENT_TYPE = 'student-pdf'
 
-export const STUDENT_UPLOAD_LEVELS = ['A1', 'A2', 'B1', 'B2', 'C1', 'C2'] as const
+export const STUDENT_UPLOAD_LEVELS = ['All', 'A1', 'A2', 'B1', 'B2', 'C1', 'C2'] as const
 
 export const STUDENT_UPLOAD_SKILLS: { value: string; label: string }[] = [
   { value: 'GRAMMAR', label: 'Grammar' },
