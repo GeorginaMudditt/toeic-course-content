@@ -1,4 +1,5 @@
 import { Resend } from 'resend'
+import { formatLoggedHours } from '@/lib/course-notes-lessons'
 
 // Initialize Resend lazily to avoid build-time errors when API key is not set
 function getResendClient() {
@@ -165,7 +166,7 @@ export async function sendCourseMidpointNotificationEmail(data: {
             <p><strong>${escapeHtml(data.studentName)}</strong> has reached the midpoint of their training package.</p>
             <ul>
               <li><strong>Course:</strong> ${escapeHtml(data.courseName)}</li>
-              <li><strong>Hours completed:</strong> ${data.hoursLogged} (midpoint at ${threshold} hours)</li>
+              <li><strong>Hours completed:</strong> ${formatLoggedHours(data.hoursLogged)} (midpoint at ${threshold} hours)</li>
             </ul>
             <p>You may want to follow up on a second invoice, the midpoint questionnaire, or other admin steps.</p>
             <p style="color:#666;font-size:12px;">This message was sent automatically from the Brizzle teacher portal when lesson notes were saved.</p>

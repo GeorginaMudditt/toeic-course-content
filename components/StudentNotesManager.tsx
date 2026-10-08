@@ -11,6 +11,7 @@ import {
 } from '@/lib/qualiopi-documents'
 import {
   computePackageProgress,
+  formatLoggedHours,
   normalizeLessonDurationHours,
   parseCourseDurationHours,
   parseLessonDateDisplay,
@@ -814,11 +815,11 @@ export default function StudentNotesManager({ student, enrollments }: Props) {
             </button>
             {courseDurationHours > 0 && (
               <span className="text-sm text-gray-600">
-                {hoursLogged} / {courseDurationHours} hours in this package
+                {formatLoggedHours(hoursLogged)} / {courseDurationHours} hours in this package
                 {hoursRemaining !== null && hoursRemaining > 0 && (
                   <>
                     {' '}
-                    · {hoursRemaining} hour{hoursRemaining === 1 ? '' : 's'} left
+                    · {formatLoggedHours(hoursRemaining)} hour{hoursRemaining === 1 ? '' : 's'} left
                   </>
                 )}
               </span>
@@ -916,11 +917,11 @@ export default function StudentNotesManager({ student, enrollments }: Props) {
                   <div className="space-y-3 text-sm">
                     <p className="text-gray-700">
                       <span className="font-medium">Hours tracking:</span>{' '}
-                      {hoursLogged} of {courseDurationHours} hours used in this package
+                      {formatLoggedHours(hoursLogged)} of {courseDurationHours} hours used in this package
                       {hoursRemaining !== null && hoursRemaining > 0 && (
                         <>
                           {' '}
-                          · {hoursRemaining} hour{hoursRemaining === 1 ? '' : 's'} remaining
+                          · {formatLoggedHours(hoursRemaining)} hour{hoursRemaining === 1 ? '' : 's'} remaining
                         </>
                       )}
                       {hoursRemaining === 0 && hoursLogged >= courseDurationHours && (
@@ -935,7 +936,7 @@ export default function StudentNotesManager({ student, enrollments }: Props) {
                         <strong>{student.name}</strong> only has{' '}
                         {hoursRemaining === 1
                           ? 'one hour'
-                          : `${hoursRemaining} hours`}{' '}
+                          : `${formatLoggedHours(hoursRemaining)} hours`}{' '}
                         left in this course. Consider contacting them about extending or booking another
                         package.
                       </div>
@@ -950,8 +951,9 @@ export default function StudentNotesManager({ student, enrollments }: Props) {
                       </div>
                     )}
                     <p className="text-xs text-gray-500">
-                      Set <span className="font-medium">Lesson length</span> to 1 or 2 hours per row (dated
-                      lessons). When logged hours reach half the package ({Math.ceil(courseDurationHours / 2)}{' '}
+                      Set <span className="font-medium">Lesson length</span> to 30 minutes, 1 hour, or 2 hours
+                      per row (dated lessons). A 30-minute lesson counts as half an hour. When logged hours
+                      reach half the package ({Math.ceil(courseDurationHours / 2)}{' '}
                       of {courseDurationHours} hours for this course), saving notes sends a one-time email to{' '}
                       <span className="font-medium">hello@brizzle-english.com</span> for admin follow-up
                       (invoice, midpoint questionnaire, etc.).
@@ -964,7 +966,7 @@ export default function StudentNotesManager({ student, enrollments }: Props) {
                       ) : courseMidpointHint ? (
                         <>
                           <p className="mt-1">
-                            Saved notes total <strong>{courseMidpointHint.hoursLogged}</strong> billable hour
+                            Saved notes total <strong>{formatLoggedHours(courseMidpointHint.hoursLogged)}</strong> billable hour
                             {courseMidpointHint.hoursLogged === 1 ? '' : 's'} · package{' '}
                             <strong>{courseMidpointHint.courseDurationHours}</strong> h · midpoint at{' '}
                             <strong>{courseMidpointHint.threshold}</strong> h
@@ -978,7 +980,7 @@ export default function StudentNotesManager({ student, enrollments }: Props) {
                             ) : (
                               <span className="text-amber-900">
                                 Below midpoint — the server sees fewer hours than needed. Set each dated row to
-                                1h or 2h and save again.
+                                30 minutes, 1 hour, or 2 hours and save again.
                               </span>
                             )}
                           </p>
@@ -1235,7 +1237,9 @@ export default function StudentNotesManager({ student, enrollments }: Props) {
                         data-lesson-strip={dataStrip}
                         value={row.durationHours}
                         onChange={(e) => {
-                          const durationHours = (e.target.value === '2' ? 2 : 1) as LessonDurationHours
+                          const durationHours = (
+                            e.target.value === '0.5' ? 0.5 : e.target.value === '2' ? 2 : 1
+                          ) as LessonDurationHours
                           setRows((prev) => {
                             const updated = [...prev]
                             updated[index] = { ...updated[index], durationHours }
@@ -1250,6 +1254,7 @@ export default function StudentNotesManager({ student, enrollments }: Props) {
                       >
                         <option value={1}>1 hour</option>
                         <option value={2}>2 hours</option>
+                        <option value={0.5}>30 minutes</option>
                       </select>
                       {lessonNum != null && (
                         <p className="mt-1 text-xs font-medium text-[#38438f]">(Lesson {lessonNum})</p>

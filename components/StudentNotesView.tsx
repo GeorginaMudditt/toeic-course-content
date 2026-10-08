@@ -1,6 +1,11 @@
 'use client'
 
-import { computePackageProgress, normalizeLessonDurationHours, type LessonDurationHours } from '@/lib/course-notes-lessons'
+import {
+  computePackageProgress,
+  formatLoggedHours,
+  normalizeLessonDurationHours,
+  type LessonDurationHours,
+} from '@/lib/course-notes-lessons'
 import {
   correctionPairsHaveContent,
   parseCorrectionPairs,
@@ -121,11 +126,11 @@ export default function StudentNotesView({ content, courseDurationHours = null }
         {duration > 0 && progress && (
           <div style={{ marginBottom: '12px' }}>
             <p style={{ margin: '0 0 8px 0', color: '#374151', fontSize: '13px' }}>
-              <strong>Hours tracking:</strong> {progress.hoursLogged} of {duration} hours used in this package
+              <strong>Hours tracking:</strong> {formatLoggedHours(progress.hoursLogged)} of {duration} hours used in this package
               {progress.hoursRemaining !== null && progress.hoursRemaining > 0 && (
                 <>
                   {' '}
-                  · {progress.hoursRemaining} hour{progress.hoursRemaining === 1 ? '' : 's'} remaining
+                  · {formatLoggedHours(progress.hoursRemaining)} hour{progress.hoursRemaining === 1 ? '' : 's'} remaining
                 </>
               )}
               {progress.hoursRemaining === 0 &&
@@ -147,7 +152,7 @@ export default function StudentNotesView({ content, courseDurationHours = null }
                 You only have{' '}
                 {progress.hoursRemaining === 1
                   ? 'one hour'
-                  : `${progress.hoursRemaining} hours`}{' '}
+                  : `${formatLoggedHours(progress.hoursRemaining)} hours`}{' '}
                 left in this course. Talk to your teacher if you would like to extend your package.
               </div>
             )}
@@ -201,6 +206,11 @@ export default function StudentNotesView({ content, courseDurationHours = null }
               <tr key={idx} style={{ backgroundColor: index === 0 ? '#ffffff' : '#f9fafb' }}>
                 <td style={{ padding: '8px', border: '1px solid #d1d5db', verticalAlign: 'top' }}>
                   {row.date}
+                  {normalizeLessonDurationHours(row.durationHours) === 0.5 && (
+                    <span style={{ display: 'block', marginTop: '4px', fontSize: '12px', color: '#4b5563' }}>
+                      (30-minute session)
+                    </span>
+                  )}
                   {normalizeLessonDurationHours(row.durationHours) === 2 && (
                     <span style={{ display: 'block', marginTop: '4px', fontSize: '12px', color: '#4b5563' }}>
                       (2-hour session)

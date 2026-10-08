@@ -1,12 +1,20 @@
 /** Row shape for lesson numbering and hour totals (structured course notes). */
 export type NotesRowWithDate = { date: string; durationHours?: number }
 
-export type LessonDurationHours = 1 | 2
+export type LessonDurationHours = 0.5 | 1 | 2
 
-/** Coerce stored JSON to 1 or 2 hours per dated lesson (default 1). */
+/** Coerce stored JSON to 30 minutes, 1 hour, or 2 hours per dated lesson (default 1). */
 export function normalizeLessonDurationHours(raw: unknown): LessonDurationHours {
   const n = typeof raw === 'number' ? raw : Number(raw)
+  if (Math.abs(n - 0.5) < 1e-6) return 0.5
   return n === 2 ? 2 : 1
+}
+
+/** Show half hours as 0.5, 1.5, 2.5 and whole hours as 1, 2, 3. */
+export function formatLoggedHours(hours: number): string {
+  const halves = Math.round(hours * 2) / 2
+  if (!Number.isFinite(halves)) return '0'
+  return Number.isInteger(halves) ? String(halves) : halves.toFixed(1)
 }
 
 /** Coerce Course.duration from DB (PostgREST may return string). */
