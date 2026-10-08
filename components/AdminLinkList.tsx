@@ -243,6 +243,35 @@ function WedofIcon() {
   )
 }
 
+function CarifIcon() {
+  return (
+    <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" aria-hidden="true">
+      <rect x="3" y="4" width="18" height="16" rx="2" fill="#0f766e" />
+      <path
+        d="M7 9h10M7 12.5h7M7 16h5"
+        stroke="#fff"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+      />
+    </svg>
+  )
+}
+
+function KairosIcon() {
+  return (
+    <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" aria-hidden="true">
+      <rect x="3" y="4" width="18" height="16" rx="2" fill="#1d4ed8" />
+      <path
+        d="M8 15V9l4 3.2L16 9v6"
+        stroke="#fff"
+        strokeWidth="1.6"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  )
+}
+
 const ICONS = {
   cursor: CursorIcon,
   github: GitHubIcon,
@@ -263,6 +292,8 @@ const ICONS = {
   maf: MafIcon,
   edof: EdofIcon,
   wedof: WedofIcon,
+  carif: CarifIcon,
+  kairos: KairosIcon,
 } as const
 
 function InlineAdminLink({ phrase, href }: { phrase: string; href: string }) {
@@ -332,7 +363,11 @@ function AdminLinkItemRow({ item }: { item: AdminLinkItem }) {
   )
 
   return (
-    <li className="flex gap-4 py-4 first:pt-0 last:pb-0">
+    <li
+      className={`flex gap-4 py-4 first:pt-0 last:pb-0 ${
+        item.reminder ? '-mx-2 rounded-lg bg-amber-100 px-2 ring-1 ring-amber-300' : ''
+      }`}
+    >
       <div
         className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg border border-gray-200 bg-white shadow-sm"
         aria-hidden="true"
@@ -344,6 +379,9 @@ function AdminLinkItemRow({ item }: { item: AdminLinkItem }) {
         <p className={`text-sm leading-relaxed text-gray-700 ${item.title ? '' : 'pt-0.5'}`}>
           {renderDescription(item.description, item.inlineLinks)}
         </p>
+        {item.reminder ? (
+          <p className="mt-2 text-sm font-semibold text-amber-950">{item.reminder}</p>
+        ) : null}
       </div>
     </li>
   )

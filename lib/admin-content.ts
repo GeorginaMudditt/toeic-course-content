@@ -18,12 +18,15 @@ export type AdminIcon =
   | 'maf'
   | 'edof'
   | 'wedof'
+  | 'carif'
+  | 'kairos'
 
 export type AdminLinkItem = {
   title?: string
   description: string
   href?: string
   inlineLinks?: { phrase: string; href: string }[]
+  reminder?: string
   icon: AdminIcon
 }
 
@@ -188,7 +191,7 @@ export const ADMIN_SECTIONS: AdminSection[] = [
     ],
   },
   {
-    title: 'CPF/EDOF',
+    title: 'Course Financing',
     description: 'Training fund admin and EDOF-related processes.',
     cardClassName: 'bg-amber-50 border-amber-200',
     headingClassName: 'text-amber-900',
@@ -222,6 +225,30 @@ export const ADMIN_SECTIONS: AdminSection[] = [
           },
         ],
         icon: 'wedof',
+      },
+      {
+        description:
+          'CARIF-OREF is the regional organisation/database that records and publishes training courses so they can be found by France Travail and other employment/training services.',
+        inlineLinks: [
+          {
+            phrase: 'CARIF-OREF',
+            href: 'https://www.cariforef-provencealpescotedazur.fr/Page/extranet-organisme-formation',
+          },
+        ],
+        reminder: 'Update this link when you have access to the actual platform.',
+        icon: 'carif',
+      },
+      {
+        description:
+          'KAIROS is France Travail’s online platform that lets training organisations manage training applications and funding processes such as AIF.',
+        inlineLinks: [
+          {
+            phrase: 'KAIROS',
+            href: 'https://actuformation.francetravail.org/sujets/adherer-a-kairos/',
+          },
+        ],
+        reminder: 'Update this link when you have access to the actual platform.',
+        icon: 'kairos',
       },
     ],
   },
