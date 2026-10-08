@@ -23,7 +23,7 @@ export default withAuth(
     }
 
     if (path.startsWith('/student')) {
-      if (isTeacher && viewAs) {
+      if (isTeacher && (viewAs || path.startsWith('/student/english-outside-class'))) {
         return NextResponse.next()
       }
 

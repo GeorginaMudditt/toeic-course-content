@@ -235,6 +235,70 @@ export async function sendWritingSubmissionNotificationEmail(data: {
   }
 }
 
+export async function sendEnglishOutsideSuggestionEmail(data: {
+  studentName: string
+  studentEmail: string
+  title: string
+  formatLabel: string
+  url: string | null
+  whereToFind: string | null
+  whyRecommend: string
+  studentContentNote: string | null
+}) {
+  const resend = getResendClient()
+
+  if (!resend) {
+    console.warn('⚠️  RESEND_API_KEY not found. Real-World English suggestion email not sent.')
+    return { error: 'Email service not configured' }
+  }
+
+  const reviewUrl = `${getSiteUrl()}/teacher/english-outside-class`
+
+  try {
+    await resend.emails.send({
+      from: FROM_EMAIL,
+      to: ADMIN_NOTIFY_EMAIL,
+      subject: `Real-World English suggestion — ${data.studentName}: ${data.title}`,
+      html: `
+        <!DOCTYPE html>
+        <html>
+          <head><meta charset="utf-8" /></head>
+          <body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333;">
+            <p>Hello,</p>
+            <p><strong>${escapeHtml(data.studentName)}</strong> (${escapeHtml(data.studentEmail)}) has suggested something for Real-World English.</p>
+            <ul>
+              <li><strong>Title:</strong> ${escapeHtml(data.title)}</li>
+              <li><strong>Type:</strong> ${escapeHtml(data.formatLabel)}</li>
+              <li><strong>Link:</strong> ${data.url ? escapeHtml(data.url) : 'None given'}</li>
+              <li><strong>Where to find it:</strong> ${data.whereToFind ? escapeHtml(data.whereToFind) : 'Not given'}</li>
+            </ul>
+            <p><strong>Why they recommend it</strong></p>
+            <p>${escapeHtml(data.whyRecommend)}</p>
+            ${
+              data.studentContentNote
+                ? `<p><strong>Anything you should know</strong></p><p>${escapeHtml(data.studentContentNote)}</p>`
+                : ''
+            }
+            <p style="margin: 24px 0;">
+              <a href="${reviewUrl}" style="display:inline-block;padding:12px 24px;background:#38438f;color:#ffffff !important;text-decoration:none;border-radius:5px;font-weight:600;">
+                Review the suggestion
+              </a>
+            </p>
+            <p style="word-break:break-all;color:#666;font-size:12px;">${reviewUrl}</p>
+            <p style="color:#666;font-size:12px;">Nothing is added to the student list until you publish it.</p>
+          </body>
+        </html>
+      `,
+    })
+    console.log('Real-World English suggestion email sent to', ADMIN_NOTIFY_EMAIL)
+    return { success: true }
+  } catch (error: unknown) {
+    const message = error instanceof Error ? error.message : 'Failed to send email'
+    console.error('Error sending Real-World English suggestion email:', error)
+    return { error: message }
+  }
+}
+
 export async function sendWritingMarkedEmail(data: {
   userEmail: string
   userName: string

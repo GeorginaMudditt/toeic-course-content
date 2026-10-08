@@ -5,6 +5,7 @@ import { usePathname } from 'next/navigation'
 import { useSession, signOut } from 'next-auth/react'
 import { useState, useRef, useEffect } from 'react'
 import AvatarSelector from './AvatarSelector'
+import { ENGLISH_OUTSIDE_NAV_LABEL, ENGLISH_OUTSIDE_TITLE } from '@/lib/english-outside-class'
 
 export default function Navbar() {
   const { data: session, update: updateSession } = useSession()
@@ -52,8 +53,18 @@ export default function Navbar() {
     if (path === '/student/dashboard') {
       return pathname === path
     }
-    if (path === '/student/toeic-info' || path === '/student/vocabulary' || path === '/student/course' || path === '/student/notes' || path === '/student/docs') {
+    if (
+      path === '/student/toeic-info' ||
+      path === '/student/vocabulary' ||
+      path === '/student/course' ||
+      path === '/student/notes' ||
+      path === '/student/docs' ||
+      path === '/student/english-outside-class'
+    ) {
       return pathname === path
+    }
+    if (path === '/teacher/english-outside-class') {
+      return pathname === path || pathname.startsWith('/teacher/english-outside-class/')
     }
     if (path === '/student/writing') {
       return pathname === path || pathname.startsWith('/student/writing/')
@@ -260,6 +271,17 @@ export default function Navbar() {
                   >
                     Vocabulary
                   </Link>
+                  <Link
+                    href="/student/english-outside-class"
+                    className={`inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium transition-colors ${
+                      isActive('/student/english-outside-class')
+                        ? 'text-gray-900'
+                        : 'border-transparent text-gray-500 hover:text-[#38438f] hover:border-[#38438f]'
+                    }`}
+                    style={isActive('/student/english-outside-class') ? { borderColor: '#38438f' } : {}}
+                  >
+                    {ENGLISH_OUTSIDE_NAV_LABEL}
+                  </Link>
                 </>
               )}
             </div>
@@ -342,6 +364,16 @@ export default function Navbar() {
                             >
                               Edit Avatar
                             </button>
+                            {isTeacher && (
+                              <Link
+                                href="/teacher/english-outside-class"
+                                className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                                role="menuitem"
+                                onClick={() => setIsDropdownOpen(false)}
+                              >
+                                {ENGLISH_OUTSIDE_TITLE}
+                              </Link>
+                            )}
                             <Link
                               href={isTeacher ? '/teacher/change-password' : '/student/change-password'}
                               className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"

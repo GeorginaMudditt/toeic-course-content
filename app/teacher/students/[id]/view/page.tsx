@@ -9,6 +9,12 @@ import { loadCourseHourPanels } from '@/lib/student-course-hours'
 import { loadUpcomingLessonsForStudent } from '@/lib/booked-lessons'
 import CourseHoursProgress from '@/components/CourseHoursProgress'
 import UpcomingLessons from '@/components/UpcomingLessons'
+import {
+  ENGLISH_OUTSIDE_CARD_DETAIL,
+  ENGLISH_OUTSIDE_TITLE,
+  outsideClassCardSummary,
+} from '@/lib/english-outside-class'
+import { countPublishedEnglishOutside } from '@/lib/english-outside-class-data'
 
 export default async function StudentViewPage({ params }: { params: { id: string } }) {
   const session = await getServerSession(authOptions)
@@ -68,6 +74,7 @@ export default async function StudentViewPage({ params }: { params: { id: string
   // Get the first enrollment for the "My Course" card
   const firstEnrollment = enrollments[0]
   const courseHourPanels = await loadCourseHourPanels(params.id)
+  const outsideClassCount = await countPublishedEnglishOutside()
   const upcomingLessons = await loadUpcomingLessonsForStudent(params.id)
 
   // Fetch document count for the "My Docs" card
@@ -222,6 +229,21 @@ export default async function StudentViewPage({ params }: { params: { id: string
               <p className="text-gray-600 text-sm">
                 Test your vocabulary knowledge with these fun activities.
               </p>
+            </Link>
+
+            <Link
+              href={`/student/english-outside-class?viewAs=${params.id}`}
+              className="bg-white shadow rounded-lg p-6 hover:shadow-lg transition-shadow"
+            >
+              <h2 className="text-xl font-semibold text-gray-900 mb-2" style={{ color: '#38438f' }}>
+                {ENGLISH_OUTSIDE_TITLE}
+              </h2>
+              <div className="text-gray-600 text-sm space-y-1">
+                <p>
+                  <em>{outsideClassCardSummary(outsideClassCount)}</em>
+                </p>
+                <p>{ENGLISH_OUTSIDE_CARD_DETAIL}</p>
+              </div>
             </Link>
           </div>
         </div>

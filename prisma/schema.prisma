@@ -78,6 +78,9 @@ model User {
   writingSubmissions     WritingSubmission[] @relation("WritingStudent")
   writingMarked          WritingSubmission[] @relation("WritingMarkedBy")
   writingUploaded        WritingSubmission[] @relation("WritingUploadedBy")
+  englishOutsideSuggestions EnglishOutsideSuggestion[]
+  englishOutsideRatings     EnglishOutsideRating[]
+  englishOutsideComments    EnglishOutsideComment[]
 }
 
 model Resource {
@@ -353,4 +356,84 @@ model WritingSubmission {
   @@index([studentId, status])
   @@index([studentId, submittedAt])
   @@index([status, submittedAt])
+}
+
+/// Films, series, podcasts, books and similar links curated by the teacher.
+model EnglishOutsideResource {
+  id              String   @id
+  title           String
+  description     String
+  url             String
+  format          String
+  whereToFind     String?
+  level           String?
+  topicTags       String[]
+  contentNotes    String[]
+  suggestedByName String?
+  /// PUBLISHED | HIDDEN
+  status          String   @default("PUBLISHED")
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  ratings     EnglishOutsideRating[]
+  comments    EnglishOutsideComment[]
+  suggestions EnglishOutsideSuggestion[]
+}
+
+/// A student recommendation. Nothing is published until the teacher adds it.
+model EnglishOutsideSuggestion {
+  id                 String   @id
+  studentId          String
+  studentName        String
+  title              String
+  url                String?
+  format             String
+  whereToFind        String?
+  whyRecommend       String
+  studentContentNote String?
+  /// PENDING | ADDED | DECLINED
+  status             String   @default("PENDING")
+  createdResourceId  String?
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+
+  student         User                    @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  createdResource EnglishOutsideResource? @relation(fields: [createdResourceId], references: [id], onDelete: SetNull)
+
+  @@index([status, createdAt])
+  @@index([studentId, createdAt])
+}
+
+model EnglishOutsideRating {
+  id         String   @id
+  resourceId String
+  studentId  String
+  stars      Int
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  resource EnglishOutsideResource @relation(fields: [resourceId], references: [id], onDelete: Cascade)
+  student  User                   @relation(fields: [studentId], references: [id], onDelete: Cascade)
+
+  @@unique([resourceId, studentId])
+  @@index([resourceId])
+}
+
+/// Student comments stay hidden until the teacher approves the wording.
+model EnglishOutsideComment {
+  id          String   @id
+  resourceId  String
+  studentId   String
+  studentName String
+  body        String
+  /// PENDING | APPROVED | DECLINED
+  status      String   @default("PENDING")
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  resource EnglishOutsideResource @relation(fields: [resourceId], references: [id], onDelete: Cascade)
+  student  User                   @relation(fields: [studentId], references: [id], onDelete: Cascade)
+
+  @@index([resourceId, status])
+  @@index([status, createdAt])
 }

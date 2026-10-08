@@ -29,6 +29,9 @@ yarn-error.log*
 .env*.local
 .env
 
+# Local preview data for English Outside Class when the database tables are not available
+/data/english-outside-class.json
+
 # vercel
 .vercel
 
