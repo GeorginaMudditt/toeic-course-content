@@ -11,12 +11,6 @@ import { loadCourseHourPanels } from '@/lib/student-course-hours'
 import { loadUpcomingLessonsForStudent } from '@/lib/booked-lessons'
 import CourseHoursProgress from '@/components/CourseHoursProgress'
 import UpcomingLessons from '@/components/UpcomingLessons'
-import {
-  ENGLISH_OUTSIDE_CARD_DETAIL,
-  ENGLISH_OUTSIDE_TITLE,
-  outsideClassCardSummary,
-} from '@/lib/english-outside-class'
-import { countPublishedEnglishOutside } from '@/lib/english-outside-class-data'
 
 export default async function StudentDashboard() {
   const session = await getServerSession(authOptions)
@@ -80,7 +74,6 @@ export default async function StudentDashboard() {
   }
 
   const savedSections = await getSavedSectionsForDashboard(session.user.id)
-  const outsideClassCount = await countPublishedEnglishOutside()
   const courseHourPanels = await loadCourseHourPanels(session.user.id)
   const upcomingLessons = await loadUpcomingLessonsForStudent(session.user.id)
 
@@ -204,21 +197,6 @@ export default async function StudentDashboard() {
               <p className="text-gray-600 text-sm">
                 Test your vocabulary knowledge with these fun activities.
               </p>
-            </Link>
-
-            <Link
-              href="/student/english-outside-class"
-              className="bg-white shadow rounded-lg p-6 hover:shadow-lg transition-shadow"
-            >
-              <h2 className="text-xl font-semibold text-gray-900 mb-2" style={{ color: '#38438f' }}>
-                {ENGLISH_OUTSIDE_TITLE}
-              </h2>
-              <div className="text-gray-600 text-sm space-y-1">
-                <p>
-                  <em>{outsideClassCardSummary(outsideClassCount)}</em>
-                </p>
-                <p>{ENGLISH_OUTSIDE_CARD_DETAIL}</p>
-              </div>
             </Link>
           </div>
 

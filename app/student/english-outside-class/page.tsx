@@ -12,24 +12,18 @@ export default async function EnglishOutsideClassPage({
 }) {
   const session = await getServerSession(authOptions)
   const viewAs = searchParams?.viewAs
-  const isTeacher = session?.user.role === 'TEACHER'
-  const isTeacherView = Boolean(isTeacher && viewAs)
+  const isTeacherView = Boolean(viewAs)
 
-  if (isTeacher) {
-    // Shared list. Teachers can preview it, including from a student dashboard.
-  } else if (!session || session.user.role !== 'STUDENT') {
-    redirect('/login')
+  if (!session || session.user.role !== 'TEACHER') {
+    redirect(session?.user.role === 'STUDENT' ? '/student/dashboard' : '/login')
   }
 
-  const studentId = isTeacher ? null : session!.user.id
-  const library = await loadEnglishOutsideLibrary(isTeacherView ? viewAs! : studentId)
+  const library = await loadEnglishOutsideLibrary(isTeacherView ? viewAs! : null)
 
   const backHref = isTeacherView
     ? `/teacher/students/${viewAs}/view`
-    : isTeacher
-      ? '/teacher/english-outside-class'
-      : '/student/dashboard'
-  const backLabel = isTeacher && !isTeacherView ? 'Back to managing the list' : 'Back to dashboard'
+    : '/teacher/english-outside-class'
+  const backLabel = isTeacherView ? 'Back to dashboard' : 'Back to managing the list'
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -43,8 +37,8 @@ export default async function EnglishOutsideClassPage({
           ) : (
             <EnglishOutsideClassBoard
               resources={library.resources}
-              canContribute={!isTeacher}
-              isTeacher={Boolean(isTeacher)}
+              canContribute={false}
+              isTeacher
               backHref={backHref}
               backLabel={backLabel}
             />
