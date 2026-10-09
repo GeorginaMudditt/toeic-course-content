@@ -110,6 +110,21 @@ export function linkHost(url: string) {
   }
 }
 
+/** Pictures for Real-World English live in public/real-world-english. */
+export function realWorldEnglishImageSrc(filename: string | null | undefined) {
+  if (!filename) return null
+  const name = filename.trim().split('/').pop() || ''
+  if (!/^[a-zA-Z0-9._ ()-]+\.(jpe?g|png|webp|gif)$/i.test(name)) return null
+  return `/real-world-english/${encodeURIComponent(name)}`
+}
+
+export function sanitizeImageFileName(value: string) {
+  const name = value.trim().split('/').pop() || ''
+  if (!name) return null
+  if (!/^[a-zA-Z0-9._ ()-]+\.(jpe?g|png|webp|gif)$/i.test(name)) return null
+  return name
+}
+
 export type LibraryComment = {
   id: string
   studentName: string
@@ -123,8 +138,8 @@ export type LibraryResource = {
   title: string
   description: string
   url: string
-  format: string
-  whereToFind: string | null
+  formats: string[]
+  image: string | null
   level: string | null
   topicTags: string[]
   contentNotes: string[]
@@ -141,8 +156,8 @@ export type TeacherResource = {
   title: string
   description: string
   url: string
-  format: string
-  whereToFind: string | null
+  formats: string[]
+  image: string | null
   level: string | null
   topicTags: string[]
   contentNotes: string[]
@@ -179,8 +194,8 @@ export type ResourceWriteInput = {
   title: string
   description: string
   url: string
-  format: string
-  whereToFind: string | null
+  formats: string[]
+  image: string | null
   level: string
   topicTags: string[]
   contentNotes: string[]
@@ -218,8 +233,8 @@ export function parseResourceWrite(body: unknown): { ok: true; data: ResourceWri
   const title = readString(record, 'title')
   const description = readString(record, 'description')
   const url = readString(record, 'url')
-  const format = readString(record, 'format')
-  const whereToFind = readString(record, 'whereToFind')
+  const formats = readTags(record, 'formats', FORMAT_IDS)
+  const image = sanitizeImageFileName(readString(record, 'image'))
   const level = readString(record, 'level') || 'all'
   const suggestedByName = readString(record, 'suggestedByName')
 
@@ -232,14 +247,14 @@ export function parseResourceWrite(body: unknown): { ok: true; data: ResourceWri
   if (!isSafeHttpUrl(url)) {
     return { ok: false, error: 'Add a full link starting with https://' }
   }
-  if (!FORMAT_IDS.has(format)) {
-    return { ok: false, error: 'Choose a type, such as film, series, or podcast.' }
+  if (formats.length === 0) {
+    return { ok: false, error: 'Choose at least one type, such as film, book, or podcast.' }
   }
   if (!LEVEL_IDS.has(level)) {
     return { ok: false, error: 'Choose a level.' }
   }
-  if (whereToFind.length > 160) {
-    return { ok: false, error: 'Where to find it is too long.' }
+  if (readString(record, 'image') && !image) {
+    return { ok: false, error: 'The picture needs to be a JPG, PNG, WEBP, or GIF file name.' }
   }
   if (suggestedByName.length > 80) {
     return { ok: false, error: 'The suggested-by name is too long.' }
@@ -251,8 +266,8 @@ export function parseResourceWrite(body: unknown): { ok: true; data: ResourceWri
       title,
       description,
       url,
-      format,
-      whereToFind: whereToFind || null,
+      formats,
+      image,
       level,
       topicTags: readTags(record, 'topicTags', TOPIC_IDS),
       contentNotes: readTags(record, 'contentNotes', NOTE_IDS),

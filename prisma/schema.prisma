@@ -364,8 +364,8 @@ model EnglishOutsideResource {
   title           String
   description     String
   url             String
-  format          String
-  whereToFind     String?
+  formats         String[]
+  image           String?
   level           String?
   topicTags       String[]
   contentNotes    String[]

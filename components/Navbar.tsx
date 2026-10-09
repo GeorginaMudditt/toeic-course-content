@@ -58,8 +58,7 @@ export default function Navbar() {
       path === '/student/vocabulary' ||
       path === '/student/course' ||
       path === '/student/notes' ||
-      path === '/student/docs' ||
-      path === '/student/english-outside-class'
+      path === '/student/docs'
     ) {
       return pathname === path
     }

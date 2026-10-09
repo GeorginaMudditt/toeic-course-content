@@ -12,7 +12,7 @@ import {
   linkHost,
   type LibraryResource,
 } from '@/lib/english-outside-class'
-import { ResourceTags, StarRow, fieldClass } from '@/components/EnglishOutsideClassUi'
+import { ResourceTags, ResourceThumbnail, StarRow, fieldClass } from '@/components/EnglishOutsideClassUi'
 
 type Props = {
   resources: LibraryResource[]
@@ -57,7 +57,7 @@ export default function EnglishOutsideClassBoard({
   const filtered = useMemo(() => {
     const needle = query.trim().toLowerCase()
     const next = resources.filter((resource) => {
-      if (formatFilter !== 'all' && resource.format !== formatFilter) return false
+      if (formatFilter !== 'all' && !resource.formats.includes(formatFilter)) return false
       if (levelFilter !== 'all' && resource.level !== levelFilter) return false
       if (topicFilter !== 'all' && !resource.topicTags.includes(topicFilter)) return false
       if (hideWarnings && resource.contentNotes.length > 0) return false
@@ -160,8 +160,7 @@ export default function EnglishOutsideClassBoard({
             <h1 className="text-3xl font-bold text-gray-900">{ENGLISH_OUTSIDE_TITLE}</h1>
             <p className="text-gray-600 mt-2 max-w-3xl">
               Films, series, podcasts, audiobooks and books that can help you improve your English
-              in real life. Your teacher chooses everything on this list, writes the descriptions,
-              and leaves out anything unsuitable.
+              in real life.
             </p>
           </div>
           {isTeacher && (
@@ -245,8 +244,11 @@ export default function EnglishOutsideClassBoard({
             const visibleComments = resource.comments.filter((item) => !item.pending)
             return (
               <article key={resource.id} className="bg-white shadow rounded-lg p-5 sm:p-6 space-y-3">
+                <div className="flex flex-col gap-4 sm:flex-row">
+                  <ResourceThumbnail filename={resource.image} />
+                  <div className="min-w-0 flex-1 space-y-3">
                 <ResourceTags
-                  format={resource.format}
+                  formats={resource.formats}
                   level={resource.level}
                   topicTags={resource.topicTags}
                   contentNotes={resource.contentNotes}
@@ -255,20 +257,12 @@ export default function EnglishOutsideClassBoard({
                   <h2 className="text-xl font-semibold text-gray-900">{resource.title}</h2>
                   <p className="text-gray-700 text-sm mt-2 leading-relaxed">{resource.description}</p>
                 </div>
-                <dl className="text-sm text-gray-600 space-y-1">
-                  {resource.whereToFind && (
-                    <div>
-                      <dt className="inline font-medium text-gray-800">Where to find it: </dt>
-                      <dd className="inline">{resource.whereToFind}</dd>
-                    </div>
-                  )}
-                  {resource.suggestedByName && (
-                    <div>
-                      <dt className="inline font-medium text-gray-800">Suggested by </dt>
-                      <dd className="inline">{resource.suggestedByName}</dd>
-                    </div>
-                  )}
-                </dl>
+                {resource.suggestedByName && (
+                  <p className="text-sm text-gray-600">
+                    <span className="font-medium text-gray-800">Suggested by </span>
+                    {resource.suggestedByName}
+                  </p>
+                )}
                 <a
                   href={resource.url}
                   target="_blank"
@@ -278,6 +272,8 @@ export default function EnglishOutsideClassBoard({
                 >
                   Open {linkHost(resource.url)}
                 </a>
+                  </div>
+                </div>
 
                 <div className="border-t border-gray-100 pt-3 space-y-2">
                   <div className="flex flex-wrap items-center gap-2 text-sm text-gray-600">

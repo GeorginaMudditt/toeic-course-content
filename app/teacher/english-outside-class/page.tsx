@@ -4,7 +4,7 @@ import { redirect } from 'next/navigation'
 import Navbar from '@/components/Navbar'
 import EnglishOutsideClassManager from '@/components/EnglishOutsideClassManager'
 import { loadTeacherEnglishOutside } from '@/lib/english-outside-class-data'
-import { englishOutsideStoreMode } from '@/lib/english-outside-store'
+import { englishOutsideStoreMode, listRealWorldEnglishImageFiles } from '@/lib/english-outside-store'
 
 export default async function TeacherEnglishOutsideClassPage() {
   const session = await getServerSession(authOptions)
@@ -14,6 +14,7 @@ export default async function TeacherEnglishOutsideClassPage() {
 
   const data = await loadTeacherEnglishOutside()
   const localPreview = (await englishOutsideStoreMode()) === 'local'
+  const imageFiles = await listRealWorldEnglishImageFiles()
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -38,6 +39,7 @@ export default async function TeacherEnglishOutsideClassPage() {
               resources={data.resources}
               suggestions={data.suggestions}
               pendingComments={data.pendingComments}
+              imageFiles={imageFiles}
             />
           )}
         </div>

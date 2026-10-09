@@ -7,8 +7,8 @@ export type ResourceRow = {
   title: string
   description: string
   url: string
-  format: string
-  whereToFind: string | null
+  formats: string[]
+  image: string | null
   level: string | null
   topicTags: string[]
   contentNotes: string[]
@@ -62,6 +62,36 @@ type FileStore = {
 }
 
 const FILE_PATH = path.join(process.cwd(), 'data', 'english-outside-class.json')
+const IMAGE_DIR = path.join(process.cwd(), 'public', 'real-world-english')
+
+const REMOVED_RESOURCE_IDS = new Set(['eoc-paddington-2', 'eoc-planet-earth-ii', 'eoc-harry-potter-audio'])
+
+function normalizeResource(raw: Record<string, unknown>): ResourceRow | null {
+  const id = typeof raw.id === 'string' ? raw.id : ''
+  if (!id || REMOVED_RESOURCE_IDS.has(id)) return null
+  const formats = Array.isArray(raw.formats)
+    ? raw.formats.filter((item): item is string => typeof item === 'string' && item.length > 0)
+    : typeof raw.format === 'string' && raw.format
+      ? [raw.format]
+      : []
+  return {
+    id,
+    title: typeof raw.title === 'string' ? raw.title : '',
+    description: typeof raw.description === 'string' ? raw.description : '',
+    url: typeof raw.url === 'string' ? raw.url : '',
+    formats,
+    image: typeof raw.image === 'string' && raw.image.trim() ? raw.image.trim() : null,
+    level: typeof raw.level === 'string' ? raw.level : null,
+    topicTags: Array.isArray(raw.topicTags) ? raw.topicTags.filter((item): item is string => typeof item === 'string') : [],
+    contentNotes: Array.isArray(raw.contentNotes)
+      ? raw.contentNotes.filter((item): item is string => typeof item === 'string')
+      : [],
+    suggestedByName: typeof raw.suggestedByName === 'string' ? raw.suggestedByName : null,
+    status: typeof raw.status === 'string' ? raw.status : 'PUBLISHED',
+    createdAt: typeof raw.createdAt === 'string' ? raw.createdAt : new Date().toISOString(),
+    updatedAt: typeof raw.updatedAt === 'string' ? raw.updatedAt : new Date().toISOString(),
+  }
+}
 
 const SEED_RESOURCES: ResourceRow[] = [
   {
@@ -70,8 +100,8 @@ const SEED_RESOURCES: ResourceRow[] = [
     description:
       'A short podcast from BBC Learning English. Each episode explores one topic from the news and teaches a few useful phrases. The presenters speak clearly, and a transcript is available on the website.',
     url: 'https://www.bbc.co.uk/learningenglish/english/features/6-minute-english',
-    format: 'podcast',
-    whereToFind: 'BBC Sounds, or the BBC Learning English website',
+    formats: ['podcast'],
+    image: 'BBC-learning-english.jpg',
     level: 'a1-a2',
     topicTags: ['news'],
     contentNotes: [],
@@ -81,45 +111,13 @@ const SEED_RESOURCES: ResourceRow[] = [
     updatedAt: '2026-03-07T10:00:00.000Z',
   },
   {
-    id: 'eoc-paddington-2',
-    title: 'Paddington 2',
-    description:
-      'A warm, funny film with clear British English and a story that is easy to follow. A good choice when you want everyday conversation without strong language or violence.',
-    url: 'https://www.imdb.com/title/tt4468740/',
-    format: 'film',
-    whereToFind: 'Streaming services',
-    level: 'a1-a2',
-    topicTags: ['comedy', 'family'],
-    contentNotes: [],
-    suggestedByName: null,
-    status: 'PUBLISHED',
-    createdAt: '2026-03-06T10:00:00.000Z',
-    updatedAt: '2026-03-06T10:00:00.000Z',
-  },
-  {
-    id: 'eoc-planet-earth-ii',
-    title: 'Planet Earth II',
-    description:
-      'David Attenborough narrates this nature series in rich but clear British English. The pictures help you understand new words. Some scenes show animals hunting.',
-    url: 'https://www.bbcearth.com/shows/planet-earth-ii',
-    format: 'series',
-    whereToFind: 'BBC iPlayer, or other streaming services',
-    level: 'b1-b2',
-    topicTags: ['documentary', 'science'],
-    contentNotes: [],
-    suggestedByName: null,
-    status: 'PUBLISHED',
-    createdAt: '2026-03-05T10:00:00.000Z',
-    updatedAt: '2026-03-05T10:00:00.000Z',
-  },
-  {
     id: 'eoc-ted-talks',
     title: 'TED Talks',
     description:
       'Short talks on ideas from science, work, culture and everyday life. Many speakers use clear international English, and you can turn on English subtitles. Pick a subject you already know something about, then watch with the transcript.',
     url: 'https://www.ted.com/talks',
-    format: 'youtube',
-    whereToFind: 'ted.com, the TED app, or YouTube',
+    formats: ['youtube'],
+    image: 'Ted-talks.webp',
     level: 'b1-b2',
     topicTags: ['science'],
     contentNotes: [],
@@ -129,29 +127,13 @@ const SEED_RESOURCES: ResourceRow[] = [
     updatedAt: '2026-03-04T10:00:00.000Z',
   },
   {
-    id: 'eoc-harry-potter-audio',
-    title: "Harry Potter and the Philosopher's Stone (audiobook)",
-    description:
-      'Hearing a long story is excellent listening practice. This audiobook uses clear British English. If you can, follow the words in the book at the same time.',
-    url: 'https://www.wizardingworld.com/discover/books',
-    format: 'audiobook',
-    whereToFind: 'Audible, a library, or the printed book alongside the recording',
-    level: 'b1-b2',
-    topicTags: ['family', 'drama'],
-    contentNotes: [],
-    suggestedByName: null,
-    status: 'PUBLISHED',
-    createdAt: '2026-03-03T10:00:00.000Z',
-    updatedAt: '2026-03-03T10:00:00.000Z',
-  },
-  {
     id: 'eoc-the-office',
     title: 'The Office (UK)',
     description:
       'The original BBC workplace comedy, with natural British English, everyday office vocabulary, and a very dry sense of humour. Some episodes include strong language, so it is better suited to adults.',
     url: 'https://www.imdb.com/title/tt0290978/',
-    format: 'series',
-    whereToFind: 'BBC iPlayer, or other streaming services',
+    formats: ['series'],
+    image: 'the-office-uk.jpeg',
     level: 'b1-b2',
     topicTags: ['comedy'],
     contentNotes: ['strong-language'],
@@ -166,8 +148,8 @@ const SEED_RESOURCES: ResourceRow[] = [
     description:
       'A practical book about building better habits. The English is modern and direct, and the chapters are short. A strong choice if you would rather read something useful than a novel.',
     url: 'https://jamesclear.com/atomic-habits',
-    format: 'book',
-    whereToFind: 'Bookshops, libraries, or an ebook',
+    formats: ['book'],
+    image: 'atomic-habits.png',
     level: 'b2-plus',
     topicTags: ['self-help'],
     contentNotes: [],
@@ -188,6 +170,17 @@ function missingTable(error: { code?: string; message?: string } | null | undefi
     error.code === 'PGRST205' ||
     /does not exist|schema cache|could not find the table/i.test(error.message || '')
   )
+}
+
+export async function listRealWorldEnglishImageFiles(): Promise<string[]> {
+  try {
+    const names = await fs.readdir(IMAGE_DIR)
+    return names
+      .filter((name) => /^[a-zA-Z0-9._ ()-]+\.(jpe?g|png|webp|gif)$/i.test(name))
+      .sort((a, b) => a.localeCompare(b))
+  } catch {
+    return []
+  }
 }
 
 export async function englishOutsideStoreMode(): Promise<'database' | 'local'> {
@@ -212,7 +205,9 @@ async function readFileStore(): Promise<FileStore> {
       throw new Error('Real-World English preview file is not valid')
     }
     return {
-      resources: parsed.resources,
+      resources: parsed.resources
+        .map((row) => normalizeResource(row as unknown as Record<string, unknown>))
+        .filter((row): row is ResourceRow => row !== null),
       ratings: Array.isArray(parsed.ratings) ? parsed.ratings : [],
       comments: Array.isArray(parsed.comments) ? parsed.comments : [],
       suggestions: Array.isArray(parsed.suggestions) ? parsed.suggestions : [],
@@ -259,7 +254,10 @@ export async function listResourceRows(status?: 'PUBLISHED') {
     if (status) query = query.eq('status', status)
     const { data, error } = await query
     if (error) return { rows: [] as ResourceRow[], error: error.message, missingTable: missingTable(error) }
-    return { rows: (data || []) as ResourceRow[], error: null, missingTable: false }
+    const rows = ((data || []) as Record<string, unknown>[])
+      .map(normalizeResource)
+      .filter((row): row is ResourceRow => row !== null)
+    return { rows, error: null, missingTable: false }
   }
   const store = await readFileStore()
   const rows = byCreatedDesc(store.resources).filter((row) => !status || row.status === status)

@@ -23,6 +23,11 @@ export default withAuth(
     }
 
     if (path.startsWith('/student')) {
+      if (path.startsWith('/student/english-outside-class') && !isTeacher) {
+        const destination = isStudent ? '/student/dashboard' : isGuardian ? '/family' : '/login'
+        return NextResponse.redirect(new URL(destination, req.url))
+      }
+
       if (isTeacher && (viewAs || path.startsWith('/student/english-outside-class'))) {
         return NextResponse.next()
       }

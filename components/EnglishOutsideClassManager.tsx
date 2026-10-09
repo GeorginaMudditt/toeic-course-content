@@ -17,7 +17,7 @@ import {
   type TeacherResource,
   type TeacherSuggestion,
 } from '@/lib/english-outside-class'
-import { ResourceTags, TagSelect, fieldClass } from '@/components/EnglishOutsideClassUi'
+import { ResourceTags, ResourceThumbnail, TagSelect, fieldClass } from '@/components/EnglishOutsideClassUi'
 
 type Draft = {
   id?: string
@@ -25,8 +25,8 @@ type Draft = {
   title: string
   description: string
   url: string
-  format: string
-  whereToFind: string
+  formats: string[]
+  image: string
   level: string
   topicTags: string[]
   contentNotes: string[]
@@ -42,14 +42,15 @@ type Props = {
   resources: TeacherResource[]
   suggestions: TeacherSuggestion[]
   pendingComments: TeacherPendingComment[]
+  imageFiles: string[]
 }
 
 const emptyDraft = (): Draft => ({
   title: '',
   description: '',
   url: '',
-  format: 'series',
-  whereToFind: '',
+  formats: [],
+  image: '',
   level: 'all',
   topicTags: [],
   contentNotes: [],
@@ -60,6 +61,7 @@ export default function EnglishOutsideClassManager({
   resources,
   suggestions,
   pendingComments,
+  imageFiles,
 }: Props) {
   const router = useRouter()
   const [draft, setDraft] = useState<Draft | null>(null)
@@ -76,8 +78,8 @@ export default function EnglishOutsideClassManager({
       title: suggestion.title,
       description: '',
       url: suggestion.url || '',
-      format: suggestion.format,
-      whereToFind: suggestion.whereToFind || '',
+      formats: suggestion.format ? [suggestion.format] : [],
+      image: '',
       level: 'all',
       topicTags: [],
       contentNotes: [],
@@ -98,8 +100,8 @@ export default function EnglishOutsideClassManager({
       title: resource.title,
       description: resource.description,
       url: resource.url,
-      format: resource.format,
-      whereToFind: resource.whereToFind || '',
+      formats: resource.formats,
+      image: resource.image || '',
       level: resource.level || 'all',
       topicTags: resource.topicTags,
       contentNotes: resource.contentNotes,
@@ -118,8 +120,8 @@ export default function EnglishOutsideClassManager({
         title: draft.title,
         description: draft.description,
         url: draft.url,
-        format: draft.format,
-        whereToFind: draft.whereToFind,
+        formats: draft.formats,
+        image: draft.image,
         level: draft.level,
         topicTags: draft.topicTags,
         contentNotes: draft.contentNotes,
@@ -257,22 +259,13 @@ export default function EnglishOutsideClassManager({
                   className={fieldClass}
                 />
               </div>
-              <div>
-                <label htmlFor="eoc-format" className="block text-sm font-medium text-gray-700 mb-1">
-                  Type
-                </label>
-                <select
-                  id="eoc-format"
-                  value={draft.format}
-                  onChange={(event) => setDraft({ ...draft, format: event.target.value })}
-                  className={fieldClass}
-                >
-                  {ENGLISH_OUTSIDE_FORMATS.map((format) => (
-                    <option key={format.id} value={format.id}>
-                      {format.label}
-                    </option>
-                  ))}
-                </select>
+              <div className="sm:col-span-2">
+                <TagSelect
+                  legend="Type — choose every kind that fits. A title can be a book and an audiobook."
+                  options={ENGLISH_OUTSIDE_FORMATS}
+                  selected={draft.formats}
+                  onChange={(formats) => setDraft({ ...draft, formats })}
+                />
               </div>
               <div>
                 <label htmlFor="eoc-level" className="block text-sm font-medium text-gray-700 mb-1">
@@ -306,16 +299,28 @@ export default function EnglishOutsideClassManager({
                 />
               </div>
               <div>
-                <label htmlFor="eoc-where" className="block text-sm font-medium text-gray-700 mb-1">
-                  Where to find it
+                <label htmlFor="eoc-image" className="block text-sm font-medium text-gray-700 mb-1">
+                  Picture
                 </label>
-                <input
-                  id="eoc-where"
-                  value={draft.whereToFind}
-                  onChange={(event) => setDraft({ ...draft, whereToFind: event.target.value })}
-                  placeholder="Netflix, BBC Sounds, a bookshop…"
+                <select
+                  id="eoc-image"
+                  value={draft.image}
+                  onChange={(event) => setDraft({ ...draft, image: event.target.value })}
                   className={fieldClass}
-                />
+                >
+                  <option value="">No picture yet</option>
+                  {imageFiles.map((file) => (
+                    <option key={file} value={file}>
+                      {file}
+                    </option>
+                  ))}
+                  {draft.image && !imageFiles.includes(draft.image) && (
+                    <option value={draft.image}>{draft.image}</option>
+                  )}
+                </select>
+                <p className="mt-1 text-xs text-gray-500">
+                  Put JPG, PNG, or WEBP files in public/real-world-english, then refresh this page.
+                </p>
               </div>
               <div className="sm:col-span-2">
                 <label htmlFor="eoc-description" className="block text-sm font-medium text-gray-700 mb-1">
@@ -498,10 +503,13 @@ export default function EnglishOutsideClassManager({
                 resource.status === 'HIDDEN' ? 'opacity-70' : ''
               }`}
             >
+              <div className="flex flex-col gap-4 sm:flex-row">
+                <ResourceThumbnail filename={resource.image} />
+                <div className="min-w-0 flex-1 space-y-2">
               <div className="flex flex-wrap items-start justify-between gap-2">
                 <div className="space-y-2">
                   <ResourceTags
-                    format={resource.format}
+                    formats={resource.formats}
                     level={resource.level}
                     topicTags={resource.topicTags}
                     contentNotes={resource.contentNotes}
@@ -574,6 +582,8 @@ export default function EnglishOutsideClassManager({
                 >
                   Delete
                 </button>
+              </div>
+                </div>
               </div>
             </article>
           ))

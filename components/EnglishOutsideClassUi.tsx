@@ -6,6 +6,7 @@ import {
   ENGLISH_OUTSIDE_LEVELS,
   ENGLISH_OUTSIDE_TOPICS,
   labelFor,
+  realWorldEnglishImageSrc,
 } from '@/lib/english-outside-class'
 
 const TONE_CLASS = {
@@ -29,20 +30,40 @@ export function OutsidePill({
   )
 }
 
+export function ResourceThumbnail({ filename }: { filename: string | null }) {
+  const src = realWorldEnglishImageSrc(filename)
+  return (
+    <div className="relative aspect-[297/210] w-full shrink-0 self-start overflow-hidden rounded-lg bg-[#e8eaf6] sm:w-64">
+      {src ? (
+        // eslint-disable-next-line @next/next/no-img-element
+        <img src={src} alt="" className="absolute inset-0 h-full w-full object-cover" />
+      ) : (
+        <div className="absolute inset-0 flex items-center justify-center px-3 text-center text-xs font-medium text-[#38438f]">
+          Picture
+        </div>
+      )}
+    </div>
+  )
+}
+
 export function ResourceTags({
-  format,
+  formats,
   level,
   topicTags,
   contentNotes,
 }: {
-  format: string
+  formats: string[]
   level: string | null
   topicTags: string[]
   contentNotes: string[]
 }) {
   return (
     <div className="flex flex-wrap gap-1.5">
-      <OutsidePill tone="format">{labelFor(ENGLISH_OUTSIDE_FORMATS, format)}</OutsidePill>
+      {formats.map((format) => (
+        <OutsidePill key={format} tone="format">
+          {labelFor(ENGLISH_OUTSIDE_FORMATS, format)}
+        </OutsidePill>
+      ))}
       {level && (
         <OutsidePill tone="level">{labelFor(ENGLISH_OUTSIDE_LEVELS, level)}</OutsidePill>
       )}
