@@ -16,10 +16,6 @@ export async function POST(request: NextRequest) {
     if (!session || session.user.role !== 'STUDENT') {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
-    return NextResponse.json(
-      { error: 'Real-World English is not open to students yet.' },
-      { status: 403 }
-    )
 
     const parsed = parseSuggestionWrite(await request.json())
     if (!parsed.ok) {

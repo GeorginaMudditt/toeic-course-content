@@ -5,7 +5,7 @@ import { usePathname } from 'next/navigation'
 import { useSession, signOut } from 'next-auth/react'
 import { useState, useRef, useEffect } from 'react'
 import AvatarSelector from './AvatarSelector'
-import { ENGLISH_OUTSIDE_TITLE } from '@/lib/english-outside-class'
+import { ENGLISH_OUTSIDE_NAV_LABEL, ENGLISH_OUTSIDE_TITLE } from '@/lib/english-outside-class'
 
 export default function Navbar() {
   const { data: session, update: updateSession } = useSession()
@@ -269,6 +269,17 @@ export default function Navbar() {
                     style={isActive('/student/vocabulary') ? { borderColor: '#38438f' } : {}}
                   >
                     Vocabulary
+                  </Link>
+                  <Link
+                    href="/student/english-outside-class"
+                    className={`inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium transition-colors ${
+                      isActive('/student/english-outside-class')
+                        ? 'text-gray-900'
+                        : 'border-transparent text-gray-500 hover:text-[#38438f] hover:border-[#38438f]'
+                    }`}
+                    style={isActive('/student/english-outside-class') ? { borderColor: '#38438f' } : {}}
+                  >
+                    {ENGLISH_OUTSIDE_NAV_LABEL}
                   </Link>
                 </>
               )}

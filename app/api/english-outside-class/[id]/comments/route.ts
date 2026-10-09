@@ -13,10 +13,6 @@ export async function POST(
     if (!session || session.user.role !== 'STUDENT') {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
-    return NextResponse.json(
-      { error: 'Real-World English is not open to students yet.' },
-      { status: 403 }
-    )
 
     const body = await request.json()
     const text = typeof body.body === 'string' ? body.body.trim() : ''
