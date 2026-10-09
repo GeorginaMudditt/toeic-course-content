@@ -13,6 +13,7 @@ import {
   firstName,
   formatAverage,
   labelFor,
+  realWorldEnglishImageSrc,
   type TeacherPendingComment,
   type TeacherResource,
   type TeacherSuggestion,
@@ -66,6 +67,7 @@ export default function EnglishOutsideClassManager({
   const router = useRouter()
   const [draft, setDraft] = useState<Draft | null>(null)
   const [saving, setSaving] = useState(false)
+  const [uploadingImage, setUploadingImage] = useState(false)
   const [formError, setFormError] = useState<string | null>(null)
   const [busyKey, setBusyKey] = useState<string | null>(null)
   const [commentEdits, setCommentEdits] = useState<Record<string, string>>({})
@@ -108,6 +110,25 @@ export default function EnglishOutsideClassManager({
       suggestedByName: resource.suggestedByName || '',
     })
     window.scrollTo({ top: 0, behavior: 'smooth' })
+  }
+
+  const uploadPicture = async (file: File) => {
+    setUploadingImage(true)
+    setFormError(null)
+    try {
+      const body = new FormData()
+      body.set('file', file)
+      const response = await fetch('/api/english-outside-class/image', { method: 'POST', body })
+      const data = await response.json().catch(() => ({}))
+      if (!response.ok || typeof data.image !== 'string') {
+        throw new Error(data.error || 'The picture could not be saved')
+      }
+      setDraft((current) => (current ? { ...current, image: data.image } : current))
+    } catch (error) {
+      setFormError(error instanceof Error ? error.message : 'The picture could not be saved')
+    } finally {
+      setUploadingImage(false)
+    }
   }
 
   const save = async (event: React.FormEvent) => {
@@ -297,29 +318,63 @@ export default function EnglishOutsideClassManager({
                   className={fieldClass}
                 />
               </div>
-              <div>
-                <label htmlFor="eoc-image" className="block text-sm font-medium text-gray-700 mb-1">
+              <div className="sm:col-span-2">
+                <label htmlFor="eoc-image-file" className="block text-sm font-medium text-gray-700 mb-1">
                   Picture
                 </label>
-                <select
-                  id="eoc-image"
-                  value={draft.image}
-                  onChange={(event) => setDraft({ ...draft, image: event.target.value })}
-                  className={fieldClass}
-                >
-                  <option value="">No picture yet</option>
-                  {imageFiles.map((file) => (
-                    <option key={file} value={file}>
-                      {file}
-                    </option>
-                  ))}
-                  {draft.image && !imageFiles.includes(draft.image) && (
-                    <option value={draft.image}>{draft.image}</option>
-                  )}
-                </select>
+                <input
+                  id="eoc-image-file"
+                  type="file"
+                  accept="image/jpeg,image/png,image/webp,image/gif"
+                  disabled={uploadingImage || saving}
+                  onChange={(event) => {
+                    const file = event.target.files?.[0]
+                    event.target.value = ''
+                    if (file) void uploadPicture(file)
+                  }}
+                  className="block w-full text-sm text-gray-700"
+                />
                 <p className="mt-1 text-xs text-gray-500">
-                  Put JPG, PNG, or WEBP files in public/real-world-english, then refresh this page.
+                  Choose a JPG, PNG, or WEBP from your computer. It is saved with this title.
                 </p>
+                {uploadingImage && <p className="mt-2 text-sm text-gray-600">Saving the picture…</p>}
+                {draft.image && realWorldEnglishImageSrc(draft.image) && (
+                  <div className="mt-3 flex items-center gap-3">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src={realWorldEnglishImageSrc(draft.image) || ''}
+                      alt=""
+                      className="h-16 w-24 rounded-md object-cover"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setDraft({ ...draft, image: '' })}
+                      className="text-sm text-gray-600 underline"
+                    >
+                      Remove picture
+                    </button>
+                  </div>
+                )}
+                {imageFiles.length > 0 && (
+                  <div className="mt-3">
+                    <label htmlFor="eoc-image" className="block text-xs font-medium text-gray-600 mb-1">
+                      Or use a picture already on the site
+                    </label>
+                    <select
+                      id="eoc-image"
+                      value={imageFiles.includes(draft.image) ? draft.image : ''}
+                      onChange={(event) => setDraft({ ...draft, image: event.target.value })}
+                      className={fieldClass}
+                    >
+                      <option value="">Keep the picture above</option>
+                      {imageFiles.map((file) => (
+                        <option key={file} value={file}>
+                          {file}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                )}
               </div>
               <div className="sm:col-span-2">
                 <label htmlFor="eoc-description" className="block text-sm font-medium text-gray-700 mb-1">

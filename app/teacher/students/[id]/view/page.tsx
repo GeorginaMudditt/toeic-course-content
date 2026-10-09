@@ -9,12 +9,7 @@ import { loadCourseHourPanels } from '@/lib/student-course-hours'
 import { loadUpcomingLessonsForStudent } from '@/lib/booked-lessons'
 import CourseHoursProgress from '@/components/CourseHoursProgress'
 import UpcomingLessons from '@/components/UpcomingLessons'
-import {
-  ENGLISH_OUTSIDE_CARD_DETAIL,
-  ENGLISH_OUTSIDE_TITLE,
-  outsideClassCardSummary,
-} from '@/lib/english-outside-class'
-import { countPublishedEnglishOutside } from '@/lib/english-outside-class-data'
+import DashboardCardStyleSamples from '@/components/DashboardCardStyleSamples'
 
 export default async function StudentViewPage({ params }: { params: { id: string } }) {
   const session = await getServerSession(authOptions)
@@ -74,7 +69,6 @@ export default async function StudentViewPage({ params }: { params: { id: string
   // Get the first enrollment for the "My Course" card
   const firstEnrollment = enrollments[0]
   const courseHourPanels = await loadCourseHourPanels(params.id)
-  const outsideClassCount = await countPublishedEnglishOutside()
   const upcomingLessons = await loadUpcomingLessonsForStudent(params.id)
 
   // Fetch document count for the "My Docs" card
@@ -125,127 +119,19 @@ export default async function StudentViewPage({ params }: { params: { id: string
             <UpcomingLessons lessons={upcomingLessons} />
           </div>
 
-          <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
-            {/* My Resources Card (was My Course) */}
-            <Link
-              href={`/student/course?viewAs=${params.id}`}
-              className="bg-white shadow rounded-lg p-6 hover:shadow-lg transition-shadow"
-            >
-              <h2 className="text-xl font-semibold text-gray-900 mb-2" style={{ color: '#38438f' }}>
-                My Resources
-              </h2>
-              {firstEnrollment && firstEnrollment.course ? (
-                <>
-                  <p className="text-gray-600 text-sm">
-                    <em>
-                      {formatCourseName(firstEnrollment.course.name, firstEnrollment.course.duration)} - enrolled {formatUKDate(firstEnrollment.enrolledAt)}
-                    </em>
-                  </p>
-                  <p className="text-gray-600 text-sm mt-1">
-                    Find all your worksheets for lessons and homework.
-                  </p>
-                </>
-              ) : (
-                <>
-                  <p className="text-gray-600 text-sm">
-                    No course enrolled yet
-                  </p>
-                  <p className="text-gray-600 text-sm mt-1">
-                    Find all your worksheets for lessons and homework.
-                  </p>
-                </>
-              )}
-            </Link>
-
-            {/* Notes Card */}
-            <Link
-              href={`/student/notes?viewAs=${params.id}`}
-              className="bg-white shadow rounded-lg p-6 hover:shadow-lg transition-shadow"
-            >
-              <h2 className="text-xl font-semibold text-gray-900 mb-2" style={{ color: '#38438f' }}>
-                My Notes
-              </h2>
-              <p className="text-gray-600 text-sm">
-                View notes, corrections from your lessons, and your attendance.
-              </p>
-            </Link>
-
-            {/* My Docs Card */}
-            <Link
-              href={`/student/docs?viewAs=${params.id}`}
-              className="bg-white shadow rounded-lg p-6 hover:shadow-lg transition-shadow"
-            >
-              <h2 className="text-xl font-semibold text-gray-900 mb-2" style={{ color: '#38438f' }}>
-                My Docs
-              </h2>
-              <div className="text-gray-600 text-sm space-y-1">
-                <p>
-                  <em>
-                    {documentCount > 0 
-                      ? `${documentCount} document${documentCount !== 1 ? 's' : ''} available`
-                      : 'No documents assigned yet.'}
-                  </em>
-                </p>
-                <p>
-                  View your administrative documentation, such as your contract.
-                </p>
-              </div>
-            </Link>
-
-            {/* My Writing Card */}
-            <Link
-              href={`/student/writing?viewAs=${params.id}`}
-              className="bg-white shadow rounded-lg p-6 hover:shadow-lg transition-shadow"
-            >
-              <h2 className="text-xl font-semibold text-gray-900 mb-2" style={{ color: '#38438f' }}>
-                My Writing
-              </h2>
-              <p className="text-gray-600 text-sm">
-                Submit writing for marking and view your teacher&apos;s corrections.
-              </p>
-            </Link>
-
-            {/* About the TOEIC® 4-Skills Test Card */}
-            <Link
-              href={`/student/toeic-info?viewAs=${params.id}`}
-              className="bg-white shadow rounded-lg p-6 hover:shadow-lg transition-shadow"
-            >
-              <h2 className="text-xl font-semibold text-gray-900 mb-2" style={{ color: '#38438f' }}>
-                About the TOEIC® 4-Skills Test
-              </h2>
-              <p className="text-gray-600 text-sm">
-                Find out about test duration, format and scoring.
-              </p>
-            </Link>
-
-            {/* Vocabulary by CEFR level Card */}
-            <Link
-              href={`/student/vocabulary?viewAs=${params.id}`}
-              className="bg-white shadow rounded-lg p-6 hover:shadow-lg transition-shadow"
-            >
-              <h2 className="text-xl font-semibold text-gray-900 mb-2" style={{ color: '#38438f' }}>
-                Vocabulary by CEFR level
-              </h2>
-              <p className="text-gray-600 text-sm">
-                Test your vocabulary knowledge with these fun activities.
-              </p>
-            </Link>
-
-            <Link
-              href={`/student/english-outside-class?viewAs=${params.id}`}
-              className="bg-white shadow rounded-lg p-6 hover:shadow-lg transition-shadow"
-            >
-              <h2 className="text-xl font-semibold text-gray-900 mb-2" style={{ color: '#38438f' }}>
-                {ENGLISH_OUTSIDE_TITLE}
-              </h2>
-              <div className="text-gray-600 text-sm space-y-1">
-                <p>
-                  <em>{outsideClassCardSummary(outsideClassCount)}</em>
-                </p>
-                <p>{ENGLISH_OUTSIDE_CARD_DETAIL}</p>
-              </div>
-            </Link>
-          </div>
+          <DashboardCardStyleSamples
+            resourcesLine={
+              firstEnrollment?.course
+                ? `${formatCourseName(firstEnrollment.course.name, firstEnrollment.course.duration)} - enrolled ${formatUKDate(firstEnrollment.enrolledAt)}`
+                : null
+            }
+            documentLine={
+              documentCount > 0
+                ? `${documentCount} document${documentCount !== 1 ? 's' : ''} available`
+                : 'No documents assigned yet.'
+            }
+            hrefFor={(path) => `${path}?viewAs=${params.id}`}
+          />
         </div>
       </div>
     </div>

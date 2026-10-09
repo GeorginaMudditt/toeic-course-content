@@ -2,7 +2,7 @@ export const ENGLISH_OUTSIDE_TITLE = 'Real-World English'
 export const ENGLISH_OUTSIDE_NAV_LABEL = 'Real-World English'
 
 export const ENGLISH_OUTSIDE_CARD_DETAIL =
-  'Suggest something you have enjoyed. Your teacher checks every idea before it is added.'
+  'Discover films, series, podcasts and books to help you improve your English. Suggest resources for other students too!'
 
 export function outsideClassCardSummary(count: number | null) {
   if (count && count > 0) {
@@ -110,17 +110,24 @@ export function linkHost(url: string) {
   }
 }
 
-/** Pictures for Real-World English live in public/real-world-english. */
+const STORED_IMAGE_URL =
+  /^https:\/\/ulrwcortyhassmytkcij\.supabase\.co\/storage\/v1\/object\/public\/(?:toeic|resources)\/real-world-english\/[a-zA-Z0-9._-]+\.(jpe?g|png|webp|gif)$/i
+
+/** A picture already in public/real-world-english, or one uploaded from the teacher form. */
 export function realWorldEnglishImageSrc(filename: string | null | undefined) {
   if (!filename) return null
-  const name = filename.trim().split('/').pop() || ''
+  const trimmed = filename.trim()
+  if (STORED_IMAGE_URL.test(trimmed)) return trimmed
+  const name = trimmed.split('/').pop() || ''
   if (!/^[a-zA-Z0-9._ ()-]+\.(jpe?g|png|webp|gif)$/i.test(name)) return null
   return `/real-world-english/${encodeURIComponent(name)}`
 }
 
 export function sanitizeImageFileName(value: string) {
-  const name = value.trim().split('/').pop() || ''
-  if (!name) return null
+  const trimmed = value.trim()
+  if (!trimmed) return null
+  if (STORED_IMAGE_URL.test(trimmed)) return trimmed
+  const name = trimmed.split('/').pop() || ''
   if (!/^[a-zA-Z0-9._ ()-]+\.(jpe?g|png|webp|gif)$/i.test(name)) return null
   return name
 }
@@ -254,7 +261,7 @@ export function parseResourceWrite(body: unknown): { ok: true; data: ResourceWri
     return { ok: false, error: 'Choose a level.' }
   }
   if (readString(record, 'image') && !image) {
-    return { ok: false, error: 'The picture needs to be a JPG, PNG, WEBP, or GIF file name.' }
+    return { ok: false, error: 'Choose a JPG, PNG, WEBP, or GIF picture.' }
   }
   if (suggestedByName.length > 80) {
     return { ok: false, error: 'The suggested-by name is too long.' }

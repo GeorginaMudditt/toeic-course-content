@@ -337,7 +337,7 @@ export default function EnglishOutsideClassBoard({
                       className={fieldClass}
                     />
                     <p className="text-xs text-gray-500">
-                      Your teacher checks comments before they appear, so the English stays clear.
+                      All comments will be checked before they appear on the portal.
                     </p>
                     <button
                       type="submit"
@@ -365,9 +365,10 @@ export default function EnglishOutsideClassBoard({
             <div>
               <h2 className="text-xl font-semibold text-gray-900">Suggest something</h2>
               <p className="text-sm text-gray-600 mt-1 max-w-2xl">
-                Tell your teacher about a film, series, podcast, book or anything else that helped
-                your English. You do not add it yourself. Your teacher reads every suggestion, checks
-                that it is suitable, and writes the description.
+                Tell Georgina about a film, series, podcast, book or anything else that helped your
+                English. She will read every suggestion, check that the resource is suitable, write
+                the description, and add it to the portal for other students to benefit from! Thank you
+                for your input 😊
               </p>
             </div>
             <button
