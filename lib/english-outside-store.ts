@@ -368,16 +368,18 @@ export async function findPublishedResource(id: string) {
   if ((await englishOutsideStoreMode()) === 'database') {
     const { data, error } = await supabaseServer
       .from('EnglishOutsideResource')
-      .select('id')
+      .select('id, title')
       .eq('id', id)
       .eq('status', 'PUBLISHED')
       .maybeSingle()
-    if (error) return { found: false, error: error.message }
-    return { found: Boolean(data), error: null }
+    if (error) return { found: false, title: null, error: error.message }
+    return { found: Boolean(data), title: data?.title ?? null, error: null }
   }
   const store = await readFileStore()
+  const row = store.resources.find((item) => item.id === id && item.status === 'PUBLISHED')
   return {
-    found: store.resources.some((row) => row.id === id && row.status === 'PUBLISHED'),
+    found: Boolean(row),
+    title: row?.title ?? null,
     error: null,
   }
 }

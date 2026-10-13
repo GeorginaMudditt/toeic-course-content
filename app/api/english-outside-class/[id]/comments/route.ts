@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
 import { randomUUID } from 'crypto'
+import { sendEnglishOutsideCommentEmail } from '@/lib/email'
 import { findPublishedResource, hasPendingComment, insertCommentRow } from '@/lib/english-outside-store'
 
 export async function POST(
@@ -20,7 +21,7 @@ export async function POST(
       return NextResponse.json({ error: 'Write a short comment (2–400 characters).' }, { status: 400 })
     }
 
-    const { found, error: resourceError } = await findPublishedResource(params.id)
+    const { found, title, error: resourceError } = await findPublishedResource(params.id)
     if (resourceError || !found) {
       return NextResponse.json({ error: 'That title is not on the list.' }, { status: 404 })
     }
@@ -53,6 +54,13 @@ export async function POST(
       console.error('Error saving comment:', error)
       return NextResponse.json({ error: 'Could not send your comment.' }, { status: 500 })
     }
+
+    await sendEnglishOutsideCommentEmail({
+      studentName: session.user.name || 'Student',
+      studentEmail: session.user.email,
+      resourceTitle: title || 'Real-World English',
+      body: text,
+    })
 
     return NextResponse.json({ ok: true })
   } catch (error) {

@@ -204,8 +204,8 @@ export default function EnglishOutsideClassManager({
             <h1 className="text-3xl font-bold text-gray-900">{ENGLISH_OUTSIDE_TITLE}</h1>
             <p className="text-gray-600 mt-2 max-w-3xl">
               Students can see what you publish. They can suggest a title, rate one, and leave a
-              comment. Suggestions are emailed to you, and both suggestions and comments wait here
-              until you approve them. Ratings appear straight away.
+              comment. Suggestions and comments are emailed to you, and both wait here until you
+              approve them. Ratings appear straight away.
             </p>
           </div>
           <Link

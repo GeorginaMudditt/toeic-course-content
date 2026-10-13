@@ -300,6 +300,58 @@ export async function sendEnglishOutsideSuggestionEmail(data: {
   }
 }
 
+export async function sendEnglishOutsideCommentEmail(data: {
+  studentName: string
+  studentEmail: string
+  resourceTitle: string
+  body: string
+}) {
+  const resend = getResendClient()
+
+  if (!resend) {
+    console.warn('⚠️  RESEND_API_KEY not found. Real-World English comment email not sent.')
+    return { error: 'Email service not configured' }
+  }
+
+  const reviewUrl = `${getSiteUrl()}/teacher/english-outside-class`
+
+  try {
+    await resend.emails.send({
+      from: FROM_EMAIL,
+      to: ADMIN_NOTIFY_EMAIL,
+      subject: `Real-World English comment — ${data.studentName}: ${data.resourceTitle}`,
+      html: `
+        <!DOCTYPE html>
+        <html>
+          <head><meta charset="utf-8" /></head>
+          <body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333;">
+            <p>Hello,</p>
+            <p><strong>${escapeHtml(data.studentName)}</strong> (${escapeHtml(data.studentEmail)}) has left a comment on Real-World English.</p>
+            <ul>
+              <li><strong>Title:</strong> ${escapeHtml(data.resourceTitle)}</li>
+            </ul>
+            <p><strong>Comment</strong></p>
+            <p>${escapeHtml(data.body)}</p>
+            <p style="margin: 24px 0;">
+              <a href="${reviewUrl}" style="display:inline-block;padding:12px 24px;background:#38438f;color:#ffffff !important;text-decoration:none;border-radius:5px;font-weight:600;">
+                Review the comment
+              </a>
+            </p>
+            <p style="word-break:break-all;color:#666;font-size:12px;">${reviewUrl}</p>
+            <p style="color:#666;font-size:12px;">The comment stays hidden from other students until you approve it.</p>
+          </body>
+        </html>
+      `,
+    })
+    console.log('Real-World English comment email sent to', ADMIN_NOTIFY_EMAIL)
+    return { success: true }
+  } catch (error: unknown) {
+    const message = error instanceof Error ? error.message : 'Failed to send email'
+    console.error('Error sending Real-World English comment email:', error)
+    return { error: message }
+  }
+}
+
 export async function sendWritingMarkedEmail(data: {
   userEmail: string
   userName: string
