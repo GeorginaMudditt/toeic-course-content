@@ -111,6 +111,14 @@ export const qualiopiDocuments: QualiopiDocument[] = [
         type: 'pdf-folder',
       },
     ],
+  },
+  {
+    slug: 'indicators-23-24-25',
+    title: 'Qualiopi Indicators 23, 24 & 25',
+    description: 'Professional practice monitoring',
+    spreadsheetId: '1qQvrsJ7g2I_1-KGYkxf3foO_oqmnudpuCsshjJ1ZSmo',
+    category: 'indicator',
+    indicatorOrder: 23,
     resourceLinksIntro:
       'Each time you complete the tracker, check these websites for relevant professional updates:',
     resourceLinks: [
@@ -127,14 +135,6 @@ export const qualiopiDocuments: QualiopiDocument[] = [
         href: 'https://www.legifrance.gouv.fr/',
       },
     ],
-  },
-  {
-    slug: 'indicators-23-24-25',
-    title: 'Qualiopi Indicators 23, 24 & 25',
-    description: 'Professional practice monitoring',
-    spreadsheetId: '1qQvrsJ7g2I_1-KGYkxf3foO_oqmnudpuCsshjJ1ZSmo',
-    category: 'indicator',
-    indicatorOrder: 23,
   },
   {
     slug: 'indicator-26',

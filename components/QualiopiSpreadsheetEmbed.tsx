@@ -1,7 +1,9 @@
 import Link from 'next/link'
+import QualiopiProfessionalUpdates from '@/components/QualiopiProfessionalUpdates'
 import {
   getGoogleSheetEditUrl,
   getGoogleSheetEmbedUrl,
+  type QualiopiResourceLink,
 } from '@/lib/qualiopi-documents'
 
 export default function QualiopiSpreadsheetEmbed({
@@ -10,12 +12,16 @@ export default function QualiopiSpreadsheetEmbed({
   spreadsheetId,
   backHref,
   backLabel,
+  resourceLinksIntro,
+  resourceLinks,
 }: {
   title: string
   description: string
   spreadsheetId: string
   backHref: string
   backLabel: string
+  resourceLinksIntro?: string
+  resourceLinks?: QualiopiResourceLink[]
 }) {
   const embedUrl = getGoogleSheetEmbedUrl(spreadsheetId)
   const editUrl = getGoogleSheetEditUrl(spreadsheetId)
@@ -47,6 +53,12 @@ export default function QualiopiSpreadsheetEmbed({
           Open in Google Sheets
         </a>
       </div>
+
+      {resourceLinks && resourceLinks.length > 0 && (
+        <div className="mb-6">
+          <QualiopiProfessionalUpdates intro={resourceLinksIntro} links={resourceLinks} />
+        </div>
+      )}
 
       <div className="bg-white shadow rounded-lg overflow-hidden">
         <iframe

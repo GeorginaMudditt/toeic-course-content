@@ -3,6 +3,7 @@ import { authOptions } from '@/lib/auth'
 import { redirect, notFound } from 'next/navigation'
 import Navbar from '@/components/Navbar'
 import Link from 'next/link'
+import QualiopiProfessionalUpdates from '@/components/QualiopiProfessionalUpdates'
 import QualiopiSpreadsheetEmbed from '@/components/QualiopiSpreadsheetEmbed'
 import {
   getQualiopiDocument,
@@ -57,28 +58,12 @@ export default async function QualiopiDocumentPage({ params }: { params: { slug:
               </div>
 
               {document.resourceLinks && document.resourceLinks.length > 0 && (
-                <section className="mt-10 rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
-                  <h2 className="text-xl font-semibold text-gray-900 mb-2">Professional updates</h2>
-                  <p className="text-gray-600 mb-4">
-                    {document.resourceLinksIntro ||
-                      'Each time you complete the tracker, check these websites for relevant professional updates:'}
-                  </p>
-                  <ul className="space-y-3">
-                    {document.resourceLinks.map((link) => (
-                      <li key={link.href}>
-                        <a
-                          href={link.href}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="text-sm font-medium transition-colors hover:text-[#2d3569]"
-                          style={{ color: '#38438f' }}
-                        >
-                          {link.label}
-                        </a>
-                      </li>
-                    ))}
-                  </ul>
-                </section>
+                <div className="mt-10">
+                  <QualiopiProfessionalUpdates
+                    intro={document.resourceLinksIntro}
+                    links={document.resourceLinks}
+                  />
+                </div>
               )}
             </>
           ) : (
@@ -88,6 +73,8 @@ export default async function QualiopiDocumentPage({ params }: { params: { slug:
               spreadsheetId={document.spreadsheetId}
               backHref="/teacher/qualiopi"
               backLabel="← Back to Qualiopi"
+              resourceLinksIntro={document.resourceLinksIntro}
+              resourceLinks={document.resourceLinks}
             />
           )}
         </div>
