@@ -81,11 +81,6 @@
     color: #1e3a8a;
   }
 
-  .mcq-options {
-    margin: 6px 0 8px;
-    padding-left: 22px;
-  }
-
   ol {
     list-style-type: decimal !important;
     list-style-position: outside !important;
@@ -104,6 +99,67 @@
 
   .print-only {
     display: none;
+  }
+
+  .ny-photo-carousel > input {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: 0;
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .ny-stage {
+    margin-top: 4px;
+  }
+
+  .ny-slide {
+    display: none;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+  }
+
+  #ny-photo-1:checked ~ .ny-stage .ny-slide:nth-child(1),
+  #ny-photo-2:checked ~ .ny-stage .ny-slide:nth-child(2),
+  #ny-photo-3:checked ~ .ny-stage .ny-slide:nth-child(3),
+  #ny-photo-4:checked ~ .ny-stage .ny-slide:nth-child(4),
+  #ny-photo-5:checked ~ .ny-stage .ny-slide:nth-child(5),
+  #ny-photo-6:checked ~ .ny-stage .ny-slide:nth-child(6),
+  #ny-photo-7:checked ~ .ny-stage .ny-slide:nth-child(7) {
+    display: flex;
+  }
+
+  .ny-slide img {
+    display: block;
+    width: auto;
+    max-width: calc(100% - 120px);
+    max-height: 68vh;
+    height: auto;
+    object-fit: contain;
+    border-radius: 8px;
+    background: #e5e7eb;
+  }
+
+  .ny-arrow {
+    flex: 0 0 46px;
+    width: 46px;
+    height: 46px;
+    border-radius: 999px;
+    border: 1px solid #cfd6df;
+    background: #fff;
+    color: #1e3a8a;
+    font-size: 30px;
+    line-height: 42px;
+    text-align: center;
+    cursor: pointer;
+    user-select: none;
+    box-shadow: 0 1px 2px rgba(15, 23, 42, 0.08);
+  }
+
+  .ny-arrow:hover {
+    background: #eef2ff;
   }
 
   @media print {
@@ -144,6 +200,15 @@
     .quick-fire {
       grid-template-columns: 1fr 1fr;
     }
+
+    .ny-arrow {
+      display: none !important;
+    }
+
+    .ny-slide img {
+      max-height: 420px;
+      max-width: 100%;
+    }
   }
 </style>
 
@@ -173,7 +238,6 @@
 
   <div class="keep-together">
     <h2 style="font-size: 22px; font-weight: 700; margin-bottom: 8px;">Listening</h2>
-    <p style="font-size: 16px; margin: 0 0 12px;">Listen to a short description of New York. Answer the questions. You can listen more than once.</p>
 
     <div class="audio-player-box">
       <p style="font-size: 16px; margin: 0 0 8px; font-weight: 700; color: #1e3a8a;">Audio: New York</p>
@@ -182,54 +246,6 @@
         Your browser does not support the audio element.
       </audio>
     </div>
-
-    <h3 style="font-size: 18px; font-weight: 700; margin: 0 0 8px;">Questions</h3>
-    <ol style="font-size: 16px; margin: 0;">
-      <li style="margin-bottom: 14px;">
-        What is the speaker’s main point about New York?
-        <ul class="mcq-options">
-          <li>A. It is a quiet city where people take their time.</li>
-          <li>B. It is a city of contrasts, mixing famous places with everyday life.</li>
-          <li>C. It is mainly a city of theatres and museums.</li>
-        </ul>
-        <p style="margin: 0;">
-          Your answer (A, B, or C): <strong><span data-grammar-input="ny-q1" style="display: inline-block; min-width: 80px; border-bottom: 1px solid #94a3b8;"></span></strong>
-        </p>
-      </li>
-      <li style="margin-bottom: 14px;">
-        What do many local people do at the start of the day?
-        <ul class="mcq-options">
-          <li>A. They visit a famous museum.</li>
-          <li>B. They take a boat to Long Island.</li>
-          <li>C. They buy a coffee and a bagel from a street cart.</li>
-        </ul>
-        <p style="margin: 0;">
-          Your answer (A, B, or C): <strong><span data-grammar-input="ny-q2" style="display: inline-block; min-width: 80px; border-bottom: 1px solid #94a3b8;"></span></strong>
-        </p>
-      </li>
-      <li style="margin-bottom: 14px;">
-        How do people in New York often speak?
-        <ul class="mcq-options">
-          <li>A. Slowly, and only when they are sitting down.</li>
-          <li>B. Fast, and often while they are walking.</li>
-          <li>C. Quietly, because the streets are very calm.</li>
-        </ul>
-        <p style="margin: 0;">
-          Your answer (A, B, or C): <strong><span data-grammar-input="ny-q3" style="display: inline-block; min-width: 80px; border-bottom: 1px solid #94a3b8;"></span></strong>
-        </p>
-      </li>
-      <li>
-        What can visitors do on a hot summer day?
-        <ul class="mcq-options">
-          <li>A. Escape the heat by going to the water or to Long Island.</li>
-          <li>B. Stay inside a corner shop all day.</li>
-          <li>C. Avoid the streets and spend the day in a theatre.</li>
-        </ul>
-        <p style="margin: 0;">
-          Your answer (A, B, or C): <strong><span data-grammar-input="ny-q4" style="display: inline-block; min-width: 80px; border-bottom: 1px solid #94a3b8;"></span></strong>
-        </p>
-      </li>
-    </ol>
 
     <div class="audio-script-toggle screen-only">
       <details>
@@ -241,17 +257,55 @@
         </div>
       </details>
     </div>
+  </div>
 
-    <div class="audio-script-toggle screen-only">
-      <details>
-        <summary>Answers</summary>
-        <ol style="margin: 10px 0 0; font-size: 16px;">
-          <li style="margin-bottom: 4px;"><strong>B</strong></li>
-          <li style="margin-bottom: 4px;"><strong>C</strong></li>
-          <li style="margin-bottom: 4px;"><strong>B</strong></li>
-          <li><strong>A</strong></li>
-        </ol>
-      </details>
+  <div class="keep-together">
+    <h2 style="font-size: 22px; font-weight: 700; margin-bottom: 8px;">Describe a photo</h2>
+    <div class="ny-photo-carousel">
+      <input type="radio" name="ny-photo" id="ny-photo-1" checked />
+      <input type="radio" name="ny-photo" id="ny-photo-2" />
+      <input type="radio" name="ny-photo" id="ny-photo-3" />
+      <input type="radio" name="ny-photo" id="ny-photo-4" />
+      <input type="radio" name="ny-photo" id="ny-photo-5" />
+      <input type="radio" name="ny-photo" id="ny-photo-6" />
+      <input type="radio" name="ny-photo" id="ny-photo-7" />
+      <div class="ny-stage">
+        <div class="ny-slide">
+          <label class="ny-arrow" for="ny-photo-7" aria-label="Previous photo">&#8249;</label>
+          <img src="/audio/new-york/ny-pic1.jpg" alt="The Statue of Liberty across the water, with visitors on the island" />
+          <label class="ny-arrow" for="ny-photo-2" aria-label="Next photo">&#8250;</label>
+        </div>
+        <div class="ny-slide">
+          <label class="ny-arrow" for="ny-photo-1" aria-label="Previous photo">&#8249;</label>
+          <img src="/audio/new-york/ny-pic2.jpg" alt="People sitting on the grass in a city park, with trees and skyscrapers behind them" loading="lazy" />
+          <label class="ny-arrow" for="ny-photo-3" aria-label="Next photo">&#8250;</label>
+        </div>
+        <div class="ny-slide">
+          <label class="ny-arrow" for="ny-photo-2" aria-label="Previous photo">&#8249;</label>
+          <img src="/audio/new-york/ny-pic3.jpg" alt="A night street with a large New York, New York sign and a tall illuminated tower" loading="lazy" />
+          <label class="ny-arrow" for="ny-photo-4" aria-label="Next photo">&#8250;</label>
+        </div>
+        <div class="ny-slide">
+          <label class="ny-arrow" for="ny-photo-3" aria-label="Previous photo">&#8249;</label>
+          <img src="/audio/new-york/ny-pic4.jpg" alt="A crowded night street lined with bright billboards" loading="lazy" />
+          <label class="ny-arrow" for="ny-photo-5" aria-label="Next photo">&#8250;</label>
+        </div>
+        <div class="ny-slide">
+          <label class="ny-arrow" for="ny-photo-4" aria-label="Previous photo">&#8249;</label>
+          <img src="/audio/new-york/ny-pic5.jpg" alt="A bridge seen from a street between tall buildings, with cars in the foreground" loading="lazy" />
+          <label class="ny-arrow" for="ny-photo-6" aria-label="Next photo">&#8250;</label>
+        </div>
+        <div class="ny-slide">
+          <label class="ny-arrow" for="ny-photo-5" aria-label="Previous photo">&#8249;</label>
+          <img src="/audio/new-york/ny-pic6.jpg" alt="A stack of bagels with icing and sprinkles" loading="lazy" />
+          <label class="ny-arrow" for="ny-photo-7" aria-label="Next photo">&#8250;</label>
+        </div>
+        <div class="ny-slide">
+          <label class="ny-arrow" for="ny-photo-6" aria-label="Previous photo">&#8249;</label>
+          <img src="/audio/new-york/ny-pic7.jpg" alt="A busy city intersection full of yellow taxis and people crossing the street" loading="lazy" />
+          <label class="ny-arrow" for="ny-photo-1" aria-label="Next photo">&#8250;</label>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -262,12 +316,5 @@
       <p style="margin: 0 0 10px;">Life moves quickly here, which can feel tiring at first, so many locals start the day with a coffee and a fresh bagel from a street cart. People talk fast, often while they walk to work, and they will happily tell you where to find the best chocolate cake or pizza in town.</p>
       <p style="margin: 0;">On a hot summer day, you can escape the heat by taking a short trip to the water, or even out to Long Island. Whether you come for the theatres and shows or for the real, everyday atmosphere, New York is a place you are unlikely to forget.</p>
     </div>
-    <h2 style="font-size: 22px; font-weight: 700; margin: 16px 0 8px;">Answers</h2>
-    <ol style="font-size: 16px; margin: 0;">
-      <li style="margin-bottom: 4px;"><strong>B</strong></li>
-      <li style="margin-bottom: 4px;"><strong>C</strong></li>
-      <li style="margin-bottom: 4px;"><strong>B</strong></li>
-      <li><strong>A</strong></li>
-    </ol>
   </div>
 </div>
