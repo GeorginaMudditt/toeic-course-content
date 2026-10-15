@@ -1,0 +1,273 @@
+<!-- New York, New York — Travel English B2 -->
+<style>
+  :root {
+    --exam-ink: #1f2937;
+    --exam-subtle-ink: #4b5563;
+    --exam-border: #cfd6df;
+    --exam-soft-border: #e5e7eb;
+    --exam-header-bg: #f6f8fb;
+    --exam-panel-bg: #fbfcfe;
+    --exam-accent: #1e3a8a;
+  }
+
+  body {
+    color: var(--exam-ink);
+  }
+
+  .exam-header {
+    border: 1px solid var(--exam-border);
+    background: linear-gradient(to bottom, #ffffff, var(--exam-header-bg));
+    border-radius: 8px;
+    padding: 12px 14px;
+  }
+
+  .keep-together {
+    border: 1px solid var(--exam-soft-border);
+    border-radius: 8px;
+    background: var(--exam-panel-bg);
+    padding: 12px 14px;
+    margin-bottom: 18px;
+  }
+
+  h2 {
+    color: var(--exam-accent) !important;
+    border-bottom: 1px solid var(--exam-border);
+    padding-bottom: 6px;
+    margin-top: 0;
+  }
+
+  h3 {
+    margin-top: 0;
+    color: #0f172a;
+  }
+
+  .quick-fire {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px 18px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .quick-fire li {
+    margin: 0;
+    padding: 8px 10px;
+    border: 1px solid var(--exam-soft-border);
+    border-radius: 8px;
+    background: #fff;
+    font-size: 16px;
+  }
+
+  .audio-player-box {
+    border: 1px solid #bfdbfe;
+    border-radius: 8px;
+    background: #eff6ff;
+    padding: 10px 12px;
+    margin: 0 0 14px;
+  }
+
+  .audio-script-toggle {
+    border: 1px solid #c7d2fe;
+    border-radius: 8px;
+    padding: 8px 10px;
+    background: #eef2ff;
+    margin-top: 14px;
+  }
+
+  .audio-script-toggle summary {
+    cursor: pointer;
+    font-weight: 700;
+    color: #1e3a8a;
+  }
+
+  .mcq-options {
+    margin: 6px 0 8px;
+    padding-left: 22px;
+  }
+
+  ol {
+    list-style-type: decimal !important;
+    list-style-position: outside !important;
+    padding-left: 24px !important;
+  }
+
+  ul {
+    list-style-type: disc !important;
+    list-style-position: outside !important;
+    padding-left: 22px !important;
+  }
+
+  li {
+    display: list-item !important;
+  }
+
+  .print-only {
+    display: none;
+  }
+
+  @media print {
+    @page {
+      margin: 1.5cm;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+    }
+
+    .page-break {
+      page-break-before: always;
+    }
+
+    .keep-together {
+      break-inside: avoid;
+      page-break-inside: avoid;
+      background: #fff;
+      border-color: #d1d5db;
+    }
+
+    h2,
+    h3 {
+      break-after: avoid;
+      page-break-after: avoid;
+    }
+
+    .screen-only {
+      display: none !important;
+    }
+
+    .print-only {
+      display: block;
+    }
+
+    .quick-fire {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+</style>
+
+<div style="max-width: 900px; margin: 0 auto; padding: 20px; font-family: Arial, sans-serif; line-height: 1.45; color: #333;">
+  <div class="exam-header" style="text-align: center; margin-bottom: 18px;">
+    <div style="display: inline-block; margin-bottom: 6px;">
+      <img src="/brizzle-logo.png" alt="Brizzle Logo" style="width: 45px; height: 45px; object-fit: contain;" />
+    </div>
+    <h1 style="font-size: 30px; line-height: 1.2; margin: 0 0 4px; color: #0f172a;">New York, New York</h1>
+    <h2 style="font-size: 18px; margin: 0; font-weight: 700; border: none; padding: 0;">Travel English · Level B2</h2>
+  </div>
+
+  <div class="keep-together">
+    <h2 style="font-size: 22px; font-weight: 700; margin-bottom: 8px;">Warm-up</h2>
+    <p style="font-size: 16px; margin: 0 0 12px;">Quick-fire questions: answer each one with your choice, then give a short reason.</p>
+    <ul class="quick-fire">
+      <li>Window seat or aisle seat?</li>
+      <li>Coffee or cocktail?</li>
+      <li>Hot weather or cold weather?</li>
+      <li>City break or beach holiday?</li>
+      <li>Plan everything, or decide when you arrive?</li>
+      <li>Michelin-starred restaurant or street food?</li>
+      <li>Suitcase or backpack?</li>
+      <li>Famous sights or everyday local life?</li>
+    </ul>
+  </div>
+
+  <div class="keep-together">
+    <h2 style="font-size: 22px; font-weight: 700; margin-bottom: 8px;">Listening</h2>
+    <p style="font-size: 16px; margin: 0 0 12px;">Listen to a short description of New York. Answer the questions. You can listen more than once.</p>
+
+    <div class="audio-player-box">
+      <p style="font-size: 16px; margin: 0 0 8px; font-weight: 700; color: #1e3a8a;">Audio: New York</p>
+      <audio controls preload="metadata" style="width: 100%; max-width: 560px; height: 40px;">
+        <source src="/audio/new-york/New-York-description.mp3" type="audio/mpeg" />
+        Your browser does not support the audio element.
+      </audio>
+    </div>
+
+    <h3 style="font-size: 18px; font-weight: 700; margin: 0 0 8px;">Questions</h3>
+    <ol style="font-size: 16px; margin: 0;">
+      <li style="margin-bottom: 14px;">
+        What is the speaker’s main point about New York?
+        <ul class="mcq-options">
+          <li>A. It is a quiet city where people take their time.</li>
+          <li>B. It is a city of contrasts, mixing famous places with everyday life.</li>
+          <li>C. It is mainly a city of theatres and museums.</li>
+        </ul>
+        <p style="margin: 0;">
+          Your answer (A, B, or C): <strong><span data-grammar-input="ny-q1" style="display: inline-block; min-width: 80px; border-bottom: 1px solid #94a3b8;"></span></strong>
+        </p>
+      </li>
+      <li style="margin-bottom: 14px;">
+        What do many local people do at the start of the day?
+        <ul class="mcq-options">
+          <li>A. They visit a famous museum.</li>
+          <li>B. They take a boat to Long Island.</li>
+          <li>C. They buy a coffee and a bagel from a street cart.</li>
+        </ul>
+        <p style="margin: 0;">
+          Your answer (A, B, or C): <strong><span data-grammar-input="ny-q2" style="display: inline-block; min-width: 80px; border-bottom: 1px solid #94a3b8;"></span></strong>
+        </p>
+      </li>
+      <li style="margin-bottom: 14px;">
+        How do people in New York often speak?
+        <ul class="mcq-options">
+          <li>A. Slowly, and only when they are sitting down.</li>
+          <li>B. Fast, and often while they are walking.</li>
+          <li>C. Quietly, because the streets are very calm.</li>
+        </ul>
+        <p style="margin: 0;">
+          Your answer (A, B, or C): <strong><span data-grammar-input="ny-q3" style="display: inline-block; min-width: 80px; border-bottom: 1px solid #94a3b8;"></span></strong>
+        </p>
+      </li>
+      <li>
+        What can visitors do on a hot summer day?
+        <ul class="mcq-options">
+          <li>A. Escape the heat by going to the water or to Long Island.</li>
+          <li>B. Stay inside a corner shop all day.</li>
+          <li>C. Avoid the streets and spend the day in a theatre.</li>
+        </ul>
+        <p style="margin: 0;">
+          Your answer (A, B, or C): <strong><span data-grammar-input="ny-q4" style="display: inline-block; min-width: 80px; border-bottom: 1px solid #94a3b8;"></span></strong>
+        </p>
+      </li>
+    </ol>
+
+    <div class="audio-script-toggle screen-only">
+      <details>
+        <summary>Transcript</summary>
+        <div style="margin-top: 10px; font-size: 16px; line-height: 1.55;">
+          <p style="margin: 0 0 10px;">New York is a city full of contrasts. Its tall skyscrapers rise above busy streets where people from all over the world have created a very diverse culture. You can find a small corner shop next to a huge office building, and famous museums just a few steps from street food vendors.</p>
+          <p style="margin: 0 0 10px;">Life moves quickly here, which can feel tiring at first, so many locals start the day with a coffee and a fresh bagel from a street cart. People talk fast, often while they walk to work, and they will happily tell you where to find the best chocolate cake or pizza in town.</p>
+          <p style="margin: 0;">On a hot summer day, you can escape the heat by taking a short trip to the water, or even out to Long Island. Whether you come for the theatres and shows or for the real, everyday atmosphere, New York is a place you are unlikely to forget.</p>
+        </div>
+      </details>
+    </div>
+
+    <div class="audio-script-toggle screen-only">
+      <details>
+        <summary>Answers</summary>
+        <ol style="margin: 10px 0 0; font-size: 16px;">
+          <li style="margin-bottom: 4px;"><strong>B</strong></li>
+          <li style="margin-bottom: 4px;"><strong>C</strong></li>
+          <li style="margin-bottom: 4px;"><strong>B</strong></li>
+          <li><strong>A</strong></li>
+        </ol>
+      </details>
+    </div>
+  </div>
+
+  <div class="print-only" style="margin-top: 18px; border: 1px solid #d1d5db; border-radius: 8px; padding: 12px; background: #fff;">
+    <h2 style="font-size: 22px; font-weight: 700; margin: 0 0 10px;">Transcript</h2>
+    <div style="font-size: 16px; line-height: 1.55;">
+      <p style="margin: 0 0 10px;">New York is a city full of contrasts. Its tall skyscrapers rise above busy streets where people from all over the world have created a very diverse culture. You can find a small corner shop next to a huge office building, and famous museums just a few steps from street food vendors.</p>
+      <p style="margin: 0 0 10px;">Life moves quickly here, which can feel tiring at first, so many locals start the day with a coffee and a fresh bagel from a street cart. People talk fast, often while they walk to work, and they will happily tell you where to find the best chocolate cake or pizza in town.</p>
+      <p style="margin: 0;">On a hot summer day, you can escape the heat by taking a short trip to the water, or even out to Long Island. Whether you come for the theatres and shows or for the real, everyday atmosphere, New York is a place you are unlikely to forget.</p>
+    </div>
+    <h2 style="font-size: 22px; font-weight: 700; margin: 16px 0 8px;">Answers</h2>
+    <ol style="font-size: 16px; margin: 0;">
+      <li style="margin-bottom: 4px;"><strong>B</strong></li>
+      <li style="margin-bottom: 4px;"><strong>C</strong></li>
+      <li style="margin-bottom: 4px;"><strong>B</strong></li>
+      <li><strong>A</strong></li>
+    </ol>
+  </div>
+</div>
