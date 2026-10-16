@@ -1,0 +1,461 @@
+<!-- Scotland — Travel English B1 -->
+<style>
+  :root {
+    --exam-ink: #1f2937;
+    --exam-subtle-ink: #4b5563;
+    --exam-border: #cfd6df;
+    --exam-soft-border: #e5e7eb;
+    --exam-header-bg: #f6f8fb;
+    --exam-panel-bg: #fbfcfe;
+    --exam-accent: #1e3a8a;
+  }
+
+  body {
+    color: var(--exam-ink);
+  }
+
+  .exam-header {
+    border: 1px solid var(--exam-border);
+    background: linear-gradient(to bottom, #ffffff, var(--exam-header-bg));
+    border-radius: 8px;
+    padding: 12px 14px;
+  }
+
+  .keep-together {
+    border: 1px solid var(--exam-soft-border);
+    border-radius: 8px;
+    background: var(--exam-panel-bg);
+    padding: 12px 14px;
+    margin-bottom: 18px;
+  }
+
+  h2 {
+    color: var(--exam-accent) !important;
+    border-bottom: 1px solid var(--exam-border);
+    padding-bottom: 6px;
+    margin-top: 0;
+  }
+
+  h3 {
+    margin-top: 0;
+    color: #0f172a;
+  }
+
+  .quick-fire {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px 18px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .quick-fire li {
+    margin: 0;
+    padding: 8px 10px;
+    border: 1px solid var(--exam-soft-border);
+    border-radius: 8px;
+    background: #fff;
+    font-size: 16px;
+  }
+
+  .audio-player-box {
+    border: 1px solid #bfdbfe;
+    border-radius: 8px;
+    background: #eff6ff;
+    padding: 10px 12px;
+    margin: 0 0 14px;
+  }
+
+  .audio-script-toggle {
+    border: 1px solid #c7d2fe;
+    border-radius: 8px;
+    padding: 8px 10px;
+    background: #eef2ff;
+    margin-top: 14px;
+  }
+
+  .audio-script-toggle summary {
+    cursor: pointer;
+    font-weight: 700;
+    color: #1e3a8a;
+  }
+
+  ol {
+    list-style-type: decimal !important;
+    list-style-position: outside !important;
+    padding-left: 24px !important;
+  }
+
+  ul {
+    list-style-type: disc !important;
+    list-style-position: outside !important;
+    padding-left: 22px !important;
+  }
+
+  li {
+    display: list-item !important;
+  }
+
+  .print-only {
+    display: none;
+  }
+
+  .sc-photo-carousel > input {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: 0;
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .sc-stage {
+    position: relative;
+    height: 72vh;
+    min-height: 420px;
+    max-height: 820px;
+    margin-top: 4px;
+  }
+
+  .sc-slide {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.45s ease;
+  }
+
+  #sc-photo-1:checked ~ .sc-stage .sc-slide:nth-child(1),
+  #sc-photo-2:checked ~ .sc-stage .sc-slide:nth-child(2),
+  #sc-photo-3:checked ~ .sc-stage .sc-slide:nth-child(3),
+  #sc-photo-4:checked ~ .sc-stage .sc-slide:nth-child(4),
+  #sc-photo-5:checked ~ .sc-stage .sc-slide:nth-child(5),
+  #sc-photo-6:checked ~ .sc-stage .sc-slide:nth-child(6),
+  #sc-photo-7:checked ~ .sc-stage .sc-slide:nth-child(7) {
+    opacity: 1;
+    pointer-events: auto;
+    z-index: 1;
+  }
+
+  .sc-slide figure {
+    margin: 0;
+    height: 100%;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .sc-slide img {
+    display: block;
+    width: auto;
+    max-width: 100%;
+    max-height: calc(100% - 36px);
+    height: auto;
+    object-fit: contain;
+    border-radius: 8px;
+    background: #e5e7eb;
+  }
+
+  .sc-count {
+    margin: 8px 0 0;
+    font-size: 15px;
+    font-weight: 600;
+    color: #4b5563;
+  }
+
+  .sc-arrow {
+    flex: 0 0 46px;
+    width: 46px;
+    height: 46px;
+    border-radius: 999px;
+    border: 1px solid #cfd6df;
+    background: #fff;
+    color: #1e3a8a;
+    font-size: 30px;
+    line-height: 42px;
+    text-align: center;
+    cursor: pointer;
+    user-select: none;
+    box-shadow: 0 1px 2px rgba(15, 23, 42, 0.08);
+  }
+
+  .sc-arrow:hover {
+    background: #eef2ff;
+  }
+
+  .role-play-card {
+    border: 1px solid var(--exam-soft-border);
+    border-radius: 8px;
+    background: #fff;
+    padding: 12px 14px;
+    margin-bottom: 12px;
+  }
+
+  .role-play-card:last-child {
+    margin-bottom: 0;
+  }
+
+  .role-play-card h3 {
+    font-size: 18px;
+    font-weight: 700;
+    margin: 0 0 6px;
+  }
+
+  .role-play-card p {
+    font-size: 16px;
+    margin: 0;
+  }
+
+  @media print {
+    @page {
+      margin: 1.5cm;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+    }
+
+    .page-break {
+      page-break-before: always;
+    }
+
+    .keep-together {
+      break-inside: avoid;
+      page-break-inside: avoid;
+      background: #fff;
+      border-color: #d1d5db;
+    }
+
+    h2,
+    h3 {
+      break-after: avoid;
+      page-break-after: avoid;
+    }
+
+    .screen-only {
+      display: none !important;
+    }
+
+    .print-only {
+      display: block;
+    }
+
+    .quick-fire {
+      grid-template-columns: 1fr 1fr;
+    }
+
+    .sc-stage {
+      height: auto !important;
+      min-height: 0 !important;
+      max-height: none !important;
+    }
+
+    .sc-slide {
+      position: static !important;
+      display: none !important;
+      opacity: 1 !important;
+      height: auto !important;
+    }
+
+    #sc-photo-1:checked ~ .sc-stage .sc-slide:nth-child(1),
+    #sc-photo-2:checked ~ .sc-stage .sc-slide:nth-child(2),
+    #sc-photo-3:checked ~ .sc-stage .sc-slide:nth-child(3),
+    #sc-photo-4:checked ~ .sc-stage .sc-slide:nth-child(4),
+    #sc-photo-5:checked ~ .sc-stage .sc-slide:nth-child(5),
+    #sc-photo-6:checked ~ .sc-stage .sc-slide:nth-child(6),
+    #sc-photo-7:checked ~ .sc-stage .sc-slide:nth-child(7) {
+      display: flex !important;
+    }
+
+    .sc-arrow {
+      display: none !important;
+    }
+
+    .sc-slide img {
+      max-height: 420px;
+      max-width: 100%;
+    }
+  }
+</style>
+
+<div style="max-width: 900px; margin: 0 auto; padding: 20px; font-family: Arial, sans-serif; line-height: 1.45; color: #333;">
+  <div class="exam-header" style="text-align: center; margin-bottom: 18px;">
+    <div style="display: inline-block; margin-bottom: 6px;">
+      <img src="/brizzle-logo.png" alt="Brizzle Logo" style="width: 45px; height: 45px; object-fit: contain;" />
+    </div>
+    <h1 style="font-size: 30px; line-height: 1.2; margin: 0 0 4px; color: #0f172a;">Scotland</h1>
+    <h2 style="font-size: 18px; margin: 0; font-weight: 700; border: none; padding: 0;">Travel English · Level B1</h2>
+  </div>
+
+  <div class="keep-together">
+    <h2 style="font-size: 22px; font-weight: 700; margin-bottom: 8px;">Warm-up</h2>
+    <p style="font-size: 16px; margin: 0 0 12px;">Quick-fire questions: answer each one with your choice, then give a short reason.</p>
+    <ul class="quick-fire">
+      <li>Cup of tea or glass of whisky?</li>
+      <li>City or countryside?</li>
+      <li>Plan your trip, or decide later?</li>
+      <li>A restaurant or a pub?</li>
+      <li>Suitcase or backpack?</li>
+      <li>Castles or beaches?</li>
+    </ul>
+  </div>
+
+  <div class="keep-together">
+    <h2 style="font-size: 22px; font-weight: 700; margin-bottom: 8px;">Listening</h2>
+
+    <div class="audio-player-box">
+      <p style="font-size: 16px; margin: 0 0 8px; font-weight: 700; color: #1e3a8a;">Audio: Scotland</p>
+      <audio controls preload="metadata" style="width: 100%; max-width: 560px; height: 40px;">
+        <source src="/audio/scotland/Scotland-description.mp3" type="audio/mpeg" />
+        Your browser does not support the audio element.
+      </audio>
+    </div>
+
+    <div class="audio-script-toggle screen-only">
+      <details>
+        <summary>Transcript</summary>
+        <div style="margin-top: 10px; font-size: 16px; line-height: 1.55;">
+          <p style="margin: 0 0 10px;">Scotland is a country of mountains, lochs, and cities. In Edinburgh, a castle sits on a hill. Just a few streets away, you can find small cafés and shops.</p>
+          <p style="margin: 0 0 10px;">The weather is often cold and wet, so many people start the day with a hot cup of tea. On a sunny day, they walk by the water or go up into the hills. Visitors often try haggis, shortbread, or fresh fish.</p>
+          <p style="margin: 0;">You can take a train through the Highlands, or a boat out to the islands. Some people come to see the castles. Others come for the quiet countryside. Scotland is a place many visitors want to see again.</p>
+        </div>
+      </details>
+    </div>
+  </div>
+
+  <div class="keep-together">
+    <h2 style="font-size: 22px; font-weight: 700; margin-bottom: 8px;">Describe a photo</h2>
+    <div class="sc-photo-carousel">
+      <input type="radio" name="sc-photo" id="sc-photo-1" checked />
+      <input type="radio" name="sc-photo" id="sc-photo-2" />
+      <input type="radio" name="sc-photo" id="sc-photo-3" />
+      <input type="radio" name="sc-photo" id="sc-photo-4" />
+      <input type="radio" name="sc-photo" id="sc-photo-5" />
+      <input type="radio" name="sc-photo" id="sc-photo-6" />
+      <input type="radio" name="sc-photo" id="sc-photo-7" />
+      <div class="sc-stage">
+        <div class="sc-slide">
+          <label class="sc-arrow" for="sc-photo-7" aria-label="Previous photo">&#8249;</label>
+          <figure>
+            <img src="/audio/scotland/scotland-pic1.jpg" alt="Edinburgh Castle on a rock above the old city" />
+            <figcaption class="sc-count">photo 1/7</figcaption>
+          </figure>
+          <label class="sc-arrow" for="sc-photo-2" aria-label="Next photo">&#8250;</label>
+        </div>
+        <div class="sc-slide">
+          <label class="sc-arrow" for="sc-photo-1" aria-label="Previous photo">&#8249;</label>
+          <figure>
+            <img src="/audio/scotland/scotland-pic2.jpg" alt="A quiet loch with mountains behind it" loading="lazy" />
+            <figcaption class="sc-count">photo 2/7</figcaption>
+          </figure>
+          <label class="sc-arrow" for="sc-photo-3" aria-label="Next photo">&#8250;</label>
+        </div>
+        <div class="sc-slide">
+          <label class="sc-arrow" for="sc-photo-2" aria-label="Previous photo">&#8249;</label>
+          <figure>
+            <img src="/audio/scotland/scotland-pic3.jpg" alt="A Highland cow standing in a green field" loading="lazy" />
+            <figcaption class="sc-count">photo 3/7</figcaption>
+          </figure>
+          <label class="sc-arrow" for="sc-photo-4" aria-label="Next photo">&#8250;</label>
+        </div>
+        <div class="sc-slide">
+          <label class="sc-arrow" for="sc-photo-3" aria-label="Previous photo">&#8249;</label>
+          <figure>
+            <img src="/audio/scotland/scotland-pic4.jpg" alt="A wet cobbled street between tall stone buildings" loading="lazy" />
+            <figcaption class="sc-count">photo 4/7</figcaption>
+          </figure>
+          <label class="sc-arrow" for="sc-photo-5" aria-label="Next photo">&#8250;</label>
+        </div>
+        <div class="sc-slide">
+          <label class="sc-arrow" for="sc-photo-4" aria-label="Previous photo">&#8249;</label>
+          <figure>
+            <img src="/audio/scotland/scotland-pic5.jpg" alt="A small fishing harbour with boats and hills behind it" loading="lazy" />
+            <figcaption class="sc-count">photo 5/7</figcaption>
+          </figure>
+          <label class="sc-arrow" for="sc-photo-6" aria-label="Next photo">&#8250;</label>
+        </div>
+        <div class="sc-slide">
+          <label class="sc-arrow" for="sc-photo-5" aria-label="Previous photo">&#8249;</label>
+          <figure>
+            <img src="/audio/scotland/scotland-pic6.jpg" alt="Shortbread and a cup of tea on a wooden table" loading="lazy" />
+            <figcaption class="sc-count">photo 6/7</figcaption>
+          </figure>
+          <label class="sc-arrow" for="sc-photo-7" aria-label="Next photo">&#8250;</label>
+        </div>
+        <div class="sc-slide">
+          <label class="sc-arrow" for="sc-photo-6" aria-label="Previous photo">&#8249;</label>
+          <figure>
+            <img src="/audio/scotland/scotland-pic7.jpg" alt="A city street of tall stone buildings" loading="lazy" />
+            <figcaption class="sc-count">photo 7/7</figcaption>
+          </figure>
+          <label class="sc-arrow" for="sc-photo-1" aria-label="Next photo">&#8250;</label>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="keep-together">
+    <h2 style="font-size: 22px; font-weight: 700; margin-bottom: 12px;">Role plays</h2>
+
+    <div class="role-play-card">
+      <h3>Immigration/customs</h3>
+      <p>Say why you are here, where you are staying, and how long you will stay.</p>
+    </div>
+
+    <div class="role-play-card">
+      <h3>Lost luggage</h3>
+      <p>Describe your bag and ask what happens next.</p>
+    </div>
+
+    <div class="role-play-card">
+      <h3>Restaurant</h3>
+      <p>Ask about Scottish food and say what you cannot eat.</p>
+    </div>
+
+    <div class="role-play-card">
+      <h3>Hotel</h3>
+      <p>Check in to your room.</p>
+    </div>
+
+    <div class="role-play-card">
+      <h3>Complain politely</h3>
+      <p>Your tour was cancelled.</p>
+    </div>
+
+    <div class="role-play-card">
+      <h3>Small talk</h3>
+      <p>Talk to someone from Scotland in a café.</p>
+    </div>
+  </div>
+
+  <div class="keep-together">
+    <h2 style="font-size: 22px; font-weight: 700; margin-bottom: 8px;">Travel questions</h2>
+    <ol style="font-size: 16px; margin: 0;">
+      <li style="margin-bottom: 8px;">What was your best holiday? Why was it good?</li>
+      <li style="margin-bottom: 8px;">What was your worst holiday? What went wrong?</li>
+      <li style="margin-bottom: 8px;">How do you plan a trip? Do you make a plan, or do you decide each day?</li>
+      <li style="margin-bottom: 8px;">What do you pack for one week away?</li>
+      <li style="margin-bottom: 8px;">Some places only allow a small number of visitors. Is that a good idea?</li>
+      <li style="margin-bottom: 8px;">Have you been to a place with too many tourists? What was it like?</li>
+      <li style="margin-bottom: 8px;">Have you ever felt surprised by life in another country? What was different?</li>
+      <li>Can a place become too popular because of social media? What happens then?</li>
+    </ol>
+  </div>
+
+  <div class="print-only" style="margin-top: 18px; border: 1px solid #d1d5db; border-radius: 8px; padding: 12px; background: #fff;">
+    <h2 style="font-size: 22px; font-weight: 700; margin: 0 0 10px;">Transcript</h2>
+    <div style="font-size: 16px; line-height: 1.55;">
+      <p style="margin: 0 0 10px;">Scotland is a country of mountains, lochs, and cities. In Edinburgh, a castle sits on a hill. Just a few streets away, you can find small cafés and shops.</p>
+      <p style="margin: 0 0 10px;">The weather is often cold and wet, so many people start the day with a hot cup of tea. On a sunny day, they walk by the water or go up into the hills. Visitors often try haggis, shortbread, or fresh fish.</p>
+      <p style="margin: 0;">You can take a train through the Highlands, or a boat out to the islands. Some people come to see the castles. Others come for the quiet countryside. Scotland is a place many visitors want to see again.</p>
+    </div>
+  </div>
+</div>

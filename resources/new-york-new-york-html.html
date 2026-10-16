@@ -111,14 +111,23 @@
   }
 
   .ny-stage {
+    position: relative;
+    height: 72vh;
+    min-height: 420px;
+    max-height: 820px;
     margin-top: 4px;
   }
 
   .ny-slide {
-    display: none;
+    position: absolute;
+    inset: 0;
+    display: flex;
     align-items: center;
     justify-content: center;
     gap: 12px;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.45s ease;
   }
 
   #ny-photo-1:checked ~ .ny-stage .ny-slide:nth-child(1),
@@ -128,18 +137,37 @@
   #ny-photo-5:checked ~ .ny-stage .ny-slide:nth-child(5),
   #ny-photo-6:checked ~ .ny-stage .ny-slide:nth-child(6),
   #ny-photo-7:checked ~ .ny-stage .ny-slide:nth-child(7) {
+    opacity: 1;
+    pointer-events: auto;
+    z-index: 1;
+  }
+
+  .ny-slide figure {
+    margin: 0;
+    height: 100%;
+    min-width: 0;
     display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
   }
 
   .ny-slide img {
     display: block;
     width: auto;
-    max-width: calc(100% - 120px);
-    max-height: 68vh;
+    max-width: 100%;
+    max-height: calc(100% - 36px);
     height: auto;
     object-fit: contain;
     border-radius: 8px;
     background: #e5e7eb;
+  }
+
+  .ny-count {
+    margin: 8px 0 0;
+    font-size: 15px;
+    font-weight: 600;
+    color: #4b5563;
   }
 
   .ny-arrow {
@@ -160,6 +188,29 @@
 
   .ny-arrow:hover {
     background: #eef2ff;
+  }
+
+  .role-play-card {
+    border: 1px solid var(--exam-soft-border);
+    border-radius: 8px;
+    background: #fff;
+    padding: 12px 14px;
+    margin-bottom: 12px;
+  }
+
+  .role-play-card:last-child {
+    margin-bottom: 0;
+  }
+
+  .role-play-card h3 {
+    font-size: 18px;
+    font-weight: 700;
+    margin: 0 0 6px;
+  }
+
+  .role-play-card p {
+    font-size: 16px;
+    margin: 0;
   }
 
   @media print {
@@ -199,6 +250,29 @@
 
     .quick-fire {
       grid-template-columns: 1fr 1fr;
+    }
+
+    .ny-stage {
+      height: auto !important;
+      min-height: 0 !important;
+      max-height: none !important;
+    }
+
+    .ny-slide {
+      position: static !important;
+      display: none !important;
+      opacity: 1 !important;
+      height: auto !important;
+    }
+
+    #ny-photo-1:checked ~ .ny-stage .ny-slide:nth-child(1),
+    #ny-photo-2:checked ~ .ny-stage .ny-slide:nth-child(2),
+    #ny-photo-3:checked ~ .ny-stage .ny-slide:nth-child(3),
+    #ny-photo-4:checked ~ .ny-stage .ny-slide:nth-child(4),
+    #ny-photo-5:checked ~ .ny-stage .ny-slide:nth-child(5),
+    #ny-photo-6:checked ~ .ny-stage .ny-slide:nth-child(6),
+    #ny-photo-7:checked ~ .ny-stage .ny-slide:nth-child(7) {
+      display: flex !important;
     }
 
     .ny-arrow {
@@ -272,41 +346,110 @@
       <div class="ny-stage">
         <div class="ny-slide">
           <label class="ny-arrow" for="ny-photo-7" aria-label="Previous photo">&#8249;</label>
-          <img src="/audio/new-york/ny-pic1.jpg" alt="The Statue of Liberty across the water, with visitors on the island" />
+          <figure>
+            <img src="/audio/new-york/ny-pic1.jpg" alt="The Statue of Liberty across the water, with visitors on the island" />
+            <figcaption class="ny-count">photo 1/7</figcaption>
+          </figure>
           <label class="ny-arrow" for="ny-photo-2" aria-label="Next photo">&#8250;</label>
         </div>
         <div class="ny-slide">
           <label class="ny-arrow" for="ny-photo-1" aria-label="Previous photo">&#8249;</label>
-          <img src="/audio/new-york/ny-pic2.jpg" alt="People sitting on the grass in a city park, with trees and skyscrapers behind them" loading="lazy" />
+          <figure>
+            <img src="/audio/new-york/ny-pic2.jpg" alt="People sitting on the grass in a city park, with trees and skyscrapers behind them" loading="lazy" />
+            <figcaption class="ny-count">photo 2/7</figcaption>
+          </figure>
           <label class="ny-arrow" for="ny-photo-3" aria-label="Next photo">&#8250;</label>
         </div>
         <div class="ny-slide">
           <label class="ny-arrow" for="ny-photo-2" aria-label="Previous photo">&#8249;</label>
-          <img src="/audio/new-york/ny-pic3.jpg" alt="A night street with a large New York, New York sign and a tall illuminated tower" loading="lazy" />
+          <figure>
+            <img src="/audio/new-york/ny-pic3.jpg" alt="A night street with a large New York, New York sign and a tall illuminated tower" loading="lazy" />
+            <figcaption class="ny-count">photo 3/7</figcaption>
+          </figure>
           <label class="ny-arrow" for="ny-photo-4" aria-label="Next photo">&#8250;</label>
         </div>
         <div class="ny-slide">
           <label class="ny-arrow" for="ny-photo-3" aria-label="Previous photo">&#8249;</label>
-          <img src="/audio/new-york/ny-pic4.jpg" alt="A crowded night street lined with bright billboards" loading="lazy" />
+          <figure>
+            <img src="/audio/new-york/ny-pic4.jpg" alt="A crowded night street lined with bright billboards" loading="lazy" />
+            <figcaption class="ny-count">photo 4/7</figcaption>
+          </figure>
           <label class="ny-arrow" for="ny-photo-5" aria-label="Next photo">&#8250;</label>
         </div>
         <div class="ny-slide">
           <label class="ny-arrow" for="ny-photo-4" aria-label="Previous photo">&#8249;</label>
-          <img src="/audio/new-york/ny-pic5.jpg" alt="A bridge seen from a street between tall buildings, with cars in the foreground" loading="lazy" />
+          <figure>
+            <img src="/audio/new-york/ny-pic5.jpg" alt="A bridge seen from a street between tall buildings, with cars in the foreground" loading="lazy" />
+            <figcaption class="ny-count">photo 5/7</figcaption>
+          </figure>
           <label class="ny-arrow" for="ny-photo-6" aria-label="Next photo">&#8250;</label>
         </div>
         <div class="ny-slide">
           <label class="ny-arrow" for="ny-photo-5" aria-label="Previous photo">&#8249;</label>
-          <img src="/audio/new-york/ny-pic6.jpg" alt="A stack of bagels with icing and sprinkles" loading="lazy" />
+          <figure>
+            <img src="/audio/new-york/ny-pic6.jpg" alt="A stack of bagels with icing and sprinkles" loading="lazy" />
+            <figcaption class="ny-count">photo 6/7</figcaption>
+          </figure>
           <label class="ny-arrow" for="ny-photo-7" aria-label="Next photo">&#8250;</label>
         </div>
         <div class="ny-slide">
           <label class="ny-arrow" for="ny-photo-6" aria-label="Previous photo">&#8249;</label>
-          <img src="/audio/new-york/ny-pic7.jpg" alt="A busy city intersection full of yellow taxis and people crossing the street" loading="lazy" />
+          <figure>
+            <img src="/audio/new-york/ny-pic7.jpg" alt="A busy city intersection full of yellow taxis and people crossing the street" loading="lazy" />
+            <figcaption class="ny-count">photo 7/7</figcaption>
+          </figure>
           <label class="ny-arrow" for="ny-photo-1" aria-label="Next photo">&#8250;</label>
         </div>
       </div>
     </div>
+  </div>
+
+  <div class="keep-together">
+    <h2 style="font-size: 22px; font-weight: 700; margin-bottom: 12px;">Role plays</h2>
+
+    <div class="role-play-card">
+      <h3>Immigration/customs</h3>
+      <p>Explain the purpose of your visit, where you are staying, and how long.</p>
+    </div>
+
+    <div class="role-play-card">
+      <h3>Lost luggage</h3>
+      <p>Describe the bag in detail and organise next steps.</p>
+    </div>
+
+    <div class="role-play-card">
+      <h3>Restaurant</h3>
+      <p>Ask about local specialities and explain some dietary requirements.</p>
+    </div>
+
+    <div class="role-play-card">
+      <h3>Hotel</h3>
+      <p>Check in to your room.</p>
+    </div>
+
+    <div class="role-play-card">
+      <h3>Complain politely</h3>
+      <p>Your tour was cancelled.</p>
+    </div>
+
+    <div class="role-play-card">
+      <h3>Small talk</h3>
+      <p>Chat to a New Yorker in a cafe.</p>
+    </div>
+  </div>
+
+  <div class="keep-together">
+    <h2 style="font-size: 22px; font-weight: 700; margin-bottom: 8px;">Travel questions</h2>
+    <ol style="font-size: 16px; margin: 0;">
+      <li style="margin-bottom: 8px;">What is the best holiday you have ever had, and what made it so good?</li>
+      <li style="margin-bottom: 8px;">What is the worst holiday you have had? What went wrong?</li>
+      <li style="margin-bottom: 8px;">How do you plan a trip? Do you follow a detailed itinerary, or do you decide day by day?</li>
+      <li style="margin-bottom: 8px;">What packing advice would you give someone going away for a week?</li>
+      <li style="margin-bottom: 8px;">Some places now limit visitor numbers, or use quotas. Do you think that is a good idea?</li>
+      <li style="margin-bottom: 8px;">Have you been somewhere that felt spoiled by too many tourists? What was it like?</li>
+      <li style="margin-bottom: 8px;">Have you ever had culture shock? What surprised you most?</li>
+      <li>Can a destination become too popular because of social media? What happens then?</li>
+    </ol>
   </div>
 
   <div class="print-only" style="margin-top: 18px; border: 1px solid #d1d5db; border-radius: 8px; padding: 12px; background: #fff;">
