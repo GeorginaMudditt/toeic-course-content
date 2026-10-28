@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { supabaseServer } from '@/lib/supabase'
 import { isVocabularyLevel, VOCABULARY_TABLES } from '@/lib/vocabulary-levels'
+import { b1VocabularyDeniedResponse } from '@/lib/vocabulary-access'
 
 export const dynamic = 'force-dynamic'
 
@@ -11,6 +12,9 @@ export async function GET(
   try {
     const level = params.level.toLowerCase()
     const topic = decodeURIComponent(params.topic)
+
+    const denied = await b1VocabularyDeniedResponse(request, level)
+    if (denied) return denied
 
     if (!isVocabularyLevel(level)) {
       return NextResponse.json({ data: [], error: null })

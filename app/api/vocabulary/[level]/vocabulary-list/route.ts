@@ -3,6 +3,7 @@ import {
   generateVocabularyListByCategoryPdf,
   generateVocabularyListPdf,
 } from '@/lib/generate-vocabulary-list-pdf'
+import { b1VocabularyDeniedResponse } from '@/lib/vocabulary-access'
 import {
   getVocabularyListCategoriesForLevel,
   getVocabularyListEntriesForLevel,
@@ -18,6 +19,9 @@ export async function GET(
 ) {
   try {
     const level = params.level.toLowerCase()
+
+    const denied = await b1VocabularyDeniedResponse(_request, level)
+    if (denied) return denied
 
     if (!supportsGeneratedVocabularyList(level)) {
       return NextResponse.json(

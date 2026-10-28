@@ -7,6 +7,7 @@ import {
   canWriteVocabularyProgress,
   resolveVocabularyProgressTarget,
 } from '@/lib/vocabulary-progress-target'
+import { isB1ProgressAllowed } from '@/lib/vocabulary-access'
 
 // GET: Fetch vocabulary progress for the current user (student) or all students (teacher)
 export async function GET(request: NextRequest) {
@@ -25,6 +26,10 @@ export async function GET(request: NextRequest) {
     const target = await resolveVocabularyProgressTarget(session, studentId)
     if (!target.ok) {
       return NextResponse.json({ error: target.error }, { status: target.status })
+    }
+
+    if (!(await isB1ProgressAllowed(target.studentId, level))) {
+      return NextResponse.json({ data: [], error: null })
     }
 
     let query = supabaseServer
@@ -75,6 +80,10 @@ export async function POST(request: NextRequest) {
 
     if (!level || !topic || typeof bronze !== 'boolean' || typeof silver !== 'boolean' || typeof gold !== 'boolean') {
       return NextResponse.json({ error: 'Invalid request data' }, { status: 400 })
+    }
+
+    if (!(await isB1ProgressAllowed(targetStudentId, level))) {
+      return NextResponse.json({ error: 'This level is coming soon.' }, { status: 403 })
     }
 
     // Normalize topic name: trim and remove extra spaces (matching vocabulary API normalization)

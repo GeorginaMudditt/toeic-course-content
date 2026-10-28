@@ -44,6 +44,7 @@ export default function ChallengePage() {
   const topic = decodeURIComponent(params.topic as string).trim().replace(/\s+/g, ' ')
   const challengeType = params.challengeType as 'bronze' | 'silver' | 'gold'
   const isViewMode = searchParams.get('view') === 'true'
+  const viewAs = searchParams.get('viewAs') || undefined
   const { data: session } = useSession()
 
   const [progress, setProgress] = useState({ bronze: false, silver: false, gold: false })
@@ -82,7 +83,10 @@ export default function ChallengePage() {
       try {
         // Normalize topic for the query
         const normalizedTopic = topic.trim().replace(/\s+/g, ' ')
-        const response = await fetch(`/api/vocabulary-progress?level=${level}&topic=${encodeURIComponent(normalizedTopic)}`)
+        const progressUrl = viewAs
+          ? `/api/vocabulary-progress?level=${level}&topic=${encodeURIComponent(normalizedTopic)}&studentId=${encodeURIComponent(viewAs)}`
+          : `/api/vocabulary-progress?level=${level}&topic=${encodeURIComponent(normalizedTopic)}`
+        const response = await fetch(progressUrl)
         const result = await response.json()
         
         if (response.ok && result.data && result.data.length > 0) {
@@ -103,7 +107,7 @@ export default function ChallengePage() {
     }
     
     fetchProgress()
-  }, [level, topic])
+  }, [level, topic, viewAs])
 
   // Fetch words for challenges
   useEffect(() => {
@@ -113,7 +117,10 @@ export default function ChallengePage() {
         setError('')
         try {
           // Fetch words from API route (uses service role key server-side)
-          const response = await fetch(`/api/vocabulary/${level}/${encodeURIComponent(topic)}`)
+          const wordsUrl = viewAs
+            ? `/api/vocabulary/${level}/${encodeURIComponent(topic)}?viewAs=${encodeURIComponent(viewAs)}`
+            : `/api/vocabulary/${level}/${encodeURIComponent(topic)}`
+          const response = await fetch(wordsUrl)
           const result = (await response.json()) as { data?: Word[]; error?: string }
 
           if (!response.ok || result.error) {
@@ -146,7 +153,7 @@ export default function ChallengePage() {
     }
 
     fetchWords()
-  }, [level, topic, challengeType])
+  }, [level, topic, challengeType, viewAs])
 
   // Save progress to API
   const saveProgress = async (newProgress: { bronze: boolean; silver: boolean; gold: boolean }) => {
@@ -528,7 +535,10 @@ export default function ChallengePage() {
       // Fetch latest progress from API before updating to ensure we don't overwrite existing progress
       let latestProgress = { ...progress }
       const normalizedTopic = topic.trim().replace(/\s+/g, ' ')
-      const response = await fetch(`/api/vocabulary-progress?level=${level}&topic=${encodeURIComponent(normalizedTopic)}`)
+      const latestProgressUrl = viewAs
+        ? `/api/vocabulary-progress?level=${level}&topic=${encodeURIComponent(normalizedTopic)}&studentId=${encodeURIComponent(viewAs)}`
+        : `/api/vocabulary-progress?level=${level}&topic=${encodeURIComponent(normalizedTopic)}`
+      const response = await fetch(latestProgressUrl)
       const result = await response.json()
       
       if (response.ok && result.data && result.data.length > 0) {
@@ -583,8 +593,8 @@ export default function ChallengePage() {
       if (newlyCompleted && isVocabularyLevel(level)) {
         try {
           const [topicsResponse, progressResponse] = await Promise.all([
-            fetch(`/api/vocabulary/${level}`),
-            fetch(`/api/vocabulary-progress?level=${level}`),
+            fetch(viewAs ? `/api/vocabulary/${level}?viewAs=${encodeURIComponent(viewAs)}` : `/api/vocabulary/${level}`),
+            fetch(viewAs ? `/api/vocabulary-progress?level=${level}&studentId=${encodeURIComponent(viewAs)}` : `/api/vocabulary-progress?level=${level}`),
           ])
           const topicsResult = await topicsResponse.json()
           const progressResult = await progressResponse.json()
@@ -706,8 +716,8 @@ export default function ChallengePage() {
         <LevelCompleteCelebration
           learnerName={learnerFirstName}
           levelLabel={level.toUpperCase()}
-          alphabeticalListHref={`/api/vocabulary/${level}/vocabulary-list`}
-          categoryListHref={`/api/vocabulary/${level}/vocabulary-list?group=category`}
+          alphabeticalListHref={viewAs ? `/api/vocabulary/${level}/vocabulary-list?viewAs=${encodeURIComponent(viewAs)}` : `/api/vocabulary/${level}/vocabulary-list`}
+          categoryListHref={viewAs ? `/api/vocabulary/${level}/vocabulary-list?group=category&viewAs=${encodeURIComponent(viewAs)}` : `/api/vocabulary/${level}/vocabulary-list?group=category`}
           levelColor={levelColor}
           onContinue={() => {
             setShowLevelCelebration(false)

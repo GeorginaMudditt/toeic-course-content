@@ -29,6 +29,7 @@ export default function VocabularyLevelPage() {
   const [error, setError] = useState('')
   const [topicToIcon, setTopicToIcon] = useState<Record<string, string>>({})
   const [topicProgress, setTopicProgress] = useState<Record<string, { bronze: boolean; silver: boolean; gold: boolean }>>({})
+  const [unavailable, setUnavailable] = useState(false)
 
   // Fetch progress for all topics in this level
   const fetchProgress = useCallback(async () => {
@@ -139,9 +140,12 @@ export default function VocabularyLevelPage() {
 
   const levelColor = getLevelColor()
   const levelDisplay = level.toUpperCase()
-  const vocabularyListPdfUrl = supportsGeneratedVocabularyList(level)
-    ? `/api/vocabulary/${level}/vocabulary-list`
-    : null
+  const vocabularyListPdfUrl =
+    supportsGeneratedVocabularyList(level) && !unavailable
+      ? viewAs
+        ? `/api/vocabulary/${level}/vocabulary-list?viewAs=${encodeURIComponent(viewAs)}`
+        : `/api/vocabulary/${level}/vocabulary-list`
+      : null
   const levelCompleted =
     !loading &&
     topics.length > 0 &&
@@ -162,8 +166,18 @@ export default function VocabularyLevelPage() {
         }
 
         // Fetch topics from API route (uses service role key server-side)
-        const response = await fetch(`/api/vocabulary/${level}`)
+        const topicsUrl = viewAs
+          ? `/api/vocabulary/${level}?viewAs=${encodeURIComponent(viewAs)}`
+          : `/api/vocabulary/${level}`
+        const response = await fetch(topicsUrl)
         const result = await response.json()
+
+        if (response.status === 403) {
+          setTopics([])
+          setUnavailable(true)
+          setLoading(false)
+          return
+        }
 
         if (!response.ok || result.error) {
           throw new Error(result.error || 'Error loading themes')
@@ -178,7 +192,7 @@ export default function VocabularyLevelPage() {
     }
 
     fetchTopics()
-  }, [level])
+  }, [level, viewAs])
 
   // Fetch completion icons for topics from API route
   useEffect(() => {
@@ -186,7 +200,10 @@ export default function VocabularyLevelPage() {
       try {
         if (!isVocabularyLevel(level)) return
 
-        const response = await fetch(`/api/vocabulary/${level}/icons`)
+        const iconsUrl = viewAs
+          ? `/api/vocabulary/${level}/icons?viewAs=${encodeURIComponent(viewAs)}`
+          : `/api/vocabulary/${level}/icons`
+        const response = await fetch(iconsUrl)
         const result = await response.json()
 
         if (!response.ok || result.error) {
@@ -200,7 +217,7 @@ export default function VocabularyLevelPage() {
     }
 
     if (isVocabularyLevel(level)) fetchIcons()
-  }, [level])
+  }, [level, viewAs])
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -282,7 +299,7 @@ export default function VocabularyLevelPage() {
                   {!loading && !error && topics.length === 0 && (
                     <tr>
                       <td colSpan={6} className="px-6 py-4 text-center text-gray-500">
-                        {isVocabularyLevel(level)
+                        {isVocabularyLevel(level) && !unavailable
                           ? 'No themes found for this level at the moment.'
                           : 'This level is coming soon.'}
                       </td>
@@ -377,7 +394,11 @@ export default function VocabularyLevelPage() {
                   Full {levelDisplay} Vocabulary List (A–Z)
                 </a>
                 <a
-                  href={`${vocabularyListPdfUrl}?group=category`}
+                  href={
+                    vocabularyListPdfUrl?.includes('?')
+                      ? `${vocabularyListPdfUrl}&group=category`
+                      : `${vocabularyListPdfUrl}?group=category`
+                  }
                   target="_blank"
                   rel="noopener noreferrer"
                   className="inline-flex items-center rounded-md border-2 bg-white px-6 py-3 text-base font-medium transition-colors hover:bg-gray-50"

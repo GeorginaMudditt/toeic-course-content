@@ -1,0 +1,5297 @@
+{
+  "level": "b1",
+  "topics": [
+    {
+      "topic_page": "Activities (A)",
+      "slug": "activities-a",
+      "words": [
+        {
+          "word_english": "athlete",
+          "translation_french": "athlète"
+        },
+        {
+          "word_english": "attraction",
+          "translation_french": "attraction"
+        },
+        {
+          "word_english": "camp",
+          "translation_french": "camp"
+        },
+        {
+          "word_english": "champion",
+          "translation_french": "champion(ne)"
+        },
+        {
+          "word_english": "club",
+          "translation_french": "club"
+        },
+        {
+          "word_english": "competitor",
+          "translation_french": "concurrent(e)"
+        },
+        {
+          "word_english": "cyclist",
+          "translation_french": "cycliste"
+        },
+        {
+          "word_english": "entertainment",
+          "translation_french": "divertissement"
+        },
+        {
+          "word_english": "festival",
+          "translation_french": "festival"
+        },
+        {
+          "word_english": "fitness",
+          "translation_french": "forme physique"
+        },
+        {
+          "word_english": "gym",
+          "translation_french": "salle de sport"
+        },
+        {
+          "word_english": "handball",
+          "translation_french": "handball"
+        },
+        {
+          "word_english": "ice skating",
+          "translation_french": "patinage sur glace"
+        },
+        {
+          "word_english": "jogging",
+          "translation_french": "jogging"
+        },
+        {
+          "word_english": "leisure",
+          "translation_french": "loisirs"
+        },
+        {
+          "word_english": "membership",
+          "translation_french": "adhésion"
+        },
+        {
+          "word_english": "nightclub",
+          "translation_french": "boîte de nuit"
+        },
+        {
+          "word_english": "squash",
+          "translation_french": "squash"
+        },
+        {
+          "word_english": "tent",
+          "translation_french": "tente"
+        },
+        {
+          "word_english": "windsurfing",
+          "translation_french": "planche à voile"
+        }
+      ],
+      "icon_file": "activities-a.png"
+    },
+    {
+      "topic_page": "Activities (B)",
+      "slug": "activities-b",
+      "words": [
+        {
+          "word_english": "athletics",
+          "translation_french": "athlétisme"
+        },
+        {
+          "word_english": "boxing",
+          "translation_french": "boxe"
+        },
+        {
+          "word_english": "campsite",
+          "translation_french": "camping"
+        },
+        {
+          "word_english": "circus",
+          "translation_french": "cirque"
+        },
+        {
+          "word_english": "coach",
+          "translation_french": "entraîneur / entraîneuse"
+        },
+        {
+          "word_english": "contest",
+          "translation_french": "concours"
+        },
+        {
+          "word_english": "diving",
+          "translation_french": "plongée"
+        },
+        {
+          "word_english": "exhibition",
+          "translation_french": "exposition"
+        },
+        {
+          "word_english": "firework",
+          "translation_french": "feu d'artifice"
+        },
+        {
+          "word_english": "goalkeeper",
+          "translation_french": "gardien / gardienne de but"
+        },
+        {
+          "word_english": "gymnastics",
+          "translation_french": "gymnastique"
+        },
+        {
+          "word_english": "ice hockey",
+          "translation_french": "hockey sur glace"
+        },
+        {
+          "word_english": "interval",
+          "translation_french": "entracte"
+        },
+        {
+          "word_english": "league",
+          "translation_french": "ligue"
+        },
+        {
+          "word_english": "magic",
+          "translation_french": "magie"
+        },
+        {
+          "word_english": "net",
+          "translation_french": "filet"
+        },
+        {
+          "word_english": "snowboard",
+          "translation_french": "snowboard"
+        },
+        {
+          "word_english": "supporter",
+          "translation_french": "supporteur / supportrice"
+        },
+        {
+          "word_english": "tournament",
+          "translation_french": "tournoi"
+        },
+        {
+          "word_english": "yoga",
+          "translation_french": "yoga"
+        }
+      ],
+      "icon_file": "activities-b.png"
+    },
+    {
+      "topic_page": "Adjectives (A)",
+      "slug": "adjectives-a",
+      "words": [
+        {
+          "word_english": "absent",
+          "translation_french": "absent(e)"
+        },
+        {
+          "word_english": "annual",
+          "translation_french": "annuel / annuelle"
+        },
+        {
+          "word_english": "blank",
+          "translation_french": "vierge"
+        },
+        {
+          "word_english": "certain",
+          "translation_french": "certain(e)"
+        },
+        {
+          "word_english": "convenient",
+          "translation_french": "pratique"
+        },
+        {
+          "word_english": "delighted",
+          "translation_french": "ravi(e)"
+        },
+        {
+          "word_english": "elderly",
+          "translation_french": "âgé(e)"
+        },
+        {
+          "word_english": "false",
+          "translation_french": "faux / fausse"
+        },
+        {
+          "word_english": "frightened",
+          "translation_french": "effrayé(e)"
+        },
+        {
+          "word_english": "hidden",
+          "translation_french": "caché(e)"
+        },
+        {
+          "word_english": "individual",
+          "translation_french": "individuel / individuelle"
+        },
+        {
+          "word_english": "loud",
+          "translation_french": "fort(e)"
+        },
+        {
+          "word_english": "nasty",
+          "translation_french": "méchant(e)"
+        },
+        {
+          "word_english": "painful",
+          "translation_french": "douloureux / douloureuse"
+        },
+        {
+          "word_english": "previous",
+          "translation_french": "précédent(e)"
+        },
+        {
+          "word_english": "realistic",
+          "translation_french": "réaliste"
+        },
+        {
+          "word_english": "scared",
+          "translation_french": "apeuré(e)"
+        },
+        {
+          "word_english": "silly",
+          "translation_french": "idiot(e)"
+        },
+        {
+          "word_english": "stressful",
+          "translation_french": "stressant(e)"
+        },
+        {
+          "word_english": "thick",
+          "translation_french": "épais / épaisse"
+        },
+        {
+          "word_english": "unfit",
+          "translation_french": "pas en forme"
+        },
+        {
+          "word_english": "useless",
+          "translation_french": "inutile"
+        }
+      ],
+      "icon_file": "adjectives-a.png"
+    },
+    {
+      "topic_page": "Adjectives (B)",
+      "slug": "adjectives-b",
+      "words": [
+        {
+          "word_english": "acceptable",
+          "translation_french": "acceptable"
+        },
+        {
+          "word_english": "anxious",
+          "translation_french": "anxieux / anxieuse"
+        },
+        {
+          "word_english": "blind",
+          "translation_french": "aveugle"
+        },
+        {
+          "word_english": "challenging",
+          "translation_french": "exigeant(e)"
+        },
+        {
+          "word_english": "cool",
+          "translation_french": "cool"
+        },
+        {
+          "word_english": "depressed",
+          "translation_french": "déprimé(e)"
+        },
+        {
+          "word_english": "embarrassed",
+          "translation_french": "gêné(e)"
+        },
+        {
+          "word_english": "familiar",
+          "translation_french": "familier / familière"
+        },
+        {
+          "word_english": "frightening",
+          "translation_french": "effrayant(e)"
+        },
+        {
+          "word_english": "high",
+          "translation_french": "haut(e)"
+        },
+        {
+          "word_english": "intelligent",
+          "translation_french": "intelligent(e)"
+        },
+        {
+          "word_english": "low",
+          "translation_french": "bas / basse"
+        },
+        {
+          "word_english": "natural",
+          "translation_french": "naturel / naturelle"
+        },
+        {
+          "word_english": "part-time",
+          "translation_french": "à temps partiel"
+        },
+        {
+          "word_english": "private",
+          "translation_french": "privé(e)"
+        },
+        {
+          "word_english": "reasonable",
+          "translation_french": "raisonnable"
+        },
+        {
+          "word_english": "scary",
+          "translation_french": "qui fait peur"
+        },
+        {
+          "word_english": "similar",
+          "translation_french": "similaire"
+        },
+        {
+          "word_english": "strict",
+          "translation_french": "strict(e)"
+        },
+        {
+          "word_english": "tight",
+          "translation_french": "serré(e)"
+        },
+        {
+          "word_english": "unforgettable",
+          "translation_french": "inoubliable"
+        },
+        {
+          "word_english": "valuable",
+          "translation_french": "précieux / précieuse"
+        }
+      ],
+      "icon_file": "adjectives-b.png"
+    },
+    {
+      "topic_page": "Adjectives (C)",
+      "slug": "adjectives-c",
+      "words": [
+        {
+          "word_english": "accurate",
+          "translation_french": "précis(e)"
+        },
+        {
+          "word_english": "ashamed",
+          "translation_french": "honteux / honteuse"
+        },
+        {
+          "word_english": "bold",
+          "translation_french": "audacieux / audacieuse"
+        },
+        {
+          "word_english": "charming",
+          "translation_french": "charmant(e)"
+        },
+        {
+          "word_english": "cosy",
+          "translation_french": "douillet / douillette"
+        },
+        {
+          "word_english": "direct",
+          "translation_french": "direct(e)"
+        },
+        {
+          "word_english": "embarrassing",
+          "translation_french": "gênant(e)"
+        },
+        {
+          "word_english": "fashionable",
+          "translation_french": "à la mode"
+        },
+        {
+          "word_english": "frozen",
+          "translation_french": "congelé(e)"
+        },
+        {
+          "word_english": "historic",
+          "translation_french": "historique"
+        },
+        {
+          "word_english": "irregular",
+          "translation_french": "irrégulier / irrégulière"
+        },
+        {
+          "word_english": "main",
+          "translation_french": "principal(e)"
+        },
+        {
+          "word_english": "near",
+          "translation_french": "proche"
+        },
+        {
+          "word_english": "patient",
+          "translation_french": "patient(e)"
+        },
+        {
+          "word_english": "professional",
+          "translation_french": "professionnel / professionnelle"
+        },
+        {
+          "word_english": "recent",
+          "translation_french": "récent(e)"
+        },
+        {
+          "word_english": "selfish",
+          "translation_french": "égoïste"
+        },
+        {
+          "word_english": "smart",
+          "translation_french": "chic"
+        },
+        {
+          "word_english": "stylish",
+          "translation_french": "élégant(e)"
+        },
+        {
+          "word_english": "tiny",
+          "translation_french": "minuscule"
+        },
+        {
+          "word_english": "unfriendly",
+          "translation_french": "peu aimable"
+        },
+        {
+          "word_english": "weak",
+          "translation_french": "faible"
+        }
+      ],
+      "icon_file": "adjectives-c.png"
+    },
+    {
+      "topic_page": "Adjectives (D)",
+      "slug": "adjectives-d",
+      "words": [
+        {
+          "word_english": "active",
+          "translation_french": "actif / active"
+        },
+        {
+          "word_english": "asleep",
+          "translation_french": "endormi(e)"
+        },
+        {
+          "word_english": "brave",
+          "translation_french": "courageux / courageuse"
+        },
+        {
+          "word_english": "cheerful",
+          "translation_french": "joyeux / joyeuse"
+        },
+        {
+          "word_english": "creative",
+          "translation_french": "créatif / créative"
+        },
+        {
+          "word_english": "disappointed",
+          "translation_french": "déçu(e)"
+        },
+        {
+          "word_english": "enjoyable",
+          "translation_french": "agréable"
+        },
+        {
+          "word_english": "female",
+          "translation_french": "féminin(e)"
+        },
+        {
+          "word_english": "full-time",
+          "translation_french": "à temps plein"
+        },
+        {
+          "word_english": "historical",
+          "translation_french": "relatif à l'histoire"
+        },
+        {
+          "word_english": "jealous",
+          "translation_french": "jaloux / jalouse"
+        },
+        {
+          "word_english": "male",
+          "translation_french": "masculin(e)"
+        },
+        {
+          "word_english": "neat",
+          "translation_french": "soigné(e)"
+        },
+        {
+          "word_english": "peaceful",
+          "translation_french": "paisible"
+        },
+        {
+          "word_english": "proper",
+          "translation_french": "convenable"
+        },
+        {
+          "word_english": "regular",
+          "translation_french": "régulier / régulière"
+        },
+        {
+          "word_english": "sensible",
+          "translation_french": "sensé(e)"
+        },
+        {
+          "word_english": "smooth",
+          "translation_french": "lisse"
+        },
+        {
+          "word_english": "successful",
+          "translation_french": "réussi(e)"
+        },
+        {
+          "word_english": "tiring",
+          "translation_french": "fatigant(e)"
+        },
+        {
+          "word_english": "unhealthy",
+          "translation_french": "malsain(e)"
+        }
+      ],
+      "icon_file": "adjectives-d.png"
+    },
+    {
+      "topic_page": "Adjectives (E)",
+      "slug": "adjectives-e",
+      "words": [
+        {
+          "word_english": "alike",
+          "translation_french": "semblable"
+        },
+        {
+          "word_english": "average",
+          "translation_french": "moyen / moyenne"
+        },
+        {
+          "word_english": "brief",
+          "translation_french": "bref / brève"
+        },
+        {
+          "word_english": "colourful",
+          "translation_french": "coloré(e)"
+        },
+        {
+          "word_english": "cruel",
+          "translation_french": "cruel / cruelle"
+        },
+        {
+          "word_english": "disappointing",
+          "translation_french": "décevant(e)"
+        },
+        {
+          "word_english": "enormous",
+          "translation_french": "énorme"
+        },
+        {
+          "word_english": "final",
+          "translation_french": "final(e)"
+        },
+        {
+          "word_english": "generous",
+          "translation_french": "généreux / généreuse"
+        },
+        {
+          "word_english": "honest",
+          "translation_french": "honnête"
+        },
+        {
+          "word_english": "juicy",
+          "translation_french": "juteux / juteuse"
+        },
+        {
+          "word_english": "marvellous",
+          "translation_french": "merveilleux / merveilleuse"
+        },
+        {
+          "word_english": "necessary",
+          "translation_french": "nécessaire"
+        },
+        {
+          "word_english": "permanent",
+          "translation_french": "permanent(e)"
+        },
+        {
+          "word_english": "proud",
+          "translation_french": "fier / fière"
+        },
+        {
+          "word_english": "relaxing",
+          "translation_french": "relaxant(e)"
+        },
+        {
+          "word_english": "serious",
+          "translation_french": "sérieux / sérieuse"
+        },
+        {
+          "word_english": "sociable",
+          "translation_french": "sociable"
+        },
+        {
+          "word_english": "suitable",
+          "translation_french": "approprié(e)"
+        },
+        {
+          "word_english": "traditional",
+          "translation_french": "traditionnel / traditionnelle"
+        },
+        {
+          "word_english": "unkind",
+          "translation_french": "pas gentil"
+        }
+      ],
+      "icon_file": "adjectives-e.png"
+    },
+    {
+      "topic_page": "Adjectives (F)",
+      "slug": "adjectives-f",
+      "words": [
+        {
+          "word_english": "alive",
+          "translation_french": "vivant(e)"
+        },
+        {
+          "word_english": "awake",
+          "translation_french": "éveillé(e)"
+        },
+        {
+          "word_english": "brilliant",
+          "translation_french": "génial(e)"
+        },
+        {
+          "word_english": "common",
+          "translation_french": "courant(e)"
+        },
+        {
+          "word_english": "cultural",
+          "translation_french": "culturel / culturelle"
+        },
+        {
+          "word_english": "disgusting",
+          "translation_french": "dégoûtant(e)"
+        },
+        {
+          "word_english": "equal",
+          "translation_french": "égal(e)"
+        },
+        {
+          "word_english": "financial",
+          "translation_french": "financier / financière"
+        },
+        {
+          "word_english": "gentle",
+          "translation_french": "doux / douce"
+        },
+        {
+          "word_english": "hopeless",
+          "translation_french": "sans espoir"
+        },
+        {
+          "word_english": "keen",
+          "translation_french": "enthousiaste"
+        },
+        {
+          "word_english": "messy",
+          "translation_french": "en désordre"
+        },
+        {
+          "word_english": "negative",
+          "translation_french": "négatif / négative"
+        },
+        {
+          "word_english": "personal",
+          "translation_french": "personnel / personnelle"
+        },
+        {
+          "word_english": "public",
+          "translation_french": "public / publique"
+        },
+        {
+          "word_english": "reliable",
+          "translation_french": "fiable"
+        },
+        {
+          "word_english": "sharp",
+          "translation_french": "tranchant(e)"
+        },
+        {
+          "word_english": "spare",
+          "translation_french": "supplémentaire"
+        },
+        {
+          "word_english": "surprising",
+          "translation_french": "surprenant(e)"
+        },
+        {
+          "word_english": "typical",
+          "translation_french": "typique"
+        },
+        {
+          "word_english": "unknown",
+          "translation_french": "inconnu(e)"
+        }
+      ],
+      "icon_file": "adjectives-f.png"
+    },
+    {
+      "topic_page": "Adjectives (G)",
+      "slug": "adjectives-g",
+      "words": [
+        {
+          "word_english": "amazed",
+          "translation_french": "stupéfait(e)"
+        },
+        {
+          "word_english": "awful",
+          "translation_french": "affreux / affreuse"
+        },
+        {
+          "word_english": "broad",
+          "translation_french": "large"
+        },
+        {
+          "word_english": "complete",
+          "translation_french": "complet / complète"
+        },
+        {
+          "word_english": "curious",
+          "translation_french": "curieux / curieuse"
+        },
+        {
+          "word_english": "due",
+          "translation_french": "prévu(e)"
+        },
+        {
+          "word_english": "essential",
+          "translation_french": "essentiel / essentielle"
+        },
+        {
+          "word_english": "flat",
+          "translation_french": "plat(e)"
+        },
+        {
+          "word_english": "gorgeous",
+          "translation_french": "magnifique"
+        },
+        {
+          "word_english": "huge",
+          "translation_french": "immense"
+        },
+        {
+          "word_english": "light",
+          "translation_french": "léger / légère"
+        },
+        {
+          "word_english": "middle-aged",
+          "translation_french": "d'âge moyen"
+        },
+        {
+          "word_english": "nervous",
+          "translation_french": "nerveux / nerveuse"
+        },
+        {
+          "word_english": "plain",
+          "translation_french": "simple"
+        },
+        {
+          "word_english": "pure",
+          "translation_french": "pur(e)"
+        },
+        {
+          "word_english": "romantic",
+          "translation_french": "romantique"
+        },
+        {
+          "word_english": "shocked",
+          "translation_french": "choqué(e)"
+        },
+        {
+          "word_english": "spicy",
+          "translation_french": "épicé(e)"
+        },
+        {
+          "word_english": "talented",
+          "translation_french": "talentueux / talentueuse"
+        },
+        {
+          "word_english": "unbelievable",
+          "translation_french": "incroyable"
+        },
+        {
+          "word_english": "unlikely",
+          "translation_french": "peu probable"
+        }
+      ],
+      "icon_file": "adjectives-g.png"
+    },
+    {
+      "topic_page": "Adjectives (H)",
+      "slug": "adjectives-h",
+      "words": [
+        {
+          "word_english": "amusing",
+          "translation_french": "amusant(e)"
+        },
+        {
+          "word_english": "bald",
+          "translation_french": "chauve"
+        },
+        {
+          "word_english": "calm",
+          "translation_french": "calme"
+        },
+        {
+          "word_english": "complicated",
+          "translation_french": "compliqué(e)"
+        },
+        {
+          "word_english": "curly",
+          "translation_french": "bouclé(e)"
+        },
+        {
+          "word_english": "dull",
+          "translation_french": "ennuyeux / ennuyeuse"
+        },
+        {
+          "word_english": "exact",
+          "translation_french": "exact(e)"
+        },
+        {
+          "word_english": "forbidden",
+          "translation_french": "interdit(e)"
+        },
+        {
+          "word_english": "grateful",
+          "translation_french": "reconnaissant(e)"
+        },
+        {
+          "word_english": "impossible",
+          "translation_french": "impossible"
+        },
+        {
+          "word_english": "lively",
+          "translation_french": "animé(e)"
+        },
+        {
+          "word_english": "mild",
+          "translation_french": "doux / douce"
+        },
+        {
+          "word_english": "obvious",
+          "translation_french": "évident(e)"
+        },
+        {
+          "word_english": "positive",
+          "translation_french": "positif / positive"
+        },
+        {
+          "word_english": "qualified",
+          "translation_french": "qualifié(e)"
+        },
+        {
+          "word_english": "rough",
+          "translation_french": "rugueux / rugueuse"
+        },
+        {
+          "word_english": "shocking",
+          "translation_french": "choquant(e)"
+        },
+        {
+          "word_english": "steep",
+          "translation_french": "raide"
+        },
+        {
+          "word_english": "tasty",
+          "translation_french": "savoureux / savoureuse"
+        },
+        {
+          "word_english": "uncomfortable",
+          "translation_french": "inconfortable"
+        },
+        {
+          "word_english": "unlucky",
+          "translation_french": "malchanceux / malchanceuse"
+        }
+      ],
+      "icon_file": "adjectives-h.png"
+    },
+    {
+      "topic_page": "Adjectives (I)",
+      "slug": "adjectives-i",
+      "words": [
+        {
+          "word_english": "ancient",
+          "translation_french": "antique"
+        },
+        {
+          "word_english": "basic",
+          "translation_french": "de base"
+        },
+        {
+          "word_english": "careless",
+          "translation_french": "négligent(e)"
+        },
+        {
+          "word_english": "confident",
+          "translation_french": "confiant(e)"
+        },
+        {
+          "word_english": "damaged",
+          "translation_french": "abîmé(e)"
+        },
+        {
+          "word_english": "eastern",
+          "translation_french": "de l'est"
+        },
+        {
+          "word_english": "exhausted",
+          "translation_french": "épuisé(e)"
+        },
+        {
+          "word_english": "former",
+          "translation_french": "ancien / ancienne"
+        },
+        {
+          "word_english": "guilty",
+          "translation_french": "coupable"
+        },
+        {
+          "word_english": "incorrect",
+          "translation_french": "incorrect(e)"
+        },
+        {
+          "word_english": "local",
+          "translation_french": "local(e)"
+        },
+        {
+          "word_english": "miserable",
+          "translation_french": "malheureux / malheureuse"
+        },
+        {
+          "word_english": "old-fashioned",
+          "translation_french": "démodé(e)"
+        },
+        {
+          "word_english": "possible",
+          "translation_french": "possible"
+        },
+        {
+          "word_english": "rare",
+          "translation_french": "rare"
+        },
+        {
+          "word_english": "round",
+          "translation_french": "rond(e)"
+        },
+        {
+          "word_english": "shut",
+          "translation_french": "fermé(e)"
+        },
+        {
+          "word_english": "sticky",
+          "translation_french": "collant(e)"
+        },
+        {
+          "word_english": "teenage",
+          "translation_french": "adolescent(e)"
+        },
+        {
+          "word_english": "unemployed",
+          "translation_french": "au chômage"
+        },
+        {
+          "word_english": "unpleasant",
+          "translation_french": "désagréable"
+        }
+      ],
+      "icon_file": "adjectives-i.png"
+    },
+    {
+      "topic_page": "Adjectives (J)",
+      "slug": "adjectives-j",
+      "words": [
+        {
+          "word_english": "annoyed",
+          "translation_french": "agacé(e)"
+        },
+        {
+          "word_english": "best",
+          "translation_french": "meilleur(e)"
+        },
+        {
+          "word_english": "casual",
+          "translation_french": "décontracté(e)"
+        },
+        {
+          "word_english": "confused",
+          "translation_french": "confus(e)"
+        },
+        {
+          "word_english": "deaf",
+          "translation_french": "sourd(e)"
+        },
+        {
+          "word_english": "easygoing",
+          "translation_french": "facile à vivre"
+        },
+        {
+          "word_english": "extraordinary",
+          "translation_french": "extraordinaire"
+        },
+        {
+          "word_english": "freezing",
+          "translation_french": "glacial(e)"
+        },
+        {
+          "word_english": "handsome",
+          "translation_french": "beau"
+        },
+        {
+          "word_english": "incredible",
+          "translation_french": "incroyable"
+        },
+        {
+          "word_english": "loose",
+          "translation_french": "ample"
+        },
+        {
+          "word_english": "monthly",
+          "translation_french": "mensuel / mensuelle"
+        },
+        {
+          "word_english": "ordinary",
+          "translation_french": "ordinaire"
+        },
+        {
+          "word_english": "powerful",
+          "translation_french": "puissant(e)"
+        },
+        {
+          "word_english": "raw",
+          "translation_french": "cru(e)"
+        },
+        {
+          "word_english": "rude",
+          "translation_french": "impoli(e)"
+        },
+        {
+          "word_english": "shy",
+          "translation_french": "timide"
+        },
+        {
+          "word_english": "straight",
+          "translation_french": "droit(e)"
+        },
+        {
+          "word_english": "temporary",
+          "translation_french": "temporaire"
+        },
+        {
+          "word_english": "unexpected",
+          "translation_french": "inattendu(e)"
+        },
+        {
+          "word_english": "untidy",
+          "translation_french": "désordonné(e)"
+        }
+      ],
+      "icon_file": "adjectives-j.png"
+    },
+    {
+      "topic_page": "Adjectives (K)",
+      "slug": "adjectives-k",
+      "words": [
+        {
+          "word_english": "annoying",
+          "translation_french": "agaçant(e)"
+        },
+        {
+          "word_english": "bitter",
+          "translation_french": "amer / amère"
+        },
+        {
+          "word_english": "central",
+          "translation_french": "central(e)"
+        },
+        {
+          "word_english": "confusing",
+          "translation_french": "déroutant(e)"
+        },
+        {
+          "word_english": "delicious",
+          "translation_french": "délicieux / délicieuse"
+        },
+        {
+          "word_english": "efficient",
+          "translation_french": "efficace"
+        },
+        {
+          "word_english": "fair",
+          "translation_french": "juste"
+        },
+        {
+          "word_english": "frequent",
+          "translation_french": "fréquent(e)"
+        },
+        {
+          "word_english": "helpful",
+          "translation_french": "serviable"
+        },
+        {
+          "word_english": "independent",
+          "translation_french": "indépendant(e)"
+        },
+        {
+          "word_english": "lost",
+          "translation_french": "perdu(e)"
+        },
+        {
+          "word_english": "narrow",
+          "translation_french": "étroit(e)"
+        },
+        {
+          "word_english": "original",
+          "translation_french": "original(e)"
+        },
+        {
+          "word_english": "pregnant",
+          "translation_french": "enceinte"
+        },
+        {
+          "word_english": "real",
+          "translation_french": "vrai(e)"
+        },
+        {
+          "word_english": "satisfied",
+          "translation_french": "satisfait(e)"
+        },
+        {
+          "word_english": "silent",
+          "translation_french": "silencieux / silencieuse"
+        },
+        {
+          "word_english": "stressed",
+          "translation_french": "stressé(e)"
+        },
+        {
+          "word_english": "terrified",
+          "translation_french": "terrifié(e)"
+        },
+        {
+          "word_english": "unfair",
+          "translation_french": "injuste"
+        },
+        {
+          "word_english": "urgent",
+          "translation_french": "urgent(e)"
+        }
+      ],
+      "icon_file": "adjectives-k.png"
+    },
+    {
+      "topic_page": "Animals",
+      "slug": "animals",
+      "words": [
+        {
+          "word_english": "ant",
+          "translation_french": "fourmi"
+        },
+        {
+          "word_english": "bat",
+          "translation_french": "chauve-souris"
+        },
+        {
+          "word_english": "bee",
+          "translation_french": "abeille"
+        },
+        {
+          "word_english": "bug",
+          "translation_french": "insecte"
+        },
+        {
+          "word_english": "bull",
+          "translation_french": "taureau"
+        },
+        {
+          "word_english": "butterfly",
+          "translation_french": "papillon"
+        },
+        {
+          "word_english": "calf",
+          "translation_french": "veau"
+        },
+        {
+          "word_english": "camel",
+          "translation_french": "chameau"
+        },
+        {
+          "word_english": "dolphin",
+          "translation_french": "dauphin"
+        },
+        {
+          "word_english": "donkey",
+          "translation_french": "âne"
+        },
+        {
+          "word_english": "fly",
+          "translation_french": "mouche"
+        },
+        {
+          "word_english": "frog",
+          "translation_french": "grenouille"
+        },
+        {
+          "word_english": "giraffe",
+          "translation_french": "girafe"
+        },
+        {
+          "word_english": "goat",
+          "translation_french": "chèvre"
+        },
+        {
+          "word_english": "kangaroo",
+          "translation_french": "kangourou"
+        },
+        {
+          "word_english": "kitten",
+          "translation_french": "chaton"
+        },
+        {
+          "word_english": "mosquito",
+          "translation_french": "moustique"
+        },
+        {
+          "word_english": "parrot",
+          "translation_french": "perroquet"
+        },
+        {
+          "word_english": "penguin",
+          "translation_french": "manchot"
+        },
+        {
+          "word_english": "puppy",
+          "translation_french": "chiot"
+        },
+        {
+          "word_english": "shark",
+          "translation_french": "requin"
+        },
+        {
+          "word_english": "spider",
+          "translation_french": "araignée"
+        },
+        {
+          "word_english": "tiger",
+          "translation_french": "tigre"
+        },
+        {
+          "word_english": "turkey",
+          "translation_french": "dinde"
+        }
+      ],
+      "icon_file": "animals.png"
+    },
+    {
+      "topic_page": "Arts",
+      "slug": "arts",
+      "words": [
+        {
+          "word_english": "animated",
+          "translation_french": "animé(e)"
+        },
+        {
+          "word_english": "animation",
+          "translation_french": "dessin animé"
+        },
+        {
+          "word_english": "author",
+          "translation_french": "auteur / autrice"
+        },
+        {
+          "word_english": "ballet",
+          "translation_french": "ballet"
+        },
+        {
+          "word_english": "biography",
+          "translation_french": "biographie"
+        },
+        {
+          "word_english": "character",
+          "translation_french": "personnage"
+        },
+        {
+          "word_english": "comedy",
+          "translation_french": "comédie"
+        },
+        {
+          "word_english": "drama",
+          "translation_french": "drame"
+        },
+        {
+          "word_english": "fiction",
+          "translation_french": "fiction"
+        },
+        {
+          "word_english": "flute",
+          "translation_french": "flûte"
+        },
+        {
+          "word_english": "gallery",
+          "translation_french": "galerie"
+        },
+        {
+          "word_english": "guitarist",
+          "translation_french": "guitariste"
+        },
+        {
+          "word_english": "literature",
+          "translation_french": "littérature"
+        },
+        {
+          "word_english": "mystery",
+          "translation_french": "mystère"
+        },
+        {
+          "word_english": "novel",
+          "translation_french": "roman"
+        },
+        {
+          "word_english": "orchestra",
+          "translation_french": "orchestre"
+        },
+        {
+          "word_english": "poem",
+          "translation_french": "poème"
+        },
+        {
+          "word_english": "poetry",
+          "translation_french": "poésie"
+        },
+        {
+          "word_english": "scene",
+          "translation_french": "scène"
+        },
+        {
+          "word_english": "sculpture",
+          "translation_french": "sculpture"
+        },
+        {
+          "word_english": "statue",
+          "translation_french": "statue"
+        },
+        {
+          "word_english": "studio",
+          "translation_french": "studio"
+        },
+        {
+          "word_english": "trumpet",
+          "translation_french": "trompette"
+        }
+      ],
+      "icon_file": "arts.png"
+    },
+    {
+      "topic_page": "Body & Health (A)",
+      "slug": "body-health-a",
+      "words": [
+        {
+          "word_english": "ache",
+          "translation_french": "douleur"
+        },
+        {
+          "word_english": "aspirin",
+          "translation_french": "aspirine"
+        },
+        {
+          "word_english": "bandage",
+          "translation_french": "pansement"
+        },
+        {
+          "word_english": "body",
+          "translation_french": "corps"
+        },
+        {
+          "word_english": "breath",
+          "translation_french": "souffle"
+        },
+        {
+          "word_english": "cheek",
+          "translation_french": "joue"
+        },
+        {
+          "word_english": "clinic",
+          "translation_french": "clinique"
+        },
+        {
+          "word_english": "disabled",
+          "translation_french": "handicapé(e)"
+        },
+        {
+          "word_english": "earache",
+          "translation_french": "mal d'oreille"
+        },
+        {
+          "word_english": "fever",
+          "translation_french": "fièvre"
+        },
+        {
+          "word_english": "forehead",
+          "translation_french": "front"
+        },
+        {
+          "word_english": "height",
+          "translation_french": "taille"
+        },
+        {
+          "word_english": "knee",
+          "translation_french": "genou"
+        },
+        {
+          "word_english": "operation",
+          "translation_french": "opération"
+        },
+        {
+          "word_english": "pharmacy",
+          "translation_french": "pharmacie"
+        },
+        {
+          "word_english": "prescription",
+          "translation_french": "ordonnance"
+        },
+        {
+          "word_english": "skin",
+          "translation_french": "peau"
+        },
+        {
+          "word_english": "tear",
+          "translation_french": "larme"
+        },
+        {
+          "word_english": "thumb",
+          "translation_french": "pouce"
+        },
+        {
+          "word_english": "tongue",
+          "translation_french": "langue"
+        },
+        {
+          "word_english": "weight",
+          "translation_french": "poids"
+        }
+      ],
+      "icon_file": "body-health-a.png"
+    },
+    {
+      "topic_page": "Body & Health (B)",
+      "slug": "body-health-b",
+      "words": [
+        {
+          "word_english": "ankle",
+          "translation_french": "cheville"
+        },
+        {
+          "word_english": "backache",
+          "translation_french": "mal de dos"
+        },
+        {
+          "word_english": "bite",
+          "translation_french": "morsure"
+        },
+        {
+          "word_english": "bone",
+          "translation_french": "os"
+        },
+        {
+          "word_english": "breathe",
+          "translation_french": "respirer"
+        },
+        {
+          "word_english": "chin",
+          "translation_french": "menton"
+        },
+        {
+          "word_english": "cough",
+          "translation_french": "toux"
+        },
+        {
+          "word_english": "disease",
+          "translation_french": "maladie"
+        },
+        {
+          "word_english": "elbow",
+          "translation_french": "coude"
+        },
+        {
+          "word_english": "flu",
+          "translation_french": "grippe"
+        },
+        {
+          "word_english": "heel",
+          "translation_french": "talon"
+        },
+        {
+          "word_english": "illness",
+          "translation_french": "affection"
+        },
+        {
+          "word_english": "lip",
+          "translation_french": "lèvre"
+        },
+        {
+          "word_english": "patient",
+          "translation_french": "patient / patiente"
+        },
+        {
+          "word_english": "pill",
+          "translation_french": "comprimé"
+        },
+        {
+          "word_english": "shoulder",
+          "translation_french": "épaule"
+        },
+        {
+          "word_english": "sore",
+          "translation_french": "douloureux / douloureuse"
+        },
+        {
+          "word_english": "throat",
+          "translation_french": "gorge"
+        },
+        {
+          "word_english": "tissue",
+          "translation_french": "mouchoir en papier"
+        },
+        {
+          "word_english": "virus",
+          "translation_french": "virus"
+        },
+        {
+          "word_english": "wheelchair",
+          "translation_french": "fauteuil roulant"
+        }
+      ],
+      "icon_file": "body-health-b.png"
+    },
+    {
+      "topic_page": "Buildings",
+      "slug": "buildings",
+      "words": [
+        {
+          "word_english": "architecture",
+          "translation_french": "architecture"
+        },
+        {
+          "word_english": "cottage",
+          "translation_french": "maison de campagne"
+        },
+        {
+          "word_english": "district",
+          "translation_french": "arrondissement"
+        },
+        {
+          "word_english": "facilities",
+          "translation_french": "équipements"
+        },
+        {
+          "word_english": "fire",
+          "translation_french": "feu"
+        },
+        {
+          "word_english": "fire station",
+          "translation_french": "caserne de pompiers"
+        },
+        {
+          "word_english": "fountain",
+          "translation_french": "fontaine"
+        },
+        {
+          "word_english": "hut",
+          "translation_french": "cabane"
+        },
+        {
+          "word_english": "location",
+          "translation_french": "emplacement"
+        },
+        {
+          "word_english": "monument",
+          "translation_french": "monument"
+        },
+        {
+          "word_english": "neighbourhood",
+          "translation_french": "quartier"
+        },
+        {
+          "word_english": "palace",
+          "translation_french": "palais"
+        },
+        {
+          "word_english": "reception",
+          "translation_french": "réception"
+        },
+        {
+          "word_english": "region",
+          "translation_french": "région"
+        },
+        {
+          "word_english": "ruin",
+          "translation_french": "ruine"
+        },
+        {
+          "word_english": "site",
+          "translation_french": "site"
+        },
+        {
+          "word_english": "temple",
+          "translation_french": "temple"
+        },
+        {
+          "word_english": "tower",
+          "translation_french": "tour"
+        }
+      ],
+      "icon_file": "buildings.png"
+    },
+    {
+      "topic_page": "Appearance",
+      "slug": "appearance",
+      "words": [
+        {
+          "word_english": "appearance",
+          "translation_french": "apparence"
+        },
+        {
+          "word_english": "bracelet",
+          "translation_french": "bracelet"
+        },
+        {
+          "word_english": "button",
+          "translation_french": "bouton"
+        },
+        {
+          "word_english": "fur",
+          "translation_french": "fourrure"
+        },
+        {
+          "word_english": "haircut",
+          "translation_french": "coupe de cheveux"
+        },
+        {
+          "word_english": "hairdryer",
+          "translation_french": "sèche-cheveux"
+        },
+        {
+          "word_english": "moustache",
+          "translation_french": "moustache"
+        },
+        {
+          "word_english": "sandal",
+          "translation_french": "sandale"
+        },
+        {
+          "word_english": "second-hand",
+          "translation_french": "d'occasion"
+        },
+        {
+          "word_english": "silk",
+          "translation_french": "soie"
+        },
+        {
+          "word_english": "sleeve",
+          "translation_french": "manche"
+        },
+        {
+          "word_english": "stripe",
+          "translation_french": "rayure"
+        },
+        {
+          "word_english": "sweatshirt",
+          "translation_french": "sweat-shirt"
+        },
+        {
+          "word_english": "tracksuit",
+          "translation_french": "survêtement"
+        },
+        {
+          "word_english": "underwear",
+          "translation_french": "sous-vêtements"
+        }
+      ],
+      "icon_file": "appearance.png"
+    },
+    {
+      "topic_page": "Communication",
+      "slug": "communication",
+      "words": [
+        {
+          "word_english": "above all",
+          "translation_french": "surtout"
+        },
+        {
+          "word_english": "absolutely",
+          "translation_french": "absolument"
+        },
+        {
+          "word_english": "actually",
+          "translation_french": "en fait"
+        },
+        {
+          "word_english": "after all",
+          "translation_french": "après tout"
+        },
+        {
+          "word_english": "against",
+          "translation_french": "contre"
+        },
+        {
+          "word_english": "aloud",
+          "translation_french": "à voix haute"
+        },
+        {
+          "word_english": "already",
+          "translation_french": "déjà"
+        },
+        {
+          "word_english": "although",
+          "translation_french": "bien que"
+        },
+        {
+          "word_english": "among",
+          "translation_french": "parmi"
+        },
+        {
+          "word_english": "anyone",
+          "translation_french": "n'importe qui"
+        },
+        {
+          "word_english": "anyway",
+          "translation_french": "de toute façon"
+        },
+        {
+          "word_english": "apart",
+          "translation_french": "à part"
+        },
+        {
+          "word_english": "approximately",
+          "translation_french": "environ"
+        },
+        {
+          "word_english": "Cheers!",
+          "translation_french": "Santé !",
+          "tts_text": "Cheers"
+        },
+        {
+          "word_english": "forever",
+          "translation_french": "pour toujours"
+        },
+        {
+          "word_english": "get in touch",
+          "translation_french": "prendre contact"
+        },
+        {
+          "word_english": "greeting",
+          "translation_french": "salutation"
+        },
+        {
+          "word_english": "meanwhile",
+          "translation_french": "pendant ce temps"
+        },
+        {
+          "word_english": "normally",
+          "translation_french": "normalement"
+        },
+        {
+          "word_english": "nothing",
+          "translation_french": "rien"
+        },
+        {
+          "word_english": "nowadays",
+          "translation_french": "de nos jours"
+        },
+        {
+          "word_english": "nowhere",
+          "translation_french": "nulle part"
+        },
+        {
+          "word_english": "otherwise",
+          "translation_french": "sinon"
+        }
+      ],
+      "icon_file": "communication.png"
+    },
+    {
+      "topic_page": "Education",
+      "slug": "education",
+      "words": [
+        {
+          "word_english": "certificate",
+          "translation_french": "certificat"
+        },
+        {
+          "word_english": "chapter",
+          "translation_french": "chapitre"
+        },
+        {
+          "word_english": "course",
+          "translation_french": "cours"
+        },
+        {
+          "word_english": "curriculum",
+          "translation_french": "programme"
+        },
+        {
+          "word_english": "degree",
+          "translation_french": "diplôme"
+        },
+        {
+          "word_english": "diagram",
+          "translation_french": "schéma"
+        },
+        {
+          "word_english": "education",
+          "translation_french": "éducation"
+        },
+        {
+          "word_english": "essay",
+          "translation_french": "rédaction"
+        },
+        {
+          "word_english": "experiment",
+          "translation_french": "expérience"
+        },
+        {
+          "word_english": "grade",
+          "translation_french": "note"
+        },
+        {
+          "word_english": "handwriting",
+          "translation_french": "écriture"
+        },
+        {
+          "word_english": "intermediate",
+          "translation_french": "intermédiaire"
+        },
+        {
+          "word_english": "knowledge",
+          "translation_french": "connaissances"
+        },
+        {
+          "word_english": "laboratory",
+          "translation_french": "laboratoire"
+        },
+        {
+          "word_english": "lecture",
+          "translation_french": "cours magistral"
+        },
+        {
+          "word_english": "noticeboard",
+          "translation_french": "tableau d'affichage"
+        },
+        {
+          "word_english": "primary school",
+          "translation_french": "école primaire"
+        },
+        {
+          "word_english": "qualification",
+          "translation_french": "qualification"
+        },
+        {
+          "word_english": "research",
+          "translation_french": "recherche"
+        },
+        {
+          "word_english": "revision",
+          "translation_french": "révisions"
+        },
+        {
+          "word_english": "skill",
+          "translation_french": "compétence"
+        },
+        {
+          "word_english": "subject",
+          "translation_french": "matière"
+        },
+        {
+          "word_english": "teaching",
+          "translation_french": "enseignement"
+        },
+        {
+          "word_english": "test",
+          "translation_french": "contrôle"
+        }
+      ],
+      "icon_file": "education.png"
+    },
+    {
+      "topic_page": "Feelings",
+      "slug": "feelings",
+      "words": [
+        {
+          "word_english": "ambition",
+          "translation_french": "ambition"
+        },
+        {
+          "word_english": "attitude",
+          "translation_french": "attitude"
+        },
+        {
+          "word_english": "beauty",
+          "translation_french": "beauté"
+        },
+        {
+          "word_english": "behaviour",
+          "translation_french": "comportement"
+        },
+        {
+          "word_english": "disappointment",
+          "translation_french": "déception"
+        },
+        {
+          "word_english": "doubt",
+          "translation_french": "doute"
+        },
+        {
+          "word_english": "dream",
+          "translation_french": "rêve"
+        },
+        {
+          "word_english": "excitement",
+          "translation_french": "excitation"
+        },
+        {
+          "word_english": "fear",
+          "translation_french": "peur"
+        },
+        {
+          "word_english": "feeling",
+          "translation_french": "sentiment"
+        },
+        {
+          "word_english": "happiness",
+          "translation_french": "bonheur"
+        },
+        {
+          "word_english": "hope",
+          "translation_french": "espoir"
+        },
+        {
+          "word_english": "hug",
+          "translation_french": "câlin"
+        },
+        {
+          "word_english": "imagination",
+          "translation_french": "imagination"
+        },
+        {
+          "word_english": "love",
+          "translation_french": "amour"
+        },
+        {
+          "word_english": "memory",
+          "translation_french": "mémoire"
+        },
+        {
+          "word_english": "mood",
+          "translation_french": "humeur"
+        },
+        {
+          "word_english": "nightmare",
+          "translation_french": "cauchemar"
+        },
+        {
+          "word_english": "pleasure",
+          "translation_french": "plaisir"
+        },
+        {
+          "word_english": "row",
+          "translation_french": "dispute"
+        },
+        {
+          "word_english": "silence",
+          "translation_french": "silence"
+        },
+        {
+          "word_english": "stress",
+          "translation_french": "stress"
+        },
+        {
+          "word_english": "surprise",
+          "translation_french": "surprise"
+        },
+        {
+          "word_english": "talent",
+          "translation_french": "talent"
+        }
+      ],
+      "icon_file": "feelings.png"
+    },
+    {
+      "topic_page": "Food & Drink (A)",
+      "slug": "food-drink-a",
+      "words": [
+        {
+          "word_english": "bacon",
+          "translation_french": "bacon"
+        },
+        {
+          "word_english": "broccoli",
+          "translation_french": "brocoli"
+        },
+        {
+          "word_english": "canteen",
+          "translation_french": "cantine"
+        },
+        {
+          "word_english": "coconut",
+          "translation_french": "noix de coco"
+        },
+        {
+          "word_english": "cucumber",
+          "translation_french": "concombre"
+        },
+        {
+          "word_english": "flavour",
+          "translation_french": "saveur"
+        },
+        {
+          "word_english": "herb",
+          "translation_french": "herbe aromatique"
+        },
+        {
+          "word_english": "lamb",
+          "translation_french": "agneau"
+        },
+        {
+          "word_english": "olive",
+          "translation_french": "olive"
+        },
+        {
+          "word_english": "peach",
+          "translation_french": "pêche"
+        },
+        {
+          "word_english": "pie",
+          "translation_french": "tarte"
+        },
+        {
+          "word_english": "pork",
+          "translation_french": "porc"
+        },
+        {
+          "word_english": "salmon",
+          "translation_french": "saumon"
+        },
+        {
+          "word_english": "spinach",
+          "translation_french": "épinards"
+        },
+        {
+          "word_english": "takeaway",
+          "translation_french": "plat à emporter"
+        },
+        {
+          "word_english": "tuna",
+          "translation_french": "thon"
+        }
+      ],
+      "icon_file": "food-drink-a.png"
+    },
+    {
+      "topic_page": "Food & Drink (B)",
+      "slug": "food-drink-b",
+      "words": [
+        {
+          "word_english": "beef",
+          "translation_french": "bœuf"
+        },
+        {
+          "word_english": "cabbage",
+          "translation_french": "chou"
+        },
+        {
+          "word_english": "chewing gum",
+          "translation_french": "chewing-gum"
+        },
+        {
+          "word_english": "courgette",
+          "translation_french": "courgette"
+        },
+        {
+          "word_english": "diet",
+          "translation_french": "régime"
+        },
+        {
+          "word_english": "flour",
+          "translation_french": "farine"
+        },
+        {
+          "word_english": "ingredient",
+          "translation_french": "ingrédient"
+        },
+        {
+          "word_english": "lettuce",
+          "translation_french": "laitue"
+        },
+        {
+          "word_english": "pea",
+          "translation_french": "petit pois"
+        },
+        {
+          "word_english": "peanut",
+          "translation_french": "cacahuète"
+        },
+        {
+          "word_english": "pineapple",
+          "translation_french": "ananas"
+        },
+        {
+          "word_english": "recipe",
+          "translation_french": "recette"
+        },
+        {
+          "word_english": "sparkling water",
+          "translation_french": "eau pétillante"
+        },
+        {
+          "word_english": "strawberry",
+          "translation_french": "fraise"
+        },
+        {
+          "word_english": "taste",
+          "translation_french": "goût"
+        },
+        {
+          "word_english": "vegetarian",
+          "translation_french": "végétarien / végétarienne"
+        }
+      ],
+      "icon_file": "food-drink-b.png"
+    },
+    {
+      "topic_page": "Home (A)",
+      "slug": "home-a",
+      "words": [
+        {
+          "word_english": "air conditioning",
+          "translation_french": "climatisation"
+        },
+        {
+          "word_english": "balcony",
+          "translation_french": "balcon"
+        },
+        {
+          "word_english": "basket",
+          "translation_french": "panier"
+        },
+        {
+          "word_english": "bin",
+          "translation_french": "poubelle"
+        },
+        {
+          "word_english": "candle",
+          "translation_french": "bougie"
+        },
+        {
+          "word_english": "chest of drawers",
+          "translation_french": "commode"
+        },
+        {
+          "word_english": "dirt",
+          "translation_french": "saleté"
+        },
+        {
+          "word_english": "dust",
+          "translation_french": "poussière"
+        },
+        {
+          "word_english": "freezer",
+          "translation_french": "congélateur"
+        },
+        {
+          "word_english": "heater",
+          "translation_french": "radiateur"
+        },
+        {
+          "word_english": "indoors",
+          "translation_french": "à l'intérieur"
+        },
+        {
+          "word_english": "ironing",
+          "translation_french": "repassage"
+        },
+        {
+          "word_english": "jug",
+          "translation_french": "pichet"
+        },
+        {
+          "word_english": "ladder",
+          "translation_french": "échelle"
+        },
+        {
+          "word_english": "oven",
+          "translation_french": "four"
+        },
+        {
+          "word_english": "plug",
+          "translation_french": "prise"
+        },
+        {
+          "word_english": "rug",
+          "translation_french": "tapis"
+        },
+        {
+          "word_english": "sheet",
+          "translation_french": "drap"
+        },
+        {
+          "word_english": "tin",
+          "translation_french": "boîte de conserve"
+        },
+        {
+          "word_english": "tube",
+          "translation_french": "tube"
+        },
+        {
+          "word_english": "wardrobe",
+          "translation_french": "armoire"
+        }
+      ],
+      "icon_file": "home-a.png"
+    },
+    {
+      "topic_page": "Home (B)",
+      "slug": "home-b",
+      "words": [
+        {
+          "word_english": "alarm",
+          "translation_french": "alarme"
+        },
+        {
+          "word_english": "basin",
+          "translation_french": "lavabo"
+        },
+        {
+          "word_english": "bell",
+          "translation_french": "sonnette"
+        },
+        {
+          "word_english": "bucket",
+          "translation_french": "seau"
+        },
+        {
+          "word_english": "central heating",
+          "translation_french": "chauffage central"
+        },
+        {
+          "word_english": "cushion",
+          "translation_french": "coussin"
+        },
+        {
+          "word_english": "dishwasher",
+          "translation_french": "lave-vaisselle"
+        },
+        {
+          "word_english": "frame",
+          "translation_french": "cadre"
+        },
+        {
+          "word_english": "frying pan",
+          "translation_french": "poêle"
+        },
+        {
+          "word_english": "housework",
+          "translation_french": "ménage"
+        },
+        {
+          "word_english": "iron",
+          "translation_french": "fer à repasser"
+        },
+        {
+          "word_english": "jar",
+          "translation_french": "bocal"
+        },
+        {
+          "word_english": "kettle",
+          "translation_french": "bouilloire"
+        },
+        {
+          "word_english": "outdoors",
+          "translation_french": "dehors"
+        },
+        {
+          "word_english": "pan",
+          "translation_french": "poêlon"
+        },
+        {
+          "word_english": "rubbish",
+          "translation_french": "ordures"
+        },
+        {
+          "word_english": "saucepan",
+          "translation_french": "casserole"
+        },
+        {
+          "word_english": "tap",
+          "translation_french": "robinet"
+        },
+        {
+          "word_english": "toothpaste",
+          "translation_french": "dentifrice"
+        },
+        {
+          "word_english": "vase",
+          "translation_french": "vase"
+        },
+        {
+          "word_english": "waste",
+          "translation_french": "gaspillage"
+        }
+      ],
+      "icon_file": "home-b.png"
+    },
+    {
+      "topic_page": "Jobs (A)",
+      "slug": "jobs-a",
+      "words": [
+        {
+          "word_english": "accountant",
+          "translation_french": "comptable"
+        },
+        {
+          "word_english": "assistant",
+          "translation_french": "assistant(e)"
+        },
+        {
+          "word_english": "baker",
+          "translation_french": "boulanger / boulangère"
+        },
+        {
+          "word_english": "barman",
+          "translation_french": "barman"
+        },
+        {
+          "word_english": "butcher",
+          "translation_french": "boucher / bouchère"
+        },
+        {
+          "word_english": "captain",
+          "translation_french": "capitaine"
+        },
+        {
+          "word_english": "crew",
+          "translation_french": "équipage"
+        },
+        {
+          "word_english": "detective",
+          "translation_french": "détective"
+        },
+        {
+          "word_english": "diver",
+          "translation_french": "plongeur / plongeuse"
+        },
+        {
+          "word_english": "employer",
+          "translation_french": "employeur / employeuse"
+        },
+        {
+          "word_english": "fire fighter",
+          "translation_french": "pompier / pompière"
+        },
+        {
+          "word_english": "guide",
+          "translation_french": "guide"
+        },
+        {
+          "word_english": "instructor",
+          "translation_french": "instructeur / instructrice"
+        },
+        {
+          "word_english": "judge",
+          "translation_french": "juge"
+        },
+        {
+          "word_english": "leader",
+          "translation_french": "chef / cheffe"
+        },
+        {
+          "word_english": "musician",
+          "translation_french": "musicien / musicienne"
+        },
+        {
+          "word_english": "politician",
+          "translation_french": "politicien / politicienne"
+        },
+        {
+          "word_english": "professor",
+          "translation_french": "professeur"
+        },
+        {
+          "word_english": "sailor",
+          "translation_french": "marin"
+        },
+        {
+          "word_english": "soldier",
+          "translation_french": "soldat"
+        },
+        {
+          "word_english": "thief",
+          "translation_french": "voleur / voleuse"
+        },
+        {
+          "word_english": "vet",
+          "translation_french": "vétérinaire"
+        }
+      ],
+      "icon_file": "jobs-a.png"
+    },
+    {
+      "topic_page": "Jobs (B)",
+      "slug": "jobs-b",
+      "words": [
+        {
+          "word_english": "architect",
+          "translation_french": "architecte"
+        },
+        {
+          "word_english": "babysitter",
+          "translation_french": "baby-sitter"
+        },
+        {
+          "word_english": "barber",
+          "translation_french": "barbier"
+        },
+        {
+          "word_english": "builder",
+          "translation_french": "maçon / maçonne"
+        },
+        {
+          "word_english": "candidate",
+          "translation_french": "candidat(e)"
+        },
+        {
+          "word_english": "celebrity",
+          "translation_french": "célébrité"
+        },
+        {
+          "word_english": "designer",
+          "translation_french": "créateur / créatrice"
+        },
+        {
+          "word_english": "director",
+          "translation_french": "directeur / directrice"
+        },
+        {
+          "word_english": "employee",
+          "translation_french": "employé(e)"
+        },
+        {
+          "word_english": "examiner",
+          "translation_french": "examinateur / examinatrice"
+        },
+        {
+          "word_english": "guard",
+          "translation_french": "gardien / gardienne"
+        },
+        {
+          "word_english": "hairdresser",
+          "translation_french": "coiffeur / coiffeuse"
+        },
+        {
+          "word_english": "journalist",
+          "translation_french": "journaliste"
+        },
+        {
+          "word_english": "lawyer",
+          "translation_french": "avocat(e)"
+        },
+        {
+          "word_english": "model",
+          "translation_french": "mannequin"
+        },
+        {
+          "word_english": "owner",
+          "translation_french": "propriétaire"
+        },
+        {
+          "word_english": "president",
+          "translation_french": "président(e)"
+        },
+        {
+          "word_english": "reporter",
+          "translation_french": "reporter"
+        },
+        {
+          "word_english": "scientist",
+          "translation_french": "scientifique"
+        },
+        {
+          "word_english": "spy",
+          "translation_french": "espion / espionne"
+        },
+        {
+          "word_english": "trainer",
+          "translation_french": "formateur / formatrice"
+        }
+      ],
+      "icon_file": "jobs-b.png"
+    },
+    {
+      "topic_page": "Language",
+      "slug": "language",
+      "words": [
+        {
+          "word_english": "alphabet",
+          "translation_french": "alphabet"
+        },
+        {
+          "word_english": "comma",
+          "translation_french": "virgule"
+        },
+        {
+          "word_english": "comment",
+          "translation_french": "commentaire"
+        },
+        {
+          "word_english": "communication",
+          "translation_french": "communication"
+        },
+        {
+          "word_english": "consonant",
+          "translation_french": "consonne"
+        },
+        {
+          "word_english": "description",
+          "translation_french": "description"
+        },
+        {
+          "word_english": "discussion",
+          "translation_french": "discussion"
+        },
+        {
+          "word_english": "enquiry",
+          "translation_french": "renseignement"
+        },
+        {
+          "word_english": "explanation",
+          "translation_french": "explication"
+        },
+        {
+          "word_english": "full stop",
+          "translation_french": "point"
+        },
+        {
+          "word_english": "infinitive",
+          "translation_french": "infinitif"
+        },
+        {
+          "word_english": "meaning",
+          "translation_french": "signification"
+        },
+        {
+          "word_english": "paragraph",
+          "translation_french": "paragraphe"
+        },
+        {
+          "word_english": "phrase",
+          "translation_french": "expression"
+        },
+        {
+          "word_english": "pronunciation",
+          "translation_french": "prononciation"
+        },
+        {
+          "word_english": "question mark",
+          "translation_french": "point d'interrogation"
+        },
+        {
+          "word_english": "sign",
+          "translation_french": "panneau"
+        },
+        {
+          "word_english": "signature",
+          "translation_french": "signature"
+        },
+        {
+          "word_english": "speech",
+          "translation_french": "discours"
+        },
+        {
+          "word_english": "text",
+          "translation_french": "texte"
+        },
+        {
+          "word_english": "title",
+          "translation_french": "titre"
+        },
+        {
+          "word_english": "topic",
+          "translation_french": "sujet"
+        },
+        {
+          "word_english": "translation",
+          "translation_french": "traduction"
+        },
+        {
+          "word_english": "vowel",
+          "translation_french": "voyelle"
+        }
+      ],
+      "icon_file": "language.png"
+    },
+    {
+      "topic_page": "Media",
+      "slug": "media",
+      "words": [
+        {
+          "word_english": "advert",
+          "translation_french": "pub"
+        },
+        {
+          "word_english": "announcement",
+          "translation_french": "annonce"
+        },
+        {
+          "word_english": "article",
+          "translation_french": "article"
+        },
+        {
+          "word_english": "blog",
+          "translation_french": "blog"
+        },
+        {
+          "word_english": "chat show",
+          "translation_french": "talk-show"
+        },
+        {
+          "word_english": "documentary",
+          "translation_french": "documentaire"
+        },
+        {
+          "word_english": "headline",
+          "translation_french": "gros titre"
+        },
+        {
+          "word_english": "joke",
+          "translation_french": "blague"
+        },
+        {
+          "word_english": "radio",
+          "translation_french": "radio"
+        },
+        {
+          "word_english": "recording",
+          "translation_french": "enregistrement"
+        },
+        {
+          "word_english": "remote control",
+          "translation_french": "télécommande"
+        },
+        {
+          "word_english": "science fiction",
+          "translation_french": "science-fiction"
+        },
+        {
+          "word_english": "series",
+          "translation_french": "série"
+        },
+        {
+          "word_english": "soap opera",
+          "translation_french": "feuilleton"
+        },
+        {
+          "word_english": "thriller",
+          "translation_french": "thriller"
+        },
+        {
+          "word_english": "trick",
+          "translation_french": "astuce"
+        },
+        {
+          "word_english": "voice",
+          "translation_french": "voix"
+        },
+        {
+          "word_english": "volume",
+          "translation_french": "volume"
+        }
+      ],
+      "icon_file": "media.png"
+    },
+    {
+      "topic_page": "Money",
+      "slug": "money",
+      "words": [
+        {
+          "word_english": "account",
+          "translation_french": "compte"
+        },
+        {
+          "word_english": "bank account",
+          "translation_french": "compte bancaire"
+        },
+        {
+          "word_english": "cashpoint",
+          "translation_french": "distributeur"
+        },
+        {
+          "word_english": "coin",
+          "translation_french": "pièce"
+        },
+        {
+          "word_english": "currency",
+          "translation_french": "devise"
+        },
+        {
+          "word_english": "deposit",
+          "translation_french": "acompte"
+        },
+        {
+          "word_english": "exchange",
+          "translation_french": "échange"
+        },
+        {
+          "word_english": "exchange rate",
+          "translation_french": "taux de change"
+        },
+        {
+          "word_english": "fare",
+          "translation_french": "tarif"
+        },
+        {
+          "word_english": "fee",
+          "translation_french": "frais"
+        },
+        {
+          "word_english": "label",
+          "translation_french": "étiquette"
+        },
+        {
+          "word_english": "loan",
+          "translation_french": "prêt"
+        },
+        {
+          "word_english": "lottery",
+          "translation_french": "loterie"
+        },
+        {
+          "word_english": "mall",
+          "translation_french": "centre commercial"
+        },
+        {
+          "word_english": "packet",
+          "translation_french": "paquet"
+        },
+        {
+          "word_english": "queue",
+          "translation_french": "file d'attente"
+        },
+        {
+          "word_english": "reward",
+          "translation_french": "récompense"
+        },
+        {
+          "word_english": "salary",
+          "translation_french": "salaire"
+        },
+        {
+          "word_english": "special offer",
+          "translation_french": "offre spéciale"
+        },
+        {
+          "word_english": "store",
+          "translation_french": "grand magasin"
+        },
+        {
+          "word_english": "tax",
+          "translation_french": "impôt"
+        },
+        {
+          "word_english": "tip",
+          "translation_french": "pourboire"
+        },
+        {
+          "word_english": "wage",
+          "translation_french": "paie"
+        }
+      ],
+      "icon_file": "money.png"
+    },
+    {
+      "topic_page": "Natural World (A)",
+      "slug": "natural-world-a",
+      "words": [
+        {
+          "word_english": "atmosphere",
+          "translation_french": "atmosphère"
+        },
+        {
+          "word_english": "branch",
+          "translation_french": "branche"
+        },
+        {
+          "word_english": "cattle",
+          "translation_french": "bétail"
+        },
+        {
+          "word_english": "cliff",
+          "translation_french": "falaise"
+        },
+        {
+          "word_english": "coast",
+          "translation_french": "côte"
+        },
+        {
+          "word_english": "earth",
+          "translation_french": "Terre"
+        },
+        {
+          "word_english": "farming",
+          "translation_french": "agriculture"
+        },
+        {
+          "word_english": "forecast",
+          "translation_french": "prévisions"
+        },
+        {
+          "word_english": "humid",
+          "translation_french": "humide"
+        },
+        {
+          "word_english": "landscape",
+          "translation_french": "paysage"
+        },
+        {
+          "word_english": "lightning",
+          "translation_french": "éclair"
+        },
+        {
+          "word_english": "planet",
+          "translation_french": "planète"
+        },
+        {
+          "word_english": "rainforest",
+          "translation_french": "forêt tropicale"
+        },
+        {
+          "word_english": "rock",
+          "translation_french": "rocher"
+        },
+        {
+          "word_english": "sand",
+          "translation_french": "sable"
+        },
+        {
+          "word_english": "season",
+          "translation_french": "saison"
+        },
+        {
+          "word_english": "shadow",
+          "translation_french": "ombre"
+        },
+        {
+          "word_english": "stone",
+          "translation_french": "pierre"
+        },
+        {
+          "word_english": "sunrise",
+          "translation_french": "lever du soleil"
+        },
+        {
+          "word_english": "sunshine",
+          "translation_french": "soleil"
+        },
+        {
+          "word_english": "valley",
+          "translation_french": "vallée"
+        },
+        {
+          "word_english": "wave",
+          "translation_french": "vague"
+        },
+        {
+          "word_english": "wildlife",
+          "translation_french": "faune"
+        }
+      ],
+      "icon_file": "natural-world-a.png"
+    },
+    {
+      "topic_page": "Natural World (B)",
+      "slug": "natural-world-b",
+      "words": [
+        {
+          "word_english": "bay",
+          "translation_french": "baie"
+        },
+        {
+          "word_english": "breeze",
+          "translation_french": "brise"
+        },
+        {
+          "word_english": "cave",
+          "translation_french": "grotte"
+        },
+        {
+          "word_english": "climate",
+          "translation_french": "climat"
+        },
+        {
+          "word_english": "continent",
+          "translation_french": "continent"
+        },
+        {
+          "word_english": "environmental",
+          "translation_french": "environnemental(e)"
+        },
+        {
+          "word_english": "flood",
+          "translation_french": "inondation"
+        },
+        {
+          "word_english": "heat",
+          "translation_french": "chaleur"
+        },
+        {
+          "word_english": "jungle",
+          "translation_french": "jungle"
+        },
+        {
+          "word_english": "leaf",
+          "translation_french": "feuille"
+        },
+        {
+          "word_english": "ocean",
+          "translation_french": "océan"
+        },
+        {
+          "word_english": "pollution",
+          "translation_french": "pollution"
+        },
+        {
+          "word_english": "recycling",
+          "translation_french": "recyclage"
+        },
+        {
+          "word_english": "rose",
+          "translation_french": "rose"
+        },
+        {
+          "word_english": "scenery",
+          "translation_french": "paysage"
+        },
+        {
+          "word_english": "shade",
+          "translation_french": "ombre"
+        },
+        {
+          "word_english": "shore",
+          "translation_french": "rivage"
+        },
+        {
+          "word_english": "stream",
+          "translation_french": "ruisseau"
+        },
+        {
+          "word_english": "sunset",
+          "translation_french": "coucher du soleil"
+        },
+        {
+          "word_english": "thunder",
+          "translation_french": "tonnerre"
+        },
+        {
+          "word_english": "waterfall",
+          "translation_french": "cascade"
+        },
+        {
+          "word_english": "whale",
+          "translation_french": "baleine"
+        }
+      ],
+      "icon_file": "natural-world-b.png"
+    },
+    {
+      "topic_page": "Nouns (A)",
+      "slug": "nouns-a",
+      "words": [
+        {
+          "word_english": "ability",
+          "translation_french": "capacité"
+        },
+        {
+          "word_english": "amount",
+          "translation_french": "quantité"
+        },
+        {
+          "word_english": "arrangement",
+          "translation_french": "arrangement"
+        },
+        {
+          "word_english": "charity",
+          "translation_french": "organisme caritatif"
+        },
+        {
+          "word_english": "conclusion",
+          "translation_french": "conclusion"
+        },
+        {
+          "word_english": "danger",
+          "translation_french": "danger"
+        },
+        {
+          "word_english": "development",
+          "translation_french": "développement"
+        },
+        {
+          "word_english": "distance",
+          "translation_french": "distance"
+        },
+        {
+          "word_english": "energy",
+          "translation_french": "énergie"
+        },
+        {
+          "word_english": "few",
+          "translation_french": "peu"
+        },
+        {
+          "word_english": "hole",
+          "translation_french": "trou"
+        },
+        {
+          "word_english": "item",
+          "translation_french": "élément"
+        },
+        {
+          "word_english": "luxury",
+          "translation_french": "luxe"
+        },
+        {
+          "word_english": "minimum",
+          "translation_french": "minimum"
+        },
+        {
+          "word_english": "object",
+          "translation_french": "objet"
+        },
+        {
+          "word_english": "pattern",
+          "translation_french": "motif"
+        },
+        {
+          "word_english": "plenty",
+          "translation_french": "beaucoup"
+        },
+        {
+          "word_english": "purpose",
+          "translation_french": "objectif"
+        },
+        {
+          "word_english": "relaxation",
+          "translation_french": "détente"
+        },
+        {
+          "word_english": "role",
+          "translation_french": "rôle"
+        },
+        {
+          "word_english": "shape",
+          "translation_french": "forme"
+        },
+        {
+          "word_english": "suggestion",
+          "translation_french": "suggestion"
+        },
+        {
+          "word_english": "variety",
+          "translation_french": "variété"
+        }
+      ],
+      "icon_file": "nouns-a.png"
+    },
+    {
+      "topic_page": "Nouns (B)",
+      "slug": "nouns-b",
+      "words": [
+        {
+          "word_english": "achievement",
+          "translation_french": "réussite"
+        },
+        {
+          "word_english": "angel",
+          "translation_french": "ange"
+        },
+        {
+          "word_english": "attention",
+          "translation_french": "attention"
+        },
+        {
+          "word_english": "choice",
+          "translation_french": "choix"
+        },
+        {
+          "word_english": "condition",
+          "translation_french": "état"
+        },
+        {
+          "word_english": "decision",
+          "translation_french": "décision"
+        },
+        {
+          "word_english": "difference",
+          "translation_french": "différence"
+        },
+        {
+          "word_english": "dozen",
+          "translation_french": "douzaine"
+        },
+        {
+          "word_english": "entry",
+          "translation_french": "entrée"
+        },
+        {
+          "word_english": "figure",
+          "translation_french": "chiffre"
+        },
+        {
+          "word_english": "idea",
+          "translation_french": "idée"
+        },
+        {
+          "word_english": "length",
+          "translation_french": "longueur"
+        },
+        {
+          "word_english": "material",
+          "translation_french": "matériau"
+        },
+        {
+          "word_english": "monster",
+          "translation_french": "monstre"
+        },
+        {
+          "word_english": "opinion",
+          "translation_french": "opinion"
+        },
+        {
+          "word_english": "pause",
+          "translation_french": "pause"
+        },
+        {
+          "word_english": "power",
+          "translation_french": "puissance"
+        },
+        {
+          "word_english": "quality",
+          "translation_french": "qualité"
+        },
+        {
+          "word_english": "request",
+          "translation_french": "demande"
+        },
+        {
+          "word_english": "routine",
+          "translation_french": "routine"
+        },
+        {
+          "word_english": "situation",
+          "translation_french": "situation"
+        },
+        {
+          "word_english": "technique",
+          "translation_french": "technique"
+        },
+        {
+          "word_english": "view",
+          "translation_french": "point de vue"
+        }
+      ],
+      "icon_file": "nouns-b.png"
+    },
+    {
+      "topic_page": "Nouns (C)",
+      "slug": "nouns-c",
+      "words": [
+        {
+          "word_english": "action",
+          "translation_french": "action"
+        },
+        {
+          "word_english": "antique",
+          "translation_french": "antiquité"
+        },
+        {
+          "word_english": "benefit",
+          "translation_french": "bénéfice"
+        },
+        {
+          "word_english": "circle",
+          "translation_french": "cercle"
+        },
+        {
+          "word_english": "connection",
+          "translation_french": "connexion"
+        },
+        {
+          "word_english": "delivery",
+          "translation_french": "livraison"
+        },
+        {
+          "word_english": "difficulty",
+          "translation_french": "difficulté"
+        },
+        {
+          "word_english": "edge",
+          "translation_french": "bord"
+        },
+        {
+          "word_english": "excuse",
+          "translation_french": "excuse"
+        },
+        {
+          "word_english": "ghost",
+          "translation_french": "fantôme"
+        },
+        {
+          "word_english": "improvement",
+          "translation_french": "amélioration"
+        },
+        {
+          "word_english": "limit",
+          "translation_french": "limite"
+        },
+        {
+          "word_english": "maximum",
+          "translation_french": "maximum"
+        },
+        {
+          "word_english": "next",
+          "translation_french": "suivant"
+        },
+        {
+          "word_english": "opposite",
+          "translation_french": "contraire"
+        },
+        {
+          "word_english": "permission",
+          "translation_french": "permission"
+        },
+        {
+          "word_english": "preparation",
+          "translation_french": "préparation"
+        },
+        {
+          "word_english": "quantity",
+          "translation_french": "quantité"
+        },
+        {
+          "word_english": "reservation",
+          "translation_french": "réservation"
+        },
+        {
+          "word_english": "secret",
+          "translation_french": "secret"
+        },
+        {
+          "word_english": "solution",
+          "translation_french": "solution"
+        },
+        {
+          "word_english": "total",
+          "translation_french": "total"
+        },
+        {
+          "word_english": "wing",
+          "translation_french": "aile"
+        }
+      ],
+      "icon_file": "nouns-c.png"
+    },
+    {
+      "topic_page": "Nouns (D)",
+      "slug": "nouns-d",
+      "words": [
+        {
+          "word_english": "admission",
+          "translation_french": "admission"
+        },
+        {
+          "word_english": "apology",
+          "translation_french": "excuses"
+        },
+        {
+          "word_english": "cage",
+          "translation_french": "cage"
+        },
+        {
+          "word_english": "collection",
+          "translation_french": "collection"
+        },
+        {
+          "word_english": "correction",
+          "translation_french": "correction"
+        },
+        {
+          "word_english": "depth",
+          "translation_french": "profondeur"
+        },
+        {
+          "word_english": "direction",
+          "translation_french": "direction"
+        },
+        {
+          "word_english": "effort",
+          "translation_french": "effort"
+        },
+        {
+          "word_english": "experience",
+          "translation_french": "expérience"
+        },
+        {
+          "word_english": "habit",
+          "translation_french": "habitude"
+        },
+        {
+          "word_english": "initial",
+          "translation_french": "initiale"
+        },
+        {
+          "word_english": "line",
+          "translation_french": "ligne"
+        },
+        {
+          "word_english": "medium",
+          "translation_french": "moyen"
+        },
+        {
+          "word_english": "note",
+          "translation_french": "message"
+        },
+        {
+          "word_english": "option",
+          "translation_french": "option"
+        },
+        {
+          "word_english": "piece",
+          "translation_french": "morceau"
+        },
+        {
+          "word_english": "presentation",
+          "translation_french": "présentation"
+        },
+        {
+          "word_english": "range",
+          "translation_french": "gamme"
+        },
+        {
+          "word_english": "result",
+          "translation_french": "résultat"
+        },
+        {
+          "word_english": "section",
+          "translation_french": "section"
+        },
+        {
+          "word_english": "space",
+          "translation_french": "espace"
+        },
+        {
+          "word_english": "trend",
+          "translation_french": "tendance"
+        }
+      ],
+      "icon_file": "nouns-d.png"
+    },
+    {
+      "topic_page": "Nouns (E)",
+      "slug": "nouns-e",
+      "words": [
+        {
+          "word_english": "advantage",
+          "translation_french": "avantage"
+        },
+        {
+          "word_english": "argument",
+          "translation_french": "dispute"
+        },
+        {
+          "word_english": "challenge",
+          "translation_french": "défi"
+        },
+        {
+          "word_english": "complaint",
+          "translation_french": "réclamation"
+        },
+        {
+          "word_english": "creature",
+          "translation_french": "créature"
+        },
+        {
+          "word_english": "detail",
+          "translation_french": "détail"
+        },
+        {
+          "word_english": "disadvantage",
+          "translation_french": "inconvénient"
+        },
+        {
+          "word_english": "emergency",
+          "translation_french": "urgence"
+        },
+        {
+          "word_english": "favour",
+          "translation_french": "faveur"
+        },
+        {
+          "word_english": "half",
+          "translation_french": "moitié"
+        },
+        {
+          "word_english": "ink",
+          "translation_french": "encre"
+        },
+        {
+          "word_english": "liquid",
+          "translation_french": "liquide"
+        },
+        {
+          "word_english": "method",
+          "translation_french": "méthode"
+        },
+        {
+          "word_english": "number",
+          "translation_french": "nombre"
+        },
+        {
+          "word_english": "parcel",
+          "translation_french": "colis"
+        },
+        {
+          "word_english": "pin",
+          "translation_french": "épingle"
+        },
+        {
+          "word_english": "promise",
+          "translation_french": "promesse"
+        },
+        {
+          "word_english": "registration",
+          "translation_french": "inscription"
+        },
+        {
+          "word_english": "review",
+          "translation_french": "avis"
+        },
+        {
+          "word_english": "session",
+          "translation_french": "séance"
+        },
+        {
+          "word_english": "speed",
+          "translation_french": "vitesse"
+        },
+        {
+          "word_english": "trouble",
+          "translation_french": "problème"
+        }
+      ],
+      "icon_file": "nouns-e.png"
+    },
+    {
+      "topic_page": "People (A)",
+      "slug": "people-a",
+      "words": [
+        {
+          "word_english": "bride",
+          "translation_french": "mariée"
+        },
+        {
+          "word_english": "couple",
+          "translation_french": "couple"
+        },
+        {
+          "word_english": "enemy",
+          "translation_french": "ennemi(e)"
+        },
+        {
+          "word_english": "fan",
+          "translation_french": "fan"
+        },
+        {
+          "word_english": "friendship",
+          "translation_french": "amitié"
+        },
+        {
+          "word_english": "groom",
+          "translation_french": "marié"
+        },
+        {
+          "word_english": "honeymoon",
+          "translation_french": "lune de miel"
+        },
+        {
+          "word_english": "lady",
+          "translation_french": "dame"
+        },
+        {
+          "word_english": "mate",
+          "translation_french": "copain / copine"
+        },
+        {
+          "word_english": "niece",
+          "translation_french": "nièce"
+        },
+        {
+          "word_english": "pirate",
+          "translation_french": "pirate"
+        },
+        {
+          "word_english": "princess",
+          "translation_french": "princesse"
+        },
+        {
+          "word_english": "relative",
+          "translation_french": "parent"
+        },
+        {
+          "word_english": "stranger",
+          "translation_french": "inconnu(e)"
+        },
+        {
+          "word_english": "wedding",
+          "translation_french": "mariage"
+        }
+      ],
+      "icon_file": "people-a.png"
+    },
+    {
+      "topic_page": "People (B)",
+      "slug": "people-b",
+      "words": [
+        {
+          "word_english": "childhood",
+          "translation_french": "enfance"
+        },
+        {
+          "word_english": "divorced",
+          "translation_french": "divorcé(e)"
+        },
+        {
+          "word_english": "engaged",
+          "translation_french": "fiancé(e)"
+        },
+        {
+          "word_english": "foreigner",
+          "translation_french": "étranger / étrangère"
+        },
+        {
+          "word_english": "generation",
+          "translation_french": "génération"
+        },
+        {
+          "word_english": "hero",
+          "translation_french": "héros / héroïne"
+        },
+        {
+          "word_english": "human",
+          "translation_french": "humain"
+        },
+        {
+          "word_english": "marriage",
+          "translation_french": "mariage"
+        },
+        {
+          "word_english": "nephew",
+          "translation_french": "neveu"
+        },
+        {
+          "word_english": "partner",
+          "translation_french": "partenaire"
+        },
+        {
+          "word_english": "prince",
+          "translation_french": "prince"
+        },
+        {
+          "word_english": "relationship",
+          "translation_french": "relation"
+        },
+        {
+          "word_english": "romance",
+          "translation_french": "histoire d'amour"
+        },
+        {
+          "word_english": "twin",
+          "translation_french": "jumeau / jumelle"
+        },
+        {
+          "word_english": "youth",
+          "translation_french": "jeunesse"
+        }
+      ],
+      "icon_file": "people-b.png"
+    },
+    {
+      "topic_page": "Society",
+      "slug": "society",
+      "words": [
+        {
+          "word_english": "air force",
+          "translation_french": "armée de l'air"
+        },
+        {
+          "word_english": "battle",
+          "translation_french": "bataille"
+        },
+        {
+          "word_english": "bomb",
+          "translation_french": "bombe"
+        },
+        {
+          "word_english": "court",
+          "translation_french": "tribunal"
+        },
+        {
+          "word_english": "crime",
+          "translation_french": "crime"
+        },
+        {
+          "word_english": "criminal",
+          "translation_french": "criminel / criminelle"
+        },
+        {
+          "word_english": "culture",
+          "translation_french": "culture"
+        },
+        {
+          "word_english": "election",
+          "translation_french": "élection"
+        },
+        {
+          "word_english": "flag",
+          "translation_french": "drapeau"
+        },
+        {
+          "word_english": "government",
+          "translation_french": "gouvernement"
+        },
+        {
+          "word_english": "immigration",
+          "translation_french": "immigration"
+        },
+        {
+          "word_english": "jail",
+          "translation_french": "maison d'arrêt"
+        },
+        {
+          "word_english": "law",
+          "translation_french": "loi"
+        },
+        {
+          "word_english": "peace",
+          "translation_french": "paix"
+        },
+        {
+          "word_english": "political",
+          "translation_french": "politique"
+        },
+        {
+          "word_english": "politics",
+          "translation_french": "la politique"
+        },
+        {
+          "word_english": "population",
+          "translation_french": "population"
+        },
+        {
+          "word_english": "prison",
+          "translation_french": "prison"
+        },
+        {
+          "word_english": "rule",
+          "translation_french": "règle"
+        },
+        {
+          "word_english": "safety",
+          "translation_french": "sécurité"
+        },
+        {
+          "word_english": "security",
+          "translation_french": "sûreté"
+        },
+        {
+          "word_english": "society",
+          "translation_french": "société"
+        },
+        {
+          "word_english": "strike",
+          "translation_french": "grève"
+        },
+        {
+          "word_english": "union",
+          "translation_french": "syndicat"
+        }
+      ],
+      "icon_file": "society.png"
+    },
+    {
+      "topic_page": "Technology",
+      "slug": "technology",
+      "words": [
+        {
+          "word_english": "access",
+          "translation_french": "accès"
+        },
+        {
+          "word_english": "cable",
+          "translation_french": "câble"
+        },
+        {
+          "word_english": "calculator",
+          "translation_french": "calculatrice"
+        },
+        {
+          "word_english": "digital",
+          "translation_french": "numérique"
+        },
+        {
+          "word_english": "display",
+          "translation_french": "affichage"
+        },
+        {
+          "word_english": "electrical",
+          "translation_french": "électrique"
+        },
+        {
+          "word_english": "electronic",
+          "translation_french": "électronique"
+        },
+        {
+          "word_english": "equipment",
+          "translation_french": "équipement"
+        },
+        {
+          "word_english": "invention",
+          "translation_french": "invention"
+        },
+        {
+          "word_english": "link",
+          "translation_french": "lien"
+        },
+        {
+          "word_english": "logo",
+          "translation_french": "logo"
+        },
+        {
+          "word_english": "password",
+          "translation_french": "mot de passe"
+        },
+        {
+          "word_english": "robot",
+          "translation_french": "robot"
+        },
+        {
+          "word_english": "system",
+          "translation_french": "système"
+        },
+        {
+          "word_english": "tablet",
+          "translation_french": "tablette"
+        },
+        {
+          "word_english": "technology",
+          "translation_french": "technologie"
+        }
+      ],
+      "icon_file": "technology.png"
+    },
+    {
+      "topic_page": "Time",
+      "slug": "time",
+      "words": [
+        {
+          "word_english": "age",
+          "translation_french": "âge"
+        },
+        {
+          "word_english": "anniversary",
+          "translation_french": "anniversaire"
+        },
+        {
+          "word_english": "birth",
+          "translation_french": "naissance"
+        },
+        {
+          "word_english": "celebration",
+          "translation_french": "célébration"
+        },
+        {
+          "word_english": "ceremony",
+          "translation_french": "cérémonie"
+        },
+        {
+          "word_english": "date",
+          "translation_french": "date"
+        },
+        {
+          "word_english": "death",
+          "translation_french": "mort"
+        },
+        {
+          "word_english": "ending",
+          "translation_french": "fin"
+        },
+        {
+          "word_english": "event",
+          "translation_french": "événement"
+        },
+        {
+          "word_english": "fortnight",
+          "translation_french": "quinzaine"
+        },
+        {
+          "word_english": "future",
+          "translation_french": "avenir"
+        },
+        {
+          "word_english": "life",
+          "translation_french": "vie"
+        },
+        {
+          "word_english": "moment",
+          "translation_french": "moment"
+        },
+        {
+          "word_english": "occasion",
+          "translation_french": "occasion"
+        },
+        {
+          "word_english": "overnight",
+          "translation_french": "pour la nuit"
+        },
+        {
+          "word_english": "past",
+          "translation_french": "passé"
+        },
+        {
+          "word_english": "suddenly",
+          "translation_french": "soudain"
+        }
+      ],
+      "icon_file": "time.png"
+    },
+    {
+      "topic_page": "Travel (A)",
+      "slug": "travel-a",
+      "words": [
+        {
+          "word_english": "abroad",
+          "translation_french": "à l'étranger"
+        },
+        {
+          "word_english": "airline",
+          "translation_french": "compagnie aérienne"
+        },
+        {
+          "word_english": "backpack",
+          "translation_french": "sac à dos"
+        },
+        {
+          "word_english": "baggage",
+          "translation_french": "bagages"
+        },
+        {
+          "word_english": "border",
+          "translation_french": "frontière"
+        },
+        {
+          "word_english": "cab",
+          "translation_french": "taxi"
+        },
+        {
+          "word_english": "canal",
+          "translation_french": "canal"
+        },
+        {
+          "word_english": "check-out",
+          "translation_french": "départ de l'hôtel"
+        },
+        {
+          "word_english": "cruise",
+          "translation_french": "croisière"
+        },
+        {
+          "word_english": "departure",
+          "translation_french": "départ"
+        },
+        {
+          "word_english": "embassy",
+          "translation_french": "ambassade"
+        },
+        {
+          "word_english": "ferry",
+          "translation_french": "ferry"
+        },
+        {
+          "word_english": "harbour",
+          "translation_french": "port"
+        },
+        {
+          "word_english": "identity card",
+          "translation_french": "carte d'identité"
+        },
+        {
+          "word_english": "parking",
+          "translation_french": "stationnement"
+        },
+        {
+          "word_english": "pedestrian",
+          "translation_french": "piéton / piétonne"
+        },
+        {
+          "word_english": "public transport",
+          "translation_french": "transports en commun"
+        },
+        {
+          "word_english": "route",
+          "translation_french": "itinéraire"
+        },
+        {
+          "word_english": "souvenir",
+          "translation_french": "souvenir"
+        },
+        {
+          "word_english": "tourism",
+          "translation_french": "tourisme"
+        },
+        {
+          "word_english": "transport",
+          "translation_french": "transport"
+        },
+        {
+          "word_english": "truck",
+          "translation_french": "camion"
+        },
+        {
+          "word_english": "van",
+          "translation_french": "camionnette"
+        },
+        {
+          "word_english": "visa",
+          "translation_french": "visa"
+        }
+      ],
+      "icon_file": "travel-a.png"
+    },
+    {
+      "topic_page": "Travel (B)",
+      "slug": "travel-b",
+      "words": [
+        {
+          "word_english": "accommodation",
+          "translation_french": "hébergement"
+        },
+        {
+          "word_english": "arrival",
+          "translation_french": "arrivée"
+        },
+        {
+          "word_english": "backpacker",
+          "translation_french": "routard / routarde"
+        },
+        {
+          "word_english": "booking",
+          "translation_french": "réservation"
+        },
+        {
+          "word_english": "brake",
+          "translation_french": "frein"
+        },
+        {
+          "word_english": "cabin",
+          "translation_french": "cabine"
+        },
+        {
+          "word_english": "check-in",
+          "translation_french": "enregistrement"
+        },
+        {
+          "word_english": "crossing",
+          "translation_french": "traversée"
+        },
+        {
+          "word_english": "customs",
+          "translation_french": "douane"
+        },
+        {
+          "word_english": "destination",
+          "translation_french": "destination"
+        },
+        {
+          "word_english": "expedition",
+          "translation_french": "expédition"
+        },
+        {
+          "word_english": "fuel",
+          "translation_french": "carburant"
+        },
+        {
+          "word_english": "hostel",
+          "translation_french": "auberge de jeunesse"
+        },
+        {
+          "word_english": "lorry",
+          "translation_french": "camion"
+        },
+        {
+          "word_english": "pavement",
+          "translation_french": "trottoir"
+        },
+        {
+          "word_english": "port",
+          "translation_french": "port"
+        },
+        {
+          "word_english": "resort",
+          "translation_french": "station touristique"
+        },
+        {
+          "word_english": "signpost",
+          "translation_french": "panneau indicateur"
+        },
+        {
+          "word_english": "tour",
+          "translation_french": "excursion"
+        },
+        {
+          "word_english": "traffic jam",
+          "translation_french": "embouteillage"
+        },
+        {
+          "word_english": "travel agent",
+          "translation_french": "agent de voyages"
+        },
+        {
+          "word_english": "tunnel",
+          "translation_french": "tunnel"
+        },
+        {
+          "word_english": "vehicle",
+          "translation_french": "véhicule"
+        },
+        {
+          "word_english": "windscreen",
+          "translation_french": "pare-brise"
+        }
+      ],
+      "icon_file": "travel-b.png"
+    },
+    {
+      "topic_page": "Verbs (A)",
+      "slug": "verbs-a",
+      "words": [
+        {
+          "word_english": "to accept",
+          "translation_french": "accepter"
+        },
+        {
+          "word_english": "to annoy",
+          "translation_french": "agacer"
+        },
+        {
+          "word_english": "to attempt",
+          "translation_french": "tenter"
+        },
+        {
+          "word_english": "to burn",
+          "translation_french": "brûler"
+        },
+        {
+          "word_english": "to concentrate",
+          "translation_french": "se concentrer"
+        },
+        {
+          "word_english": "to cycle",
+          "translation_french": "faire du vélo"
+        },
+        {
+          "word_english": "to deserve",
+          "translation_french": "mériter"
+        },
+        {
+          "word_english": "to divide",
+          "translation_french": "diviser"
+        },
+        {
+          "word_english": "to explode",
+          "translation_french": "exploser"
+        },
+        {
+          "word_english": "to float",
+          "translation_french": "flotter"
+        },
+        {
+          "word_english": "to handle",
+          "translation_french": "manier"
+        },
+        {
+          "word_english": "to install",
+          "translation_french": "installer"
+        },
+        {
+          "word_english": "to lock",
+          "translation_french": "fermer à clé"
+        },
+        {
+          "word_english": "to organise",
+          "translation_french": "organiser"
+        },
+        {
+          "word_english": "to pour",
+          "translation_french": "verser"
+        },
+        {
+          "word_english": "to quit",
+          "translation_french": "arrêter"
+        },
+        {
+          "word_english": "to regret",
+          "translation_french": "regretter"
+        },
+        {
+          "word_english": "to respect",
+          "translation_french": "respecter"
+        },
+        {
+          "word_english": "to scream",
+          "translation_french": "hurler"
+        },
+        {
+          "word_english": "to skate",
+          "translation_french": "patiner"
+        },
+        {
+          "word_english": "to stir",
+          "translation_french": "remuer"
+        },
+        {
+          "word_english": "to tear",
+          "translation_french": "déchirer"
+        },
+        {
+          "word_english": "to turn",
+          "translation_french": "tourner"
+        },
+        {
+          "word_english": "to work out",
+          "translation_french": "faire du sport"
+        }
+      ],
+      "icon_file": "verbs-a.png"
+    },
+    {
+      "topic_page": "Verbs (B)",
+      "slug": "verbs-b",
+      "words": [
+        {
+          "word_english": "to accompany",
+          "translation_french": "accompagner"
+        },
+        {
+          "word_english": "to apologise",
+          "translation_french": "s'excuser"
+        },
+        {
+          "word_english": "to attend",
+          "translation_french": "assister à"
+        },
+        {
+          "word_english": "to bury",
+          "translation_french": "enterrer"
+        },
+        {
+          "word_english": "to confirm",
+          "translation_french": "confirmer"
+        },
+        {
+          "word_english": "to damage",
+          "translation_french": "abîmer"
+        },
+        {
+          "word_english": "to destroy",
+          "translation_french": "détruire"
+        },
+        {
+          "word_english": "to drag",
+          "translation_french": "traîner"
+        },
+        {
+          "word_english": "to explore",
+          "translation_french": "explorer"
+        },
+        {
+          "word_english": "to flow",
+          "translation_french": "s'écouler"
+        },
+        {
+          "word_english": "to hang",
+          "translation_french": "accrocher"
+        },
+        {
+          "word_english": "to interrupt",
+          "translation_french": "interrompre"
+        },
+        {
+          "word_english": "to lose",
+          "translation_french": "perdre"
+        },
+        {
+          "word_english": "to owe",
+          "translation_french": "devoir"
+        },
+        {
+          "word_english": "to predict",
+          "translation_french": "prédire"
+        },
+        {
+          "word_english": "to raise",
+          "translation_french": "lever"
+        },
+        {
+          "word_english": "to relax",
+          "translation_french": "se détendre"
+        },
+        {
+          "word_english": "to retire",
+          "translation_french": "prendre sa retraite"
+        },
+        {
+          "word_english": "to search",
+          "translation_french": "chercher"
+        },
+        {
+          "word_english": "to ski",
+          "translation_french": "skier"
+        },
+        {
+          "word_english": "to succeed",
+          "translation_french": "réussir"
+        },
+        {
+          "word_english": "to throw away",
+          "translation_french": "jeter"
+        },
+        {
+          "word_english": "to type",
+          "translation_french": "taper"
+        },
+        {
+          "word_english": "to worry",
+          "translation_french": "s'inquiéter"
+        }
+      ],
+      "icon_file": "verbs-b.png"
+    },
+    {
+      "topic_page": "Verbs (C)",
+      "slug": "verbs-c",
+      "words": [
+        {
+          "word_english": "to achieve",
+          "translation_french": "accomplir"
+        },
+        {
+          "word_english": "to appear",
+          "translation_french": "apparaître"
+        },
+        {
+          "word_english": "to attract",
+          "translation_french": "attirer"
+        },
+        {
+          "word_english": "to cancel",
+          "translation_french": "annuler"
+        },
+        {
+          "word_english": "to connect",
+          "translation_french": "relier"
+        },
+        {
+          "word_english": "to declare",
+          "translation_french": "déclarer"
+        },
+        {
+          "word_english": "to develop",
+          "translation_french": "développer"
+        },
+        {
+          "word_english": "to dress",
+          "translation_french": "s'habiller"
+        },
+        {
+          "word_english": "to fall",
+          "translation_french": "tomber"
+        },
+        {
+          "word_english": "to fold",
+          "translation_french": "plier"
+        },
+        {
+          "word_english": "to hide",
+          "translation_french": "cacher"
+        },
+        {
+          "word_english": "to introduce",
+          "translation_french": "présenter"
+        },
+        {
+          "word_english": "to manage",
+          "translation_french": "gérer"
+        },
+        {
+          "word_english": "to pass",
+          "translation_french": "passer"
+        },
+        {
+          "word_english": "to press",
+          "translation_french": "appuyer"
+        },
+        {
+          "word_english": "to reach",
+          "translation_french": "atteindre"
+        },
+        {
+          "word_english": "to remind",
+          "translation_french": "rappeler"
+        },
+        {
+          "word_english": "to revise",
+          "translation_french": "réviser"
+        },
+        {
+          "word_english": "to select",
+          "translation_french": "sélectionner"
+        },
+        {
+          "word_english": "to slip",
+          "translation_french": "glisser"
+        },
+        {
+          "word_english": "to suggest",
+          "translation_french": "suggérer"
+        },
+        {
+          "word_english": "to tick",
+          "translation_french": "cocher"
+        },
+        {
+          "word_english": "to underline",
+          "translation_french": "souligner"
+        },
+        {
+          "word_english": "to wrap",
+          "translation_french": "emballer"
+        }
+      ],
+      "icon_file": "verbs-c.png"
+    },
+    {
+      "topic_page": "Verbs (D)",
+      "slug": "verbs-d",
+      "words": [
+        {
+          "word_english": "to act",
+          "translation_french": "agir"
+        },
+        {
+          "word_english": "to apply",
+          "translation_french": "postuler"
+        },
+        {
+          "word_english": "to avoid",
+          "translation_french": "éviter"
+        },
+        {
+          "word_english": "to care",
+          "translation_french": "tenir à"
+        },
+        {
+          "word_english": "to consider",
+          "translation_french": "envisager"
+        },
+        {
+          "word_english": "to decorate",
+          "translation_french": "décorer"
+        },
+        {
+          "word_english": "to dial",
+          "translation_french": "composer"
+        },
+        {
+          "word_english": "to drop",
+          "translation_french": "laisser tomber"
+        },
+        {
+          "word_english": "to fall in love",
+          "translation_french": "tomber amoureux / amoureuse"
+        },
+        {
+          "word_english": "to forgive",
+          "translation_french": "pardonner"
+        },
+        {
+          "word_english": "to hire",
+          "translation_french": "embaucher"
+        },
+        {
+          "word_english": "to invent",
+          "translation_french": "inventer"
+        },
+        {
+          "word_english": "to marry",
+          "translation_french": "se marier"
+        },
+        {
+          "word_english": "to pay",
+          "translation_french": "payer"
+        },
+        {
+          "word_english": "to prevent",
+          "translation_french": "empêcher"
+        },
+        {
+          "word_english": "to realise",
+          "translation_french": "se rendre compte"
+        },
+        {
+          "word_english": "to remove",
+          "translation_french": "enlever"
+        },
+        {
+          "word_english": "to ride",
+          "translation_french": "monter"
+        },
+        {
+          "word_english": "to separate",
+          "translation_french": "séparer"
+        },
+        {
+          "word_english": "to smell",
+          "translation_french": "sentir"
+        },
+        {
+          "word_english": "to sunbathe",
+          "translation_french": "prendre le soleil"
+        },
+        {
+          "word_english": "to tidy up",
+          "translation_french": "ranger"
+        },
+        {
+          "word_english": "to unpack",
+          "translation_french": "déballer"
+        },
+        {
+          "word_english": "to write",
+          "translation_french": "écrire"
+        }
+      ],
+      "icon_file": "verbs-d.png"
+    },
+    {
+      "topic_page": "Verbs (E)",
+      "slug": "verbs-e",
+      "words": [
+        {
+          "word_english": "to admire",
+          "translation_french": "admirer"
+        },
+        {
+          "word_english": "to approach",
+          "translation_french": "approcher"
+        },
+        {
+          "word_english": "to babysit",
+          "translation_french": "garder un enfant"
+        },
+        {
+          "word_english": "to celebrate",
+          "translation_french": "fêter"
+        },
+        {
+          "word_english": "to contain",
+          "translation_french": "contenir"
+        },
+        {
+          "word_english": "to decrease",
+          "translation_french": "diminuer"
+        },
+        {
+          "word_english": "to dig",
+          "translation_french": "creuser"
+        },
+        {
+          "word_english": "to eat out",
+          "translation_french": "manger au restaurant"
+        },
+        {
+          "word_english": "to fall over",
+          "translation_french": "tomber par terre"
+        },
+        {
+          "word_english": "to freeze",
+          "translation_french": "geler"
+        },
+        {
+          "word_english": "to hit",
+          "translation_french": "frapper"
+        },
+        {
+          "word_english": "to involve",
+          "translation_french": "impliquer"
+        },
+        {
+          "word_english": "to mend",
+          "translation_french": "raccommoder"
+        },
+        {
+          "word_english": "to perform",
+          "translation_french": "se produire"
+        },
+        {
+          "word_english": "to produce",
+          "translation_french": "produire"
+        },
+        {
+          "word_english": "to recognise",
+          "translation_french": "reconnaître"
+        },
+        {
+          "word_english": "to rent",
+          "translation_french": "louer"
+        },
+        {
+          "word_english": "to ring",
+          "translation_french": "téléphoner"
+        },
+        {
+          "word_english": "to sew",
+          "translation_french": "coudre"
+        },
+        {
+          "word_english": "to smile",
+          "translation_french": "sourire"
+        },
+        {
+          "word_english": "to support",
+          "translation_french": "soutenir"
+        },
+        {
+          "word_english": "to touch",
+          "translation_french": "toucher"
+        },
+        {
+          "word_english": "to update",
+          "translation_french": "mettre à jour"
+        }
+      ],
+      "icon_file": "verbs-e.png"
+    },
+    {
+      "topic_page": "Verbs (F)",
+      "slug": "verbs-f",
+      "words": [
+        {
+          "word_english": "to admit",
+          "translation_french": "admettre"
+        },
+        {
+          "word_english": "to approve",
+          "translation_french": "approuver"
+        },
+        {
+          "word_english": "to beat",
+          "translation_french": "battre"
+        },
+        {
+          "word_english": "to charge",
+          "translation_french": "facturer"
+        },
+        {
+          "word_english": "to continue",
+          "translation_french": "continuer"
+        },
+        {
+          "word_english": "to defeat",
+          "translation_french": "vaincre"
+        },
+        {
+          "word_english": "to disagree",
+          "translation_french": "être en désaccord"
+        },
+        {
+          "word_english": "to employ",
+          "translation_french": "employer"
+        },
+        {
+          "word_english": "to feed",
+          "translation_french": "nourrir"
+        },
+        {
+          "word_english": "to fry",
+          "translation_french": "frire"
+        },
+        {
+          "word_english": "to hitchhike",
+          "translation_french": "faire du stop"
+        },
+        {
+          "word_english": "to knit",
+          "translation_french": "tricoter"
+        },
+        {
+          "word_english": "to mention",
+          "translation_french": "mentionner"
+        },
+        {
+          "word_english": "to permit",
+          "translation_french": "permettre"
+        },
+        {
+          "word_english": "to promote",
+          "translation_french": "promouvoir"
+        },
+        {
+          "word_english": "to recommend",
+          "translation_french": "recommander"
+        },
+        {
+          "word_english": "to replace",
+          "translation_french": "remplacer"
+        },
+        {
+          "word_english": "to rise",
+          "translation_french": "augmenter"
+        },
+        {
+          "word_english": "to shake",
+          "translation_french": "secouer"
+        },
+        {
+          "word_english": "to smoke",
+          "translation_french": "fumer"
+        },
+        {
+          "word_english": "to surf",
+          "translation_french": "surfer"
+        },
+        {
+          "word_english": "to train",
+          "translation_french": "entraîner"
+        },
+        {
+          "word_english": "to upload",
+          "translation_french": "mettre en ligne"
+        }
+      ],
+      "icon_file": "verbs-f.png"
+    },
+    {
+      "topic_page": "Verbs (G)",
+      "slug": "verbs-g",
+      "words": [
+        {
+          "word_english": "to advertise",
+          "translation_french": "faire de la publicité"
+        },
+        {
+          "word_english": "to argue",
+          "translation_french": "se disputer"
+        },
+        {
+          "word_english": "to behave",
+          "translation_french": "se comporter"
+        },
+        {
+          "word_english": "to clap",
+          "translation_french": "applaudir"
+        },
+        {
+          "word_english": "to control",
+          "translation_french": "contrôler"
+        },
+        {
+          "word_english": "to defend",
+          "translation_french": "défendre"
+        },
+        {
+          "word_english": "to disappear",
+          "translation_french": "disparaître"
+        },
+        {
+          "word_english": "to encourage",
+          "translation_french": "encourager"
+        },
+        {
+          "word_english": "to fetch",
+          "translation_french": "aller chercher"
+        },
+        {
+          "word_english": "to gain",
+          "translation_french": "gagner"
+        },
+        {
+          "word_english": "to hunt",
+          "translation_french": "chasser"
+        },
+        {
+          "word_english": "to knock",
+          "translation_french": "frapper"
+        },
+        {
+          "word_english": "to move",
+          "translation_french": "bouger"
+        },
+        {
+          "word_english": "to persuade",
+          "translation_french": "persuader"
+        },
+        {
+          "word_english": "to protect",
+          "translation_french": "protéger"
+        },
+        {
+          "word_english": "to recover",
+          "translation_french": "récupérer"
+        },
+        {
+          "word_english": "to reply",
+          "translation_french": "répondre"
+        },
+        {
+          "word_english": "to rob",
+          "translation_french": "voler"
+        },
+        {
+          "word_english": "to shave",
+          "translation_french": "se raser"
+        },
+        {
+          "word_english": "to solve",
+          "translation_french": "résoudre"
+        },
+        {
+          "word_english": "to surround",
+          "translation_french": "entourer"
+        },
+        {
+          "word_english": "to transfer",
+          "translation_french": "transférer"
+        },
+        {
+          "word_english": "to vote",
+          "translation_french": "voter"
+        }
+      ],
+      "icon_file": "verbs-g.png"
+    },
+    {
+      "topic_page": "Verbs (H)",
+      "slug": "verbs-h",
+      "words": [
+        {
+          "word_english": "to advise",
+          "translation_french": "conseiller"
+        },
+        {
+          "word_english": "to arrange",
+          "translation_french": "arranger"
+        },
+        {
+          "word_english": "to blame",
+          "translation_french": "reprocher"
+        },
+        {
+          "word_english": "to communicate",
+          "translation_french": "communiquer"
+        },
+        {
+          "word_english": "to convince",
+          "translation_french": "convaincre"
+        },
+        {
+          "word_english": "to delete",
+          "translation_french": "supprimer"
+        },
+        {
+          "word_english": "to disappoint",
+          "translation_french": "décevoir"
+        },
+        {
+          "word_english": "to entertain",
+          "translation_french": "divertir"
+        },
+        {
+          "word_english": "to fight",
+          "translation_french": "se battre"
+        },
+        {
+          "word_english": "to grab",
+          "translation_french": "attraper"
+        },
+        {
+          "word_english": "to imagine",
+          "translation_french": "imaginer"
+        },
+        {
+          "word_english": "to lead",
+          "translation_french": "mener"
+        },
+        {
+          "word_english": "to move house",
+          "translation_french": "déménager"
+        },
+        {
+          "word_english": "to plant",
+          "translation_french": "planter"
+        },
+        {
+          "word_english": "to prove",
+          "translation_french": "prouver"
+        },
+        {
+          "word_english": "to recycle",
+          "translation_french": "recycler"
+        },
+        {
+          "word_english": "to report",
+          "translation_french": "signaler"
+        },
+        {
+          "word_english": "to run out",
+          "translation_french": "être à court"
+        },
+        {
+          "word_english": "to shine",
+          "translation_french": "briller"
+        },
+        {
+          "word_english": "to spill",
+          "translation_french": "renverser"
+        },
+        {
+          "word_english": "to switch off",
+          "translation_french": "éteindre"
+        },
+        {
+          "word_english": "to translate",
+          "translation_french": "traduire"
+        },
+        {
+          "word_english": "to warn",
+          "translation_french": "avertir"
+        }
+      ],
+      "icon_file": "verbs-h.png"
+    },
+    {
+      "topic_page": "Verbs (I)",
+      "slug": "verbs-i",
+      "words": [
+        {
+          "word_english": "to aim",
+          "translation_french": "viser"
+        },
+        {
+          "word_english": "to arrest",
+          "translation_french": "arrêter"
+        },
+        {
+          "word_english": "to bleed",
+          "translation_french": "saigner"
+        },
+        {
+          "word_english": "to compare",
+          "translation_french": "comparer"
+        },
+        {
+          "word_english": "to count",
+          "translation_french": "compter"
+        },
+        {
+          "word_english": "to deliver",
+          "translation_french": "livrer"
+        },
+        {
+          "word_english": "to discover",
+          "translation_french": "découvrir"
+        },
+        {
+          "word_english": "to escape",
+          "translation_french": "s'échapper"
+        },
+        {
+          "word_english": "to fill",
+          "translation_french": "remplir"
+        },
+        {
+          "word_english": "to greet",
+          "translation_french": "saluer"
+        },
+        {
+          "word_english": "to increase",
+          "translation_french": "augmenter"
+        },
+        {
+          "word_english": "to let",
+          "translation_french": "laisser"
+        },
+        {
+          "word_english": "to need",
+          "translation_french": "avoir besoin de"
+        },
+        {
+          "word_english": "to point",
+          "translation_french": "indiquer"
+        },
+        {
+          "word_english": "to provide",
+          "translation_french": "fournir"
+        },
+        {
+          "word_english": "to reduce",
+          "translation_french": "réduire"
+        },
+        {
+          "word_english": "to require",
+          "translation_french": "nécessiter"
+        },
+        {
+          "word_english": "to sail",
+          "translation_french": "naviguer"
+        },
+        {
+          "word_english": "to shoot",
+          "translation_french": "tirer"
+        },
+        {
+          "word_english": "to split up",
+          "translation_french": "se séparer"
+        },
+        {
+          "word_english": "to switch on",
+          "translation_french": "allumer"
+        },
+        {
+          "word_english": "to travel",
+          "translation_french": "voyager"
+        },
+        {
+          "word_english": "to wave",
+          "translation_french": "faire signe"
+        }
+      ],
+      "icon_file": "verbs-i.png"
+    },
+    {
+      "topic_page": "Verbs (J)",
+      "slug": "verbs-j",
+      "words": [
+        {
+          "word_english": "to allow",
+          "translation_french": "autoriser"
+        },
+        {
+          "word_english": "to attach",
+          "translation_french": "attacher"
+        },
+        {
+          "word_english": "to blow",
+          "translation_french": "souffler"
+        },
+        {
+          "word_english": "to compete",
+          "translation_french": "concourir"
+        },
+        {
+          "word_english": "to crash",
+          "translation_french": "avoir un accident"
+        },
+        {
+          "word_english": "to demand",
+          "translation_french": "exiger"
+        },
+        {
+          "word_english": "to dislike",
+          "translation_french": "ne pas aimer"
+        },
+        {
+          "word_english": "to exist",
+          "translation_french": "exister"
+        },
+        {
+          "word_english": "to fit",
+          "translation_french": "convenir"
+        },
+        {
+          "word_english": "to grill",
+          "translation_french": "griller"
+        },
+        {
+          "word_english": "to injure",
+          "translation_french": "blesser"
+        },
+        {
+          "word_english": "to lift",
+          "translation_french": "soulever"
+        },
+        {
+          "word_english": "to offer",
+          "translation_french": "offrir"
+        },
+        {
+          "word_english": "to post",
+          "translation_french": "poster"
+        },
+        {
+          "word_english": "to punish",
+          "translation_french": "punir"
+        },
+        {
+          "word_english": "to refund",
+          "translation_french": "rembourser"
+        },
+        {
+          "word_english": "to rescue",
+          "translation_french": "sauver"
+        },
+        {
+          "word_english": "to say",
+          "translation_french": "dire"
+        },
+        {
+          "word_english": "to shout",
+          "translation_french": "crier"
+        },
+        {
+          "word_english": "to spoil",
+          "translation_french": "gâcher"
+        },
+        {
+          "word_english": "to take care of",
+          "translation_french": "s'occuper de"
+        },
+        {
+          "word_english": "to trust",
+          "translation_french": "faire confiance"
+        },
+        {
+          "word_english": "to weigh",
+          "translation_french": "peser"
+        }
+      ],
+      "icon_file": "verbs-j.png"
+    },
+    {
+      "topic_page": "Verbs (K)",
+      "slug": "verbs-k",
+      "words": [
+        {
+          "word_english": "to announce",
+          "translation_french": "annoncer"
+        },
+        {
+          "word_english": "to attack",
+          "translation_french": "attaquer"
+        },
+        {
+          "word_english": "to boil",
+          "translation_french": "bouillir"
+        },
+        {
+          "word_english": "to complain",
+          "translation_french": "se plaindre"
+        },
+        {
+          "word_english": "to create",
+          "translation_french": "créer"
+        },
+        {
+          "word_english": "to depart",
+          "translation_french": "partir"
+        },
+        {
+          "word_english": "to dive",
+          "translation_french": "plonger"
+        },
+        {
+          "word_english": "to expect",
+          "translation_french": "s'attendre à"
+        },
+        {
+          "word_english": "to fix",
+          "translation_french": "réparer"
+        },
+        {
+          "word_english": "to grow",
+          "translation_french": "grandir"
+        },
+        {
+          "word_english": "to insist",
+          "translation_french": "insister"
+        },
+        {
+          "word_english": "to live",
+          "translation_french": "vivre"
+        },
+        {
+          "word_english": "to operate",
+          "translation_french": "opérer"
+        },
+        {
+          "word_english": "to postpone",
+          "translation_french": "reporter"
+        },
+        {
+          "word_english": "to push",
+          "translation_french": "pousser"
+        },
+        {
+          "word_english": "to refuse",
+          "translation_french": "refuser"
+        },
+        {
+          "word_english": "to reserve",
+          "translation_french": "réserver"
+        },
+        {
+          "word_english": "to score",
+          "translation_french": "marquer"
+        },
+        {
+          "word_english": "to sink",
+          "translation_french": "couler"
+        },
+        {
+          "word_english": "to stick",
+          "translation_french": "coller"
+        },
+        {
+          "word_english": "to take part",
+          "translation_french": "participer"
+        },
+        {
+          "word_english": "to try",
+          "translation_french": "essayer"
+        },
+        {
+          "word_english": "to wonder",
+          "translation_french": "se demander"
+        }
+      ],
+      "icon_file": "verbs-k.png"
+    },
+    {
+      "topic_page": "Work",
+      "slug": "work",
+      "words": [
+        {
+          "word_english": "agency",
+          "translation_french": "agence"
+        },
+        {
+          "word_english": "application",
+          "translation_french": "candidature"
+        },
+        {
+          "word_english": "business",
+          "translation_french": "affaires"
+        },
+        {
+          "word_english": "career",
+          "translation_french": "carrière"
+        },
+        {
+          "word_english": "conference",
+          "translation_french": "conférence"
+        },
+        {
+          "word_english": "contract",
+          "translation_french": "contrat"
+        },
+        {
+          "word_english": "design",
+          "translation_french": "conception"
+        },
+        {
+          "word_english": "duty",
+          "translation_french": "devoir"
+        },
+        {
+          "word_english": "economics",
+          "translation_french": "économie"
+        },
+        {
+          "word_english": "employment",
+          "translation_french": "emploi"
+        },
+        {
+          "word_english": "engineering",
+          "translation_french": "ingénierie"
+        },
+        {
+          "word_english": "expert",
+          "translation_french": "expert(e)"
+        },
+        {
+          "word_english": "firm",
+          "translation_french": "entreprise"
+        },
+        {
+          "word_english": "industry",
+          "translation_french": "industrie"
+        },
+        {
+          "word_english": "interview",
+          "translation_french": "entretien"
+        },
+        {
+          "word_english": "opportunity",
+          "translation_french": "occasion"
+        },
+        {
+          "word_english": "position",
+          "translation_french": "poste"
+        },
+        {
+          "word_english": "product",
+          "translation_french": "produit"
+        },
+        {
+          "word_english": "profession",
+          "translation_french": "profession"
+        },
+        {
+          "word_english": "progress",
+          "translation_french": "progrès"
+        },
+        {
+          "word_english": "service",
+          "translation_french": "service"
+        },
+        {
+          "word_english": "success",
+          "translation_french": "succès"
+        },
+        {
+          "word_english": "trade",
+          "translation_french": "commerce"
+        },
+        {
+          "word_english": "unemployment",
+          "translation_french": "chômage"
+        }
+      ],
+      "icon_file": "work.png"
+    }
+  ]
+}

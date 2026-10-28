@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { LEVEL_INFO } from '@/lib/level-colors'
 import { resolveVocabularyStudentContext } from '@/lib/vocabulary-student-context'
 import { getCompletedVocabularyLevelIds } from '@/lib/vocabulary-level-completion-server'
+import { isB1VocabularyVisibleForPortal } from '@/lib/vocabulary-access'
 import VocabularyNav from '@/components/VocabularyNav'
 
 export default async function VocabularyPage({ searchParams }: { searchParams: { viewAs?: string } }) {
@@ -16,6 +17,7 @@ export default async function VocabularyPage({ searchParams }: { searchParams: {
     redirect(ctx.backHref)
   }
 
+  const b1Visible = await isB1VocabularyVisibleForPortal(session, viewAs)
   const isGuardian = ctx.isGuardian
   let completedLevels = new Set<string>()
   if (ctx.studentId) {
@@ -53,7 +55,10 @@ export default async function VocabularyPage({ searchParams }: { searchParams: {
           <div className="bg-white shadow rounded-lg p-6">
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {LEVEL_INFO.map((level) => {
-                const isAvailable = level.id === 'A1' || level.id === 'A2'
+                const isAvailable =
+                  level.id === 'A1' ||
+                  level.id === 'A2' ||
+                  (level.id === 'B1' && b1Visible)
                 const cardContent = (
                   <>
                     {!isAvailable && (

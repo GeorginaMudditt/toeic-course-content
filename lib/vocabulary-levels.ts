@@ -1,4 +1,4 @@
-export const VOCABULARY_LEVELS = ['a1', 'a2'] as const
+export const VOCABULARY_LEVELS = ['a1', 'a2', 'b1'] as const
 
 export type VocabularyLevel = (typeof VOCABULARY_LEVELS)[number]
 
@@ -8,6 +8,7 @@ export const VOCABULARY_TABLES: Record<
 > = {
   a1: { vocab: 'Brizzle_A1_vocab', icons: 'Brizzle_A1_icons' },
   a2: { vocab: 'Brizzle_A2_vocab', icons: 'Brizzle_A2_icons' },
+  b1: { vocab: 'Brizzle_B1_vocab', icons: 'Brizzle_B1_icons' },
 }
 
 export function isVocabularyLevel(level: string): level is VocabularyLevel {

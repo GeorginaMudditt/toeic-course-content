@@ -16,7 +16,7 @@ export interface VocabularyListCategory {
 }
 
 /** Levels whose full vocabulary list PDF is generated from stored vocabulary data. */
-export const GENERATED_VOCABULARY_LIST_LEVELS = ['a1', 'a2'] as const
+export const GENERATED_VOCABULARY_LIST_LEVELS = ['a1', 'a2', 'b1'] as const
 
 export type GeneratedVocabularyListLevel =
   (typeof GENERATED_VOCABULARY_LIST_LEVELS)[number]
