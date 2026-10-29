@@ -613,7 +613,8 @@
         },
         {
           "word_english": "colourful",
-          "translation_french": "coloré(e)"
+          "translation_french": "coloré(e)",
+          "gold_alternatives": ["colorful"]
         },
         {
           "word_english": "cruel",
@@ -669,7 +670,8 @@
         },
         {
           "word_english": "suitable",
-          "translation_french": "approprié(e)"
+          "translation_french": "approprié(e)",
+          "gold_alternatives": ["appropriate"]
         },
         {
           "word_english": "traditional",
