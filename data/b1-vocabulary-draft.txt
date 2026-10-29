@@ -1143,6 +1143,7 @@ trend
 trick
 trouble
 truck
+true
 to trust
 trumpet
 to try

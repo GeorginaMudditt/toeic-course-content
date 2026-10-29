@@ -202,7 +202,7 @@
         },
         {
           "word_english": "frightened",
-          "translation_french": "effrayé(e)"
+          "translation_french": "effrayé(e) / apeuré(e)"
         },
         {
           "word_english": "hidden",
@@ -234,7 +234,7 @@
         },
         {
           "word_english": "scared",
-          "translation_french": "apeuré(e)"
+          "translation_french": "effrayé(e) / apeuré(e)"
         },
         {
           "word_english": "silly",
@@ -247,6 +247,10 @@
         {
           "word_english": "thick",
           "translation_french": "épais / épaisse"
+        },
+        {
+          "word_english": "true",
+          "translation_french": "vrai(e)"
         },
         {
           "word_english": "unfit",
