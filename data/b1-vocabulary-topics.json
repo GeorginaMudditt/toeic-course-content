@@ -170,7 +170,8 @@
       "words": [
         {
           "word_english": "absent",
-          "translation_french": "absent(e)"
+          "translation_french": "absent(e)",
+          "gold_alternatives": ["missing"]
         },
         {
           "word_english": "annual",
@@ -182,19 +183,23 @@
         },
         {
           "word_english": "certain",
-          "translation_french": "certain(e)"
+          "translation_french": "certain(e)",
+          "gold_alternatives": ["sure"]
         },
         {
           "word_english": "convenient",
-          "translation_french": "pratique"
+          "translation_french": "pratique",
+          "gold_alternatives": ["practical"]
         },
         {
           "word_english": "delighted",
-          "translation_french": "ravi(e)"
+          "translation_french": "ravi(e)",
+          "gold_alternatives": ["pleased"]
         },
         {
           "word_english": "elderly",
-          "translation_french": "âgé(e)"
+          "translation_french": "âgé(e)",
+          "gold_alternatives": ["old"]
         },
         {
           "word_english": "false",
@@ -214,11 +219,12 @@
         },
         {
           "word_english": "loud",
-          "translation_french": "fort(e)"
+          "translation_french": "fort(e) (volume)"
         },
         {
           "word_english": "nasty",
-          "translation_french": "méchant(e)"
+          "translation_french": "méchant(e)",
+          "gold_alternatives": ["naughty", "mean"]
         },
         {
           "word_english": "painful",
@@ -238,7 +244,8 @@
         },
         {
           "word_english": "silly",
-          "translation_french": "idiot(e)"
+          "translation_french": "idiot(e)",
+          "gold_alternatives": ["idiotic", "stupid"]
         },
         {
           "word_english": "stressful",

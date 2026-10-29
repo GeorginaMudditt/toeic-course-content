@@ -79,6 +79,13 @@ const GOLD_ALTERNATIVES: Record<string, string[]> = {
   'b1|Activities (B)|coach': ['trainer'],
   'b1|Activities (B)|contest': ['competition'],
   'b1|Activities (B)|ice hockey': ['ice-hockey', 'icehockey'],
+  'b1|Adjectives (A)|absent': ['missing'],
+  'b1|Adjectives (A)|certain': ['sure'],
+  'b1|Adjectives (A)|convenient': ['practical'],
+  'b1|Adjectives (A)|delighted': ['pleased'],
+  'b1|Adjectives (A)|elderly': ['old'],
+  'b1|Adjectives (A)|nasty': ['naughty', 'mean'],
+  'b1|Adjectives (A)|silly': ['idiotic', 'stupid'],
 }
 
 export interface VocabularyWord {
