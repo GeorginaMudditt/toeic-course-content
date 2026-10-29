@@ -104,7 +104,8 @@
         },
         {
           "word_english": "coach",
-          "translation_french": "entraîneur / entraîneuse"
+          "translation_french": "entraîneur / entraîneuse",
+          "gold_alternatives": ["trainer"]
         },
         {
           "word_english": "contest",
@@ -132,7 +133,8 @@
         },
         {
           "word_english": "ice hockey",
-          "translation_french": "hockey sur glace"
+          "translation_french": "hockey sur glace",
+          "gold_alternatives": ["ice-hockey", "icehockey"]
         },
         {
           "word_english": "league",
