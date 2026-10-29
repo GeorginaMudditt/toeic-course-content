@@ -48,7 +48,10 @@
         {
           "word_english": "ice skating",
           "translation_french": "patinage sur glace",
-          "gold_alternatives": ["ice-skating", "iceskating"]
+          "gold_alternatives": [
+            "ice-skating",
+            "iceskating"
+          ]
         },
         {
           "word_english": "jogging",
@@ -77,7 +80,10 @@
         {
           "word_english": "windsurfing",
           "translation_french": "planche à voile",
-          "gold_alternatives": ["wind-surfing", "wind surfing"]
+          "gold_alternatives": [
+            "wind-surfing",
+            "wind surfing"
+          ]
         }
       ],
       "icon_file": "activities-a.png"
@@ -105,12 +111,16 @@
         {
           "word_english": "coach",
           "translation_french": "entraîneur / entraîneuse",
-          "gold_alternatives": ["trainer"]
+          "gold_alternatives": [
+            "trainer"
+          ]
         },
         {
           "word_english": "contest",
           "translation_french": "concours",
-          "gold_alternatives": ["competition"]
+          "gold_alternatives": [
+            "competition"
+          ]
         },
         {
           "word_english": "diving",
@@ -135,7 +145,10 @@
         {
           "word_english": "ice hockey",
           "translation_french": "hockey sur glace",
-          "gold_alternatives": ["ice-hockey", "icehockey"]
+          "gold_alternatives": [
+            "ice-hockey",
+            "icehockey"
+          ]
         },
         {
           "word_english": "league",
@@ -171,7 +184,9 @@
         {
           "word_english": "absent",
           "translation_french": "absent(e)",
-          "gold_alternatives": ["missing"]
+          "gold_alternatives": [
+            "missing"
+          ]
         },
         {
           "word_english": "annual",
@@ -184,22 +199,30 @@
         {
           "word_english": "certain",
           "translation_french": "certain(e)",
-          "gold_alternatives": ["sure"]
+          "gold_alternatives": [
+            "sure"
+          ]
         },
         {
           "word_english": "convenient",
           "translation_french": "pratique",
-          "gold_alternatives": ["practical"]
+          "gold_alternatives": [
+            "practical"
+          ]
         },
         {
           "word_english": "delighted",
           "translation_french": "ravi(e)",
-          "gold_alternatives": ["pleased"]
+          "gold_alternatives": [
+            "pleased"
+          ]
         },
         {
           "word_english": "elderly",
           "translation_french": "âgé(e)",
-          "gold_alternatives": ["old"]
+          "gold_alternatives": [
+            "old"
+          ]
         },
         {
           "word_english": "false",
@@ -208,7 +231,9 @@
         {
           "word_english": "frightened",
           "translation_french": "effrayé(e)",
-          "gold_alternatives": ["scared"]
+          "gold_alternatives": [
+            "scared"
+          ]
         },
         {
           "word_english": "hidden",
@@ -225,7 +250,10 @@
         {
           "word_english": "nasty",
           "translation_french": "méchant(e)",
-          "gold_alternatives": ["naughty", "mean"]
+          "gold_alternatives": [
+            "naughty",
+            "mean"
+          ]
         },
         {
           "word_english": "painful",
@@ -242,12 +270,17 @@
         {
           "word_english": "scared",
           "translation_french": "apeuré(e)",
-          "gold_alternatives": ["frightened"]
+          "gold_alternatives": [
+            "frightened"
+          ]
         },
         {
           "word_english": "silly",
           "translation_french": "idiot(e)",
-          "gold_alternatives": ["idiotic", "stupid"]
+          "gold_alternatives": [
+            "idiotic",
+            "stupid"
+          ]
         },
         {
           "word_english": "stressful",
@@ -291,7 +324,9 @@
         {
           "word_english": "challenging",
           "translation_french": "exigeant(e)",
-          "gold_alternatives": ["demanding"]
+          "gold_alternatives": [
+            "demanding"
+          ]
         },
         {
           "word_english": "cool",
@@ -312,7 +347,9 @@
         {
           "word_english": "frightening",
           "translation_french": "effrayant(e)",
-          "gold_alternatives": ["scary"]
+          "gold_alternatives": [
+            "scary"
+          ]
         },
         {
           "word_english": "high",
@@ -331,22 +368,15 @@
           "translation_french": "naturel / naturelle"
         },
         {
-          "word_english": "part-time",
-          "translation_french": "à temps partiel",
-          "gold_alternatives": ["part time", "parttime"]
-        },
-        {
-          "word_english": "private",
-          "translation_french": "privé(e)"
-        },
-        {
           "word_english": "reasonable",
           "translation_french": "raisonnable"
         },
         {
           "word_english": "scary",
           "translation_french": "qui fait peur",
-          "gold_alternatives": ["frightening"]
+          "gold_alternatives": [
+            "frightening"
+          ]
         },
         {
           "word_english": "similar",
@@ -357,17 +387,15 @@
           "translation_french": "strict(e)"
         },
         {
-          "word_english": "tight",
-          "translation_french": "serré(e)"
-        },
-        {
           "word_english": "unforgettable",
           "translation_french": "inoubliable"
         },
         {
           "word_english": "valuable",
           "translation_french": "précieux / précieuse",
-          "gold_alternatives": ["precious"]
+          "gold_alternatives": [
+            "precious"
+          ]
         }
       ],
       "icon_file": "adjectives-b.png"
@@ -379,7 +407,9 @@
         {
           "word_english": "accurate",
           "translation_french": "précis(e)",
-          "gold_alternatives": ["precise"]
+          "gold_alternatives": [
+            "precise"
+          ]
         },
         {
           "word_english": "ashamed",
@@ -388,7 +418,9 @@
         {
           "word_english": "bold",
           "translation_french": "audacieux / audacieuse",
-          "gold_alternatives": ["audacious"]
+          "gold_alternatives": [
+            "audacious"
+          ]
         },
         {
           "word_english": "charming",
@@ -397,7 +429,9 @@
         {
           "word_english": "cosy",
           "translation_french": "douillet / douillette",
-          "gold_alternatives": ["cozy"]
+          "gold_alternatives": [
+            "cozy"
+          ]
         },
         {
           "word_english": "direct",
@@ -420,18 +454,18 @@
           "translation_french": "historique"
         },
         {
-          "word_english": "irregular",
-          "translation_french": "irrégulier / irrégulière"
-        },
-        {
           "word_english": "main",
           "translation_french": "principal(e)",
-          "gold_alternatives": ["principal"]
+          "gold_alternatives": [
+            "principal"
+          ]
         },
         {
           "word_english": "near",
           "translation_french": "proche",
-          "gold_alternatives": ["close"]
+          "gold_alternatives": [
+            "close"
+          ]
         },
         {
           "word_english": "patient",
@@ -452,16 +486,16 @@
         {
           "word_english": "stylish",
           "translation_french": "élégant(e)",
-          "gold_alternatives": ["elegant"]
-        },
-        {
-          "word_english": "tiny",
-          "translation_french": "minuscule"
+          "gold_alternatives": [
+            "elegant"
+          ]
         },
         {
           "word_english": "unfriendly",
           "translation_french": "peu aimable",
-          "gold_alternatives": ["unkind"]
+          "gold_alternatives": [
+            "unkind"
+          ]
         },
         {
           "word_english": "weak",
@@ -477,10 +511,6 @@
         {
           "word_english": "active",
           "translation_french": "actif / active"
-        },
-        {
-          "word_english": "asleep",
-          "translation_french": "endormi(e)"
         },
         {
           "word_english": "brave",
@@ -511,6 +541,14 @@
           "translation_french": "à temps plein"
         },
         {
+          "word_english": "part-time",
+          "translation_french": "à temps partiel",
+          "gold_alternatives": [
+            "part time",
+            "parttime"
+          ]
+        },
+        {
           "word_english": "jealous",
           "translation_french": "jaloux / jalouse"
         },
@@ -527,20 +565,16 @@
           "translation_french": "paisible"
         },
         {
-          "word_english": "proper",
-          "translation_french": "convenable"
-        },
-        {
           "word_english": "regular",
           "translation_french": "régulier / régulière"
         },
         {
-          "word_english": "sensible",
-          "translation_french": "sensé(e)"
+          "word_english": "irregular",
+          "translation_french": "irrégulier / irrégulière"
         },
         {
-          "word_english": "smooth",
-          "translation_french": "lisse"
+          "word_english": "sensible",
+          "translation_french": "sensé(e)"
         },
         {
           "word_english": "successful",
@@ -614,10 +648,6 @@
           "translation_french": "nécessaire"
         },
         {
-          "word_english": "permanent",
-          "translation_french": "permanent(e)"
-        },
-        {
           "word_english": "proud",
           "translation_french": "fier / fière"
         },
@@ -661,12 +691,12 @@
           "translation_french": "éveillé(e)"
         },
         {
-          "word_english": "brilliant",
-          "translation_french": "génial(e)"
+          "word_english": "asleep",
+          "translation_french": "endormi(e)"
         },
         {
-          "word_english": "common",
-          "translation_french": "courant(e)"
+          "word_english": "brilliant",
+          "translation_french": "génial(e)"
         },
         {
           "word_english": "cultural",
@@ -701,16 +731,16 @@
           "translation_french": "en désordre"
         },
         {
-          "word_english": "negative",
-          "translation_french": "négatif / négative"
-        },
-        {
           "word_english": "personal",
           "translation_french": "personnel / personnelle"
         },
         {
           "word_english": "public",
           "translation_french": "public / publique"
+        },
+        {
+          "word_english": "private",
+          "translation_french": "privé(e)"
         },
         {
           "word_english": "reliable",
@@ -752,10 +782,6 @@
           "translation_french": "affreux / affreuse"
         },
         {
-          "word_english": "broad",
-          "translation_french": "large"
-        },
-        {
           "word_english": "complete",
           "translation_french": "complet / complète"
         },
@@ -782,6 +808,10 @@
         {
           "word_english": "huge",
           "translation_french": "immense"
+        },
+        {
+          "word_english": "tiny",
+          "translation_french": "minuscule"
         },
         {
           "word_english": "light",
@@ -871,10 +901,6 @@
           "translation_french": "reconnaissant(e)"
         },
         {
-          "word_english": "impossible",
-          "translation_french": "impossible"
-        },
-        {
           "word_english": "lively",
           "translation_french": "animé(e)"
         },
@@ -891,12 +917,20 @@
           "translation_french": "positif / positive"
         },
         {
+          "word_english": "negative",
+          "translation_french": "négatif / négative"
+        },
+        {
           "word_english": "qualified",
           "translation_french": "qualifié(e)"
         },
         {
           "word_english": "rough",
           "translation_french": "rugueux / rugueuse"
+        },
+        {
+          "word_english": "smooth",
+          "translation_french": "lisse"
         },
         {
           "word_english": "shocking",
@@ -982,8 +1016,16 @@
           "translation_french": "possible"
         },
         {
+          "word_english": "impossible",
+          "translation_french": "impossible"
+        },
+        {
           "word_english": "rare",
           "translation_french": "rare"
+        },
+        {
+          "word_english": "common",
+          "translation_french": "courant(e)"
         },
         {
           "word_english": "round",
@@ -1061,6 +1103,10 @@
           "translation_french": "ample"
         },
         {
+          "word_english": "tight",
+          "translation_french": "serré(e)"
+        },
+        {
           "word_english": "monthly",
           "translation_french": "mensuel / mensuelle"
         },
@@ -1091,6 +1137,10 @@
         {
           "word_english": "temporary",
           "translation_french": "temporaire"
+        },
+        {
+          "word_english": "permanent",
+          "translation_french": "permanent(e)"
         },
         {
           "word_english": "unexpected",
@@ -1154,6 +1204,10 @@
         {
           "word_english": "narrow",
           "translation_french": "étroit(e)"
+        },
+        {
+          "word_english": "broad",
+          "translation_french": "large"
         },
         {
           "word_english": "original",
