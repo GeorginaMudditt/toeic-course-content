@@ -18,6 +18,9 @@
  *   npx tsx scripts/generate-b1-vocabulary-tts.ts --dry-run
  *   npx tsx scripts/generate-b1-vocabulary-tts.ts --skip-existing
  *   npx tsx scripts/generate-b1-vocabulary-tts.ts --topic "Verbs (A)"
+ *
+ * data/b1-audio-rerecord.txt lists topic|word pairs whose cached clip is wrong.
+ * Those words ignore the cache and use a new seed, so the next paid run replaces them.
  */
 
 import { config } from 'dotenv'
@@ -28,6 +31,7 @@ config({ path: resolve(process.cwd(), '.env.local') })
 config({ path: resolve(process.cwd(), '.env') })
 
 const DATA_FILE = join(process.cwd(), 'data', 'b1-vocabulary-topics.json')
+const RERECORD_FILE = join(process.cwd(), 'data', 'b1-audio-rerecord.txt')
 const AUDIO_BUCKET = 'B1_audio'
 /** George — British male (ElevenLabs premade voice) */
 const DEFAULT_VOICE_ID = 'JBFqnCBsd6RMkjVDRZzb'
@@ -52,6 +56,18 @@ interface VocabTopic {
 interface VocabData {
   level: string
   topics: VocabTopic[]
+}
+
+function loadRerecordKeys(): Set<string> {
+  if (!existsSync(RERECORD_FILE)) return new Set()
+  const keys = new Set<string>()
+  for (const line of readFileSync(RERECORD_FILE, 'utf8').split('\n')) {
+    const trimmed = line.trim()
+    if (!trimmed || trimmed.startsWith('#')) continue
+    const [topic, word] = trimmed.split('|').map((part) => part.trim())
+    if (topic && word) keys.add(`${topic}|${word.toLowerCase()}`)
+  }
+  return keys
 }
 
 function sleep(ms: number) {
@@ -167,6 +183,11 @@ async function main() {
 
   await ensurePublicBucket(supabaseServer, AUDIO_BUCKET)
 
+  const rerecordKeys = loadRerecordKeys()
+  if (rerecordKeys.size) {
+    console.log(`Rerecord list: ${rerecordKeys.size} word(s) will ignore the cache`)
+  }
+
   const cacheDir = join(process.cwd(), '.cache', 'b1-vocabulary-audio')
   if (!existsSync(cacheDir)) {
     mkdirSync(cacheDir, { recursive: true })
@@ -197,7 +218,11 @@ async function main() {
       const storagePath = `${topic.slug}/${slugifyVocabularyText(word.word_english)}.mp3`
       const cacheFile = join(cacheDir, storagePath.replace(/\//g, '__'))
 
-      if (skipExisting && tableReady) {
+      const rerecord = rerecordKeys.has(
+        `${topic.topic_page}|${word.word_english.toLowerCase()}`
+      )
+
+      if (skipExisting && tableReady && !rerecord) {
         const { data: existing } = await supabaseServer
           .from('Brizzle_B1_vocab')
           .select('pron_english')
@@ -214,15 +239,16 @@ async function main() {
 
       try {
         const spokenText = word.tts_text ?? word.word_english
-        const seed = word.tts_text ? TTS_SEED + spokenText.length : TTS_SEED
+        const seed =
+          (word.tts_text ? TTS_SEED + spokenText.length : TTS_SEED) + (rerecord ? 100 : 0)
 
         let audioBuffer: Buffer
-        if (cacheOnly && !existsSync(cacheFile)) {
+        if (cacheOnly && (rerecord || !existsSync(cacheFile))) {
           skipped++
           continue
         }
 
-        if (!forceRegenerate && existsSync(cacheFile)) {
+        if (!forceRegenerate && !rerecord && existsSync(cacheFile)) {
           audioBuffer = readFileSync(cacheFile)
           console.log(`  cache hit: ${word.word_english} (${seen}/${total})`)
         } else {

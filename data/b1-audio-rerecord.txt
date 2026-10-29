@@ -1,0 +1,4 @@
+# Topic | English word | why the current clip should be replaced
+# The next ElevenLabs run ignores the cache for these words.
+Animals | ant | sounds like "antire"
+Animals | bat | sounds like "battiti"
