@@ -701,10 +701,6 @@
           "translation_french": "endormi(e)"
         },
         {
-          "word_english": "brilliant",
-          "translation_french": "génial(e)"
-        },
-        {
           "word_english": "cultural",
           "translation_french": "culturel / culturelle"
         },
@@ -722,7 +718,8 @@
         },
         {
           "word_english": "gentle",
-          "translation_french": "doux / douce"
+          "translation_french": "doux / douce",
+          "gold_alternatives": ["soft"]
         },
         {
           "word_english": "hopeless",
@@ -730,11 +727,13 @@
         },
         {
           "word_english": "keen",
-          "translation_french": "enthousiaste"
+          "translation_french": "enthousiaste",
+          "gold_alternatives": ["enthusiastic"]
         },
         {
           "word_english": "messy",
-          "translation_french": "en désordre"
+          "translation_french": "en désordre",
+          "gold_alternatives": ["in disorder"]
         },
         {
           "word_english": "personal",
@@ -758,7 +757,8 @@
         },
         {
           "word_english": "spare",
-          "translation_french": "supplémentaire"
+          "translation_french": "supplémentaire",
+          "gold_alternatives": ["supplementary", "additional", "extra"]
         },
         {
           "word_english": "surprising",
