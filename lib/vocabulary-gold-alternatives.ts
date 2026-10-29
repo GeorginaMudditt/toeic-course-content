@@ -86,6 +86,9 @@ const GOLD_ALTERNATIVES: Record<string, string[]> = {
   'b1|Adjectives (A)|elderly': ['old'],
   'b1|Adjectives (A)|nasty': ['naughty', 'mean'],
   'b1|Adjectives (A)|silly': ['idiotic', 'stupid'],
+  'b1|Adjectives (B)|challenging': ['demanding'],
+  'b1|Adjectives (B)|part-time': ['part time', 'parttime'],
+  'b1|Adjectives (B)|valuable': ['precious'],
 }
 
 /**

@@ -290,7 +290,8 @@
         },
         {
           "word_english": "challenging",
-          "translation_french": "exigeant(e)"
+          "translation_french": "exigeant(e)",
+          "gold_alternatives": ["demanding"]
         },
         {
           "word_english": "cool",
@@ -331,7 +332,8 @@
         },
         {
           "word_english": "part-time",
-          "translation_french": "à temps partiel"
+          "translation_french": "à temps partiel",
+          "gold_alternatives": ["part time", "parttime"]
         },
         {
           "word_english": "private",
@@ -364,7 +366,8 @@
         },
         {
           "word_english": "valuable",
-          "translation_french": "précieux / précieuse"
+          "translation_french": "précieux / précieuse",
+          "gold_alternatives": ["precious"]
         }
       ],
       "icon_file": "adjectives-b.png"
