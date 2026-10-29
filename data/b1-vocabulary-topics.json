@@ -518,7 +518,8 @@
         },
         {
           "word_english": "cheerful",
-          "translation_french": "joyeux / joyeuse"
+          "translation_french": "joyeux / joyeuse",
+          "gold_alternatives": ["happy"]
         },
         {
           "word_english": "creative",
@@ -534,11 +535,13 @@
         },
         {
           "word_english": "female",
-          "translation_french": "féminin(e)"
+          "translation_french": "féminin(e)",
+          "gold_alternatives": ["feminine"]
         },
         {
           "word_english": "full-time",
-          "translation_french": "à temps plein"
+          "translation_french": "à temps plein",
+          "gold_alternatives": ["full time", "fulltime"]
         },
         {
           "word_english": "part-time",
@@ -554,7 +557,8 @@
         },
         {
           "word_english": "male",
-          "translation_french": "masculin(e)"
+          "translation_french": "masculin(e)",
+          "gold_alternatives": ["masculine"]
         },
         {
           "word_english": "neat",
