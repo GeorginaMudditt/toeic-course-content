@@ -57,11 +57,27 @@ export async function isB1VocabularyVisibleForPortal(
 }
 
 export async function isB1ProgressAllowed(
+  session: Session,
   studentId: string,
   level: string | null | undefined
 ): Promise<boolean> {
-  if (level?.toLowerCase() !== 'b1') return true
-  return userIsDemoStudent(studentId)
+  if (!level || level.toLowerCase() !== 'b1') return true
+
+  // The logged-in student and guardian already carry the name on the session.
+  // Looking them up in Prisma hits the direct database host, which the live site cannot reach.
+  if (session.user.role === 'STUDENT' && session.user.id === studentId) {
+    return isDemoVocabularyStudent(session.user)
+  }
+
+  if (session.user.role === 'GUARDIAN' && session.user.activeChildId === studentId) {
+    return isDemoVocabularyStudent({ name: session.user.activeChildName })
+  }
+
+  if (session.user.role === 'TEACHER') {
+    return userIsDemoStudent(studentId)
+  }
+
+  return false
 }
 
 /** Block B1 word, topic, icon, and list routes unless this request is the demo student portal. */

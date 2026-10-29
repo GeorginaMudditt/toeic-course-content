@@ -28,7 +28,7 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: target.error }, { status: target.status })
     }
 
-    if (!(await isB1ProgressAllowed(target.studentId, level))) {
+    if (!(await isB1ProgressAllowed(session, target.studentId, level))) {
       return NextResponse.json({ data: [], error: null })
     }
 
@@ -82,7 +82,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Invalid request data' }, { status: 400 })
     }
 
-    if (!(await isB1ProgressAllowed(targetStudentId, level))) {
+    if (!(await isB1ProgressAllowed(session, targetStudentId, level))) {
       return NextResponse.json({ error: 'This level is coming soon.' }, { status: 403 })
     }
 
