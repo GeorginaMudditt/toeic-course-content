@@ -77,6 +77,7 @@ const GOLD_ALTERNATIVES: Record<string, string[]> = {
   'b1|Activities (A)|ice skating': ['ice-skating', 'iceskating'],
   'b1|Activities (A)|windsurfing': ['wind-surfing', 'wind surfing'],
   'b1|Activities (B)|coach': ['trainer'],
+  'b1|Activities (B)|contest': ['competition'],
   'b1|Activities (B)|ice hockey': ['ice-hockey', 'icehockey'],
 }
 

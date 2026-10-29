@@ -109,7 +109,8 @@
         },
         {
           "word_english": "contest",
-          "translation_french": "concours"
+          "translation_french": "concours",
+          "gold_alternatives": ["competition"]
         },
         {
           "word_english": "diving",
