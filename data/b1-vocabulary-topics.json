@@ -10,14 +10,6 @@
           "translation_french": "athlète"
         },
         {
-          "word_english": "attraction",
-          "translation_french": "attraction"
-        },
-        {
-          "word_english": "camp",
-          "translation_french": "camp"
-        },
-        {
           "word_english": "champion",
           "translation_french": "champion(ne)"
         },
@@ -55,7 +47,8 @@
         },
         {
           "word_english": "ice skating",
-          "translation_french": "patinage sur glace"
+          "translation_french": "patinage sur glace",
+          "gold_alternatives": ["ice-skating", "iceskating"]
         },
         {
           "word_english": "jogging",
@@ -83,7 +76,8 @@
         },
         {
           "word_english": "windsurfing",
-          "translation_french": "planche à voile"
+          "translation_french": "planche à voile",
+          "gold_alternatives": ["wind-surfing", "wind surfing"]
         }
       ],
       "icon_file": "activities-a.png"
