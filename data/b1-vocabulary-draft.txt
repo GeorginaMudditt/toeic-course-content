@@ -608,7 +608,6 @@ instructor
 intelligent
 intermediate
 to interrupt
-interval
 interview
 to introduce
 to invent
@@ -679,7 +678,6 @@ loud
 love
 low
 luxury
-magic
 main
 male
 mall
