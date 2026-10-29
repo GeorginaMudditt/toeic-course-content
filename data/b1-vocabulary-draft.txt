@@ -1010,7 +1010,6 @@ skill
 skin
 sleeve
 to slip
-smart
 to smell
 to smile
 to smoke

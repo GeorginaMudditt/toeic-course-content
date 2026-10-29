@@ -378,7 +378,8 @@
       "words": [
         {
           "word_english": "accurate",
-          "translation_french": "précis(e)"
+          "translation_french": "précis(e)",
+          "gold_alternatives": ["precise"]
         },
         {
           "word_english": "ashamed",
@@ -386,7 +387,8 @@
         },
         {
           "word_english": "bold",
-          "translation_french": "audacieux / audacieuse"
+          "translation_french": "audacieux / audacieuse",
+          "gold_alternatives": ["audacious"]
         },
         {
           "word_english": "charming",
@@ -394,7 +396,8 @@
         },
         {
           "word_english": "cosy",
-          "translation_french": "douillet / douillette"
+          "translation_french": "douillet / douillette",
+          "gold_alternatives": ["cozy"]
         },
         {
           "word_english": "direct",
@@ -422,11 +425,13 @@
         },
         {
           "word_english": "main",
-          "translation_french": "principal(e)"
+          "translation_french": "principal(e)",
+          "gold_alternatives": ["principal"]
         },
         {
           "word_english": "near",
-          "translation_french": "proche"
+          "translation_french": "proche",
+          "gold_alternatives": ["close"]
         },
         {
           "word_english": "patient",
@@ -445,12 +450,9 @@
           "translation_french": "égoïste"
         },
         {
-          "word_english": "smart",
-          "translation_french": "chic"
-        },
-        {
           "word_english": "stylish",
-          "translation_french": "élégant(e)"
+          "translation_french": "élégant(e)",
+          "gold_alternatives": ["elegant"]
         },
         {
           "word_english": "tiny",
@@ -458,7 +460,8 @@
         },
         {
           "word_english": "unfriendly",
-          "translation_french": "peu aimable"
+          "translation_french": "peu aimable",
+          "gold_alternatives": ["unkind"]
         },
         {
           "word_english": "weak",
