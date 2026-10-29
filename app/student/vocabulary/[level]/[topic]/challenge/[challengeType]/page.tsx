@@ -241,8 +241,8 @@ export default function ChallengePage() {
 
   const silverSlotCorrectness = useMemo(() => {
     if (challengeType !== 'silver' || !silverHelpModeEnabled) return {} as Record<number, boolean>
-    return getSilverSlotCorrectness(words, wordPositions)
-  }, [challengeType, silverHelpModeEnabled, words, wordPositions])
+    return getSilverSlotCorrectness(words, wordPositions, level, topic)
+  }, [challengeType, silverHelpModeEnabled, words, wordPositions, level, topic])
 
   const goldSlotCorrectness = useMemo(() => {
     if (challengeType !== 'gold' || !helpModeEnabled) return {} as Record<number, boolean>
@@ -491,7 +491,7 @@ export default function ChallengePage() {
     
     // For silver challenge, check if all words are correctly positioned
     if (challengeType === 'silver') {
-      const allCorrect = isSilverChallengeCorrect(words, wordPositions)
+      const allCorrect = isSilverChallengeCorrect(words, wordPositions, level, topic)
       if (!allCorrect) {
         const newErrorCount = silverErrorCount + 1
         setSilverErrorCount(newErrorCount)

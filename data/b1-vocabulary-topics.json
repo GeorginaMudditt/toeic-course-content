@@ -207,7 +207,8 @@
         },
         {
           "word_english": "frightened",
-          "translation_french": "effrayé(e) / apeuré(e)"
+          "translation_french": "effrayé(e)",
+          "gold_alternatives": ["scared"]
         },
         {
           "word_english": "hidden",
@@ -240,7 +241,8 @@
         },
         {
           "word_english": "scared",
-          "translation_french": "effrayé(e) / apeuré(e)"
+          "translation_french": "apeuré(e)",
+          "gold_alternatives": ["frightened"]
         },
         {
           "word_english": "silly",
@@ -308,7 +310,8 @@
         },
         {
           "word_english": "frightening",
-          "translation_french": "effrayant(e) / qui fait peur"
+          "translation_french": "effrayant(e)",
+          "gold_alternatives": ["scary"]
         },
         {
           "word_english": "high",
@@ -340,7 +343,8 @@
         },
         {
           "word_english": "scary",
-          "translation_french": "effrayant(e) / qui fait peur"
+          "translation_french": "qui fait peur",
+          "gold_alternatives": ["frightening"]
         },
         {
           "word_english": "similar",

@@ -88,6 +88,28 @@ const GOLD_ALTERNATIVES: Record<string, string[]> = {
   'b1|Adjectives (A)|silly': ['idiotic', 'stupid'],
 }
 
+/**
+ * Pairs that accept either English word on either card.
+ * Each card keeps its own French. The other English word is also a correct answer.
+ */
+const INTERCHANGEABLE_GROUPS: Record<string, string[][]> = {
+  'b1|Adjectives (A)': [['frightened', 'scared']],
+  'b1|Adjectives (B)': [['frightening', 'scary']],
+}
+
+export function interchangeableEnglishWords(
+  level: string,
+  topic: string,
+  wordEnglish: string
+): string[] {
+  const key = `${level.toLowerCase()}|${topic.trim()}`
+  const group = (INTERCHANGEABLE_GROUPS[key] ?? []).find((words) =>
+    words.some((word) => word.toLocaleLowerCase() === wordEnglish.toLocaleLowerCase())
+  )
+  if (!group) return []
+  return group.filter((word) => word.toLocaleLowerCase() !== wordEnglish.toLocaleLowerCase())
+}
+
 export interface VocabularyWord {
   word_english: string
   translation_french: string
@@ -193,7 +215,7 @@ export function getGoldAlternatives(
   wordEnglish: string
 ): string[] {
   const key = `${level.toLowerCase()}|${topic.trim()}|${wordEnglish}`
-  return GOLD_ALTERNATIVES[key] ?? []
+  return [...(GOLD_ALTERNATIVES[key] ?? []), ...interchangeableEnglishWords(level, topic, wordEnglish)]
 }
 
 export function isGoldEnglishAnswerCorrect(
