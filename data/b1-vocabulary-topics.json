@@ -881,20 +881,12 @@
           "translation_french": "amusant(e)"
         },
         {
-          "word_english": "bald",
-          "translation_french": "chauve"
-        },
-        {
           "word_english": "calm",
           "translation_french": "calme"
         },
         {
           "word_english": "complicated",
           "translation_french": "compliqué(e)"
-        },
-        {
-          "word_english": "curly",
-          "translation_french": "bouclé(e)"
         },
         {
           "word_english": "dull",
@@ -1729,12 +1721,20 @@
       "slug": "appearance",
       "words": [
         {
+          "word_english": "bald",
+          "translation_french": "chauve"
+        },
+        {
           "word_english": "bracelet",
           "translation_french": "bracelet"
         },
         {
           "word_english": "button",
           "translation_french": "bouton"
+        },
+        {
+          "word_english": "curly",
+          "translation_french": "bouclé(e)"
         },
         {
           "word_english": "fur",
