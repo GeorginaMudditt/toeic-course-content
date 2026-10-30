@@ -890,7 +890,8 @@
         },
         {
           "word_english": "dull",
-          "translation_french": "ennuyeux / ennuyeuse"
+          "translation_french": "ennuyeux / ennuyeuse",
+          "gold_alternatives": ["boring"]
         },
         {
           "word_english": "exact",
@@ -906,15 +907,18 @@
         },
         {
           "word_english": "lively",
-          "translation_french": "animé(e)"
+          "translation_french": "animé(e)",
+          "gold_alternatives": ["animated"]
         },
         {
           "word_english": "mild",
-          "translation_french": "doux / douce"
+          "translation_french": "doux / douce",
+          "gold_alternatives": ["soft", "gentle"]
         },
         {
           "word_english": "obvious",
-          "translation_french": "évident(e)"
+          "translation_french": "évident(e)",
+          "gold_alternatives": ["evident"]
         },
         {
           "word_english": "positive",
