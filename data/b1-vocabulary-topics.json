@@ -797,7 +797,8 @@
         },
         {
           "word_english": "due",
-          "translation_french": "prévu(e)"
+          "translation_french": "prévu(e)",
+          "gold_alternatives": ["expected"]
         },
         {
           "word_english": "essential",
@@ -809,11 +810,13 @@
         },
         {
           "word_english": "gorgeous",
-          "translation_french": "magnifique"
+          "translation_french": "magnifique",
+          "gold_alternatives": ["magnificent"]
         },
         {
           "word_english": "huge",
-          "translation_french": "immense"
+          "translation_french": "immense",
+          "gold_alternatives": ["immense"]
         },
         {
           "word_english": "tiny",
@@ -825,7 +828,8 @@
         },
         {
           "word_english": "middle-aged",
-          "translation_french": "d'âge moyen"
+          "translation_french": "d'âge moyen",
+          "gold_alternatives": ["middle aged"]
         },
         {
           "word_english": "nervous",
@@ -833,7 +837,8 @@
         },
         {
           "word_english": "plain",
-          "translation_french": "simple"
+          "translation_french": "simple",
+          "gold_alternatives": ["simple"]
         },
         {
           "word_english": "pure",
@@ -857,7 +862,8 @@
         },
         {
           "word_english": "unbelievable",
-          "translation_french": "incroyable"
+          "translation_french": "incroyable",
+          "gold_alternatives": ["incredible"]
         },
         {
           "word_english": "unlikely",
