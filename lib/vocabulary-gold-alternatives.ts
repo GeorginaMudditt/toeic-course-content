@@ -99,6 +99,7 @@ const GOLD_ALTERNATIVES: Record<string, string[]> = {
   'b1|Adjectives (F)|messy': ['in disorder'],
   'b1|Adjectives (F)|spare': ['supplementary', 'additional', 'extra'],
   'b1|Animals|bug': ['insect'],
+  'b1|Appearance|second-hand': ['secondhand', 'second hand'],
   'b1|Adjectives (B)|valuable': ['precious'],
   'b1|Adjectives (C)|accurate': ['precise'],
   'b1|Adjectives (C)|bold': ['audacious'],

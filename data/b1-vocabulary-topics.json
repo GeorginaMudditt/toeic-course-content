@@ -1752,7 +1752,8 @@
         },
         {
           "word_english": "second-hand",
-          "translation_french": "d'occasion"
+          "translation_french": "d'occasion",
+          "gold_alternatives": ["secondhand", "second hand"]
         },
         {
           "word_english": "silk",
