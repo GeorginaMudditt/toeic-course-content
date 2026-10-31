@@ -1,0 +1,12 @@
+---
+description: Leave resource descriptions blank. Do not add a tagline under a resource title.
+alwaysApply: true
+---
+
+# Resource descriptions
+
+When creating or updating a resource, leave `description` empty (`null`). Do not add a tagline or subtitle under the title.
+
+Other resources on this platform do not have one. Do not invent a sentence such as "Look carefully..." and store it as the resource description.
+
+Instructions that belong inside the worksheet can stay in the worksheet content. Those are separate from the description shown under the title in the resources list and on the assignment page.

@@ -1,0 +1,311 @@
+<!-- Speaking: Describe a Picture (A1) -->
+<style>
+  .dp-wrap {
+    --dp-ink: #2a1848;
+    --dp-purple: #8a3dde;
+    --dp-pink: #db2777;
+    --dp-red: #e11d48;
+    --dp-green: #178a4a;
+    max-width: 920px;
+    margin: 0 auto;
+    padding: 4px 4px 12px;
+    font-family: Arial, sans-serif;
+    color: var(--dp-ink);
+  }
+
+  .dp-wrap p,
+  .dp-wrap button,
+  .dp-wrap figcaption {
+    font-family: Arial, sans-serif;
+  }
+
+  .dp-prompt {
+    margin: 0 0 8px !important;
+    max-width: 42rem;
+    font-size: 18px;
+    line-height: 1.45;
+    color: var(--dp-ink);
+  }
+
+  .dp-progress {
+    margin: 0 0 16px !important;
+    font-size: 17px;
+    font-weight: 700;
+    line-height: 1.35;
+    color: var(--dp-purple);
+  }
+
+  .dp-viewer {
+    position: relative;
+  }
+
+  .dp-frame {
+    margin: 0 !important;
+  }
+
+  .dp-frame img {
+    display: block;
+    width: 100%;
+    height: auto;
+    margin: 0 !important;
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+    border-radius: 28px;
+    background: white;
+    box-shadow: 0 10px 0 rgba(42, 24, 72, 0.1);
+  }
+
+  .dp-frame figcaption {
+    margin: 12px 0 0 !important;
+    color: var(--dp-purple);
+    font-size: 18px;
+    font-weight: 700;
+  }
+
+  .dp-arrow {
+    position: absolute;
+    top: calc(50% - 42px);
+    z-index: 2;
+    display: grid;
+    place-items: center;
+    width: 48px;
+    height: 48px;
+    padding: 0;
+    border: 0;
+    border-radius: 50%;
+    background: white;
+    color: var(--dp-pink);
+    box-shadow: 0 5px 0 rgba(42, 24, 72, 0.12);
+    cursor: pointer;
+  }
+
+  .dp-arrow svg {
+    width: 22px;
+    height: 22px;
+  }
+
+  .dp-arrow-prev { left: 12px; }
+  .dp-arrow-next { right: 12px; }
+
+  .dp-arrow:hover {
+    background: var(--dp-pink);
+    color: white;
+  }
+
+  .dp-tools {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px;
+    margin-top: 14px;
+  }
+
+  .dp-tool {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 9px 16px;
+    border: 0;
+    border-radius: 999px;
+    background: white;
+    color: var(--dp-ink);
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 0 4px 0 rgba(42, 24, 72, 0.1);
+  }
+
+  .dp-tool:hover {
+    transform: translateY(-2px);
+  }
+
+  .dp-tool.is-done {
+    background: var(--dp-green);
+    color: white;
+  }
+
+  .dp-tool.is-recording {
+    background: var(--dp-red);
+    color: white;
+  }
+
+  .dp-playback {
+    width: min(100%, 28rem);
+    height: 42px;
+  }
+
+  .dp-thumbs {
+    display: flex;
+    gap: 10px;
+    margin-top: 16px;
+    overflow-x: auto;
+    padding-bottom: 6px;
+  }
+
+  .dp-thumb {
+    position: relative;
+    flex: 0 0 112px;
+    height: 84px;
+    padding: 0;
+    border: 3px solid transparent;
+    border-radius: 16px;
+    background: white;
+    overflow: hidden;
+    cursor: pointer;
+  }
+
+  .dp-thumb img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    margin: 0 !important;
+    object-fit: cover;
+  }
+
+  .dp-thumb[aria-current="true"] {
+    border-color: var(--dp-pink);
+  }
+
+  .dp-thumb.is-done::after {
+    content: "✓";
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    width: 22px;
+    height: 22px;
+    display: grid;
+    place-items: center;
+    border-radius: 50%;
+    background: white;
+    color: var(--dp-green);
+    font-size: 14px;
+    font-weight: 700;
+    line-height: 1;
+  }
+
+  .dp-thumb:hover,
+  .dp-arrow:hover {
+    transform: translateY(-2px);
+  }
+
+  .dp-feedback {
+    margin: 14px 0 0 !important;
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--dp-purple);
+  }
+
+  .dp-status {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+
+  .dp-arrow:focus-visible,
+  .dp-thumb:focus-visible,
+  .dp-tool:focus-visible {
+    outline: 3px solid var(--dp-purple);
+    outline-offset: 3px;
+  }
+
+  @media (max-width: 640px) {
+    .dp-frame img {
+      border-radius: 18px;
+    }
+
+    .dp-arrow {
+      width: 40px;
+      height: 40px;
+      top: calc(50% - 36px);
+    }
+
+    .dp-arrow-prev { left: 8px; }
+    .dp-arrow-next { right: 8px; }
+  }
+
+  @media print {
+    .dp-tools,
+    .dp-thumbs,
+    .dp-arrow,
+    .dp-feedback,
+    .dp-progress {
+      display: none !important;
+    }
+  }
+</style>
+
+<div class="dp-wrap" data-describe-picture>
+  <p class="dp-prompt">Look carefully. Who is there, where are they, and what are they doing? You can record your voice and then listen to the recording. Tick each picture when you have described it.</p>
+  <p class="dp-progress" data-dp-progress>0 of 10 pictures ticked.</p>
+
+  <div class="dp-viewer">
+    <button type="button" class="dp-arrow dp-arrow-prev" data-dp-prev aria-label="Previous picture">
+      <svg viewBox="0 0 20 20" aria-hidden="true">
+        <path d="M12.5 4.5 7 10l5.5 5.5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" />
+      </svg>
+    </button>
+    <figure class="dp-frame">
+      <img
+        data-dp-picture
+        src="https://ulrwcortyhassmytkcij.supabase.co/storage/v1/object/public/toeic/describe-a-picture/picture-birthday.jpg"
+        alt="Six friends around a birthday cake with candles, balloons, and presents."
+        width="960"
+        height="720"
+      />
+      <figcaption data-dp-caption>Birthday party · 1 of 10</figcaption>
+    </figure>
+    <button type="button" class="dp-arrow dp-arrow-next" data-dp-next aria-label="Next picture">
+      <svg viewBox="0 0 20 20" aria-hidden="true">
+        <path d="M7.5 4.5 13 10l-5.5 5.5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" />
+      </svg>
+    </button>
+  </div>
+
+  <div class="dp-tools">
+    <button type="button" class="dp-tool" data-dp-done aria-pressed="false">Tick this picture</button>
+    <button type="button" class="dp-tool" data-dp-record aria-pressed="false">Record</button>
+    <audio class="dp-playback" data-dp-playback controls hidden></audio>
+  </div>
+
+  <div class="dp-thumbs" role="list" aria-label="Pictures">
+    <button type="button" class="dp-thumb" role="listitem" data-dp-thumb aria-current="true" aria-label="Birthday party" data-src="https://ulrwcortyhassmytkcij.supabase.co/storage/v1/object/public/toeic/describe-a-picture/picture-birthday.jpg" data-label="Birthday party" data-alt="Six friends around a birthday cake with candles, balloons, and presents.">
+      <img src="https://ulrwcortyhassmytkcij.supabase.co/storage/v1/object/public/toeic/describe-a-picture/picture-birthday.jpg" alt="">
+    </button>
+    <button type="button" class="dp-thumb" role="listitem" data-dp-thumb aria-label="Football match" data-src="https://ulrwcortyhassmytkcij.supabase.co/storage/v1/object/public/toeic/describe-a-picture/picture-football.jpg" data-label="Football match" data-alt="Children playing football on a sunny pitch, with friends cheering beside the field.">
+      <img src="https://ulrwcortyhassmytkcij.supabase.co/storage/v1/object/public/toeic/describe-a-picture/picture-football.jpg" alt="">
+    </button>
+    <button type="button" class="dp-thumb" role="listitem" data-dp-thumb aria-label="Skate park" data-src="https://ulrwcortyhassmytkcij.supabase.co/storage/v1/object/public/toeic/describe-a-picture/picture-skatepark.jpg" data-label="Skate park" data-alt="Children skateboarding and scooting at a colourful city skate park.">
+      <img src="https://ulrwcortyhassmytkcij.supabase.co/storage/v1/object/public/toeic/describe-a-picture/picture-skatepark.jpg" alt="">
+    </button>
+    <button type="button" class="dp-thumb" role="listitem" data-dp-thumb aria-label="Camping trip" data-src="https://ulrwcortyhassmytkcij.supabase.co/storage/v1/object/public/toeic/describe-a-picture/picture-camping.jpg" data-label="Camping trip" data-alt="Three children camping beside a lake, with a tent, backpacks, and a campfire.">
+      <img src="https://ulrwcortyhassmytkcij.supabase.co/storage/v1/object/public/toeic/describe-a-picture/picture-camping.jpg" alt="">
+    </button>
+    <button type="button" class="dp-thumb" role="listitem" data-dp-thumb aria-label="Band practice" data-src="https://ulrwcortyhassmytkcij.supabase.co/storage/v1/object/public/toeic/describe-a-picture/picture-band.jpg" data-label="Band practice" data-alt="Four children playing keyboard, drums, and guitar, and singing in a garage.">
+      <img src="https://ulrwcortyhassmytkcij.supabase.co/storage/v1/object/public/toeic/describe-a-picture/picture-band.jpg" alt="">
+    </button>
+    <button type="button" class="dp-thumb" role="listitem" data-dp-thumb aria-label="Theme park" data-src="https://ulrwcortyhassmytkcij.supabase.co/storage/v1/object/public/toeic/describe-a-picture/picture-themepark.jpg" data-label="Theme park" data-alt="Three friends at a theme park, with a roller coaster, a ferris wheel, and a snack stall.">
+      <img src="https://ulrwcortyhassmytkcij.supabase.co/storage/v1/object/public/toeic/describe-a-picture/picture-themepark.jpg" alt="">
+    </button>
+    <button type="button" class="dp-thumb" role="listitem" data-dp-thumb aria-label="Classroom" data-src="https://ulrwcortyhassmytkcij.supabase.co/storage/v1/object/public/toeic/describe-a-picture/picture-classroom.jpg" data-label="Classroom" data-alt="A teacher stands beside the whiteboard while a grumpy class looks toward her. One pupil is in a wheelchair, and one wears glasses.">
+      <img src="https://ulrwcortyhassmytkcij.supabase.co/storage/v1/object/public/toeic/describe-a-picture/picture-classroom.jpg" alt="">
+    </button>
+    <button type="button" class="dp-thumb" role="listitem" data-dp-thumb aria-label="At work" data-src="https://ulrwcortyhassmytkcij.supabase.co/storage/v1/object/public/toeic/describe-a-picture/picture-work.jpg" data-label="At work" data-alt="Four adults working in an office, typing, talking on the phone, pointing at a chart, and carrying a folder.">
+      <img src="https://ulrwcortyhassmytkcij.supabase.co/storage/v1/object/public/toeic/describe-a-picture/picture-work.jpg" alt="">
+    </button>
+    <button type="button" class="dp-thumb" role="listitem" data-dp-thumb aria-label="Beach" data-src="https://ulrwcortyhassmytkcij.supabase.co/storage/v1/object/public/toeic/describe-a-picture/picture-beach.jpg" data-label="Beach" data-alt="Four friends at the beach, building a sandcastle, running with a ball, eating ice cream, and paddling.">
+      <img src="https://ulrwcortyhassmytkcij.supabase.co/storage/v1/object/public/toeic/describe-a-picture/picture-beach.jpg" alt="">
+    </button>
+    <button type="button" class="dp-thumb" role="listitem" data-dp-thumb aria-label="Baking" data-src="https://ulrwcortyhassmytkcij.supabase.co/storage/v1/object/public/toeic/describe-a-picture/picture-baking.jpg" data-label="Baking" data-alt="Three children baking in a kitchen, stirring a bowl, decorating a cake, and tasting the icing.">
+      <img src="https://ulrwcortyhassmytkcij.supabase.co/storage/v1/object/public/toeic/describe-a-picture/picture-baking.jpg" alt="">
+    </button>
+  </div>
+
+  <p class="dp-feedback" data-dp-feedback hidden></p>
+  <p class="dp-status" data-dp-status aria-live="polite"></p>
+</div>

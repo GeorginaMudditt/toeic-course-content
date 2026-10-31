@@ -43,6 +43,12 @@ import {
   parseSpeakingTopicsUsedFromNotes,
   type SpeakingTopicsPersistence,
 } from '@/lib/worksheetInteractions/speakingTopicsPack'
+import {
+  mergeDescribePictureTickedIntoNotes,
+  mountDescribePictures,
+  parseDescribePictureTickedFromNotes,
+  type DescribePicturePersistence,
+} from '@/lib/worksheetInteractions/describePicture'
 import { mountWritingClearlyPhraseMatch } from '@/lib/worksheetInteractions/writingClearlyPhraseMatch'
 import { mountWritingClearlySubmit } from '@/lib/worksheetInteractions/writingClearlySubmit'
 import { mountWritingTaskSubmits } from '@/lib/worksheetInteractions/writingTaskSubmit'
@@ -869,6 +875,7 @@ export default function WorksheetViewer({
   const latestSaveIdRef = useRef(0)
   const giaqPersistenceRef = useRef<GiaqActivityPersistence | null>(null)
   const speakingTopicsPersistenceRef = useRef<SpeakingTopicsPersistence | null>(null)
+  const describePicturePersistenceRef = useRef<DescribePicturePersistence | null>(null)
   giaqPersistenceRef.current = {
     getMatchPlacements: (matchKey) => parseGiaqMatchPlacementsFromNotes(notesRef.current, matchKey),
     setMatchPlacements: (matchKey, placements) => {
@@ -927,6 +934,8 @@ export default function WorksheetViewer({
     typeof resource.content === 'string' && resource.content.includes('data-dd-reveal')
   const hasSpeakingTopics =
     typeof resource.content === 'string' && resource.content.includes('data-speaking-topics')
+  const hasDescribePicture =
+    typeof resource.content === 'string' && resource.content.includes('data-describe-picture')
   const bookmarkedSlugsRef = useRef(new Set(initialBookmarkedSlugs))
 
   /** Per-section Check Answers + live tick/cross (see resources using data-grammar-per-section-check). */
@@ -1552,6 +1561,15 @@ export default function WorksheetViewer({
     getUsedTopics: () => parseSpeakingTopicsUsedFromNotes(notesRef.current),
     setUsedTopics: (topics) => {
       const newNotes = mergeSpeakingTopicsUsedIntoNotes(notesRef.current, topics)
+      notesRef.current = newNotes
+      setNotes(newNotes)
+      void saveProgressRef.current(newNotes)
+    },
+  }
+  describePicturePersistenceRef.current = {
+    getTicked: () => parseDescribePictureTickedFromNotes(notesRef.current),
+    setTicked: (indexes) => {
+      const newNotes = mergeDescribePictureTickedIntoNotes(notesRef.current, indexes)
       notesRef.current = newNotes
       setNotes(newNotes)
       void saveProgressRef.current(newNotes)
@@ -3144,6 +3162,25 @@ export default function WorksheetViewer({
     }
   }, [hasSpeakingTopics, resource.content, isClientMounted])
 
+  // A1 Describe a Picture: carousel, microphone recording, and tick-as-done.
+  useLayoutEffect(() => {
+    if (!hasDescribePicture || !isClientMounted) return
+    let detach: (() => void) | undefined
+    const rafId = requestAnimationFrame(() => {
+      const host = contentRef.current
+      if (!host) return
+      detach = mountDescribePictures(
+        host,
+        describePicturePersistenceRef.current ?? undefined,
+        assignmentId,
+      )
+    })
+    return () => {
+      cancelAnimationFrame(rafId)
+      detach?.()
+    }
+  }, [hasDescribePicture, resource.content, isClientMounted, assignmentId])
+
   // Writing Clearly — wordy phrase matching.
   useEffect(() => {
     if (!hasWritingClearlyPhraseMatch) return
@@ -3676,11 +3713,11 @@ export default function WorksheetViewer({
             } else {
               // Render normally for non-placement tests
               // Memoize HTML when it has injected inputs/activities (re-renders would reset the DOM).
-              if (hasGrammarInputs || hasMountedWorksheetActivities || hasSpeakingTopics || hasArticleExpressionMatch) {
+              if (hasGrammarInputs || hasMountedWorksheetActivities || hasSpeakingTopics || hasDescribePicture || hasArticleExpressionMatch) {
                 return (
                   <MemoizedContent
                     html={resource.content}
-                    fullWidth={hasMountedWorksheetActivities || hasSpeakingTopics}
+                    fullWidth={hasMountedWorksheetActivities || hasSpeakingTopics || hasDescribePicture}
                   />
                 )
               }

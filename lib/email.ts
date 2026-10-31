@@ -49,7 +49,7 @@ export async function sendPasswordResetEmail(data: PasswordResetEmail) {
     const result = await resend.emails.send({
       from: fromEmail,
       to: data.userEmail,
-      subject: 'Password Reset Request - Brizzle TOEIC®',
+      subject: 'Password Reset Request - Brizzle E-Learning Platform',
       html: `
         <!DOCTYPE html>
         <html>
@@ -72,7 +72,7 @@ export async function sendPasswordResetEmail(data: PasswordResetEmail) {
               </div>
               <div class="content">
                 <p>Hello ${data.userName},</p>
-                <p>You requested to reset your password for your Brizzle TOEIC® account.</p>
+                <p>You requested to reset your password for your Brizzle E-Learning Platform account.</p>
                 
                 <div style="text-align: center; margin: 30px 0;">
                   <a href="${resetUrl}" class="button" style="color: #ffffff !important; text-decoration: none;">Reset Your Password</a>
@@ -91,7 +91,7 @@ export async function sendPasswordResetEmail(data: PasswordResetEmail) {
                 </div>
                 
                 <p>If you have any questions, please contact us at hello@brizzle-english.com</p>
-                <p>Best regards,<br>The Brizzle TOEIC® Team</p>
+                <p>Best regards,<br>The Brizzle Team</p>
               </div>
               <div class="footer">
                 <p>Brizzle TOEIC®<br>hello@brizzle-english.com</p>
