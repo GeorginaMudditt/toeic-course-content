@@ -50,6 +50,13 @@ export const qualiopiDocuments: QualiopiDocument[] = [
     category: 'key',
   },
   {
+    slug: 'indicators-summary',
+    title: 'Qualiopi indicators summary',
+    description: '',
+    spreadsheetId: '1Y7AVZ-H1PNO0XPWmdrD-zC0nCSNIsDEaVDls5qWvhcM',
+    category: 'key',
+  },
+  {
     slug: 'indicator-1',
     title: 'Qualiopi Indicator 1',
     description: 'Public-Facing Information',
@@ -122,6 +129,10 @@ export const qualiopiDocuments: QualiopiDocument[] = [
     resourceLinksIntro:
       'Each time you complete the tracker, check these websites for relevant professional updates:',
     resourceLinks: [
+      {
+        label: 'Certiforma',
+        href: 'https://certiforma.fr/veille/',
+      },
       {
         label: 'Mon Compte Formation',
         href: 'https://financeurs.moncompteformation.gouv.fr/espace-public/accueil?field_thematique_target_id=All',

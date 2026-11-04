@@ -23,7 +23,9 @@ function QualiopiCard({
       <h2 className="text-xl font-semibold text-gray-900 mb-2" style={{ color: '#38438f' }}>
         {document.title}
       </h2>
-      <p className="text-gray-600 text-sm">{document.description}</p>
+      {document.description ? (
+        <p className="text-gray-600 text-sm">{document.description}</p>
+      ) : null}
     </Link>
   )
 }
