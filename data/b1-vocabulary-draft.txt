@@ -380,7 +380,6 @@ dust
 duty
 earache
 earth
-eastern
 easygoing
 economics
 edge
@@ -491,7 +490,6 @@ forehead
 foreigner
 forever
 to forgive
-former
 fortnight
 fountain
 frame
@@ -928,7 +926,6 @@ romance
 romantic
 rose
 rough
-round
 route
 routine
 row

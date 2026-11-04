@@ -969,7 +969,7 @@
       "words": [
         {
           "word_english": "ancient",
-          "translation_french": "antique"
+          "translation_french": "ancien / ancienne"
         },
         {
           "word_english": "basic",
@@ -988,16 +988,8 @@
           "translation_french": "abîmé(e)"
         },
         {
-          "word_english": "eastern",
-          "translation_french": "de l'est"
-        },
-        {
           "word_english": "exhausted",
           "translation_french": "épuisé(e)"
-        },
-        {
-          "word_english": "former",
-          "translation_french": "ancien / ancienne"
         },
         {
           "word_english": "guilty",
@@ -1034,10 +1026,6 @@
         {
           "word_english": "common",
           "translation_french": "courant(e)"
-        },
-        {
-          "word_english": "round",
-          "translation_french": "rond(e)"
         },
         {
           "word_english": "shut",
@@ -1262,7 +1250,8 @@
       "words": [
         {
           "word_english": "ant",
-          "translation_french": "fourmi"
+          "translation_french": "fourmi",
+          "tts_text": "Ant."
         },
         {
           "word_english": "bat",

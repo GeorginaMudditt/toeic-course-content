@@ -209,8 +209,10 @@ async function main() {
   let skipped = 0
   let failed = 0
   let seen = 0
+  let quotaExceeded = false
 
   for (const topic of topics) {
+    if (quotaExceeded) break
     console.log(`\n=== ${topic.topic_page} (${topic.words.length} words) ===`)
 
     for (const word of topic.words) {
@@ -303,6 +305,11 @@ async function main() {
       } catch (error: any) {
         console.error(`  FAILED: ${word.word_english} — ${error.message}`)
         failed++
+        if (String(error.message).includes('quota_exceeded')) {
+          console.error('ElevenLabs quota exceeded. Stopping so remaining words can be retried later.')
+          quotaExceeded = true
+          break
+        }
       }
     }
   }
