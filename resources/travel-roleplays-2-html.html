@@ -1,0 +1,648 @@
+<!-- Travel Roleplays 2 -->
+<style>
+  :root {
+    --exam-ink: #1f2937;
+    --exam-subtle-ink: #4b5563;
+    --exam-border: #cfd6df;
+    --exam-soft-border: #e5e7eb;
+    --exam-header-bg: #f6f8fb;
+    --exam-panel-bg: #fbfcfe;
+    --exam-accent: #1e3a8a;
+  }
+
+  body {
+    color: var(--exam-ink);
+  }
+
+  .exam-header {
+    border: 1px solid var(--exam-border);
+    background: linear-gradient(to bottom, #ffffff, var(--exam-header-bg));
+    border-radius: 8px;
+    padding: 12px 14px;
+  }
+
+  .keep-together {
+    border: 1px solid var(--exam-soft-border);
+    border-radius: 8px;
+    background: var(--exam-panel-bg);
+    padding: 12px 14px;
+    margin-bottom: 18px;
+  }
+
+  h2 {
+    color: var(--exam-accent) !important;
+    margin-top: 0;
+  }
+
+  h3 {
+    margin-top: 0;
+    color: #0f172a;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    background: #fff;
+  }
+
+  th,
+  td {
+    border: 1px solid #111827;
+    padding: 8px;
+    font-size: 16px;
+    vertical-align: top;
+  }
+
+  th {
+    font-weight: 700;
+    text-align: left;
+    background: #f8fafc;
+  }
+
+  .phrase-table td:last-child {
+    background: #f8fafc;
+  }
+
+  .answer-block {
+    margin-top: 24px;
+    padding-top: 16px;
+    border-top: 2px solid #e5e7eb;
+  }
+
+  .role-play-card {
+    border: 1px solid var(--exam-soft-border);
+    border-radius: 8px;
+    background: #fff;
+    padding: 12px 14px;
+    margin-bottom: 14px;
+  }
+
+  .role-play-card:last-child {
+    margin-bottom: 0;
+  }
+
+  .pair-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+  }
+
+  .pair-grid .role-play-card {
+    margin-bottom: 0;
+  }
+
+  .example-reveal {
+    margin-top: 10px;
+    border: 1px solid #c7d2fe;
+    border-radius: 8px;
+    background: #eef2ff;
+    padding: 8px 10px;
+  }
+
+  .example-reveal summary {
+    cursor: pointer;
+    font-weight: 700;
+    color: #1e3a8a;
+    font-size: 15px;
+  }
+
+  .example-reveal-body {
+    margin-top: 8px;
+    font-size: 15px;
+  }
+
+  .example-reveal-body ul {
+    margin: 0;
+    padding-left: 20px;
+  }
+
+  .task-list {
+    margin: 0;
+    padding-left: 22px;
+  }
+
+  .task-list li {
+    margin-bottom: 12px;
+    font-size: 16px;
+  }
+
+  .phrase-key {
+    margin: 12px 0 0;
+    padding-left: 22px;
+  }
+
+  .phrase-key li {
+    margin-bottom: 6px;
+    font-size: 16px;
+  }
+
+  .dialogue-list {
+    margin: 0;
+    padding-left: 22px;
+    list-style-type: disc !important;
+    list-style-position: outside !important;
+  }
+
+  .dialogue-list li {
+    display: list-item !important;
+    margin-bottom: 10px;
+    font-size: 16px;
+  }
+
+  .gap {
+    display: inline-block;
+    min-width: 140px;
+    border-bottom: 1px solid #94a3b8;
+  }
+
+  ol {
+    list-style-type: decimal !important;
+    list-style-position: outside !important;
+    padding-left: 24px !important;
+  }
+
+  ul {
+    list-style-type: disc !important;
+    list-style-position: outside !important;
+    padding-left: 22px !important;
+  }
+
+  li {
+    display: list-item !important;
+  }
+
+  @media (max-width: 720px) {
+    .pair-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  @media print {
+    @page {
+      margin: 1.5cm;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+    }
+
+    div[style*="max-width: 900px"] {
+      max-width: 100% !important;
+      padding: 5mm 6mm !important;
+      box-sizing: border-box !important;
+      line-height: 1.25 !important;
+      font-size: 14px !important;
+    }
+
+    h1 {
+      font-size: 24px !important;
+      margin-bottom: 2px !important;
+    }
+
+    h2 {
+      font-size: 18px !important;
+      margin-bottom: 6px !important;
+    }
+
+    h3 {
+      font-size: 16px !important;
+      margin-bottom: 6px !important;
+    }
+
+    p,
+    li,
+    th,
+    td {
+      font-size: 14px !important;
+    }
+
+    .keep-together {
+      break-inside: auto;
+      page-break-inside: auto;
+      background: #fff;
+      border-color: #d1d5db;
+      padding: 8px 10px;
+      margin-bottom: 10px;
+    }
+
+    h2,
+    h3 {
+      break-after: avoid;
+      page-break-after: avoid;
+    }
+
+    th,
+    td {
+      padding: 5px;
+    }
+
+    .answer-block {
+      margin-top: 10px;
+      padding-top: 10px;
+    }
+
+    .page-break {
+      break-before: page;
+      page-break-before: always;
+    }
+
+    .section-answers-container {
+      break-before: page;
+      page-break-before: always;
+    }
+
+    .role-play-card,
+    .pair-grid {
+      break-inside: avoid;
+      page-break-inside: avoid;
+    }
+
+    .example-reveal > summary {
+      display: none;
+    }
+
+    .example-reveal {
+      border: none;
+      background: transparent;
+      padding: 0;
+    }
+
+    .example-reveal-body {
+      display: block !important;
+    }
+  }
+</style>
+
+<div style="max-width: 900px; margin: 0 auto; padding: 20px; font-family: Arial, sans-serif; line-height: 1.45; color: #333;">
+  <div class="exam-header" style="text-align: center; margin-bottom: 18px;">
+    <div style="display: inline-block; margin-bottom: 6px;">
+      <img src="/brizzle-logo.png" alt="Brizzle Logo" style="width: 45px; height: 45px; object-fit: contain;" />
+    </div>
+    <h1 style="font-size: 30px; line-height: 1.2; margin: 0; color: #0f172a;">Travel Roleplays 2</h1>
+  </div>
+
+  <div data-bookmarkable="car-hire" data-bookmark-label="Car hire">
+    <div class="keep-together">
+      <h2 style="font-size: 22px; font-weight: 700; margin-bottom: 10px;">1. Car hire</h2>
+      <table class="phrase-table">
+        <thead>
+          <tr>
+            <th>Everyday</th>
+            <th>You could also say</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>I have a reservation.</td>
+            <td>I made a reservation online, but it isn&rsquo;t on your system.</td>
+          </tr>
+          <tr>
+            <td>How much is it per day?</td>
+            <td>Could you tell me the daily rate, including insurance?</td>
+          </tr>
+          <tr>
+            <td>I need an automatic.</td>
+            <td>I&rsquo;d prefer an automatic, if you have one.</td>
+          </tr>
+          <tr>
+            <td>Can I return it in another city?</td>
+            <td>Would it be possible to return the car to a different branch?</td>
+          </tr>
+          <tr>
+            <td>Is insurance included?</td>
+            <td>What does the insurance cover, and what is the excess?</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="keep-together" data-grammar-per-section-check="true" data-grammar-save-section="true" data-grammar-check-snapshot="travel-car">
+      <h3 style="font-size: 18px; font-weight: 700; margin-bottom: 8px;">Choose the question</h3>
+      <p style="font-size: 16px; margin: 0 0 12px;">Which question do you need?</p>
+      <ol class="task-list">
+        <li>You want the price for one day. <span data-grammar-input="car-1" data-grammar-input-type="radio" data-grammar-input-options="A|B|C|D" data-grammar-acceptable="A"></span></li>
+        <li>You cannot drive a manual car. <span data-grammar-input="car-2" data-grammar-input-type="radio" data-grammar-input-options="A|B|C|D" data-grammar-acceptable="B"></span></li>
+        <li>You want to leave the car in another city. <span data-grammar-input="car-3" data-grammar-input-type="radio" data-grammar-input-options="A|B|C|D" data-grammar-acceptable="C"></span></li>
+        <li>You want to know what happens if you damage the car. <span data-grammar-input="car-4" data-grammar-input-type="radio" data-grammar-input-options="A|B|C|D" data-grammar-acceptable="D"></span></li>
+      </ol>
+      <ul class="phrase-key">
+        <li><strong>A</strong> How much is it per day?</li>
+        <li><strong>B</strong> Do you have an automatic car?</li>
+        <li><strong>C</strong> Can I return the car in another city?</li>
+        <li><strong>D</strong> Is insurance included?</li>
+      </ul>
+    </div>
+
+    <div class="keep-together" data-grammar-check-disabled="true">
+      <h3 style="font-size: 18px; font-weight: 700; margin-bottom: 8px;">Role play: information gap</h3>
+      <p style="font-size: 16px; margin: 0 0 12px;">Do not show your card to your partner. Ask questions, then decide together.</p>
+      <div class="pair-grid">
+        <div class="role-play-card">
+          <h3 style="font-size: 17px; font-weight: 700; margin-bottom: 8px;">Student A &mdash; Customer</h3>
+          <p style="font-size: 16px; margin: 0 0 8px;">You reserved a small car for five days. You need an automatic. You want full insurance, and you hope to return the car in another city. Your budget is about &euro;40 a day.</p>
+          <details class="example-reveal">
+            <summary>Example questions</summary>
+            <div class="example-reveal-body">
+              <ul>
+                <li>I have a reservation under the name&hellip;</li>
+                <li>Do you have an automatic?</li>
+                <li>How much is full insurance?</li>
+                <li>Can I return the car in another city?</li>
+              </ul>
+            </div>
+          </details>
+          <p style="font-size: 15px; margin: 12px 0 6px; color: #4b5563;"><strong>Your notes:</strong></p>
+          <span data-grammar-input="car-notes-a" data-grammar-input-type="textarea" data-grammar-textarea-rows="4" style="display: block; min-height: 88px;"></span>
+        </div>
+        <div class="role-play-card">
+          <h3 style="font-size: 17px; font-weight: 700; margin-bottom: 8px;">Student B &mdash; Car hire desk</h3>
+          <p style="font-size: 16px; margin: 0 0 8px;">You cannot find the reservation. Cars available today:</p>
+          <ul>
+            <li>Small car, manual, &euro;35 a day. Return in the same city only.</li>
+            <li>Medium car, automatic, &euro;55 a day. One-way return: &euro;30 extra.</li>
+            <li>Full insurance: &euro;12 a day. There is no small automatic car.</li>
+          </ul>
+          <details class="example-reveal">
+            <summary>Example phrases</summary>
+            <div class="example-reveal-body">
+              <ul>
+                <li>I&rsquo;m afraid I can&rsquo;t find a reservation under that name.</li>
+                <li>We only have a medium automatic today.</li>
+                <li>Full insurance is &euro;12 a day.</li>
+                <li>A one-way return costs &euro;30 extra.</li>
+              </ul>
+            </div>
+          </details>
+          <p style="font-size: 15px; margin: 12px 0 6px; color: #4b5563;"><strong>Your notes:</strong></p>
+          <span data-grammar-input="car-notes-b" data-grammar-input-type="textarea" data-grammar-textarea-rows="4" style="display: block; min-height: 88px;"></span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div data-bookmarkable="guided-tour" data-bookmark-label="Guided tour">
+    <div class="keep-together">
+      <h2 style="font-size: 22px; font-weight: 700; margin-bottom: 10px;">2. Guided tour</h2>
+      <table class="phrase-table">
+        <thead>
+          <tr>
+            <th>Everyday</th>
+            <th>You could also say</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>What time does the tour start?</td>
+            <td>Could you tell me what time we set off?</td>
+          </tr>
+          <tr>
+            <td>How long is the tour?</td>
+            <td>How long does the tour last?</td>
+          </tr>
+          <tr>
+            <td>Is the ticket included?</td>
+            <td>Does the price include entry to the museum?</td>
+          </tr>
+          <tr>
+            <td>Could you speak more slowly?</td>
+            <td>Would you mind speaking a little more slowly?</td>
+          </tr>
+          <tr>
+            <td>Where do we meet?</td>
+            <td>Where is the meeting point if we get separated?</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="keep-together" data-grammar-per-section-check="true" data-grammar-save-section="true" data-grammar-check-snapshot="travel-tour">
+      <h3 style="font-size: 18px; font-weight: 700; margin-bottom: 8px;">Complete the conversation</h3>
+      <ul class="dialogue-list">
+        <li><strong>Guide:</strong> Welcome. Please meet here, at the main <span class="gap" data-grammar-input="tour-1" data-grammar-acceptable="entrance|gate"></span>.</li>
+        <li><strong>Guide:</strong> The tour <span class="gap" data-grammar-input="tour-2" data-grammar-acceptable="starts|begins"></span> at 10.</li>
+        <li><strong>You:</strong> How <span class="gap" data-grammar-input="tour-3" data-grammar-acceptable="long"></span> does it last?</li>
+        <li><strong>Guide:</strong> About two hours. The museum ticket is <span class="gap" data-grammar-input="tour-4" data-grammar-acceptable="included"></span>.</li>
+        <li><strong>You:</strong> Could you speak more <span class="gap" data-grammar-input="tour-5" data-grammar-acceptable="slowly"></span>, please?</li>
+        <li><strong>Guide:</strong> Of course. Tell me if you would like me to <span class="gap" data-grammar-input="tour-6" data-grammar-acceptable="repeat"></span> anything.</li>
+      </ul>
+    </div>
+
+    <div class="keep-together" data-grammar-check-disabled="true">
+      <h3 style="font-size: 18px; font-weight: 700; margin-bottom: 8px;">Role play</h3>
+      <div class="role-play-card">
+        <p style="font-size: 16px; margin: 0 0 8px;"><strong>Visitor:</strong> You arrived five minutes late. You are not sure whether lunch and the museum ticket are included. The guide speaks quickly, and you need the meeting place for later.</p>
+        <p style="font-size: 16px; margin: 0 0 8px;"><strong>Guide:</strong> The tour started at 10 and lasts two hours. Lunch is not included. Museum entry is included. If anyone gets lost, the group meets at the fountain at 12:30. You are happy to repeat, but the group needs to keep moving.</p>
+        <details class="example-reveal">
+          <summary>Example phrases</summary>
+          <div class="example-reveal-body">
+            <ul>
+              <li>Sorry I&rsquo;m late. Where is the group?</li>
+              <li>Does the price include the museum?</li>
+              <li>Is lunch included?</li>
+              <li>Would you mind speaking a little more slowly?</li>
+              <li>Where do we meet if we get separated?</li>
+            </ul>
+          </div>
+        </details>
+        <p style="font-size: 15px; margin: 12px 0 6px; color: #4b5563;"><strong>Your notes:</strong></p>
+        <span data-grammar-input="tour-notes" data-grammar-input-type="textarea" data-grammar-textarea-rows="4" style="display: block; min-height: 88px;"></span>
+      </div>
+    </div>
+  </div>
+
+  <div data-bookmarkable="getting-around" data-bookmark-label="Getting around">
+    <div class="keep-together">
+      <h2 style="font-size: 22px; font-weight: 700; margin-bottom: 10px;">3. Getting around</h2>
+      <table class="phrase-table">
+        <thead>
+          <tr>
+            <th>Everyday</th>
+            <th>You could also say</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>How do I get to the station?</td>
+            <td>Could you tell me the best way to the station?</td>
+          </tr>
+          <tr>
+            <td>A single ticket, please.</td>
+            <td>Could I have a single to the city centre, please?</td>
+          </tr>
+          <tr>
+            <td>How much is a taxi to the hotel?</td>
+            <td>Roughly how much would a taxi to the hotel cost?</td>
+          </tr>
+          <tr>
+            <td>Does this bus go to the museum?</td>
+            <td>Could you tell me if this bus stops at the museum?</td>
+          </tr>
+          <tr>
+            <td>Turn left at the lights.</td>
+            <td>Take the second turning on the left, just after the lights.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="keep-together" data-grammar-per-section-check="true" data-grammar-save-section="true" data-grammar-check-snapshot="travel-around">
+      <h3 style="font-size: 18px; font-weight: 700; margin-bottom: 8px;">Complete the questions and directions</h3>
+      <ol class="task-list">
+        <li>How do I <span class="gap" data-grammar-input="way-1" data-grammar-acceptable="get"></span> to the station?</li>
+        <li>Could I have a <span class="gap" data-grammar-input="way-2" data-grammar-acceptable="single|one-way|one way"></span> ticket to the city centre?</li>
+        <li>Does this bus <span class="gap" data-grammar-input="way-3" data-grammar-acceptable="go"></span> to the museum?</li>
+        <li>How <span class="gap" data-grammar-input="way-4" data-grammar-acceptable="much"></span> would a taxi to the hotel cost?</li>
+        <li>Take the second <span class="gap" data-grammar-input="way-5" data-grammar-acceptable="turning|turn|street|road"></span> on the left.</li>
+      </ol>
+    </div>
+
+    <div class="keep-together" data-grammar-check-disabled="true">
+      <h3 style="font-size: 18px; font-weight: 700; margin-bottom: 8px;">Role play</h3>
+      <div class="role-play-card">
+        <p style="font-size: 16px; margin: 0 0 8px;"><strong>Traveller:</strong> You need to be at the museum by 2 o&rsquo;clock. You can walk, take a bus, or take a taxi. Ask for the price, the stop, and the walking directions.</p>
+        <p style="font-size: 16px; margin: 0 0 8px;"><strong>Local person:</strong> The museum is two stops away. Bus 14 leaves from across the road and costs &euro;2. A taxi is about &euro;12. On foot: second turning on the left after the traffic lights, then straight on for five minutes.</p>
+        <details class="example-reveal">
+          <summary>Example phrases</summary>
+          <div class="example-reveal-body">
+            <ul>
+              <li>Excuse me, how do I get to the museum?</li>
+              <li>Does bus 14 go to the museum?</li>
+              <li>How much is a ticket?</li>
+              <li>How much would a taxi cost?</li>
+              <li>Is it quicker to walk?</li>
+            </ul>
+          </div>
+        </details>
+        <p style="font-size: 15px; margin: 12px 0 6px; color: #4b5563;"><strong>Your notes:</strong></p>
+        <span data-grammar-input="way-notes" data-grammar-input-type="textarea" data-grammar-textarea-rows="4" style="display: block; min-height: 88px;"></span>
+      </div>
+    </div>
+  </div>
+
+  <div data-bookmarkable="problems" data-bookmark-label="When something goes wrong">
+    <div class="keep-together">
+      <h2 style="font-size: 22px; font-weight: 700; margin-bottom: 10px;">4. When something goes wrong</h2>
+      <table class="phrase-table">
+        <thead>
+          <tr>
+            <th>Everyday</th>
+            <th>You could also say</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>My bag hasn&rsquo;t arrived.</td>
+            <td>I&rsquo;d like to report a missing suitcase.</td>
+          </tr>
+          <tr>
+            <td>This isn&rsquo;t what I booked.</td>
+            <td>I&rsquo;m afraid this doesn&rsquo;t match my booking.</td>
+          </tr>
+          <tr>
+            <td>I&rsquo;d like a refund.</td>
+            <td>Would it be possible to arrange a refund?</td>
+          </tr>
+          <tr>
+            <td>Can I change my booking?</td>
+            <td>I&rsquo;d like to change my booking, if that&rsquo;s possible.</td>
+          </tr>
+          <tr>
+            <td>I want to speak to the manager.</td>
+            <td>Could I speak to someone in charge, please?</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="keep-together" data-grammar-per-section-check="true" data-grammar-save-section="true" data-grammar-check-snapshot="travel-problems">
+      <h3 style="font-size: 18px; font-weight: 700; margin-bottom: 8px;">Match the problem to the phrase</h3>
+      <ol class="task-list">
+        <li>Your suitcase is not on the belt. <span data-grammar-input="prob-1" data-grammar-input-type="radio" data-grammar-input-options="A|B|C|D|E" data-grammar-acceptable="A"></span></li>
+        <li>The room has one bed, but you booked two. <span data-grammar-input="prob-2" data-grammar-input-type="radio" data-grammar-input-options="A|B|C|D|E" data-grammar-acceptable="B"></span></li>
+        <li>The tour was cancelled. <span data-grammar-input="prob-3" data-grammar-input-type="radio" data-grammar-input-options="A|B|C|D|E" data-grammar-acceptable="C"></span></li>
+        <li>You need a later train. <span data-grammar-input="prob-4" data-grammar-input-type="radio" data-grammar-input-options="A|B|C|D|E" data-grammar-acceptable="D"></span></li>
+        <li>The person at the desk cannot help you. <span data-grammar-input="prob-5" data-grammar-input-type="radio" data-grammar-input-options="A|B|C|D|E" data-grammar-acceptable="E"></span></li>
+      </ol>
+      <ul class="phrase-key">
+        <li><strong>A</strong> I&rsquo;d like to report a missing suitcase.</li>
+        <li><strong>B</strong> I&rsquo;m afraid this isn&rsquo;t what I booked.</li>
+        <li><strong>C</strong> Would it be possible to have a refund?</li>
+        <li><strong>D</strong> I&rsquo;d like to change my booking.</li>
+        <li><strong>E</strong> Could I speak to a manager, please?</li>
+      </ul>
+    </div>
+
+    <div class="keep-together" data-grammar-check-disabled="true">
+      <h3 style="font-size: 18px; font-weight: 700; margin-bottom: 8px;">Role play</h3>
+      <div class="role-play-card">
+        <p style="font-size: 16px; margin: 0 0 8px;"><strong>Traveller:</strong> Your flight has been cancelled. You want the next flight or a refund. Your suitcase has not arrived either. Stay polite, and ask for a manager if you need to.</p>
+        <p style="font-size: 16px; margin: 0 0 8px;"><strong>Airline agent:</strong> The next flight is tomorrow morning. You can offer a hotel voucher. A refund goes back to the same card and takes seven days. The suitcase is on a later flight tonight, but you cannot promise the time.</p>
+        <details class="example-reveal">
+          <summary>Example phrases</summary>
+          <div class="example-reveal-body">
+            <ul>
+              <li>I&rsquo;m afraid my flight has been cancelled.</li>
+              <li>What is the next available flight?</li>
+              <li>Would it be possible to arrange a refund?</li>
+              <li>I&rsquo;d like to report a missing suitcase.</li>
+              <li>Could I speak to a manager, please?</li>
+            </ul>
+          </div>
+        </details>
+        <p style="font-size: 15px; margin: 12px 0 6px; color: #4b5563;"><strong>Your notes:</strong></p>
+        <span data-grammar-input="prob-notes" data-grammar-input-type="textarea" data-grammar-textarea-rows="4" style="display: block; min-height: 88px;"></span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div style="max-width: 900px; margin: 0 auto; padding: 20px; font-family: Arial, sans-serif; line-height: 1.45; color: #333;" class="section-answers-container">
+  <div class="answer-block">
+    <h2 style="font-size: 22px; font-weight: 700; margin: 0 0 12px;">Answers</h2>
+
+    <div style="margin-bottom: 14px;">
+      <h3 style="font-size: 18px; margin: 0 0 8px;">1. Car hire</h3>
+      <ol style="font-size: 16px; margin: 0;">
+        <li>A</li>
+        <li>B</li>
+        <li>C</li>
+        <li>D</li>
+      </ol>
+    </div>
+
+    <div style="margin-bottom: 14px;">
+      <h3 style="font-size: 18px; margin: 0 0 8px;">2. Guided tour</h3>
+      <ol style="font-size: 16px; margin: 0;">
+        <li>entrance / gate</li>
+        <li>starts / begins</li>
+        <li>long</li>
+        <li>included</li>
+        <li>slowly</li>
+        <li>repeat</li>
+      </ol>
+    </div>
+
+    <div style="margin-bottom: 14px;">
+      <h3 style="font-size: 18px; margin: 0 0 8px;">3. Getting around</h3>
+      <ol style="font-size: 16px; margin: 0;">
+        <li>get</li>
+        <li>single / one-way</li>
+        <li>go</li>
+        <li>much</li>
+        <li>turning / turn / street / road</li>
+      </ol>
+    </div>
+
+    <div>
+      <h3 style="font-size: 18px; margin: 0 0 8px;">4. When something goes wrong</h3>
+      <ol style="font-size: 16px; margin: 0;">
+        <li>A</li>
+        <li>B</li>
+        <li>C</li>
+        <li>D</li>
+        <li>E</li>
+      </ol>
+    </div>
+  </div>
+</div>
