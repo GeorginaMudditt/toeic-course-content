@@ -173,6 +173,34 @@ function lessonStripSummaryHoverClass(lessonNum: number | null): string {
   return 'hover:bg-sky-100/55'
 }
 
+function sessionSummaryLabel(attendance: AttendanceOption): string | null {
+  switch (attendance) {
+    case 'YES_ONLINE':
+      return 'online lesson'
+    case 'YES_IN_PERSON':
+      return 'in-person lesson'
+    case 'NO_NOT_INFORMED':
+      return 'absence (not informed)'
+    default:
+      return null
+  }
+}
+
+function sessionSummaryRowClass(attendance: AttendanceOption): string {
+  if (attendance === 'YES_ONLINE' || attendance === 'YES_IN_PERSON') {
+    return 'bg-green-100'
+  }
+  if (attendance === 'NO_NOT_INFORMED') {
+    return 'bg-red-100'
+  }
+  return 'bg-white'
+}
+
+function formatHoursWithUnit(hours: number): string {
+  const formatted = formatLoggedHours(hours)
+  return `${formatted} ${hours === 1 ? 'hour' : 'hours'}`
+}
+
 /** Matches globals.css `[data-lesson-strip]` overrides so inputs are not forced to app-wide light blue */
 function lessonDataStripAttr(lessonNum: number | null): 'amber' | 'sky' | 'neutral' {
   if (lessonNum == null) return 'neutral'
@@ -668,6 +696,30 @@ export default function StudentNotesManager({ student, enrollments }: Props) {
       [rows, courseDurationHours]
     )
 
+  const sessionSummary = useMemo(() => {
+    const items: { lessonNum: number; date: string; attendance: AttendanceOption }[] = []
+    let hoursBooked = 0
+    let hoursAttended = 0
+
+    rows.forEach((row, index) => {
+      const lessonNum = lessonNums[index]
+      if (lessonNum == null) return
+      const duration = normalizeLessonDurationHours(row.durationHours)
+      hoursBooked += duration
+      if (row.attendance === 'YES_ONLINE' || row.attendance === 'YES_IN_PERSON') {
+        hoursAttended += duration
+      }
+      items.push({
+        lessonNum,
+        date: row.date.trim(),
+        attendance: row.attendance,
+      })
+    })
+
+    items.sort((a, b) => a.lessonNum - b.lessonNum)
+    return { items, hoursBooked, hoursAttended }
+  }, [rows, lessonNums])
+
   const saveCoursePackageHours = async () => {
     const courseId = activeEnrollment?.course?.id
     if (!courseId) return
@@ -769,6 +821,40 @@ export default function StudentNotesManager({ student, enrollments }: Props) {
                 : 'Unknown Course'}
             </h2>
           </div>
+        )}
+
+        {resolvedEnrollmentId && (
+          <section className="mx-auto mt-6 max-w-3xl text-left" aria-label="Session summary">
+            <p className="text-sm font-medium text-gray-900">
+              {formatHoursWithUnit(sessionSummary.hoursBooked)} booked ·{' '}
+              {formatHoursWithUnit(sessionSummary.hoursAttended)} attended
+            </p>
+            <p className="mt-1 text-xs text-gray-500">Only visible to you.</p>
+            {sessionSummary.items.length === 0 ? (
+              <p className="mt-3 text-sm text-gray-600">No sessions recorded yet.</p>
+            ) : (
+              <div className="mt-3 overflow-x-auto rounded-lg border border-gray-200">
+                <table className="w-full text-sm">
+                  <tbody>
+                    {sessionSummary.items.map((item) => (
+                      <tr
+                        key={item.lessonNum}
+                        className={`border-b border-gray-200/80 last:border-b-0 ${sessionSummaryRowClass(item.attendance)}`}
+                      >
+                        <td className="whitespace-nowrap px-3 py-2 font-medium text-gray-900">
+                          Lesson {item.lessonNum}
+                        </td>
+                        <td className="whitespace-nowrap px-3 py-2 text-gray-800">{item.date}</td>
+                        <td className="whitespace-nowrap px-3 py-2 text-gray-800">
+                          {sessionSummaryLabel(item.attendance) ?? '—'}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
+          </section>
         )}
       </header>
 
