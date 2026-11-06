@@ -44,9 +44,10 @@ function readPairs(host: HTMLElement): Pair[] {
 function mountOne(host: HTMLElement): Cleanup {
   if (host.getAttribute('data-en-fr-mounted') === 'true') return () => {}
 
-  const board = host.querySelector('[data-en-fr-board]') as HTMLElement | null
+  const boardEl = host.querySelector('[data-en-fr-board]')
   const pairs = readPairs(host)
-  if (!board || pairs.length === 0) return () => {}
+  if (!(boardEl instanceof HTMLElement) || pairs.length === 0) return () => {}
+  const board: HTMLElement = boardEl
 
   host.setAttribute('data-en-fr-mounted', 'true')
 
@@ -64,7 +65,7 @@ function mountOne(host: HTMLElement): Cleanup {
     rows.forEach(({ slot }) => {
       slot.classList.remove('is-correct', 'is-wrong')
     })
-    const feedback = board!.querySelector('[data-en-fr-feedback]')
+    const feedback = board.querySelector('[data-en-fr-feedback]')
     if (feedback) feedback.textContent = ''
   }
 
@@ -161,7 +162,7 @@ function mountOne(host: HTMLElement): Cleanup {
       slot.classList.remove('is-over')
       const word = e.dataTransfer?.getData('text/plain')
       if (!word) return
-      const chips = Array.from(board!.querySelectorAll('.hb-fr-chip')) as HTMLButtonElement[]
+      const chips = Array.from(board.querySelectorAll('.hb-fr-chip')) as HTMLButtonElement[]
       const chip = chips.find((item) => item.dataset.word === word)
       if (chip) placeInSlot(slot, chip)
     })
@@ -179,7 +180,7 @@ function mountOne(host: HTMLElement): Cleanup {
         slot.classList.add('is-wrong')
       }
     })
-    const feedback = board!.querySelector('[data-en-fr-feedback]')
+    const feedback = board.querySelector('[data-en-fr-feedback]')
     if (!feedback) return
     if (correct === rows.length) {
       feedback.textContent = `Excellent — ${correct} / ${rows.length} correct.`
@@ -265,9 +266,9 @@ function mountOne(host: HTMLElement): Cleanup {
     bankWrap.appendChild(bankTitle)
     bankWrap.appendChild(bank)
 
-    board!.appendChild(list)
-    board!.appendChild(bankWrap)
-    board!.appendChild(toolbar)
+    board.appendChild(list)
+    board.appendChild(bankWrap)
+    board.appendChild(toolbar)
   }
 
   build()
