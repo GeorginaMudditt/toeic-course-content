@@ -36,6 +36,7 @@ import { mountOpinionRankings } from '@/lib/worksheetInteractions/opinionRanking
 import { mountParagraphReorders } from '@/lib/worksheetInteractions/paragraphReorder'
 import { mountDiscourseMarkerSorts } from '@/lib/worksheetInteractions/discourseMarkerSort'
 import { mountArticleExpressionMatches } from '@/lib/worksheetInteractions/articleExpressionMatch'
+import { mountEnglishFrenchMatches } from '@/lib/worksheetInteractions/englishFrenchMatch'
 import { mountWritingPracticeTimers } from '@/lib/worksheetInteractions/writingPracticeTimers'
 import {
   mergeSpeakingTopicsUsedIntoNotes,
@@ -928,6 +929,8 @@ export default function WorksheetViewer({
     typeof resource.content === 'string' && resource.content.includes('data-discourse-marker-sort')
   const hasArticleExpressionMatch =
     typeof resource.content === 'string' && resource.content.includes('data-article-expression-match')
+  const hasEnglishFrenchMatch =
+    typeof resource.content === 'string' && resource.content.includes('data-en-fr-match')
   const hasWritingTaskSubmit =
     typeof resource.content === 'string' && resource.content.includes('data-writing-task-submit')
   const hasDailyRoutineReveal =
@@ -3114,6 +3117,21 @@ export default function WorksheetViewer({
     }
   }, [hasArticleExpressionMatch, resource.content, isClientMounted])
 
+  // English → French vocabulary matching (drag or tap, then Check answers).
+  useLayoutEffect(() => {
+    if (!hasEnglishFrenchMatch || !isClientMounted) return
+    let detach: (() => void) | undefined
+    const rafId = requestAnimationFrame(() => {
+      const host = contentRef.current
+      if (!host) return
+      detach = mountEnglishFrenchMatches(host)
+    })
+    return () => {
+      cancelAnimationFrame(rafId)
+      detach?.()
+    }
+  }, [hasEnglishFrenchMatch, resource.content, isClientMounted])
+
   // Static phrase lists with 🔊 buttons (e.g. Natur'Evasion Vocabulary).
   useLayoutEffect(() => {
     if (!hasPhraseAudioRoot) return
@@ -3713,7 +3731,7 @@ export default function WorksheetViewer({
             } else {
               // Render normally for non-placement tests
               // Memoize HTML when it has injected inputs/activities (re-renders would reset the DOM).
-              if (hasGrammarInputs || hasMountedWorksheetActivities || hasSpeakingTopics || hasDescribePicture || hasArticleExpressionMatch) {
+              if (hasGrammarInputs || hasMountedWorksheetActivities || hasSpeakingTopics || hasDescribePicture || hasArticleExpressionMatch || hasEnglishFrenchMatch) {
                 return (
                   <MemoizedContent
                     html={resource.content}

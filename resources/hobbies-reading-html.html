@@ -1,0 +1,556 @@
+<!-- Hobbies — A1 Reading -->
+<style>
+  .hb-wrap {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 8px 4px 32px;
+    font-family: Arial, sans-serif;
+    line-height: 1.55;
+    color: #1f2937;
+  }
+
+  .hb-wrap h1 {
+    margin: 0 !important;
+    font-size: 32px;
+    line-height: 1.15;
+    color: #0f172a;
+  }
+
+  .hb-wrap h2 {
+    margin: 0 0 8px !important;
+    font-size: 22px;
+    line-height: 1.25;
+    color: #38438f;
+  }
+
+  .hb-wrap h3 {
+    margin: 18px 0 8px !important;
+    font-size: 18px;
+    color: #1e3a8a;
+  }
+
+  .hb-wrap p {
+    margin: 0 0 10px !important;
+    font-size: 16px;
+  }
+
+  .hb-wrap figure {
+    margin: 0 0 22px !important;
+  }
+
+  .hb-wrap img {
+    margin: 0 !important;
+  }
+
+  .hb-wrap [hidden] {
+    display: none !important;
+  }
+
+  .hb-header {
+    text-align: center;
+    margin-bottom: 18px;
+  }
+
+  .hb-kicker {
+    margin: 6px 0 0 !important;
+    font-size: 14px !important;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: #ba3627;
+  }
+
+  .hb-card {
+    border: 1px solid #dbe3f0;
+    border-radius: 12px;
+    background: #fff;
+    padding: 18px 18px 16px;
+    margin-bottom: 18px;
+  }
+
+  .hb-lead {
+    color: #475569;
+  }
+
+  .hb-para {
+    display: grid;
+    grid-template-columns: 220px 1fr;
+    gap: 6px 16px;
+    align-items: start;
+  }
+
+  .hb-para img {
+    grid-column: 1;
+    grid-row: 1;
+    width: 220px;
+    height: 165px;
+    object-fit: cover;
+    border-radius: 12px;
+    border: 1px solid #e2e8f0;
+  }
+
+  .hb-para figcaption {
+    grid-column: 1;
+    grid-row: 2;
+    font-size: 13px;
+    line-height: 1.35;
+    text-align: center;
+    color: #64748b;
+  }
+
+  .hb-copy {
+    grid-column: 2;
+    grid-row: 1 / span 2;
+  }
+
+  .hb-copy p:last-child {
+    margin-bottom: 0 !important;
+  }
+
+  .hb-q {
+    margin: 0 0 16px;
+    padding-bottom: 14px;
+    border-bottom: 1px solid #e5e7eb;
+  }
+
+  .hb-q:last-of-type {
+    border-bottom: none;
+    margin-bottom: 0;
+    padding-bottom: 0;
+  }
+
+  .hb-q p {
+    margin-bottom: 8px !important;
+  }
+
+  .hb-wrap [data-grammar-input-type="radio"] > div {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 8px !important;
+  }
+
+  .hb-wrap [data-grammar-input-type="radio"] label {
+    font-weight: 600;
+  }
+
+  .hb-fr-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .hb-fr-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 12px;
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+  }
+
+  .hb-fr-label {
+    flex: 1 1 150px;
+    font-weight: 700;
+    font-size: 16px;
+    color: #1e3a8a;
+  }
+
+  .hb-fr-slot {
+    flex: 1 1 220px;
+    min-height: 48px;
+    border: 2px dashed #94a3b8;
+    border-radius: 10px;
+    background: #fff;
+    display: flex;
+    align-items: center;
+    padding: 4px;
+    cursor: pointer;
+    box-sizing: border-box;
+  }
+
+  .hb-fr-slot.is-over {
+    border-color: #38438f;
+    background: #e8eaf6;
+  }
+
+  .hb-fr-slot.is-correct {
+    border-style: solid;
+    border-color: #16a34a;
+    background: #f0fdf4;
+  }
+
+  .hb-fr-slot.is-wrong {
+    border-style: solid;
+    border-color: #dc2626;
+    background: #fef2f2;
+  }
+
+  .hb-fr-chip {
+    font: 600 15px/1.3 Arial, sans-serif;
+    padding: 8px 12px;
+    border-radius: 8px;
+    border: 2px solid #38438f;
+    background: #fff;
+    color: #1e293b;
+    cursor: grab;
+    margin: 0;
+    white-space: nowrap;
+  }
+
+  .hb-fr-chip.is-selected {
+    background: #e8eaf6;
+    box-shadow: 0 0 0 3px rgba(56, 67, 143, 0.35);
+  }
+
+  .hb-fr-bank-wrap {
+    margin-top: 16px;
+    padding: 14px;
+    border-radius: 12px;
+    background: #e8eaf6;
+  }
+
+  .hb-fr-bank-title {
+    margin: 0 0 10px !important;
+    font-size: 14px !important;
+    font-weight: 700;
+    color: #38438f;
+  }
+
+  .hb-fr-bank {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .hb-fr-toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    align-items: center;
+    margin-top: 14px;
+  }
+
+  .hb-fr-check,
+  .hb-fr-reset {
+    font: 600 15px Arial, sans-serif;
+    padding: 10px 16px;
+    border-radius: 8px;
+    cursor: pointer;
+  }
+
+  .hb-fr-check {
+    border: none;
+    background: #38438f;
+    color: #fff;
+  }
+
+  .hb-fr-reset {
+    border: 2px solid #38438f;
+    background: #fff;
+    color: #38438f;
+  }
+
+  .hb-fr-feedback {
+    margin: 0 !important;
+    font-size: 15px !important;
+    font-weight: 700;
+    min-height: 22px;
+  }
+
+  .hb-fr-feedback.is-ok {
+    color: #15803d;
+  }
+
+  .hb-fr-feedback.is-miss {
+    color: #92400e;
+  }
+
+  .hb-answers ol {
+    margin: 0 0 8px;
+    padding-left: 22px;
+    font-size: 16px;
+  }
+
+  .hb-answers li {
+    margin: 0 0 6px;
+  }
+
+  .hb-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 16px;
+  }
+
+  .hb-table td {
+    border-bottom: 1px solid #e2e8f0;
+    padding: 6px 8px;
+    vertical-align: top;
+  }
+
+  .hb-table td:first-child {
+    font-weight: 700;
+    color: #1e3a8a;
+    width: 42%;
+  }
+
+  .hb-note {
+    margin: 0 0 12px !important;
+    font-size: 14px !important;
+    color: #64748b;
+  }
+
+  @media (max-width: 700px) {
+    .hb-para {
+      grid-template-columns: 1fr;
+    }
+
+    .hb-para img,
+    .hb-para figcaption,
+    .hb-copy {
+      grid-column: 1;
+      grid-row: auto;
+    }
+
+    .hb-para img {
+      width: 100%;
+      height: 210px;
+    }
+  }
+
+  @media print {
+    .screen-only {
+      display: none !important;
+    }
+
+    .hb-card,
+    .hb-para,
+    .hb-q {
+      break-inside: avoid;
+    }
+  }
+</style>
+
+<div class="hb-wrap">
+  <div class="hb-header">
+    <h1>Hobbies</h1>
+    <p class="hb-kicker">A1 · Reading</p>
+  </div>
+
+  <div class="hb-card keep-together" data-bookmarkable="vocabulary" data-bookmark-label="Vocabulary" data-en-fr-match>
+    <h2>Vocabulary</h2>
+    <p class="hb-lead">Match each English word with the French word. Drag a French word into the box, or tap a word and then tap a box. Then click <strong>Check answers</strong>.</p>
+    <div data-en-fr-pairs hidden>
+      <span data-en="hiking" data-fr="la randonnée"></span>
+      <span data-en="outdoors" data-fr="dehors"></span>
+      <span data-en="mountain" data-fr="la montagne"></span>
+      <span data-en="summer" data-fr="l'été"></span>
+      <span data-en="winter" data-fr="l'hiver"></span>
+      <span data-en="dream" data-fr="un rêve"></span>
+      <span data-en="reading" data-fr="la lecture"></span>
+      <span data-en="computer games" data-fr="les jeux vidéo"></span>
+      <span data-en="board games" data-fr="les jeux de société"></span>
+      <span data-en="baking" data-fr="la pâtisserie"></span>
+      <span data-en="cupcakes" data-fr="les cupcakes"></span>
+      <span data-en="kitchen" data-fr="la cuisine"></span>
+      <span data-en="football" data-fr="le football"></span>
+      <span data-en="tennis" data-fr="le tennis"></span>
+      <span data-en="horse" data-fr="un cheval"></span>
+    </div>
+    <div data-en-fr-board></div>
+  </div>
+
+  <div class="hb-card" data-bookmarkable="reading" data-bookmark-label="Reading">
+    <h2>Reading</h2>
+    <p class="hb-lead">Read about Ben and his family.</p>
+
+    <figure class="hb-para">
+      <img src="https://ulrwcortyhassmytkcij.supabase.co/storage/v1/object/public/toeic/hobbies/hiking.jpg" alt="Ben hiking with his family on a sunny mountain path" />
+      <figcaption>Ben likes hiking.</figcaption>
+      <div class="hb-copy">
+        <p>Hi! My name is Ben. At the weekend, I love hiking with my family. I like being outdoors in nature, and I love the beautiful view from the top of the mountain. I especially love hiking in the summer, when the weather is warm. I don’t enjoy hiking in the winter, when it is really cold. My dream is to hike Mount Everest one day!</p>
+      </div>
+    </figure>
+
+    <figure class="hb-para">
+      <img src="https://ulrwcortyhassmytkcij.supabase.co/storage/v1/object/public/toeic/hobbies/games.jpg?v=2" alt="Tim playing a board game indoors, with a computer and books nearby" />
+      <figcaption>Tim prefers indoor hobbies.</figcaption>
+      <div class="hb-copy">
+        <p>My best friend is Tim. He is very different from me. He hates outdoor activities and he prefers to be inside. His hobbies are reading, computer games and board games. Sometimes I play with him, but he usually wins!</p>
+      </div>
+    </figure>
+
+    <figure class="hb-para">
+      <img src="https://ulrwcortyhassmytkcij.supabase.co/storage/v1/object/public/toeic/hobbies/baking.jpg" alt="Ben's sister baking cupcakes and muffins in a messy kitchen" />
+      <figcaption>Ben’s sister loves baking.</figcaption>
+      <div class="hb-copy">
+        <p>My sister’s favourite hobby is baking. She loves trying new recipes, and she is great at baking cupcakes and muffins. I like eating the delicious cakes, but she makes a mess in the kitchen!</p>
+      </div>
+    </figure>
+
+    <figure class="hb-para">
+      <img src="https://ulrwcortyhassmytkcij.supabase.co/storage/v1/object/public/toeic/hobbies/sports.jpg?v=2" alt="Cindy with a football and a basketball, tennis things, trophies, and a horse" />
+      <figcaption>Cindy loves sports.</figcaption>
+      <div class="hb-copy">
+        <p>My cousin Cindy loves sports. She plays many different sports. She is on the football team and the basketball team, and she has a lot of trophies in her bedroom. She can play tennis really well, and she is learning to ride a horse.</p>
+      </div>
+    </figure>
+  </div>
+
+  <div class="hb-card keep-together" data-bookmarkable="tick-the-answer" data-bookmark-label="Tick the correct answer" data-grammar-per-section-check="true" data-grammar-save-section="true">
+    <h2>Tick the correct answer</h2>
+    <p class="hb-lead">Choose one answer for each question. Then click <strong>Check Answers</strong>.</p>
+
+    <div class="hb-q">
+      <p><strong>1.</strong> What is Ben’s favourite hobby?</p>
+      <span data-grammar-input="hb-tick-1" data-grammar-input-type="radio" data-grammar-input-options="Baking|Hiking|Reading|Tennis" data-correct="Hiking"></span>
+    </div>
+    <div class="hb-q">
+      <p><strong>2.</strong> When does Ben enjoy hiking?</p>
+      <span data-grammar-input="hb-tick-2" data-grammar-input-type="radio" data-grammar-input-options="In the winter|At night|In the summer|Never" data-correct="In the summer"></span>
+    </div>
+    <div class="hb-q">
+      <p><strong>3.</strong> What is Ben’s dream?</p>
+      <span data-grammar-input="hb-tick-3" data-grammar-input-type="radio" data-grammar-input-options="To bake muffins|To hike Mount Everest|To play computer games|To win a trophy" data-correct="To hike Mount Everest"></span>
+    </div>
+    <div class="hb-q">
+      <p><strong>4.</strong> Where does Tim prefer to be?</p>
+      <span data-grammar-input="hb-tick-4" data-grammar-input-type="radio" data-grammar-input-options="On a mountain|Inside|In the kitchen|On a horse" data-correct="Inside"></span>
+    </div>
+    <div class="hb-q">
+      <p><strong>5.</strong> Who usually wins when Ben and Tim play games?</p>
+      <span data-grammar-input="hb-tick-5" data-grammar-input-type="radio" data-grammar-input-options="Ben|Cindy|Tim|Ben's sister" data-correct="Tim"></span>
+    </div>
+    <div class="hb-q">
+      <p><strong>6.</strong> What is Cindy learning?</p>
+      <span data-grammar-input="hb-tick-6" data-grammar-input-type="radio" data-grammar-input-options="To bake|To hike|To ride a horse|To play board games" data-correct="To ride a horse"></span>
+    </div>
+  </div>
+
+  <div class="hb-card keep-together" data-bookmarkable="short-answers" data-bookmark-label="Write a short answer" data-grammar-check-disabled="true" data-grammar-save-section="true">
+    <h2>Write a short answer</h2>
+    <p class="hb-lead">Answer in a sentence or a few words. The answers are at the end of the page.</p>
+
+    <div class="hb-q">
+      <p><strong>1.</strong> Why does Ben enjoy hiking?</p>
+      <span data-grammar-input="hb-read-1" data-grammar-input-type="textarea" data-grammar-textarea-rows="2" style="display: block; min-height: 72px;"></span>
+    </div>
+    <div class="hb-q">
+      <p><strong>2.</strong> What are Tim’s hobbies?</p>
+      <span data-grammar-input="hb-read-2" data-grammar-input-type="textarea" data-grammar-textarea-rows="2" style="display: block; min-height: 72px;"></span>
+    </div>
+    <div class="hb-q">
+      <p><strong>3.</strong> What does Ben’s sister bake really well?</p>
+      <span data-grammar-input="hb-read-3" data-grammar-input-type="textarea" data-grammar-textarea-rows="2" style="display: block; min-height: 72px;"></span>
+    </div>
+    <div class="hb-q">
+      <p><strong>4.</strong> What does Ben not like about his sister’s hobby?</p>
+      <span data-grammar-input="hb-read-4" data-grammar-input-type="textarea" data-grammar-textarea-rows="2" style="display: block; min-height: 72px;"></span>
+    </div>
+    <div class="hb-q">
+      <p><strong>5.</strong> What sports does Cindy play?</p>
+      <span data-grammar-input="hb-read-5" data-grammar-input-type="textarea" data-grammar-textarea-rows="2" style="display: block; min-height: 72px;"></span>
+    </div>
+  </div>
+
+  <div class="hb-card keep-together" data-bookmarkable="writing" data-bookmark-label="Writing" data-grammar-check-disabled="true" data-grammar-save-section="true">
+    <h2>Writing</h2>
+    <p class="hb-lead">Write short answers about you, your family and your friends. There is no wrong answer. Example answers are at the end.</p>
+
+    <div class="hb-q">
+      <p><strong>1.</strong> What are your hobbies?</p>
+      <span data-grammar-input="hb-write-1" data-grammar-input-type="textarea" data-grammar-textarea-rows="3" style="display: block; min-height: 84px;"></span>
+    </div>
+    <div class="hb-q">
+      <p><strong>2.</strong> What new hobby would you like to try?</p>
+      <span data-grammar-input="hb-write-2" data-grammar-input-type="textarea" data-grammar-textarea-rows="3" style="display: block; min-height: 84px;"></span>
+    </div>
+    <div class="hb-q">
+      <p><strong>3.</strong> Do you play any sports?</p>
+      <span data-grammar-input="hb-write-3" data-grammar-input-type="textarea" data-grammar-textarea-rows="2" style="display: block; min-height: 72px;"></span>
+    </div>
+    <div class="hb-q">
+      <p><strong>4.</strong> Do you collect anything?</p>
+      <span data-grammar-input="hb-write-4" data-grammar-input-type="textarea" data-grammar-textarea-rows="2" style="display: block; min-height: 72px;"></span>
+    </div>
+    <div class="hb-q">
+      <p><strong>5.</strong> Do you like computer games?</p>
+      <span data-grammar-input="hb-write-5" data-grammar-input-type="textarea" data-grammar-textarea-rows="2" style="display: block; min-height: 72px;"></span>
+    </div>
+    <div class="hb-q">
+      <p><strong>6.</strong> Do you prefer indoor or outdoor hobbies?</p>
+      <span data-grammar-input="hb-write-6" data-grammar-input-type="textarea" data-grammar-textarea-rows="2" style="display: block; min-height: 72px;"></span>
+    </div>
+    <div class="hb-q">
+      <p><strong>7.</strong> What are your parents' hobbies?</p>
+      <span data-grammar-input="hb-write-7" data-grammar-input-type="textarea" data-grammar-textarea-rows="3" style="display: block; min-height: 84px;"></span>
+    </div>
+    <div class="hb-q">
+      <p><strong>8.</strong> Do you have any brothers or sisters? What are their hobbies?</p>
+      <span data-grammar-input="hb-write-8" data-grammar-input-type="textarea" data-grammar-textarea-rows="3" style="display: block; min-height: 84px;"></span>
+    </div>
+    <div class="hb-q">
+      <p><strong>9.</strong> What are your best friend's hobbies?</p>
+      <span data-grammar-input="hb-write-9" data-grammar-input-type="textarea" data-grammar-textarea-rows="3" style="display: block; min-height: 84px;"></span>
+    </div>
+  </div>
+
+  <div class="hb-card hb-answers" data-bookmarkable="answers" data-bookmark-label="Answers">
+    <h2>Answers</h2>
+
+    <h3>Vocabulary</h3>
+    <table class="hb-table">
+      <tbody>
+        <tr><td>hiking</td><td>la randonnée</td></tr>
+        <tr><td>outdoors</td><td>dehors</td></tr>
+        <tr><td>mountain</td><td>la montagne</td></tr>
+        <tr><td>summer</td><td>l'été</td></tr>
+        <tr><td>winter</td><td>l'hiver</td></tr>
+        <tr><td>dream</td><td>un rêve</td></tr>
+        <tr><td>reading</td><td>la lecture</td></tr>
+        <tr><td>computer games</td><td>les jeux vidéo</td></tr>
+        <tr><td>board games</td><td>les jeux de société</td></tr>
+        <tr><td>baking</td><td>la pâtisserie</td></tr>
+        <tr><td>cupcakes</td><td>les cupcakes</td></tr>
+        <tr><td>kitchen</td><td>la cuisine</td></tr>
+        <tr><td>football</td><td>le football</td></tr>
+        <tr><td>tennis</td><td>le tennis</td></tr>
+        <tr><td>horse</td><td>un cheval</td></tr>
+      </tbody>
+    </table>
+
+    <h3>Tick the correct answer</h3>
+    <ol>
+      <li>Hiking</li>
+      <li>In the summer</li>
+      <li>To hike Mount Everest</li>
+      <li>Inside</li>
+      <li>Tim</li>
+      <li>To ride a horse</li>
+    </ol>
+
+    <h3>Write a short answer</h3>
+    <ol>
+      <li>He likes being outdoors in nature, and he loves the beautiful view from the top of the mountain.</li>
+      <li>Reading, computer games and board games.</li>
+      <li>Cupcakes and muffins.</li>
+      <li>She makes a mess in the kitchen.</li>
+      <li>Football, basketball and tennis. She is also learning to ride a horse.</li>
+    </ol>
+
+    <h3>Writing — example answers</h3>
+    <p class="hb-note">Your answers will be different. These are only examples.</p>
+    <ol>
+      <li>I like reading and playing football.</li>
+      <li>I would like to try baking.</li>
+      <li>Yes, I play tennis. / No, I don’t.</li>
+      <li>Yes, I collect stickers. / No, I don’t.</li>
+      <li>Yes, I do. / No, I don’t.</li>
+      <li>I prefer outdoor hobbies.</li>
+      <li>My mum likes reading, and my dad likes hiking.</li>
+      <li>Yes, I have a sister. She likes baking. / No, I don’t.</li>
+      <li>My best friend likes computer games and board games.</li>
+    </ol>
+  </div>
+</div>
