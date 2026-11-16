@@ -45,6 +45,7 @@ interface Props {
   student: {
     id: string
     name: string
+    email: string
   }
   enrollments: Enrollment[]
 }
@@ -176,11 +177,11 @@ function lessonStripSummaryHoverClass(lessonNum: number | null): string {
 function sessionSummaryLabel(attendance: AttendanceOption): string | null {
   switch (attendance) {
     case 'YES_ONLINE':
-      return 'online lesson'
+      return 'Online lesson'
     case 'YES_IN_PERSON':
-      return 'in-person lesson'
+      return 'In-person lesson'
     case 'NO_NOT_INFORMED':
-      return 'absence (not informed)'
+      return 'Absence (not informed)'
     default:
       return null
   }
@@ -277,6 +278,8 @@ export default function StudentNotesManager({ student, enrollments }: Props) {
   const [coursePackageSaveError, setCoursePackageSaveError] = useState<string | null>(null)
   const [trackHoursModalOpen, setTrackHoursModalOpen] = useState(false)
   const [engagementReminderOpen, setEngagementReminderOpen] = useState(false)
+  const [exportingPdf, setExportingPdf] = useState(false)
+  const [exportPdfError, setExportPdfError] = useState<string | null>(null)
   /**
    * Incremented after each successful load from the API so we can imperatively open <details>
    * for rows that already have corrections/notes. Native <details> is left uncontrolled to avoid
@@ -347,6 +350,7 @@ export default function StudentNotesManager({ student, enrollments }: Props) {
       noteLoadedRef.current = false
       setCourseMidpointHint(null)
       setTrackHoursModalOpen(false)
+      setExportPdfError(null)
       loadNote(resolvedEnrollmentId)
     } else {
       setContent('')
@@ -697,7 +701,12 @@ export default function StudentNotesManager({ student, enrollments }: Props) {
     )
 
   const sessionSummary = useMemo(() => {
-    const items: { lessonNum: number; date: string; attendance: AttendanceOption }[] = []
+    const items: {
+      lessonNum: number
+      date: string
+      attendance: AttendanceOption
+      durationHours: LessonDurationHours
+    }[] = []
     let hoursBooked = 0
     let hoursAttended = 0
 
@@ -713,12 +722,48 @@ export default function StudentNotesManager({ student, enrollments }: Props) {
         lessonNum,
         date: row.date.trim(),
         attendance: row.attendance,
+        durationHours: duration,
       })
     })
 
     items.sort((a, b) => a.lessonNum - b.lessonNum)
     return { items, hoursBooked, hoursAttended }
   }, [rows, lessonNums])
+
+  const exportAttendancePdf = async () => {
+    if (!activeEnrollment || exportingPdf) return
+    setExportingPdf(true)
+    setExportPdfError(null)
+    try {
+      const { downloadAttendanceRecordPdf, formatCourseNameForAttendancePdf } = await import(
+        '@/lib/generate-attendance-record-pdf'
+      )
+      const courseName = activeEnrollment.course
+        ? formatCourseNameForAttendancePdf(
+            activeEnrollment.course.name,
+            activeEnrollment.course.duration
+          )
+        : 'Cours inconnu'
+      await downloadAttendanceRecordPdf({
+        studentName: student.name,
+        studentEmail: student.email,
+        courseName,
+        hoursBooked: sessionSummary.hoursBooked,
+        hoursAttended: sessionSummary.hoursAttended,
+        rows: sessionSummary.items.map((item) => ({
+          lessonNum: item.lessonNum,
+          date: item.date,
+          durationHours: item.durationHours,
+          attendance: item.attendance,
+        })),
+      })
+    } catch (error) {
+      console.error('Error exporting attendance PDF:', error)
+      setExportPdfError('Could not create the PDF. Try again.')
+    } finally {
+      setExportingPdf(false)
+    }
+  }
 
   const saveCoursePackageHours = async () => {
     const courseId = activeEnrollment?.course?.id
@@ -825,11 +870,28 @@ export default function StudentNotesManager({ student, enrollments }: Props) {
 
         {resolvedEnrollmentId && (
           <section className="mx-auto mt-6 max-w-3xl text-left" aria-label="Session summary">
-            <p className="text-sm font-medium text-gray-900">
-              {formatHoursWithUnit(sessionSummary.hoursBooked)} booked ·{' '}
-              {formatHoursWithUnit(sessionSummary.hoursAttended)} attended
-            </p>
-            <p className="mt-1 text-xs text-gray-500">Only visible to you.</p>
+            <div className="flex flex-wrap items-start justify-between gap-3">
+              <div>
+                <p className="text-sm font-medium text-gray-900">
+                  {formatHoursWithUnit(sessionSummary.hoursBooked)} booked ·{' '}
+                  {formatHoursWithUnit(sessionSummary.hoursAttended)} attended
+                </p>
+                <p className="mt-1 text-xs text-gray-500">Only visible to you.</p>
+              </div>
+              <button
+                type="button"
+                onClick={() => void exportAttendancePdf()}
+                disabled={loading || exportingPdf}
+                className="shrink-0 rounded-md bg-[#38438f] px-3 py-2 text-sm font-medium text-white shadow-sm hover:bg-[#2d3569] focus:outline-none focus:ring-2 focus:ring-[#38438f] disabled:opacity-50"
+              >
+                {exportingPdf ? 'Preparing PDF…' : 'Export data as PDF'}
+              </button>
+            </div>
+            {exportPdfError && (
+              <p className="mt-2 text-sm text-red-700" role="alert">
+                {exportPdfError}
+              </p>
+            )}
             {sessionSummary.items.length === 0 ? (
               <p className="mt-3 text-sm text-gray-600">No sessions recorded yet.</p>
             ) : (
