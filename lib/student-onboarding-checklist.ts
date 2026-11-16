@@ -274,18 +274,18 @@ export const STUDENT_ONBOARDING_CHECKLIST_ITEMS: OnboardingChecklistItemDefiniti
     allowedMimeTypes: ['application/pdf'],
   },
   {
+    slug: 'book-toeic-exam',
+    label: 'Book TOEIC exam (around the midpoint)',
+    type: 'complete-or-na',
+    completeNoteOnly: true,
+  },
+  {
     slug: 'end-of-course-assessment',
     label: 'End-of-course assessment against objectives',
     type: 'convention-contract',
     documentTitle: 'End-of-course assessment against objectives',
     allowedMimeTypes: ['application/pdf'],
     allowNotApplicable: true,
-  },
-  {
-    slug: 'book-toeic-exam',
-    label: 'Book TOEIC exam',
-    type: 'complete-or-na',
-    completeNoteOnly: true,
   },
   {
     slug: 'end-of-course-certificate',
