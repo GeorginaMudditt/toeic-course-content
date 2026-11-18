@@ -1,0 +1,658 @@
+<!-- Cabin Crew — B1 Travel English -->
+<style>
+  .cc-wrap {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 8px 4px 32px;
+    font-family: Arial, sans-serif;
+    line-height: 1.55;
+    color: #1f2937;
+  }
+
+  .cc-wrap h1 {
+    margin: 0 !important;
+    font-size: 32px;
+    line-height: 1.15;
+    color: #0f172a;
+  }
+
+  .cc-wrap h2 {
+    margin: 0 0 8px !important;
+    font-size: 22px;
+    line-height: 1.25;
+    color: #38438f;
+  }
+
+  .cc-wrap p {
+    margin: 0 0 10px !important;
+    font-size: 16px;
+  }
+
+  .cc-wrap ol,
+  .cc-wrap ul {
+    margin: 0;
+    padding-left: 22px;
+    font-size: 16px;
+  }
+
+  .cc-vocab {
+    list-style-type: decimal !important;
+    list-style-position: outside !important;
+    padding-left: 28px;
+    margin: 0;
+  }
+
+  .cc-vocab li {
+    display: list-item;
+  }
+
+  .cc-answers h3 {
+    margin: 14px 0 6px !important;
+    font-size: 17px;
+    color: #1e3a8a;
+  }
+
+  .cc-answers h3:first-of-type {
+    margin-top: 0 !important;
+  }
+
+  .cc-answers ol,
+  .cc-answers ul {
+    margin: 0 0 4px;
+  }
+
+  .cc-answers ul {
+    list-style-type: disc !important;
+    list-style-position: outside !important;
+  }
+
+  .cc-answers li {
+    margin-bottom: 4px;
+  }
+
+  .cc-must {
+    margin: 4px 0 0 6px;
+    padding-left: 22px;
+    list-style-type: disc !important;
+    list-style-position: outside !important;
+  }
+
+  .cc-must li {
+    display: list-item;
+    margin-bottom: 8px;
+  }
+
+  .cc-wrap li {
+    margin-bottom: 10px;
+  }
+
+  .cc-wrap [hidden] {
+    display: none !important;
+  }
+
+  .cc-header {
+    text-align: center;
+    margin-bottom: 18px;
+  }
+
+  .cc-kicker {
+    margin: 6px 0 0 !important;
+    font-size: 14px !important;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: #ba3627;
+  }
+
+  .cc-card {
+    border: 1px solid #dbe3f0;
+    border-radius: 12px;
+    background: #fff;
+    padding: 18px 18px 16px;
+    margin-bottom: 18px;
+  }
+
+  .cc-lead {
+    color: #475569;
+  }
+
+  .cc-example {
+    color: #38438f;
+    font-weight: 700;
+  }
+
+  .cc-history {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    background: #fff;
+    border: 1px solid #cfd6df;
+    border-radius: 8px;
+    overflow: hidden;
+    font-size: 16px;
+  }
+
+  .cc-history th {
+    background: #1e4b8f;
+    color: #fff;
+    font-weight: 700;
+    text-align: center;
+    padding: 10px 12px;
+    letter-spacing: 0.04em;
+  }
+
+  .cc-history td {
+    padding: 8px 12px;
+    border-bottom: 1px solid #dbe7f5;
+    vertical-align: top;
+  }
+
+  .cc-history tr:last-child td {
+    border-bottom: none;
+  }
+
+  .cc-history tr:nth-child(even) td {
+    background: #f3f8fd;
+  }
+
+  .cc-year {
+    width: 84px;
+    font-weight: 700;
+    color: #1e4b8f;
+    white-space: nowrap;
+  }
+
+  .cc-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    background: #fff;
+    border: 1px solid #cfd6df;
+    border-radius: 8px;
+    overflow: hidden;
+    font-size: 16px;
+  }
+
+  .cc-table th {
+    background: #f6e7b8;
+    color: #0f172a;
+    font-weight: 700;
+    text-align: left;
+    padding: 8px 10px;
+    border-bottom: 1px solid #e4d7a4;
+    width: 50%;
+  }
+
+  .cc-table td {
+    padding: 8px 10px;
+    border-bottom: 1px solid #e8edf3;
+    vertical-align: middle;
+  }
+
+  .cc-table tr:last-child td {
+    border-bottom: none;
+  }
+
+  .cc-table tr:nth-child(even) td {
+    background: #fffdf6;
+  }
+
+  .cc-passage {
+    background: #fffdf6;
+    border: 1px solid #eadfba;
+    border-radius: 10px;
+    padding: 14px 16px;
+  }
+
+  .cc-passage p:last-child {
+    margin-bottom: 0 !important;
+  }
+
+  .cc-note {
+    margin: 4px 0 0 !important;
+    padding: 10px 12px;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    background: #f8fafc;
+    font-size: 13px !important;
+    line-height: 1.45;
+    color: #475569;
+  }
+
+  .cc-audio-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 8px;
+  }
+
+  .cc-audio-card {
+    border: 1px solid #dbe3f0;
+    border-radius: 10px;
+    background: #f8fafc;
+    padding: 12px;
+  }
+
+  .cc-audio-card p {
+    margin: 0 0 8px !important;
+    font-weight: 700;
+    color: #1e3a8a;
+  }
+
+  .cc-audio-card audio {
+    display: none;
+  }
+
+  .cc-player-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 8px;
+  }
+
+  .cc-audio-card button {
+    appearance: none;
+    border: 1px solid #1e3a8a;
+    background: #fff;
+    color: #1e3a8a;
+    border-radius: 999px;
+    padding: 6px 12px;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    line-height: 1.2;
+  }
+
+  .cc-audio-card button:hover {
+    background: #dbeafe;
+  }
+
+  .cc-audio-card button[aria-pressed="true"] {
+    background: #1e3a8a;
+    color: #fff;
+  }
+
+  .cc-seek {
+    width: 100%;
+    margin: 2px 0 4px;
+    accent-color: #1e3a8a;
+  }
+
+  .cc-time {
+    margin: 0 !important;
+    font-size: 13px !important;
+    font-weight: 700;
+    color: #1e3a8a;
+  }
+
+  .cc-player-status {
+    margin: 6px 0 0 !important;
+    font-size: 13px !important;
+    font-weight: 600;
+    color: #9a3412;
+  }
+
+  .cc-player-status:empty {
+    display: none;
+  }
+
+  .cc-transcript {
+    margin-top: 10px;
+    border: 1px solid #c7d2fe;
+    border-radius: 8px;
+    background: #eef2ff;
+    padding: 8px 12px;
+  }
+
+  .cc-transcript summary {
+    cursor: pointer;
+    font-weight: 700;
+    color: #1e3a8a;
+    font-size: 15px;
+  }
+
+  .cc-transcript p {
+    margin: 8px 0 0 !important;
+    font-size: 15px !important;
+    font-weight: 400;
+    color: #1f2937;
+  }
+
+  .cc-q {
+    margin: 0 0 16px;
+    padding-bottom: 14px;
+    border-bottom: 1px solid #e5e7eb;
+  }
+
+  .cc-q:last-of-type {
+    border-bottom: none;
+    margin-bottom: 0;
+    padding-bottom: 0;
+  }
+
+  .cc-wrap [data-grammar-input-type="radio"] > div {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 8px !important;
+  }
+
+  .cc-wrap [data-grammar-input-type="radio"] label {
+    font-weight: 600;
+    line-height: 1.35;
+  }
+
+  @media (max-width: 700px) {
+    .cc-audio-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  @media print {
+    @page {
+      margin: 1.5cm;
+    }
+    .cc-card {
+      break-inside: avoid;
+      page-break-inside: avoid;
+    }
+    h2 {
+      break-after: avoid;
+      page-break-after: avoid;
+    }
+  }
+</style>
+
+<div class="cc-wrap">
+  <div class="cc-header no-break">
+    <h1>Cabin Crew</h1>
+  </div>
+
+  <div class="cc-card" data-bookmarkable="listening" data-bookmark-label="Listening">
+    <h2>Listening</h2>
+    <p class="cc-lead">Listen to three members of cabin crew. They are talking about their jobs. You can listen more than once, at normal speed or at 0.75× speed.</p>
+    <div class="cc-audio-grid">
+      <div class="cc-audio-card" data-lesson-audio data-audio-src="https://ulrwcortyhassmytkcij.supabase.co/storage/v1/object/public/travel-english/cabin-crew1.mp3?v=1">
+        <p>Speaker 1</p>
+        <audio preload="metadata"></audio>
+        <div class="cc-player-row">
+          <button type="button" data-audio-action="play">Play</button>
+          <button type="button" data-audio-action="speed" data-speed="0.75">0.75× speed</button>
+          <button type="button" data-audio-action="speed" data-speed="1" aria-pressed="true">Normal speed</button>
+        </div>
+        <input class="cc-seek" data-audio-seek type="range" min="0" max="100" value="0" step="0.1" aria-label="Position in Speaker 1" />
+        <p class="cc-time" data-audio-time>0:00 / –:––</p>
+        <p class="cc-player-status" data-audio-status></p>
+        <details class="cc-transcript">
+          <summary>Transcript</summary>
+          <p>I’ve had my current job for four years. I got the job after I’d been with my airline for five years, so I’ve been flying for nine years. I was happy to get a pay increase, but the best part of the job is going on international flights. I had to pass an English test for that. And now I have a regular flight schedule. I got very tired of being on call and having to go to work whenever the phone rang.</p>
+        </details>
+      </div>
+      <div class="cc-audio-card" data-lesson-audio data-audio-src="https://ulrwcortyhassmytkcij.supabase.co/storage/v1/object/public/travel-english/cabin-crew2.mp3?v=1">
+        <p>Speaker 2</p>
+        <audio preload="metadata"></audio>
+        <div class="cc-player-row">
+          <button type="button" data-audio-action="play">Play</button>
+          <button type="button" data-audio-action="speed" data-speed="0.75">0.75× speed</button>
+          <button type="button" data-audio-action="speed" data-speed="1" aria-pressed="true">Normal speed</button>
+        </div>
+        <input class="cc-seek" data-audio-seek type="range" min="0" max="100" value="0" step="0.1" aria-label="Position in Speaker 2" />
+        <p class="cc-time" data-audio-time>0:00 / –:––</p>
+        <p class="cc-player-status" data-audio-status></p>
+        <details class="cc-transcript">
+          <summary>Transcript</summary>
+          <p>I started as a flight attendant nineteen years ago. I’ve worked for three different airlines. Now I’ve got the top job. I’ve been doing it for a year. I’m in charge of running the whole cabin. I tell the flight crew when the cabin is secure for take-off and landing, I make all the announcements, and I report any missing or broken emergency equipment to the pilots after the pre-flight check. I operate the doors, too. I also take care of all the required paperwork and reports for each flight, and also account for all of the money we take.</p>
+        </details>
+      </div>
+      <div class="cc-audio-card" data-lesson-audio data-audio-src="https://ulrwcortyhassmytkcij.supabase.co/storage/v1/object/public/travel-english/cabin-crew3.mp3?v=1">
+        <p>Speaker 3</p>
+        <audio preload="metadata"></audio>
+        <div class="cc-player-row">
+          <button type="button" data-audio-action="play">Play</button>
+          <button type="button" data-audio-action="speed" data-speed="0.75">0.75× speed</button>
+          <button type="button" data-audio-action="speed" data-speed="1" aria-pressed="true">Normal speed</button>
+        </div>
+        <input class="cc-seek" data-audio-seek type="range" min="0" max="100" value="0" step="0.1" aria-label="Position in Speaker 3" />
+        <p class="cc-time" data-audio-time>0:00 / –:––</p>
+        <p class="cc-player-status" data-audio-status></p>
+        <details class="cc-transcript">
+          <summary>Transcript</summary>
+          <p>I’m a new recruit. I finished my training eighteen months ago, and I’ve been doing this job for about a year. It’s hard work, but I love it. My main responsibility is passenger safety. Of course, I also look after passengers’ comfort and serve food and drinks, but safety is the most important thing. A lot of passengers don’t understand that. Some people think I’m just a waiter.</p>
+        </details>
+      </div>
+    </div>
+  </div>
+
+  <div class="cc-card" data-bookmarkable="reading" data-bookmark-label="Reading">
+    <h2>Reading</h2>
+    <p class="cc-lead">Read the history of cabin crew.</p>
+    <table class="cc-history">
+      <thead>
+        <tr>
+          <th colspan="2">History of cabin crew</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="cc-year">1916</td>
+          <td>Aircraft Transport and Travel begins the first scheduled airline service. They fly between the UK and France. There are no cabin crew.</td>
+        </tr>
+        <tr>
+          <td class="cc-year">1924</td>
+          <td>Imperial Airways is the first air carrier to use ‘cabin boys’ – the first flight attendants. They are polite, and comfort nervous passengers.</td>
+        </tr>
+        <tr>
+          <td class="cc-year">1928</td>
+          <td>Western Airlines is the first US airline to serve food in-flight. The job becomes more complex, so flight attendants must become more organised to do it well.</td>
+        </tr>
+        <tr>
+          <td class="cc-year">1930</td>
+          <td>25-year-old nurse, Ellen Church, becomes the first female flight attendant. Flight attendants are now expected to be prepared for medical emergencies.</td>
+        </tr>
+        <tr>
+          <td class="cc-year">1945</td>
+          <td>The first flight attendants’ union – the Airline Stewardesses Association (ALSA) – is formed. Flight attendants are now skilled and professional.</td>
+        </tr>
+        <tr>
+          <td class="cc-year">1952</td>
+          <td>British Overseas Airways Corporation (BOAC) starts the world’s first commercial jetliner service. The golden age of cabin crew begins. Their main job is passenger safety, but cabin crew – almost all young, single women – are expected to be glamorous.</td>
+        </tr>
+        <tr>
+          <td class="cc-year">1970</td>
+          <td>The first 747 jumbo jets are flown commercially. Increasing international travel means flight attendants need to be very flexible and adaptable.</td>
+        </tr>
+        <tr>
+          <td class="cc-year">1976</td>
+          <td>Concorde, the first supersonic airliner, enters service. The flight from London to New York takes less than three hours.</td>
+        </tr>
+        <tr>
+          <td class="cc-year">1978</td>
+          <td>A change in the law allows low-cost budget airlines to fly. Cabin crew learn to be patient with lots of first-time flyers from the general public.</td>
+        </tr>
+        <tr>
+          <td class="cc-year">1985</td>
+          <td>Ryanair, now one of Europe’s oldest and most successful budget carriers, starts flying. Cheaper tickets mean more passengers, tighter turnarounds, and fewer passenger comforts. The ability to communicate and to be cool under pressure become more and more important.</td>
+        </tr>
+        <tr>
+          <td class="cc-year">1990s</td>
+          <td>In Europe, budget airlines begin to grow and take passengers away from traditional national airlines. More and more people fly, and the job of cabin crew becomes more challenging.</td>
+        </tr>
+        <tr>
+          <td class="cc-year">2001</td>
+          <td>After the events of September 11, fewer people fly. Many flight attendants lose their jobs. Cabin crew who continue working must learn to be more forceful in possibly difficult situations.</td>
+        </tr>
+        <tr>
+          <td class="cc-year">2008</td>
+          <td>An increase in the cost of fuel drives many airlines out of business. In spite of all the difficulties, cabin crew continue to be empathetic and cheerful. It isn’t always easy!</td>
+        </tr>
+        <tr>
+          <td class="cc-year">2020</td>
+          <td>During the Covid-19 pandemic, most flights stop. Many cabin crew lose their jobs. Crew who continue flying have to follow new health rules, and keeping passengers safe becomes even more important.</td>
+        </tr>
+        <tr>
+          <td class="cc-year">2022</td>
+          <td>Passengers return, but many airlines do not have enough cabin crew. Airports are crowded and flights are often delayed. Crew need to be patient, flexible and cool under pressure.</td>
+        </tr>
+        <tr>
+          <td class="cc-year">2024</td>
+          <td>Some airlines change their rules about appearance. Cabin crew can show tattoos, and uniforms are less about glamour. The job is still about safety, skill and professionalism, especially when passengers are difficult.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="cc-card keep-together" data-bookmarkable="vocabulary" data-bookmark-label="Vocabulary" data-grammar-per-section-check="true" data-grammar-save-section="true" data-grammar-check-snapshot="cc-vocabulary">
+    <h2>Vocabulary</h2>
+    <p class="cc-lead">Find these words in the history. Write the word that matches each definition. The first one is an example. Then click <strong>Check Answers</strong>.</p>
+    <ol class="cc-vocab">
+      <li>able to change <span class="cc-example">flexible</span></li>
+      <li>positive and happy <span data-grammar-input="cc-vocab-2" data-grammar-input-type="text" data-grammar-acceptable="cheerful" data-grammar-answer-key="cheerful" style="display: inline-block; min-width: 220px;"></span></li>
+      <li>not rude <span data-grammar-input="cc-vocab-3" data-grammar-input-type="text" data-grammar-acceptable="polite" data-grammar-answer-key="polite" style="display: inline-block; min-width: 220px;"></span></li>
+      <li>ready <span data-grammar-input="cc-vocab-4" data-grammar-input-type="text" data-grammar-acceptable="prepared" data-grammar-answer-key="prepared" style="display: inline-block; min-width: 220px;"></span></li>
+      <li>having special training and qualifications to do a job <span data-grammar-input="cc-vocab-5" data-grammar-input-type="text" data-grammar-acceptable="skilled" data-grammar-answer-key="skilled" style="display: inline-block; min-width: 220px;"></span></li>
+      <li>not old; aged 18–21, for example <span data-grammar-input="cc-vocab-6" data-grammar-input-type="text" data-grammar-acceptable="young" data-grammar-answer-key="young" style="display: inline-block; min-width: 220px;"></span></li>
+      <li>attractive and exciting <span data-grammar-input="cc-vocab-7" data-grammar-input-type="text" data-grammar-acceptable="glamorous|glamourous" data-grammar-answer-key="glamorous" style="display: inline-block; min-width: 220px;"></span></li>
+      <li>able to change <span data-grammar-input="cc-vocab-8" data-grammar-input-type="text" data-grammar-acceptable="adaptable" data-grammar-answer-key="adaptable" style="display: inline-block; min-width: 220px;"></span></li>
+      <li>acting with strength and determination in order to succeed <span data-grammar-input="cc-vocab-9" data-grammar-input-type="text" data-grammar-acceptable="forceful" data-grammar-answer-key="forceful" style="display: inline-block; min-width: 220px;"></span></li>
+      <li>able to understand people’s feelings <span data-grammar-input="cc-vocab-10" data-grammar-input-type="text" data-grammar-acceptable="empathetic" data-grammar-answer-key="empathetic" style="display: inline-block; min-width: 220px;"></span></li>
+      <li>able to plan carefully <span data-grammar-input="cc-vocab-11" data-grammar-input-type="text" data-grammar-acceptable="organised|organized" data-grammar-answer-key="organised" style="display: inline-block; min-width: 220px;"></span></li>
+      <li>having certain abilities and experience <span data-grammar-input="cc-vocab-12" data-grammar-input-type="text" data-grammar-acceptable="professional" data-grammar-answer-key="professional" style="display: inline-block; min-width: 220px;"></span></li>
+      <li>able to accept annoying behaviour <span data-grammar-input="cc-vocab-13" data-grammar-input-type="text" data-grammar-acceptable="patient" data-grammar-answer-key="patient" style="display: inline-block; min-width: 220px;"></span></li>
+      <li>not easily upset in a difficult situation <span data-grammar-input="cc-vocab-14" data-grammar-input-type="text" data-grammar-acceptable="cool under pressure" data-grammar-answer-key="cool under pressure" style="display: inline-block; min-width: 220px;"></span></li>
+    </ol>
+  </div>
+
+  <div class="cc-card keep-together" data-bookmarkable="word-table" data-bookmark-label="Word table" data-grammar-per-section-check="true" data-grammar-save-section="true" data-grammar-check-snapshot="cc-word-table">
+    <h2>Word table</h2>
+    <p class="cc-lead">Adjectives often have related nouns. Use a dictionary to complete the table. Then click <strong>Check Answers</strong>.</p>
+    <table class="cc-table">
+      <thead>
+        <tr>
+          <th>Adjective</th>
+          <th>Noun</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>adaptable</td>
+          <td>adaptability</td>
+        </tr>
+        <tr>
+          <td>forceful</td>
+          <td>forcefulness</td>
+        </tr>
+        <tr>
+          <td><span data-grammar-input="cc-wt-1" data-grammar-input-type="text" data-grammar-acceptable="cheerful" data-grammar-answer-key="cheerful" style="display: inline-block; min-width: 180px;"></span></td>
+          <td>cheerfulness</td>
+        </tr>
+        <tr>
+          <td><span data-grammar-input="cc-wt-3" data-grammar-input-type="text" data-grammar-acceptable="empathetic" data-grammar-answer-key="empathetic" style="display: inline-block; min-width: 180px;"></span></td>
+          <td>empathy</td>
+        </tr>
+        <tr>
+          <td>flexible</td>
+          <td><span data-grammar-input="cc-wt-4" data-grammar-input-type="text" data-grammar-acceptable="flexibility" data-grammar-answer-key="flexibility" style="display: inline-block; min-width: 180px;"></span></td>
+        </tr>
+        <tr>
+          <td><span data-grammar-input="cc-wt-5" data-grammar-input-type="text" data-grammar-acceptable="glamorous|glamourous" data-grammar-answer-key="glamorous" style="display: inline-block; min-width: 180px;"></span></td>
+          <td>glamour</td>
+        </tr>
+        <tr>
+          <td>organised</td>
+          <td><span data-grammar-input="cc-wt-6" data-grammar-input-type="text" data-grammar-acceptable="organisation|organization" data-grammar-answer-key="organisation" style="display: inline-block; min-width: 180px;"></span></td>
+        </tr>
+        <tr>
+          <td><span data-grammar-input="cc-wt-7" data-grammar-input-type="text" data-grammar-acceptable="patient" data-grammar-answer-key="patient" style="display: inline-block; min-width: 180px;"></span></td>
+          <td>patience</td>
+        </tr>
+        <tr>
+          <td>polite</td>
+          <td><span data-grammar-input="cc-wt-8" data-grammar-input-type="text" data-grammar-acceptable="politeness" data-grammar-answer-key="politeness" style="display: inline-block; min-width: 180px;"></span></td>
+        </tr>
+        <tr>
+          <td>professional</td>
+          <td><span data-grammar-input="cc-wt-10" data-grammar-input-type="text" data-grammar-acceptable="professionalism" data-grammar-answer-key="professionalism" style="display: inline-block; min-width: 180px;"></span></td>
+        </tr>
+        <tr>
+          <td><span data-grammar-input="cc-wt-11" data-grammar-input-type="text" data-grammar-acceptable="skilled" data-grammar-answer-key="skilled" style="display: inline-block; min-width: 180px;"></span></td>
+          <td>skill</td>
+        </tr>
+        <tr>
+          <td>young</td>
+          <td><span data-grammar-input="cc-wt-12" data-grammar-input-type="text" data-grammar-acceptable="youth" data-grammar-answer-key="youth" style="display: inline-block; min-width: 180px;"></span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="cc-card" data-bookmarkable="correct-word" data-bookmark-label="Correct word" data-grammar-per-section-check="true" data-grammar-save-section="true" data-grammar-check-snapshot="cc-correct-word">
+    <h2>Choose the correct word</h2>
+    <p class="cc-lead">Choose the correct word to complete the text. Then click <strong>Check Answers</strong>.</p>
+    <div class="cc-passage">
+      <p><strong>What makes a good flight attendant?</strong></p>
+      <p>Airlines prefer to hire <span data-grammar-input="cc-cw-1" data-grammar-input-type="select" data-grammar-input-options="cheerful|cheerfulness" data-grammar-acceptable="cheerful" data-grammar-answer-key="cheerful" style="display: inline-block; min-width: 168px;"></span> people who also show a lot of <span data-grammar-input="cc-cw-2" data-grammar-input-type="select" data-grammar-input-options="empathetic|empathy" data-grammar-acceptable="empathy" data-grammar-answer-key="empathy" style="display: inline-block; min-width: 160px;"></span>. You no longer need to be <span data-grammar-input="cc-cw-3" data-grammar-input-type="select" data-grammar-input-options="young|youth" data-grammar-acceptable="young" data-grammar-answer-key="young" style="display: inline-block; min-width: 120px;"></span> and <span data-grammar-input="cc-cw-4" data-grammar-input-type="select" data-grammar-input-options="glamourous|glamour" data-grammar-acceptable="glamourous" data-grammar-answer-key="glamourous" style="display: inline-block; min-width: 160px;"></span> to get a job. However, you need to show that you want to become a <span data-grammar-input="cc-cw-5" data-grammar-input-type="select" data-grammar-input-options="skilled|skill" data-grammar-acceptable="skilled" data-grammar-answer-key="skilled" style="display: inline-block; min-width: 120px;"></span> and <span data-grammar-input="cc-cw-6" data-grammar-input-type="select" data-grammar-input-options="professional|professionalism" data-grammar-acceptable="professional" data-grammar-answer-key="professional" style="display: inline-block; min-width: 180px;"></span> worker, because you will be the ‘face’ of the airline.</p>
+      <p>Cabin crew must also:</p>
+      <ul class="cc-must">
+        <li>have <span data-grammar-input="cc-cw-7" data-grammar-input-type="select" data-grammar-input-options="excellent|excellence" data-grammar-acceptable="excellent" data-grammar-answer-key="excellent" style="display: inline-block; min-width: 150px;"></span> health</li>
+        <li>have good <span data-grammar-input="cc-cw-8" data-grammar-input-type="select" data-grammar-input-options="clear|clarity" data-grammar-acceptable="clarity" data-grammar-answer-key="clarity" style="display: inline-block; min-width: 120px;"></span> of speech</li>
+        <li>be <span data-grammar-input="cc-cw-9" data-grammar-input-type="select" data-grammar-input-options="tall|tallness" data-grammar-acceptable="tall" data-grammar-answer-key="tall" style="display: inline-block; min-width: 130px;"></span> enough to reach emergency equipment in overhead lockers</li>
+        <li>have <span data-grammar-input="cc-cw-10" data-grammar-input-type="select" data-grammar-input-options="good|goodness" data-grammar-acceptable="good" data-grammar-answer-key="good" style="display: inline-block; min-width: 130px;"></span> vision</li>
+        <li>be good team workers</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="cc-card" data-bookmarkable="your-qualities" data-bookmark-label="Your qualities" data-grammar-check-disabled="true" data-grammar-save-section="true">
+    <h2>Your qualities</h2>
+    <p class="cc-lead">What qualities do you have now that will help you be a good crew member? What qualities do you need to develop?</p>
+    <span data-grammar-input="cc-qualities" data-grammar-input-type="textarea" data-grammar-textarea-rows="5" style="display: block; min-height: 120px;"></span>
+  </div>
+
+  <div class="cc-card cc-answers" data-bookmarkable="answers" data-bookmark-label="Answers">
+    <h2>Answers</h2>
+
+    <h3>Vocabulary</h3>
+    <ol class="cc-vocab">
+      <li>flexible</li>
+      <li>cheerful</li>
+      <li>polite</li>
+      <li>prepared</li>
+      <li>skilled</li>
+      <li>young</li>
+      <li>glamorous</li>
+      <li>adaptable</li>
+      <li>forceful</li>
+      <li>empathetic</li>
+      <li>organised</li>
+      <li>professional</li>
+      <li>patient</li>
+      <li>cool under pressure</li>
+    </ol>
+
+    <h3>Word table</h3>
+    <ul>
+      <li>cheerful — cheerfulness</li>
+      <li>empathetic — empathy</li>
+      <li>flexible — flexibility</li>
+      <li>glamorous — glamour</li>
+      <li>organised — organisation</li>
+      <li>patient — patience</li>
+      <li>polite — politeness</li>
+      <li>professional — professionalism</li>
+      <li>skilled — skill</li>
+      <li>young — youth</li>
+    </ul>
+
+    <h3>Choose the correct word</h3>
+    <p>Airlines prefer to hire <strong>cheerful</strong> people who also show a lot of <strong>empathy</strong>. You no longer need to be <strong>young</strong> and <strong>glamourous</strong> to get a job. However, you need to show that you want to become a <strong>skilled</strong> and <strong>professional</strong> worker, because you will be the ‘face’ of the airline.</p>
+    <p>Cabin crew must also:</p>
+    <ul class="cc-must">
+      <li>have <strong>excellent</strong> health</li>
+      <li>have good <strong>clarity</strong> of speech</li>
+      <li>be <strong>tall</strong> enough to reach emergency equipment in overhead lockers</li>
+      <li>have <strong>good</strong> vision</li>
+      <li>be good team workers</li>
+    </ul>
+  </div>
+
+  <p class="cc-note">Adapted from "English for Cabin Crew" by Sue Ellis and Lewis Lansford (Oxford Business English, 2010)</p>
+</div>

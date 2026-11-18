@@ -18,6 +18,7 @@ import {
   type GiaqActivityPersistence,
 } from '@/lib/worksheetInteractions/givingInformationAnsweringQuestions'
 import { mountPhraseAudioButtons } from '@/lib/worksheetInteractions/phraseAudioButtons'
+import { mountLessonAudioPlayers } from '@/lib/worksheetInteractions/lessonAudioPlayer'
 import { mountResourceSectionBookmarks } from '@/lib/worksheetInteractions/resourceSectionBookmarks'
 import {
   buildSnapshotFromCheckResult,
@@ -909,6 +910,8 @@ export default function WorksheetViewer({
   const hasMountedWorksheetActivities = hasPspActivities || hasGiaqActivities || hasVocabGapFill
   const hasPhraseAudioRoot =
     typeof resource.content === 'string' && resource.content.includes('data-phrase-audio-root')
+  const hasLessonAudio =
+    typeof resource.content === 'string' && resource.content.includes('data-lesson-audio')
   const hasWritingTimers =
     typeof resource.content === 'string' && resource.content.includes('data-writing-timer-minutes')
   const hasWritingClearlyPhraseMatch =
@@ -3149,6 +3152,21 @@ export default function WorksheetViewer({
       detach?.()
     }
   }, [resource.content, hasPhraseAudioRoot])
+
+  // Lesson listening player: pause, skip, and 0.75× speed (scripts in resource HTML do not run).
+  useLayoutEffect(() => {
+    if (!hasLessonAudio || !isClientMounted) return
+    let detach: (() => void) | undefined
+    const rafId = requestAnimationFrame(() => {
+      const host = contentRef.current
+      if (!host) return
+      detach = mountLessonAudioPlayers(host)
+    })
+    return () => {
+      cancelAnimationFrame(rafId)
+      detach?.()
+    }
+  }, [hasLessonAudio, resource.content, isClientMounted])
 
   // TOEIC writing practice countdown timers (emails + essay).
   useLayoutEffect(() => {

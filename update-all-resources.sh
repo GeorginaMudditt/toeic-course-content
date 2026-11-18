@@ -31,6 +31,7 @@ npm run update:resource:supabase "Travel English Lesson 3" "travel-english-lesso
 npm run update:resource:supabase "Travel English Lesson 5" "travel-english-lesson-5-html.html"
 npm run update:resource:supabase "Travel English Lesson 6" "travel-english-lesson-6-html.html"
 npm run update:resource:supabase "Travel English Lesson 7" "travel-english-lesson-7-html.html"
+npm run update:resource:supabase "Cabin Crew" "cabin-crew-html.html"
 npm run update:resource:supabase "New York, New York" "new-york-new-york-html.html"
 npm run update:resource:supabase "Scotland" "scotland-html.html"
 npm run update:resource:supabase "Greetings, Numbers and Letters" "greetings-numbers-and-letters-html.html"
