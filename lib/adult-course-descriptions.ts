@@ -81,7 +81,7 @@ export const adultCourseDescriptionsFallback: AdultCourseDescription[] = [
     title: 'TOEIC® Pack Progress',
     hours: '15 heures',
     price: '1 200 €',
-    pdfFileName: 'TOEIC_Pack_Progress_v1.9.pdf',
+    pdfFileName: 'TOEIC_Pack_Progress_v2.1.pdf',
     category: 'toeic',
   }),
   course({
@@ -89,7 +89,7 @@ export const adultCourseDescriptionsFallback: AdultCourseDescription[] = [
     title: 'TOEIC® Pack Perform',
     hours: '20 heures',
     price: '1 500 €',
-    pdfFileName: 'TOEIC_Pack_Perform_v1.9.pdf',
+    pdfFileName: 'TOEIC_Pack_Perform_v2.1.pdf',
     category: 'toeic',
   }),
 ]
