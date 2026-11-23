@@ -240,10 +240,8 @@ export const STUDENT_ONBOARDING_CHECKLIST_ITEMS: OnboardingChecklistItemDefiniti
     type: 'template-pick-upload',
     documentTitle: 'Welcome booklet',
     templatePickOptions: [
-      { key: 'online', label: 'Online Student' },
-      { key: 'online-toeic', label: 'Online Student (TOEIC)' },
-      { key: 'inperson', label: 'In-person Student' },
-      { key: 'inperson-toeic', label: 'In-person Student (TOEIC)' },
+      { key: 'online-nov26', label: 'Online' },
+      { key: 'inperson-nov26', label: 'In-person' },
     ],
   },
   {

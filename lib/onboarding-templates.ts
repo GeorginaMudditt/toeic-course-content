@@ -128,32 +128,18 @@ export type WelcomeBookletTemplate = {
 
 export const WELCOME_BOOKLET_TEMPLATES: WelcomeBookletTemplate[] = [
   {
-    key: 'online',
-    label: 'Online Student',
+    key: 'online-nov26',
+    label: 'Online',
     storageBucket: 'onboarding-templates',
-    storagePath: 'welcome-online.pdf',
-    publishFileName: 'Welcome booklet - Online Student.pdf',
+    storagePath: 'welcome-online-v25Nov26.pdf',
+    publishFileName: 'Welcome booklet - Online.pdf',
   },
   {
-    key: 'online-toeic',
-    label: 'Online Student (TOEIC)',
+    key: 'inperson-nov26',
+    label: 'In-person',
     storageBucket: 'onboarding-templates',
-    storagePath: 'welcome-online-toeic.pdf',
-    publishFileName: 'Welcome booklet - Online Student (TOEIC).pdf',
-  },
-  {
-    key: 'inperson',
-    label: 'In-person Student',
-    storageBucket: 'onboarding-templates',
-    storagePath: 'welcome-inperson.pdf',
-    publishFileName: 'Welcome booklet - In-person Student.pdf',
-  },
-  {
-    key: 'inperson-toeic',
-    label: 'In-person Student (TOEIC)',
-    storageBucket: 'onboarding-templates',
-    storagePath: 'welcome-inperson-toeic.pdf',
-    publishFileName: 'Welcome booklet - In-person Student (TOEIC).pdf',
+    storagePath: 'welcome-inperson-v25Nov26.pdf',
+    publishFileName: 'Welcome booklet - In-person.pdf',
   },
 ]
 

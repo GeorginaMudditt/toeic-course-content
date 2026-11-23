@@ -13,29 +13,38 @@ type Props = {
   onItemUpdate: (item: OnboardingChecklistItemView) => void
 }
 
+function fileNameMatchesOption(fileName: string, label: string) {
+  const withoutExtension = fileName.replace(/\.pdf$/i, '')
+  return withoutExtension.endsWith(label)
+}
+
 function resolveSelectedOption(item: OnboardingChecklistItemView) {
   const options = item.templatePickOptions ?? []
-  const byWorkflowKey = options.find(
-    (option) => option.key === item.workflowState?.selectedVariant
-  )
-  if (byWorkflowKey) {
-    return {
-      key: byWorkflowKey.key,
-      label: item.workflowState?.selectedVariantLabel ?? byWorkflowKey.label,
+  const storedKey = item.workflowState?.selectedVariant ?? null
+  const storedLabel = item.workflowState?.selectedVariantLabel ?? null
+
+  if (storedKey) {
+    const byWorkflowKey = options.find((option) => option.key === storedKey)
+    if (byWorkflowKey) {
+      return {
+        key: byWorkflowKey.key,
+        label: storedLabel ?? byWorkflowKey.label,
+      }
+    }
+
+    if (storedLabel) {
+      return { key: storedKey, label: storedLabel }
     }
   }
 
   const fileName = item.linkedDocument?.fileName ?? ''
-  const byFileName = options.find((option) => fileName.includes(option.label))
+  const byFileName = options.find((option) => fileNameMatchesOption(fileName, option.label))
   if (byFileName) {
     return { key: byFileName.key, label: byFileName.label }
   }
 
-  if (item.workflowState?.selectedVariantLabel) {
-    return {
-      key: item.workflowState.selectedVariant ?? null,
-      label: item.workflowState.selectedVariantLabel,
-    }
+  if (storedLabel) {
+    return { key: storedKey, label: storedLabel }
   }
 
   return null
@@ -58,6 +67,9 @@ export default function WelcomeBookletChecklistCard({
   const isUploaded = item.linkedDocument !== null
   const options = item.templatePickOptions ?? []
   const selected = resolveSelectedOption(item)
+  const selectedIsCurrentOption = Boolean(
+    selected && options.some((option) => option.key === selected.key)
+  )
   const showPicker = !isUploaded || showChangePanel
 
   const handlePublish = async (templateKey: string) => {
@@ -161,6 +173,12 @@ export default function WelcomeBookletChecklistCard({
               {isUploaded && selected && !showChangePanel && (
                 <p className="mt-1 text-sm text-gray-800">
                   <span className="font-medium">Version:</span> {selected.label}
+                </p>
+              )}
+
+              {isUploaded && selected && !selectedIsCurrentOption && !showChangePanel && (
+                <p className="mt-1 text-sm text-gray-600">
+                  This earlier booklet stays on the student’s portal.
                 </p>
               )}
 
