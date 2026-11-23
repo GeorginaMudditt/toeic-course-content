@@ -7,6 +7,8 @@ import Link from 'next/link'
 import StudentOnboardingChecklist from '@/components/StudentOnboardingChecklist'
 import { loadStudentOnboardingChecklist } from '@/lib/load-student-onboarding-checklist'
 
+export const dynamic = 'force-dynamic'
+
 export default async function StudentOnboardingPage({
   params,
 }: {

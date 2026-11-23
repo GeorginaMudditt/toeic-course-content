@@ -240,8 +240,8 @@ export const STUDENT_ONBOARDING_CHECKLIST_ITEMS: OnboardingChecklistItemDefiniti
     type: 'template-pick-upload',
     documentTitle: 'Welcome booklet',
     templatePickOptions: [
-      { key: 'online-nov26', label: 'Online' },
-      { key: 'inperson-nov26', label: 'In-person' },
+      { key: 'online-nov26', label: 'Online student' },
+      { key: 'inperson-nov26', label: 'In-person student' },
     ],
   },
   {
