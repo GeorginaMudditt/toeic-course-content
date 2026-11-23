@@ -169,11 +169,6 @@ export async function POST(request: NextRequest) {
       selectedVariantLabel: template.label,
     }
 
-    const { data: checklistRecords } = await supabaseServer
-      .from('StudentOnboardingChecklistItem')
-      .select('*')
-      .eq('studentId', studentId)
-
     const { data: existingWorkflow } = await supabaseServer
       .from('StudentOnboardingChecklistItem')
       .select('id')
@@ -185,7 +180,8 @@ export async function POST(request: NextRequest) {
       const { error: workflowError } = await supabaseServer
         .from('StudentOnboardingChecklistItem')
         .update({
-          status: 'PENDING',
+          status: 'COMPLETED',
+          completedAt: now,
           workflowState,
           updatedBy: session.user.id,
           updatedAt: now,
@@ -202,8 +198,9 @@ export async function POST(request: NextRequest) {
           id: randomUUID(),
           studentId,
           itemSlug: checklistItemSlug,
-          status: 'PENDING',
+          status: 'COMPLETED',
           note: null,
+          completedAt: now,
           workflowState,
           updatedBy: session.user.id,
           createdAt: now,
@@ -214,6 +211,11 @@ export async function POST(request: NextRequest) {
         console.error('Error creating welcome booklet workflow:', workflowError)
       }
     }
+
+    const { data: checklistRecords } = await supabaseServer
+      .from('StudentOnboardingChecklistItem')
+      .select('*')
+      .eq('studentId', studentId)
 
     const linkedDocuments = await loadLinkedChecklistDocuments(studentId)
     const items = mergeChecklistWithRecords(

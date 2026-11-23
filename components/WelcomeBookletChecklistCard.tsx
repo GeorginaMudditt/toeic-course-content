@@ -64,7 +64,7 @@ export default function WelcomeBookletChecklistCard({
   const [showChangePanel, setShowChangePanel] = useState(false)
   const [isSavingNote, setIsSavingNote] = useState(false)
 
-  const isUploaded = item.linkedDocument !== null
+  const isUploaded = item.linkedDocument !== null || item.status === 'COMPLETED'
   const options = item.templatePickOptions ?? []
   const selected = resolveSelectedOption(item)
   const selectedIsCurrentOption = Boolean(
