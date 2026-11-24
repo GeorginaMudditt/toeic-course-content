@@ -54,8 +54,10 @@ export type OnboardingChecklistItemDefinition = {
   allowedMimeTypes?: string[]
   /** Multiple My Docs uploads before the item is complete (dual-document-or-na only). */
   documentSlots?: ChecklistDocumentSlot[]
-  /** Show N/A (complete-or-na items only). Defaults to true. */
+  /** Show an N/A button. Defaults to true for complete-or-na items. */
   allowNotApplicable?: boolean
+  /** Button and ticked-state label when N/A needs a specific reason. */
+  notApplicableLabel?: string
   /** Mark complete + note only — no optional file upload (complete-or-na items only). */
   completeNoteOnly?: boolean
   /** Links to admin / Qualiopi tools or external forms (complete-or-na items only). */
@@ -226,6 +228,8 @@ export const STUDENT_ONBOARDING_CHECKLIST_ITEMS: OnboardingChecklistItemDefiniti
     type: 'convention-contract',
     documentTitle: 'Convention / Contract',
     allowedMimeTypes: ['application/pdf'],
+    allowNotApplicable: true,
+    notApplicableLabel: 'N/A (CPF titulaire)',
   },
   {
     slug: 'cgv-reglement-interieur',
@@ -233,6 +237,8 @@ export const STUDENT_ONBOARDING_CHECKLIST_ITEMS: OnboardingChecklistItemDefiniti
     type: 'pdf-workflow-document',
     documentTitle: 'CGV et Règlement Intérieur',
     allowedMimeTypes: ['application/pdf'],
+    allowNotApplicable: true,
+    notApplicableLabel: 'N/A (CPF titulaire)',
   },
   {
     slug: 'welcome-booklet',

@@ -52,6 +52,9 @@ export default function PdfWorkflowChecklistCard({
   const [isDownloading, setIsDownloading] = useState(false)
 
   const isUploaded = item.linkedDocument !== null
+  const isNotApplicable = item.status === 'NOT_APPLICABLE'
+  const isResolved = isUploaded || isNotApplicable
+  const showNotApplicable = item.allowNotApplicable === true
   const workflow = item.workflowState ?? {}
 
   const closePanel = () => {
@@ -257,10 +260,28 @@ export default function PdfWorkflowChecklistCard({
     setFileDraft(null)
   }
 
+  const handleMarkNotApplicable = async () => {
+    const success = await patchChecklist({ status: 'NOT_APPLICABLE' })
+    if (success) {
+      closePanel()
+    }
+  }
+
+  const handleUndoNotApplicable = async () => {
+    const success = await patchChecklist({ status: 'PENDING' })
+    if (success) {
+      closePanel()
+    }
+  }
+
   return (
     <li
       className={`rounded-lg border bg-white p-4 shadow-sm ${
-        isUploaded ? 'border-emerald-200' : 'border-gray-200'
+        isNotApplicable
+          ? 'border-slate-200 bg-slate-50'
+          : isUploaded
+            ? 'border-emerald-200'
+            : 'border-gray-200'
       }`}
     >
       <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
@@ -268,13 +289,25 @@ export default function PdfWorkflowChecklistCard({
           <div className="flex items-start gap-3">
             <span
               className={`mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-xs font-semibold ${
-                isUploaded ? 'bg-emerald-100 text-emerald-800' : 'bg-gray-100 text-gray-600'
+                isResolved ? 'bg-emerald-100 text-emerald-800' : 'bg-gray-100 text-gray-600'
               }`}
             >
-              {isUploaded ? '✓' : index + 1}
+              {isResolved ? '✓' : index + 1}
             </span>
             <div className="min-w-0">
-              <p className="text-sm font-medium text-gray-900 sm:text-base">{item.label}</p>
+              <p
+                className={`text-sm font-medium sm:text-base ${
+                  isNotApplicable ? 'text-gray-500 line-through' : 'text-gray-900'
+                }`}
+              >
+                {item.label}
+              </p>
+
+              {isNotApplicable && (
+                <p className="mt-1 text-xs font-medium text-slate-500">
+                  {item.notApplicableLabel ?? 'Not applicable'}
+                </p>
+              )}
 
               {isUploaded && item.completedAt && (
                 <p className="mt-2 text-sm text-emerald-700">
@@ -297,7 +330,7 @@ export default function PdfWorkflowChecklistCard({
                 <p className="mt-2 whitespace-pre-wrap text-sm text-gray-600">{item.note}</p>
               )}
 
-              {!isUploaded && (
+              {!isUploaded && !isNotApplicable && (
                 <div className="mt-4 rounded-md border border-gray-200 p-3">
                   <p className="text-sm font-medium text-gray-900">CGV &amp; Règlement Intérieur</p>
                   <p className="mt-1 text-xs text-gray-600">
@@ -392,6 +425,32 @@ export default function PdfWorkflowChecklistCard({
             </div>
           </div>
         </div>
+
+        {showNotApplicable && !isResolved && (
+          <div className="flex shrink-0 flex-wrap gap-2 sm:justify-end">
+            <button
+              type="button"
+              onClick={handleMarkNotApplicable}
+              disabled={isSaving}
+              className="rounded-md border border-gray-300 bg-white px-3 py-1.5 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-50 disabled:opacity-50"
+            >
+              {item.notApplicableLabel ?? 'N/A'}
+            </button>
+          </div>
+        )}
+
+        {isNotApplicable && (
+          <div className="flex shrink-0 flex-wrap gap-2 sm:justify-end">
+            <button
+              type="button"
+              onClick={handleUndoNotApplicable}
+              disabled={isSaving}
+              className="rounded-md border border-gray-300 bg-white px-3 py-1.5 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-50 disabled:opacity-50"
+            >
+              Undo
+            </button>
+          </div>
+        )}
 
         {isUploaded && panelMode === null && (
           <div className="flex shrink-0 flex-wrap gap-2 sm:justify-end">
