@@ -82,7 +82,33 @@ export default async function StudentDashboard() {
       <Navbar />
       <div className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
         <div className="px-4 py-6 sm:px-0">
-          <h1 className="text-3xl font-bold text-gray-900 mb-8">Dashboard</h1>
+          <div className="mb-8 flex flex-wrap items-center gap-4">
+            <h1 className="text-3xl font-bold text-gray-900">Dashboard</h1>
+            <a
+              href="https://brizzle-english.com/calendrier"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 rounded-md px-5 py-3 text-base font-semibold text-white shadow-md transition-colors hover:bg-[#2d3569]"
+              style={{ backgroundColor: '#38438f' }}
+            >
+              <svg
+                className="h-5 w-5"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.8"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                aria-hidden="true"
+              >
+                <rect x="4" y="5" width="16" height="15" rx="2" />
+                <path d="M8 3.5V7" />
+                <path d="M16 3.5V7" />
+                <path d="M4 10h16" />
+              </svg>
+              Book your next lesson
+            </a>
+          </div>
 
           <div
             className={`mb-8 grid grid-cols-1 gap-6 ${
