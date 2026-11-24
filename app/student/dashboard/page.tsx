@@ -11,6 +11,7 @@ import { loadUpcomingLessonsForStudent } from '@/lib/booked-lessons'
 import CourseHoursProgress from '@/components/CourseHoursProgress'
 import UpcomingLessons from '@/components/UpcomingLessons'
 import DashboardCardStyleSamples from '@/components/DashboardCardStyleSamples'
+import { getLessonBookingCode } from '@/lib/lesson-booking-codes'
 
 export default async function StudentDashboard() {
   const session = await getServerSession(authOptions)
@@ -74,6 +75,7 @@ export default async function StudentDashboard() {
   }
 
   const savedSections = await getSavedSectionsForDashboard(session.user.id)
+  const bookingCode = getLessonBookingCode(session.user.name)
   const courseHourPanels = await loadCourseHourPanels(session.user.id)
   const upcomingLessons = await loadUpcomingLessonsForStudent(session.user.id)
 
@@ -84,30 +86,40 @@ export default async function StudentDashboard() {
         <div className="px-4 py-6 sm:px-0">
           <div className="mb-8 flex flex-wrap items-center gap-4">
             <h1 className="text-3xl font-bold text-gray-900">Dashboard</h1>
-            <a
-              href="https://brizzle-english.com/calendrier"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 rounded-md px-5 py-3 text-base font-semibold text-white shadow-md transition-colors hover:bg-[#2d3569]"
-              style={{ backgroundColor: '#38438f' }}
-            >
-              <svg
-                className="h-5 w-5"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="1.8"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                aria-hidden="true"
-              >
-                <rect x="4" y="5" width="16" height="15" rx="2" />
-                <path d="M8 3.5V7" />
-                <path d="M16 3.5V7" />
-                <path d="M4 10h16" />
-              </svg>
-              Book your next lesson
-            </a>
+            {bookingCode && (
+              <>
+                <a
+                  href="https://brizzle-english.com/calendrier"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 rounded-md px-5 py-3 text-base font-semibold text-white shadow-md transition-colors hover:bg-[#2d3569]"
+                  style={{ backgroundColor: '#38438f' }}
+                >
+                  <svg
+                    className="h-5 w-5"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="1.8"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    aria-hidden="true"
+                  >
+                    <rect x="4" y="5" width="16" height="15" rx="2" />
+                    <path d="M8 3.5V7" />
+                    <path d="M16 3.5V7" />
+                    <path d="M4 10h16" />
+                  </svg>
+                  Book your next lesson
+                </a>
+                <p className="text-base text-gray-900">
+                  Your code is{' '}
+                  <span className="font-mono text-lg font-bold tracking-wide text-[#38438f]">
+                    {bookingCode}
+                  </span>
+                </p>
+              </>
+            )}
           </div>
 
           <div
