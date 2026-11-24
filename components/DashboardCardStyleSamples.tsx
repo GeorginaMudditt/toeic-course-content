@@ -186,7 +186,7 @@ function CardBody({
         <p>
           <em>{documentLine}</em>
         </p>
-        <p>View your administrative documentation, such as your contract.</p>
+        <p>View your administrative documents, such as your welcome booklet.</p>
       </div>
     )
   }
