@@ -3,6 +3,7 @@ const LESSON_BOOKING_CODES = [
   { name: 'Anna Raikova', code: '6XWPHYST' },
   { name: 'Xavier Simon', code: 'HXP47KUL' },
   { name: 'Dovile KEDIKAITE', code: 'DM5RUG7Q' },
+  { name: 'Evan Gimeno-Bonato', code: 'J6V6FL63' },
   { name: 'Fatima OUALI', code: 'G2GEUN45' },
   { name: 'Thomas TINEL', code: 'E89Z9QEY' },
 ] as const
