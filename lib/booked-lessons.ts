@@ -113,6 +113,17 @@ export function formatLessonLength(startTime: string, endTime: string): string |
   return `${minutes} minutes`
 }
 
+/** Whole hours covered by upcoming bookings, for the course-hour boxes. */
+export function countBookedHours(
+  lessons: Array<Pick<UpcomingLesson, 'startTime' | 'endTime'>>
+): number {
+  const minutes = lessons.reduce((total, lesson) => {
+    const length = clockToMinutes(lesson.endTime) - clockToMinutes(lesson.startTime)
+    return length > 0 ? total + length : total
+  }, 0)
+  return Math.round(minutes / 60)
+}
+
 export async function loadUpcomingLessonsForStudent(studentId: string): Promise<UpcomingLesson[]> {
   const { data: student, error: studentError } = await supabaseServer
     .from('User')

@@ -7,7 +7,7 @@ import { getSavedSectionsForDashboard } from '@/lib/resource-bookmarks'
 import SavedSectionsPanel from '@/components/SavedSectionsPanel'
 import { formatUKDate, formatCourseName } from '@/lib/date-utils'
 import { loadCourseHourPanels } from '@/lib/student-course-hours'
-import { loadUpcomingLessonsForStudent } from '@/lib/booked-lessons'
+import { countBookedHours, loadUpcomingLessonsForStudent } from '@/lib/booked-lessons'
 import CourseHoursProgress from '@/components/CourseHoursProgress'
 import UpcomingLessons from '@/components/UpcomingLessons'
 import DashboardCardStyleSamples from '@/components/DashboardCardStyleSamples'
@@ -127,7 +127,10 @@ export default async function StudentDashboard() {
               courseHourPanels.length > 0 ? 'xl:grid-cols-2' : ''
             }`}
           >
-            <CourseHoursProgress panels={courseHourPanels} />
+            <CourseHoursProgress
+              panels={courseHourPanels}
+              hoursBooked={countBookedHours(upcomingLessons)}
+            />
             <UpcomingLessons lessons={upcomingLessons} />
           </div>
 
